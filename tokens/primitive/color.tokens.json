@@ -1,0 +1,408 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "color": {
+    "$type": "color",
+    "$description": "Raw color ramps. Use semantic tokens in components, never these.",
+    "neutral": {
+      "0": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [1, 0, 0],
+          "hex": "#ffffff"
+        },
+        "$description": "Neutral slate, step 0 (lightness 1).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "50": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.985, 0.003, 255],
+          "hex": "#f9fafc"
+        },
+        "$description": "Neutral slate, step 50 (lightness 0.985).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.965, 0.005, 255],
+          "hex": "#f1f4f7"
+        },
+        "$description": "Neutral slate, step 100 (lightness 0.965).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.92, 0.008, 255],
+          "hex": "#e1e5ea"
+        },
+        "$description": "Neutral slate, step 200 (lightness 0.92).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.86, 0.012, 255],
+          "hex": "#ccd1d9"
+        },
+        "$description": "Neutral slate, step 300 (lightness 0.86).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.72, 0.016, 255],
+          "hex": "#9ea5af"
+        },
+        "$description": "Neutral slate, step 400 (lightness 0.72).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.58, 0.018, 255],
+          "hex": "#737b85"
+        },
+        "$description": "Neutral slate, step 500 (lightness 0.58).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.48, 0.018, 255],
+          "hex": "#575e68"
+        },
+        "$description": "Neutral slate, step 600 (lightness 0.48).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.39, 0.018, 255],
+          "hex": "#3f464f"
+        },
+        "$description": "Neutral slate, step 700 (lightness 0.39).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.3, 0.016, 255],
+          "hex": "#282e36"
+        },
+        "$description": "Neutral slate, step 800 (lightness 0.3).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.22, 0.014, 255],
+          "hex": "#161b21"
+        },
+        "$description": "Neutral slate, step 900 (lightness 0.22).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "950": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.16, 0.012, 255],
+          "hex": "#0a0e12"
+        },
+        "$description": "Neutral slate, step 950 (lightness 0.16).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "1000": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0, 0, 0],
+          "hex": "#000000"
+        },
+        "$description": "Neutral slate, step 1000 (lightness 0).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "$description": "Slate neutrals from white (0) to black (1000). Higher numbers are darker."
+    },
+    "brand": {
+      "50": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.98, 0.03, 95],
+          "hex": "#fff9e2"
+        },
+        "$description": "Brand yellow, step 50 (lightness 0.98).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "100": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.96, 0.06, 95],
+          "hex": "#fef2c5"
+        },
+        "$description": "Brand yellow, step 100 (lightness 0.96).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.93, 0.11, 95],
+          "hex": "#ffe891"
+        },
+        "$description": "Brand yellow, step 200 (lightness 0.93).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.9, 0.15, 95],
+          "hex": "#fddc5b"
+        },
+        "$description": "Brand yellow, step 300 (lightness 0.9).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.87, 0.17, 95],
+          "hex": "#f7d22a"
+        },
+        "$description": "Brand yellow, step 400 (lightness 0.87).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.82, 0.168, 95],
+          "hex": "#e6c103"
+        },
+        "$description": "Brand yellow, step 500 (lightness 0.82).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.7, 0.142, 95],
+          "hex": "#ba9c0a"
+        },
+        "$description": "Brand yellow, step 600 (lightness 0.7).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.58, 0.118, 95],
+          "hex": "#907904"
+        },
+        "$description": "Brand yellow, step 700 (lightness 0.58).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.47, 0.096, 95],
+          "hex": "#6c5901"
+        },
+        "$description": "Brand yellow, step 800 (lightness 0.47).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.37, 0.074, 95],
+          "hex": "#4c3f03"
+        },
+        "$description": "Brand yellow, step 900 (lightness 0.37).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "950": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.27, 0.054, 95],
+          "hex": "#2f2601"
+        },
+        "$description": "Brand yellow, step 950 (lightness 0.27).",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "$description": "The brand ramp. The base brand is raincoat yellow; themes replace this ramp."
+    },
+    "red": {
+      "100": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.94, 0.03, 27],
+          "hex": "#ffe4e0"
+        },
+        "$description": "Red, step 100 (lightness 0.94)."
+      },
+      "200": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.88, 0.06, 27],
+          "hex": "#fdc9c2"
+        },
+        "$description": "Red, step 200 (lightness 0.88)."
+      },
+      "300": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.8, 0.1, 27],
+          "hex": "#f8a59b"
+        },
+        "$description": "Red, step 300 (lightness 0.8)."
+      },
+      "400": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.71, 0.16, 27],
+          "hex": "#f57569"
+        },
+        "$description": "Red, step 400 (lightness 0.71)."
+      },
+      "500": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.63, 0.21, 27],
+          "hex": "#ed413b"
+        },
+        "$description": "Red, step 500 (lightness 0.63)."
+      },
+      "600": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.55, 0.21, 27],
+          "hex": "#d01d21"
+        },
+        "$description": "Red, step 600 (lightness 0.55)."
+      },
+      "700": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.47, 0.18, 27],
+          "hex": "#a91518"
+        },
+        "$description": "Red, step 700 (lightness 0.47)."
+      },
+      "800": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.39, 0.15, 27],
+          "hex": "#830d10"
+        },
+        "$description": "Red, step 800 (lightness 0.39)."
+      },
+      "900": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.31, 0.11, 27],
+          "hex": "#5c0e0d"
+        },
+        "$description": "Red, step 900 (lightness 0.31)."
+      },
+      "950": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.24, 0.08, 27],
+          "hex": "#3d0a08"
+        },
+        "$description": "Red, step 950 (lightness 0.24)."
+      },
+      "$description": "Reds for destructive actions and errors. Not replaced by themes."
+    }
+  }
+}

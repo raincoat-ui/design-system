@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$value": "{motion.duration.100}",
+        "$description": "Hover, press, and focus changes on controls."
+      },
+      "normal": {
+        "$value": "{motion.duration.200}",
+        "$description": "Elements appearing, disappearing, or resizing."
+      },
+      "slow": {
+        "$value": "{motion.duration.300}",
+        "$description": "Large surfaces sliding in, such as sheets."
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "interactive": {
+        "$value": "{motion.easing.standard}",
+        "$description": "The curve for state changes on controls."
+      },
+      "leave": {
+        "$value": "{motion.easing.exit}",
+        "$description": "The curve for elements leaving the screen."
+      }
+    }
+  }
+}

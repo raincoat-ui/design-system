@@ -1,0 +1,59 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "radius": {
+    "$type": "dimension",
+    "$description": "Corner radii. Themes may change these to set how round a brand feels.",
+    "none": {
+      "$value": "{dimension.0}",
+      "$description": "Square corners.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    },
+    "sm": {
+      "$value": "{dimension.4}",
+      "$description": "Small radius, for compact elements such as tags.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    },
+    "md": {
+      "$value": "{dimension.8}",
+      "$description": "Medium radius, for buttons and inputs.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    },
+    "lg": {
+      "$value": "{dimension.12}",
+      "$description": "Large radius, for cards and dialogs.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    },
+    "full": {
+      "$value": "{dimension.9999}",
+      "$description": "Fully rounded ends, for pills and circular controls.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    }
+  },
+  "border-width": {
+    "$type": "dimension",
+    "$description": "Border widths. Locked: the focus ring width is an accessibility minimum.",
+    "thin": { "$value": "{dimension.1}", "$description": "The default border on controls." },
+    "thick": { "$value": "{dimension.2}", "$description": "Emphasized borders and small offsets." },
+    "focus": {
+      "$value": "{dimension.2}",
+      "$description": "The width of the focus ring. Never less than 2px."
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "$description": "Fixed sizes that do not change with density.",
+    "target": {
+      "minimum": {
+        "$value": "{dimension.44}",
+        "$description": "The smallest touch target. Locked: an accessibility minimum."
+      }
+    },
+    "icon": {
+      "sm": { "$value": "{dimension.16}", "$description": "Icons inside small controls." },
+      "md": {
+        "$value": "{dimension.20}",
+        "$description": "Icons inside medium and large controls."
+      }
+    }
+  }
+}

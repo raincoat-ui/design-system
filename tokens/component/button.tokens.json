@@ -1,0 +1,213 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "button": {
+    "$description": "Tokens of the Button component. See rfcs/0001-foundation-tokens-and-button.md.",
+    "radius": {
+      "$type": "dimension",
+      "$value": "{radius.md}",
+      "$description": "Corner radius of every button."
+    },
+    "border-width": {
+      "$type": "dimension",
+      "$value": "{border-width.thin}",
+      "$description": "Outline width of the secondary button."
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.2}",
+      "$description": "Space between a button's icon and its label."
+    },
+    "height": {
+      "$type": "dimension",
+      "sm": { "$value": "{size.control.sm}", "$description": "Height of the small button." },
+      "md": { "$value": "{size.control.md}", "$description": "Height of the medium button." },
+      "lg": { "$value": "{size.control.lg}", "$description": "Height of the large button." }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "sm": { "$value": "{space.3}", "$description": "Side padding of the small button." },
+      "md": { "$value": "{space.4}", "$description": "Side padding of the medium button." },
+      "lg": { "$value": "{space.5}", "$description": "Side padding of the large button." }
+    },
+    "icon-size": {
+      "$type": "dimension",
+      "sm": { "$value": "{size.icon.sm}", "$description": "Icon size in the small button." },
+      "md": { "$value": "{size.icon.md}", "$description": "Icon size in the medium button." },
+      "lg": { "$value": "{size.icon.md}", "$description": "Icon size in the large button." }
+    },
+    "label": {
+      "$type": "typography",
+      "sm": { "$value": "{type.label.sm}", "$description": "Text style of the small button." },
+      "md": { "$value": "{type.label.md}", "$description": "Text style of the medium button." },
+      "lg": { "$value": "{type.label.lg}", "$description": "Text style of the large button." }
+    },
+    "target-minimum": {
+      "$type": "dimension",
+      "$value": "{size.target.minimum}",
+      "$description": "Smallest touch target of any button, whatever its visible height."
+    },
+    "focus-ring": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.focus}",
+        "$description": "Width of the focus ring."
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{border-width.thick}",
+        "$description": "Gap between the button's edge and its focus ring."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.focus}",
+        "$description": "Color of the focus ring, drawn on the surface behind the button.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "transition": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.fast}",
+        "$description": "Duration of hover and press color changes."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.interactive}",
+        "$description": "Easing of hover and press color changes."
+      }
+    },
+    "primary": {
+      "$type": "color",
+      "$description": "The main action in a view. At most one per view.",
+      "bg": {
+        "default": { "$value": "{color.accent.default}", "$description": "Fill at rest." },
+        "hover": { "$value": "{color.accent.hover}", "$description": "Fill when hovered." },
+        "pressed": { "$value": "{color.accent.pressed}", "$description": "Fill when pressed." }
+      },
+      "fg": {
+        "$value": "{color.fg.on-accent}",
+        "$description": "Label and icon color.",
+        "$extensions": {
+          "raincoat": {
+            "on": [
+              "button.primary.bg.default",
+              "button.primary.bg.hover",
+              "button.primary.bg.pressed"
+            ],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "secondary": {
+      "$type": "color",
+      "$description": "An alternative action beside the primary one.",
+      "bg": {
+        "default": { "$value": "{color.control.default}", "$description": "Fill at rest." },
+        "hover": { "$value": "{color.control.hover}", "$description": "Fill when hovered." },
+        "pressed": { "$value": "{color.control.pressed}", "$description": "Fill when pressed." }
+      },
+      "fg": {
+        "$value": "{color.fg.default}",
+        "$description": "Label and icon color.",
+        "$extensions": {
+          "raincoat": {
+            "on": [
+              "button.secondary.bg.default",
+              "button.secondary.bg.hover",
+              "button.secondary.bg.pressed"
+            ],
+            "contrast": "text"
+          }
+        }
+      },
+      "border": {
+        "$value": "{color.border.strong}",
+        "$description": "Outline color. It is what identifies the control against the surface.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "ghost": {
+      "$type": "color",
+      "$description": "A low-emphasis action with no fill at rest.",
+      "bg": {
+        "hover": { "$value": "{color.control.hover}", "$description": "Fill when hovered." },
+        "pressed": { "$value": "{color.control.pressed}", "$description": "Fill when pressed." }
+      },
+      "fg": {
+        "$value": "{color.fg.default}",
+        "$description": "Label and icon color.",
+        "$extensions": {
+          "raincoat": {
+            "on": [
+              "color.bg.canvas",
+              "color.bg.surface",
+              "color.bg.subtle",
+              "button.ghost.bg.hover",
+              "button.ghost.bg.pressed"
+            ],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "danger": {
+      "$type": "color",
+      "$description": "A destructive action, such as deleting.",
+      "bg": {
+        "default": { "$value": "{color.danger.default}", "$description": "Fill at rest." },
+        "hover": { "$value": "{color.danger.hover}", "$description": "Fill when hovered." },
+        "pressed": { "$value": "{color.danger.pressed}", "$description": "Fill when pressed." }
+      },
+      "fg": {
+        "$value": "{color.fg.on-danger}",
+        "$description": "Label and icon color.",
+        "$extensions": {
+          "raincoat": {
+            "on": [
+              "button.danger.bg.default",
+              "button.danger.bg.hover",
+              "button.danger.bg.pressed"
+            ],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "disabled": {
+      "$type": "color",
+      "$description": "Any variant when disabled.",
+      "bg": { "$value": "{color.bg.disabled}", "$description": "Fill when disabled." },
+      "fg": {
+        "$value": "{color.fg.disabled}",
+        "$description": "Label and icon color when disabled.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Disabled content is exempt from contrast requirements (WCAG 1.4.3)."
+          }
+        }
+      },
+      "border": {
+        "$value": "{color.border.disabled}",
+        "$description": "Outline color when disabled.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Disabled controls are exempt from contrast requirements (WCAG 1.4.11)."
+          }
+        }
+      }
+    }
+  }
+}

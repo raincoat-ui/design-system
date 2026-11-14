@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "motion": {
+    "$description": "Raw durations and easing curves.",
+    "duration": {
+      "$type": "duration",
+      "100": {
+        "$value": { "value": 100, "unit": "ms" },
+        "$description": "100 milliseconds: state changes on small controls."
+      },
+      "200": {
+        "$value": { "value": 200, "unit": "ms" },
+        "$description": "200 milliseconds: elements entering or changing size."
+      },
+      "300": {
+        "$value": { "value": 300, "unit": "ms" },
+        "$description": "300 milliseconds: large surfaces such as sheets."
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard": {
+        "$value": [0.2, 0, 0, 1],
+        "$description": "Starts quickly and settles gently. For most transitions."
+      },
+      "exit": {
+        "$value": [0.4, 0, 1, 1],
+        "$description": "Accelerates away. For elements leaving the screen."
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "$description": "Control heights at compact density, for data-heavy screens.",
+      "sm": { "$value": "{dimension.28}", "$description": "Height of small controls." },
+      "md": { "$value": "{dimension.36}", "$description": "Height of medium controls." },
+      "lg": { "$value": "{dimension.44}", "$description": "Height of large controls." }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raincoat-ui.github.io/design-system/schemas/tokens.schema.json",
+  "title": "Raincoat token file",
+  "description": "A file of design tokens in the DTCG 2025.10 format, restricted to what Raincoat supports. This schema checks structure; the token linter checks values, references, and tiers.",
+  "type": "object",
+  "allOf": [{ "$ref": "#/$defs/group" }],
+  "$defs": {
+    "type": {
+      "enum": [
+        "color",
+        "dimension",
+        "duration",
+        "fontFamily",
+        "fontWeight",
+        "number",
+        "cubicBezier",
+        "typography",
+        "shadow"
+      ]
+    },
+    "node": {
+      "type": "object",
+      "if": { "required": ["$value"] },
+      "then": { "$ref": "#/$defs/token" },
+      "else": { "$ref": "#/$defs/group" }
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "$schema": { "type": "string" },
+        "$type": { "$ref": "#/$defs/type" },
+        "$description": { "type": "string", "minLength": 1 }
+      },
+      "patternProperties": {
+        "^[a-z0-9]+(-[a-z0-9]+)*$": { "$ref": "#/$defs/node" }
+      },
+      "additionalProperties": false
+    },
+    "token": {
+      "type": "object",
+      "required": ["$value", "$description"],
+      "properties": {
+        "$value": true,
+        "$type": { "$ref": "#/$defs/type" },
+        "$description": {
+          "type": "string",
+          "minLength": 8,
+          "description": "Where the token is used. Required on every token."
+        },
+        "$deprecated": { "type": ["boolean", "string"] },
+        "$extensions": {
+          "type": "object",
+          "properties": {
+            "raincoat": { "$ref": "#/$defs/extension" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "overridable": {
+          "type": "boolean",
+          "description": "Whether a theme may replace this token's value."
+        },
+        "on": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)+$" },
+          "description": "Paths of the background tokens this color is drawn on."
+        },
+        "contrast": {
+          "enum": ["text", "large-text", "graphic", "exempt"],
+          "description": "Which contrast requirement applies against every background in `on`."
+        },
+        "contrast-note": {
+          "type": "string",
+          "minLength": 8,
+          "description": "Why the token is exempt. Required when contrast is exempt."
+        }
+      },
+      "additionalProperties": false,
+      "dependentRequired": { "on": ["contrast"] },
+      "allOf": [
+        {
+          "if": { "properties": { "contrast": { "const": "exempt" } }, "required": ["contrast"] },
+          "then": { "required": ["contrast-note"], "not": { "required": ["on"] } }
+        },
+        {
+          "if": {
+            "properties": { "contrast": { "enum": ["text", "large-text", "graphic"] } },
+            "required": ["contrast"]
+          },
+          "then": { "required": ["on"] }
+        }
+      ]
+    }
+  }
+}

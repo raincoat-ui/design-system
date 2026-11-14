@@ -38,7 +38,10 @@ The decisions behind this are recorded in [docs/adr](docs/adr/README.md).
 | `tools/`                     | Repository tooling: license gate, commit checks, pinned CI tools   |
 | `.github/`                   | Workflows, issue and pull request templates, repository rules      |
 
-Tokens, themes, component specs, and the platform packages arrive in milestone 1.
+The token source lives in `tokens/`, checked by `schemas/tokens.schema.json` and the linter and
+contrast checker in `packages/tokens/`. To add a token, follow
+[docs/contributing/add-a-token.md](docs/contributing/add-a-token.md). Themes, component specs,
+and the platform packages follow during milestone 1.
 
 ## Development
 

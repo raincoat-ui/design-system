@@ -1,0 +1,12 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "$description": "Control heights at comfortable density, the default.",
+      "sm": { "$value": "{dimension.36}", "$description": "Height of small controls." },
+      "md": { "$value": "{dimension.44}", "$description": "Height of medium controls." },
+      "lg": { "$value": "{dimension.52}", "$description": "Height of large controls." }
+    }
+  }
+}
