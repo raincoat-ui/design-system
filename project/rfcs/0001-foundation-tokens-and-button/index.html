@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-pec5ixqd"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>RFC 0001: Foundation tokens and Button | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/project/rfcs/0001-foundation-tokens-and-button/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.7"/><meta name="generator" content="Starlight v0.42.10"/><meta property="og:title" content="RFC 0001: Foundation tokens and Button"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/project/rfcs/0001-foundation-tokens-and-button/"/><meta property="og:locale" content="en"/><meta property="og:description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/common.DpnUlbrT.css"><style>@layer starlight.components{svg:where(.astro-zzlu2q4j){color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body class="astro-pec5ixqd"><a class="sl-skip-link astro-zxewszun" href="#_top">Skip to content</a><div class="page sl-flex astro-yv4qvh6f"><header class="header astro-yv4qvh6f"><div class="header astro-7w7yq26v"><div class="title-wrapper sl-flex astro-7w7yq26v"><a href="/design-system/" class="site-title sl-flex astro-6oi2feyw"><span class="astro-6oi2feyw" translate="no">Raincoat</span></a></div><div class="sl-flex print:hidden astro-7w7yq26v"><site-search class="astro-7w7yq26v astro-qjfgabjr" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-qjfgabjr"><svg aria-hidden="true" class="astro-qjfgabjr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-qjfgabjr" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-qjfgabjr" style="display: none"><kbd class="astro-qjfgabjr">Ctrl</kbd><kbd class="astro-qjfgabjr">K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" class="astro-qjfgabjr"><div class="dialog-frame sl-flex astro-qjfgabjr"><button data-close-modal class="sl-flex md:sl-hidden astro-qjfgabjr">Cancel</button><div class="search-container astro-qjfgabjr"><div id="starlight__search" class="astro-qjfgabjr"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-7w7yq26v"><div class="sl-flex social-icons astro-7w7yq26v"><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex astro-ffltkggq"><span class="sr-only astro-ffltkggq">GitHub</span><svg aria-hidden="true" class="astro-ffltkggq astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-vdepmrdz"><span class="sr-only astro-vdepmrdz">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-vdepmrdz"><option value="dark" class="astro-vdepmrdz">Dark</option><option value="light" class="astro-vdepmrdz">Light</option><option value="auto" selected class="astro-vdepmrdz">Auto</option></select><svg aria-hidden="true" class="icon caret astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-yv4qvh6f" aria-label="Main"><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden astro-5sulrg7b"><svg aria-hidden="true" class="open-menu astro-5sulrg7b astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-5sulrg7b astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only astro-5sulrg7b">Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane astro-yv4qvh6f"><div class="sidebar-content sl-flex astro-yv4qvh6f"><sl-sidebar-state-persist data-hash="1e2shyv" class="astro-gjolb7by"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-s2ptcezz"><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Start here</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Overview</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/roadmap/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Roadmap</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Foundations</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/foundations/color/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Color</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/contrast/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Contrast</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/typography/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Typography</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/spacing-and-shape/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Spacing and shape</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/motion/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Motion</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Components</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/components/button/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Button</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Contributing</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/contributing/overview/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">How to contribute</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/contributing/add-a-token/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Add or change a token</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/contributing/rfcs/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Proposing a change (RFCs)</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Project</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/project/prior-art/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Prior art</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/licenses/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">License allowlist</span></a></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Proposals (RFCs)</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" aria-current="page" class="astro-s2ptcezz"><span class="astro-s2ptcezz">RFC 0001: Foundation tokens and Button</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Decisions (ADRs)</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0003. Style Dictionary compiles the tokens</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0004-web-stack/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0005-platform-targets/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0005. Minimum OS and browser targets</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0006-github-hosted-ci/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0006. A public GitHub repository with hosted CI runners</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0007-distribution/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0008-lockstep-versioning/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0008. One version for every package</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0009-license-policy/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0010-themes/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0010. Themes are overlays, shipped one artifact per theme</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0011-claude-design-output/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0011. The Claude Design output is optional and isolated</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0012-name/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0012. The name Raincoat</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-a2r6cxu7"><div class="social-icons astro-a2r6cxu7"><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex astro-ffltkggq"><span class="sr-only astro-ffltkggq">GitHub</span><svg aria-hidden="true" class="astro-ffltkggq astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-vdepmrdz"><span class="sr-only astro-vdepmrdz">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-vdepmrdz"><option value="dark" class="astro-vdepmrdz">Dark</option><option value="light" class="astro-vdepmrdz">Light</option><option value="auto" selected class="astro-vdepmrdz">Auto</option></select><svg aria-hidden="true" class="icon caret astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame astro-yv4qvh6f"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-ezksrnu2"><aside class="right-sidebar-container print:hidden astro-ezksrnu2"><div class="right-sidebar astro-ezksrnu2"><div class="lg:sl-hidden astro-qtipafxo"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-rnodomuc"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-rnodomuc"><details id="starlight__mobile-toc" class="astro-rnodomuc"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-rnodomuc"><span class="toggle sl-flex astro-rnodomuc">On this page<svg aria-hidden="true" class="caret astro-rnodomuc astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-rnodomuc"></span></summary><div class="dropdown astro-rnodomuc"><ul class="isMobile astro-onk3k4tb" style="--depth: 0;"><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#_top" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Overview</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#summary" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Summary</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#problem" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Problem</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#proposal" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Proposal</span></a><ul class="isMobile astro-onk3k4tb" style="--depth: 1;"><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#tokens" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Tokens</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#button" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Button</span></a></li></ul></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#prior-art" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Prior art</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#accessibility" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Accessibility</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#internationalization" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Internationalization</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#platform-notes" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Platform notes</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#migration" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Migration</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#alternatives-considered" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Alternatives considered</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-qtipafxo"><div class="sl-container astro-qtipafxo"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-onk3k4tb" style="--depth: 0;"><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#_top" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Overview</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#summary" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Summary</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#problem" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Problem</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#proposal" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Proposal</span></a><ul class="astro-onk3k4tb" style="--depth: 1;"><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#tokens" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Tokens</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#button" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Button</span></a></li></ul></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#prior-art" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Prior art</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#accessibility" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Accessibility</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#internationalization" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Internationalization</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#platform-notes" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Platform notes</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#migration" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Migration</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#alternatives-considered" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Alternatives considered</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane astro-ezksrnu2"><main data-pagefind-body class="astro-pec5ixqd" lang="en" dir="ltr"><div class="content-panel astro-dv6z42ae"><div class="sl-container astro-dv6z42ae"><h1 id="_top" class="astro-k7htbys7">RFC 0001: Foundation tokens and Button</h1></div></div><div class="content-panel astro-dv6z42ae"><div class="sl-container astro-dv6z42ae"><div class="sl-markdown-content"><ul>
+<li>Status: accepted</li>
+<li>Kind: component</li>
+<li>Proposed: 2026-11-14</li>
+<li>Decided: 2026-11-14</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="summary">Summary</h2><a class="sl-anchor-link" href="#summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Summary”</span></a></div>
+<p>Defines the first token set (the three tiers, four color modes, two densities) and the first
+component, Button, which exists to prove that one token source can drive every platform.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="problem">Problem</h2><a class="sl-anchor-link" href="#problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Problem”</span></a></div>
+<p>Nothing can be built until there is a token vocabulary, and a vocabulary designed without a
+component to consume it tends to name things nobody needs. Button is the smallest component that
+touches color, type, spacing, shape, motion, focus, and touch targets at once.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="proposal">Proposal</h2><a class="sl-anchor-link" href="#proposal"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Proposal”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="tokens">Tokens</h3><a class="sl-anchor-link" href="#tokens"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Tokens”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Holds</th>
+<th>May reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primitive (<code dir="auto">tokens/primitive/</code>)</td>
+<td>Raw values: color ramps, the size scale, font values, durations</td>
+<td>Nothing</td>
+</tr>
+<tr>
+<td>Semantic (<code dir="auto">tokens/semantic/</code>)</td>
+<td>Roles: <code dir="auto">color.bg.canvas</code>, <code dir="auto">space.4</code>, <code dir="auto">radius.md</code>, <code dir="auto">type.label.md</code></td>
+<td>Primitives only</td>
+</tr>
+<tr>
+<td>Component (<code dir="auto">tokens/component/</code>)</td>
+<td>One component’s parts: <code dir="auto">button.primary.bg.hover</code></td>
+<td>Semantic tokens only</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Color modes</strong>: <code dir="auto">light</code>, <code dir="auto">dark</code>, <code dir="auto">light-hc</code>, <code dir="auto">dark-hc</code>. Each is one file,
+<code dir="auto">tokens/semantic/color.&lt;mode&gt;.tokens.json</code>, and all four define the same roles. The
+high-contrast modes hold text to 7:1 and control outlines to 3:1.</li>
+<li><strong>Densities</strong>: <code dir="auto">comfortable</code> (default) and <code dir="auto">compact</code> change control heights only.</li>
+<li><strong>Base brand</strong>: slate neutrals with a raincoat-yellow accent. Text on the accent is dark, so
+the base brand exercises the <code dir="auto">on-accent</code> role that a blue or green brand would hide.</li>
+<li><strong>Contrast is declared, then checked.</strong> A text, border, or focus color names the backgrounds
+it is drawn on and the requirement that applies. CI computes every pair in every mode.</li>
+<li><strong>Themes</strong> may replace tokens flagged <code dir="auto">overridable</code>: the brand and neutral ramps, font
+families and weights, radii, and every semantic color role. Spacing, border widths, and the
+minimum touch target are locked.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="button">Button</h3><a class="sl-anchor-link" href="#button"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Button”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variants</td>
+<td><code dir="auto">primary</code>, <code dir="auto">secondary</code>, <code dir="auto">ghost</code>, <code dir="auto">danger</code></td>
+</tr>
+<tr>
+<td>Sizes</td>
+<td><code dir="auto">sm</code>, <code dir="auto">md</code>, <code dir="auto">lg</code>, plus a full-width option</td>
+</tr>
+<tr>
+<td>States</td>
+<td>rest, hover, focus-visible, pressed, disabled, loading</td>
+</tr>
+<tr>
+<td>Content</td>
+<td>A label, with an optional leading or trailing icon. Icon-only buttons must supply an accessible name</td>
+</tr>
+<tr>
+<td>Label</td>
+<td>Centered. It wraps rather than truncates, so the size tokens are minimum heights</td>
+</tr>
+<tr>
+<td>Loading</td>
+<td>A spinner replaces the leading icon, the label stays, activation is blocked, and the button keeps focus</td>
+</tr>
+<tr>
+<td>Disabled</td>
+<td>Not interactive and not focusable. Exempt from contrast requirements</td>
+</tr>
+</tbody>
+</table>
+<p>Tokens: <code dir="auto">tokens/component/button.tokens.json</code>.</p>
+<p>Usage rules that will go into the guidelines:</p>
+<ul>
+<li>At most one primary button in a view.</li>
+<li>Use danger only for destructive actions, and say what is destroyed: “Delete page”, not
+“Delete”.</li>
+<li>Labels start with a verb and use sentence case.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="prior-art">Prior art</h2><a class="sl-anchor-link" href="#prior-art"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Prior art”</span></a></div>
+<p>Read from each system’s public documentation on 2026-11-14.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>IBM Carbon</th>
+<th>Adobe Spectrum</th>
+<th>Google Material</th>
+<th>GitLab Pajamas</th>
+<th>Raincoat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variants</td>
+<td>Primary, secondary, tertiary, ghost, danger</td>
+<td>Accent, primary, secondary, negative, each as fill or outline</td>
+<td>Filled, filled tonal, elevated, outlined, text</td>
+<td>Primary and tertiary categories; default, confirm, danger variants</td>
+<td>Primary, secondary, ghost, danger</td>
+</tr>
+<tr>
+<td>Sizes</td>
+<td>Seven, from extra small to 2XL</td>
+<td>Not read</td>
+<td>Not read</td>
+<td>Small, medium, and full-width “block”</td>
+<td>Small, medium, large, and full width</td>
+</tr>
+<tr>
+<td>Loading</td>
+<td>Inline loading; the button is disabled</td>
+<td>A spinner replaces label and icon after one second; events are blocked</td>
+<td>Not read</td>
+<td>A spinner; the action is disabled</td>
+<td>Spinner beside a label that stays; activation blocked; focus kept</td>
+</tr>
+<tr>
+<td>Disabled</td>
+<td>Not read</td>
+<td><code dir="auto">isDisabled</code></td>
+<td><code dir="auto">enabled = false</code></td>
+<td>Kept focusable, with an explanation</td>
+<td>Not focusable</td>
+</tr>
+<tr>
+<td>Keyboard</td>
+<td>Enter or Space</td>
+<td>Enter or Space</td>
+<td>Not read</td>
+<td>Not read</td>
+<td>Enter or Space</td>
+</tr>
+<tr>
+<td>Icons</td>
+<td>To the right of the label; icon-only centered</td>
+<td>Icon with a text sibling; icon-only needs <code dir="auto">aria-label</code></td>
+<td>Not read</td>
+<td>Icon-only needs <code dir="auto">aria-label</code>; decorative icons hidden</td>
+<td>Leading or trailing; icon-only needs an accessible name</td>
+</tr>
+<tr>
+<td>Emphasis rule</td>
+<td>One primary button per screen</td>
+<td>Not read</td>
+<td>Filled for the primary action; outlined medium; text low</td>
+<td>By hierarchy; too many danger buttons break it</td>
+<td>At most one primary per view</td>
+</tr>
+<tr>
+<td>Right-to-left</td>
+<td>The button mirrors</td>
+<td>Logical <code dir="auto">start</code> and <code dir="auto">end</code> recommended</td>
+<td>Not read</td>
+<td>Not read</td>
+<td>Mirrors through logical properties</td>
+</tr>
+</tbody>
+</table>
+<p>Where the systems disagree, and which way Raincoat goes:</p>
+<ul>
+<li><strong>Label alignment.</strong> Carbon left-aligns labels even in wide buttons. Raincoat centers them,
+which is the convention on iOS and Android and so keeps the three platforms alike.</li>
+<li><strong>Loading.</strong> Spectrum hides the label behind a spinner. Raincoat keeps the label, so the
+button’s width does not change and the action stays readable in every language.</li>
+<li><strong>Disabled.</strong> Pajamas keeps disabled buttons focusable so they can explain themselves.
+Raincoat v1 uses the platform’s native disabled behavior; a focusable disabled state can be
+proposed later with the Tooltip component it depends on.</li>
+<li><strong>Number of variants.</strong> Material’s five types and Spectrum’s fill and outline matrix give
+designers more ways to be inconsistent. Four variants cover high, medium, and low emphasis
+plus destruction.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="accessibility">Accessibility</h2><a class="sl-anchor-link" href="#accessibility"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accessibility”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>How it is tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Role and name: a native button; icon-only buttons require a name</td>
+<td>Web: axe and Testing Library. iOS: accessibility audit. Android: semantics tests</td>
+</tr>
+<tr>
+<td>Keyboard: Enter and Space activate; disabled buttons leave the tab order</td>
+<td>Web: Playwright keyboard tests</td>
+</tr>
+<tr>
+<td>Focus: a 2px ring, offset from the edge, at 3:1 against the surface behind it</td>
+<td>Token contrast check; focus snapshots</td>
+</tr>
+<tr>
+<td>Contrast: label on fill at 4.5:1 in every state, 7:1 in high-contrast modes</td>
+<td>Token contrast check</td>
+</tr>
+<tr>
+<td>Target: at least 44pt on iOS and 48dp on Android, whatever the visible height</td>
+<td>Target-size tests on each platform</td>
+</tr>
+<tr>
+<td>Loading is announced and does not move focus</td>
+<td>Interaction tests on each platform</td>
+</tr>
+<tr>
+<td>Reduced motion: color transitions are removed</td>
+<td>Snapshot with the reduced-motion setting</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="internationalization">Internationalization</h2><a class="sl-anchor-link" href="#internationalization"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Internationalization”</span></a></div>
+<ul>
+<li>Icon and label swap sides in right-to-left layouts; nothing uses left or right.</li>
+<li>The label wraps when it does not fit. Snapshots cover an expanded pseudo-locale.</li>
+<li>Label line height is 1.4, the lowest value that clears stacked Vietnamese diacritics.</li>
+<li>Chinese, Japanese, and Korean labels are covered by snapshots in each locale.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="platform-notes">Platform notes</h2><a class="sl-anchor-link" href="#platform-notes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Platform notes”</span></a></div>
+<ul>
+<li><strong>Web</strong>: a native <code dir="auto">&lt;button&gt;</code> from shadcn/ui’s Button, restyled through these tokens.</li>
+<li><strong>iOS</strong>: a SwiftUI <code dir="auto">ButtonStyle</code>, so it works with any <code dir="auto">Button</code> initializer.</li>
+<li><strong>Android</strong>: a composable with the button role and Material’s minimum interactive size.</li>
+</ul>
+<p>Hover exists only where a pointer does. On touch platforms the pressed state carries the
+feedback.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="migration">Migration</h2><a class="sl-anchor-link" href="#migration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Migration”</span></a></div>
+<p>None. This is the first token set and the first component.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="alternatives-considered">Alternatives considered</h2><a class="sl-anchor-link" href="#alternatives-considered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Alternatives considered”</span></a></div>
+<ul>
+<li><strong>A blue base brand.</strong> Familiar, but white text on blue hides whether <code dir="auto">on-accent</code> is wired
+correctly. Yellow makes a mistake visible immediately.</li>
+<li><strong>Opacity for the disabled state.</strong> One token instead of three, but the result depends on what
+is behind the button. Explicit disabled colors are predictable in every mode.</li>
+<li><strong>Defining every v1 component’s tokens now.</strong> Each component’s tokens arrive with its own
+RFC, so no token exists without a consumer.</li>
+</ul>
+</div><footer class="sl-flex astro-dmtdzjtj"><div class="meta sl-flex astro-dmtdzjtj"></div><div class="pagination-links print:hidden astro-aurjgwcr" dir="ltr"><a href="/design-system/project/licenses/" rel="prev" class="astro-aurjgwcr"><svg aria-hidden="true" class="astro-aurjgwcr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-aurjgwcr">Previous<br class="astro-aurjgwcr"><span class="link-title astro-aurjgwcr">License allowlist</span></span></a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" rel="next" class="astro-aurjgwcr"><svg aria-hidden="true" class="astro-aurjgwcr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-aurjgwcr">Next<br class="astro-aurjgwcr"><span class="link-title astro-aurjgwcr">0001. One monorepo with pnpm workspaces and Turborepo</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

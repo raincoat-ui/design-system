@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-pec5ixqd"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Color | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/foundations/color/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.7"/><meta name="generator" content="Starlight v0.42.10"/><meta property="og:title" content="Color"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/foundations/color/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Raincoat's color roles in every color mode, and the ramps they are drawn from."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Raincoat's color roles in every color mode, and the ramps they are drawn from."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/common.DpnUlbrT.css"><style>@layer starlight.components{svg:where(.astro-zzlu2q4j){color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body class="astro-pec5ixqd"><a class="sl-skip-link astro-zxewszun" href="#_top">Skip to content</a><div class="page sl-flex astro-yv4qvh6f"><header class="header astro-yv4qvh6f"><div class="header astro-7w7yq26v"><div class="title-wrapper sl-flex astro-7w7yq26v"><a href="/design-system/" class="site-title sl-flex astro-6oi2feyw"><span class="astro-6oi2feyw" translate="no">Raincoat</span></a></div><div class="sl-flex print:hidden astro-7w7yq26v"><site-search class="astro-7w7yq26v astro-qjfgabjr" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-qjfgabjr"><svg aria-hidden="true" class="astro-qjfgabjr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-qjfgabjr" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-qjfgabjr" style="display: none"><kbd class="astro-qjfgabjr">Ctrl</kbd><kbd class="astro-qjfgabjr">K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" class="astro-qjfgabjr"><div class="dialog-frame sl-flex astro-qjfgabjr"><button data-close-modal class="sl-flex md:sl-hidden astro-qjfgabjr">Cancel</button><div class="search-container astro-qjfgabjr"><div id="starlight__search" class="astro-qjfgabjr"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-7w7yq26v"><div class="sl-flex social-icons astro-7w7yq26v"><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex astro-ffltkggq"><span class="sr-only astro-ffltkggq">GitHub</span><svg aria-hidden="true" class="astro-ffltkggq astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-vdepmrdz"><span class="sr-only astro-vdepmrdz">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-vdepmrdz"><option value="dark" class="astro-vdepmrdz">Dark</option><option value="light" class="astro-vdepmrdz">Light</option><option value="auto" selected class="astro-vdepmrdz">Auto</option></select><svg aria-hidden="true" class="icon caret astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-yv4qvh6f" aria-label="Main"><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden astro-5sulrg7b"><svg aria-hidden="true" class="open-menu astro-5sulrg7b astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-5sulrg7b astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only astro-5sulrg7b">Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane astro-yv4qvh6f"><div class="sidebar-content sl-flex astro-yv4qvh6f"><sl-sidebar-state-persist data-hash="1e2shyv" class="astro-gjolb7by"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-s2ptcezz"><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Start here</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Overview</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/roadmap/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Roadmap</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Foundations</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/foundations/color/" aria-current="page" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Color</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/contrast/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Contrast</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/typography/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Typography</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/spacing-and-shape/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Spacing and shape</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/foundations/motion/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Motion</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Components</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/components/button/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Button</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Contributing</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/contributing/overview/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">How to contribute</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/contributing/add-a-token/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Add or change a token</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/contributing/rfcs/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Proposing a change (RFCs)</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details open class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Project</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/project/prior-art/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">Prior art</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/licenses/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">License allowlist</span></a></li><li class="astro-s2ptcezz"><details class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Proposals (RFCs)</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">RFC 0001: Foundation tokens and Button</span></a></li></ul></details></li><li class="astro-s2ptcezz"><details class="astro-s2ptcezz"><summary class="astro-s2ptcezz"><span class="group-label astro-s2ptcezz"><span class="large astro-s2ptcezz">Decisions (ADRs)</span></span><svg aria-hidden="true" class="caret astro-s2ptcezz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul class="astro-s2ptcezz"><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0003. Style Dictionary compiles the tokens</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0004-web-stack/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0005-platform-targets/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0005. Minimum OS and browser targets</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0006-github-hosted-ci/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0006. A public GitHub repository with hosted CI runners</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0007-distribution/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0008-lockstep-versioning/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0008. One version for every package</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0009-license-policy/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0010-themes/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0010. Themes are overlays, shipped one artifact per theme</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0011-claude-design-output/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0011. The Claude Design output is optional and isolated</span></a></li><li class="astro-s2ptcezz"><a href="/design-system/project/decisions/0012-name/" class="astro-s2ptcezz"><span class="astro-s2ptcezz">0012. The name Raincoat</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-a2r6cxu7"><div class="social-icons astro-a2r6cxu7"><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex astro-ffltkggq"><span class="sr-only astro-ffltkggq">GitHub</span><svg aria-hidden="true" class="astro-ffltkggq astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-vdepmrdz"><span class="sr-only astro-vdepmrdz">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-vdepmrdz"><option value="dark" class="astro-vdepmrdz">Dark</option><option value="light" class="astro-vdepmrdz">Light</option><option value="auto" selected class="astro-vdepmrdz">Auto</option></select><svg aria-hidden="true" class="icon caret astro-vdepmrdz astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame astro-yv4qvh6f"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-ezksrnu2"><aside class="right-sidebar-container print:hidden astro-ezksrnu2"><div class="right-sidebar astro-ezksrnu2"><div class="lg:sl-hidden astro-qtipafxo"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-rnodomuc"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-rnodomuc"><details id="starlight__mobile-toc" class="astro-rnodomuc"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-rnodomuc"><span class="toggle sl-flex astro-rnodomuc">On this page<svg aria-hidden="true" class="caret astro-rnodomuc astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-rnodomuc"></span></summary><div class="dropdown astro-rnodomuc"><ul class="isMobile astro-onk3k4tb" style="--depth: 0;"><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#_top" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Overview</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#roles" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Roles</span></a><ul class="isMobile astro-onk3k4tb" style="--depth: 1;"><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#backgrounds" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Backgrounds</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#text-and-icons" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Text and icons</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#borders" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Borders</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#accent-fills" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Accent fills</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#danger-fills" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Danger fills</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#neutral-control-fills" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Neutral control fills</span></a></li></ul></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#ramps" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Ramps</span></a><ul class="isMobile astro-onk3k4tb" style="--depth: 1;"><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#neutral" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Neutral</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#brand" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Brand</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#red" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Red</span></a></li></ul></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-qtipafxo"><div class="sl-container astro-qtipafxo"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-onk3k4tb" style="--depth: 0;"><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#_top" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Overview</span></a></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#roles" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Roles</span></a><ul class="astro-onk3k4tb" style="--depth: 1;"><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#backgrounds" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Backgrounds</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#text-and-icons" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Text and icons</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#borders" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Borders</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#accent-fills" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Accent fills</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#danger-fills" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Danger fills</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#neutral-control-fills" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Neutral control fills</span></a></li></ul></li><li style="--depth: 0;" class="astro-onk3k4tb"><a href="#ramps" style="--depth: 0;" class="astro-onk3k4tb"><span style="--depth: 0;" class="astro-onk3k4tb">Ramps</span></a><ul class="astro-onk3k4tb" style="--depth: 1;"><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#neutral" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Neutral</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#brand" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Brand</span></a></li><li style="--depth: 1;" class="astro-onk3k4tb"><a href="#red" style="--depth: 1;" class="astro-onk3k4tb"><span style="--depth: 1;" class="astro-onk3k4tb">Red</span></a></li></ul></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane astro-ezksrnu2"><main data-pagefind-body class="astro-pec5ixqd" lang="en" dir="ltr"><div class="content-panel astro-dv6z42ae"><div class="sl-container astro-dv6z42ae"><h1 id="_top" class="astro-k7htbys7">Color</h1></div></div><div class="content-panel astro-dv6z42ae"><div class="sl-container astro-dv6z42ae"><div class="sl-markdown-content"><p>Components use <strong>roles</strong>, never raw colors. A role such as <code dir="auto">color.fg.muted</code> has a value
+in each of the four color modes, so a component styled with roles works in all of them.</p>
+<p>This page shows the base brand: slate neutrals with a raincoat-yellow accent. A theme replaces
+the brand and neutral ramps and may remap any role.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="roles">Roles</h2><a class="sl-anchor-link" href="#roles"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Roles”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="backgrounds">Backgrounds</h3><a class="sl-anchor-link" href="#backgrounds"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Backgrounds”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Use</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light, high contrast</th>
+<th>Dark, high contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.bg.canvas</code></td>
+<td>The page background.</td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#0a0e12"></span><code dir="auto">#0a0e12</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.bg.surface</code></td>
+<td>Background of cards, sheets, and other raised surfaces.</td>
+<td><span class="rc-swatch" style="background:#f9fafc"></span><code dir="auto">#f9fafc</code></td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.bg.subtle</code></td>
+<td>A quiet fill for grouping content, such as a table header.</td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+<td><span class="rc-swatch" style="background:#282e36"></span><code dir="auto">#282e36</code></td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+<td><span class="rc-swatch" style="background:#0a0e12"></span><code dir="auto">#0a0e12</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.bg.inverse</code></td>
+<td>A surface in the opposite scheme, such as a toast.</td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+<td><span class="rc-swatch" style="background:#f9fafc"></span><code dir="auto">#f9fafc</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.bg.disabled</code></td>
+<td>Fill of a disabled control.</td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+<td><span class="rc-swatch" style="background:#282e36"></span><code dir="auto">#282e36</code></td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="text-and-icons">Text and icons</h3><a class="sl-anchor-link" href="#text-and-icons"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Text and icons”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Use</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light, high contrast</th>
+<th>Dark, high contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.fg.default</code></td>
+<td>Primary text and icons.</td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+<td><span class="rc-swatch" style="background:#f9fafc"></span><code dir="auto">#f9fafc</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.muted</code></td>
+<td>Secondary text, such as captions and help text.</td>
+<td><span class="rc-swatch" style="background:#575e68"></span><code dir="auto">#575e68</code></td>
+<td><span class="rc-swatch" style="background:#9ea5af"></span><code dir="auto">#9ea5af</code></td>
+<td><span class="rc-swatch" style="background:#3f464f"></span><code dir="auto">#3f464f</code></td>
+<td><span class="rc-swatch" style="background:#e1e5ea"></span><code dir="auto">#e1e5ea</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.inverse</code></td>
+<td>Text and icons on the inverse surface.</td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#0a0e12"></span><code dir="auto">#0a0e12</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.accent</code></td>
+<td>Accent-colored text, such as links.</td>
+<td><span class="rc-swatch" style="background:#6c5901"></span><code dir="auto">#6c5901</code></td>
+<td><span class="rc-swatch" style="background:#fddc5b"></span><code dir="auto">#fddc5b</code></td>
+<td><span class="rc-swatch" style="background:#4c3f03"></span><code dir="auto">#4c3f03</code></td>
+<td><span class="rc-swatch" style="background:#ffe891"></span><code dir="auto">#ffe891</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.danger</code></td>
+<td>Error text and destructive labels on a plain background.</td>
+<td><span class="rc-swatch" style="background:#a91518"></span><code dir="auto">#a91518</code></td>
+<td><span class="rc-swatch" style="background:#f8a59b"></span><code dir="auto">#f8a59b</code></td>
+<td><span class="rc-swatch" style="background:#830d10"></span><code dir="auto">#830d10</code></td>
+<td><span class="rc-swatch" style="background:#fdc9c2"></span><code dir="auto">#fdc9c2</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.on-accent</code></td>
+<td>Text and icons on an accent fill.</td>
+<td><span class="rc-swatch" style="background:#0a0e12"></span><code dir="auto">#0a0e12</code></td>
+<td><span class="rc-swatch" style="background:#0a0e12"></span><code dir="auto">#0a0e12</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.on-danger</code></td>
+<td>Text and icons on a danger fill.</td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.disabled</code></td>
+<td>Text and icons of a disabled control.</td>
+<td><span class="rc-swatch" style="background:#9ea5af"></span><code dir="auto">#9ea5af</code></td>
+<td><span class="rc-swatch" style="background:#575e68"></span><code dir="auto">#575e68</code></td>
+<td><span class="rc-swatch" style="background:#737b85"></span><code dir="auto">#737b85</code></td>
+<td><span class="rc-swatch" style="background:#737b85"></span><code dir="auto">#737b85</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="borders">Borders</h3><a class="sl-anchor-link" href="#borders"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Borders”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Use</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light, high contrast</th>
+<th>Dark, high contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.border.default</code></td>
+<td>Dividers and the outline of cards.</td>
+<td><span class="rc-swatch" style="background:#ccd1d9"></span><code dir="auto">#ccd1d9</code></td>
+<td><span class="rc-swatch" style="background:#3f464f"></span><code dir="auto">#3f464f</code></td>
+<td><span class="rc-swatch" style="background:#575e68"></span><code dir="auto">#575e68</code></td>
+<td><span class="rc-swatch" style="background:#9ea5af"></span><code dir="auto">#9ea5af</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.strong</code></td>
+<td>The outline of interactive controls.</td>
+<td><span class="rc-swatch" style="background:#737b85"></span><code dir="auto">#737b85</code></td>
+<td><span class="rc-swatch" style="background:#737b85"></span><code dir="auto">#737b85</code></td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.focus</code></td>
+<td>The focus ring.</td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+<td><span class="rc-swatch" style="background:#f7d22a"></span><code dir="auto">#f7d22a</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+<td><span class="rc-swatch" style="background:#fddc5b"></span><code dir="auto">#fddc5b</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.disabled</code></td>
+<td>The outline of a disabled control.</td>
+<td><span class="rc-swatch" style="background:#e1e5ea"></span><code dir="auto">#e1e5ea</code></td>
+<td><span class="rc-swatch" style="background:#3f464f"></span><code dir="auto">#3f464f</code></td>
+<td><span class="rc-swatch" style="background:#9ea5af"></span><code dir="auto">#9ea5af</code></td>
+<td><span class="rc-swatch" style="background:#575e68"></span><code dir="auto">#575e68</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="accent-fills">Accent fills</h3><a class="sl-anchor-link" href="#accent-fills"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accent fills”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Use</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light, high contrast</th>
+<th>Dark, high contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.accent.default</code></td>
+<td>Fill of the primary action.</td>
+<td><span class="rc-swatch" style="background:#f7d22a"></span><code dir="auto">#f7d22a</code></td>
+<td><span class="rc-swatch" style="background:#f7d22a"></span><code dir="auto">#f7d22a</code></td>
+<td><span class="rc-swatch" style="background:#f7d22a"></span><code dir="auto">#f7d22a</code></td>
+<td><span class="rc-swatch" style="background:#fddc5b"></span><code dir="auto">#fddc5b</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.accent.hover</code></td>
+<td>Fill of the primary action when hovered.</td>
+<td><span class="rc-swatch" style="background:#e6c103"></span><code dir="auto">#e6c103</code></td>
+<td><span class="rc-swatch" style="background:#fddc5b"></span><code dir="auto">#fddc5b</code></td>
+<td><span class="rc-swatch" style="background:#e6c103"></span><code dir="auto">#e6c103</code></td>
+<td><span class="rc-swatch" style="background:#ffe891"></span><code dir="auto">#ffe891</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.accent.pressed</code></td>
+<td>Fill of the primary action when pressed.</td>
+<td><span class="rc-swatch" style="background:#ba9c0a"></span><code dir="auto">#ba9c0a</code></td>
+<td><span class="rc-swatch" style="background:#e6c103"></span><code dir="auto">#e6c103</code></td>
+<td><span class="rc-swatch" style="background:#ba9c0a"></span><code dir="auto">#ba9c0a</code></td>
+<td><span class="rc-swatch" style="background:#f7d22a"></span><code dir="auto">#f7d22a</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="danger-fills">Danger fills</h3><a class="sl-anchor-link" href="#danger-fills"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Danger fills”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Use</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light, high contrast</th>
+<th>Dark, high contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.danger.default</code></td>
+<td>Fill of a destructive action.</td>
+<td><span class="rc-swatch" style="background:#d01d21"></span><code dir="auto">#d01d21</code></td>
+<td><span class="rc-swatch" style="background:#d01d21"></span><code dir="auto">#d01d21</code></td>
+<td><span class="rc-swatch" style="background:#830d10"></span><code dir="auto">#830d10</code></td>
+<td><span class="rc-swatch" style="background:#f8a59b"></span><code dir="auto">#f8a59b</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.danger.hover</code></td>
+<td>Fill of a destructive action when hovered.</td>
+<td><span class="rc-swatch" style="background:#a91518"></span><code dir="auto">#a91518</code></td>
+<td><span class="rc-swatch" style="background:#a91518"></span><code dir="auto">#a91518</code></td>
+<td><span class="rc-swatch" style="background:#5c0e0d"></span><code dir="auto">#5c0e0d</code></td>
+<td><span class="rc-swatch" style="background:#fdc9c2"></span><code dir="auto">#fdc9c2</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.danger.pressed</code></td>
+<td>Fill of a destructive action when pressed.</td>
+<td><span class="rc-swatch" style="background:#830d10"></span><code dir="auto">#830d10</code></td>
+<td><span class="rc-swatch" style="background:#830d10"></span><code dir="auto">#830d10</code></td>
+<td><span class="rc-swatch" style="background:#3d0a08"></span><code dir="auto">#3d0a08</code></td>
+<td><span class="rc-swatch" style="background:#f57569"></span><code dir="auto">#f57569</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="neutral-control-fills">Neutral control fills</h3><a class="sl-anchor-link" href="#neutral-control-fills"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Neutral control fills”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Use</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light, high contrast</th>
+<th>Dark, high contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.control.default</code></td>
+<td>Fill of a neutral control, such as a secondary button.</td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td><span class="rc-swatch" style="background:#000000"></span><code dir="auto">#000000</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.control.hover</code></td>
+<td>Fill of a neutral control when hovered.</td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+<td><span class="rc-swatch" style="background:#282e36"></span><code dir="auto">#282e36</code></td>
+<td><span class="rc-swatch" style="background:#f1f4f7"></span><code dir="auto">#f1f4f7</code></td>
+<td><span class="rc-swatch" style="background:#0a0e12"></span><code dir="auto">#0a0e12</code></td>
+</tr>
+<tr>
+<td><code dir="auto">color.control.pressed</code></td>
+<td>Fill of a neutral control when pressed.</td>
+<td><span class="rc-swatch" style="background:#e1e5ea"></span><code dir="auto">#e1e5ea</code></td>
+<td><span class="rc-swatch" style="background:#3f464f"></span><code dir="auto">#3f464f</code></td>
+<td><span class="rc-swatch" style="background:#e1e5ea"></span><code dir="auto">#e1e5ea</code></td>
+<td><span class="rc-swatch" style="background:#161b21"></span><code dir="auto">#161b21</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="ramps">Ramps</h2><a class="sl-anchor-link" href="#ramps"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Ramps”</span></a></div>
+<p>The raw colors that roles point to. Do not use these directly in components.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="neutral">Neutral</h3><a class="sl-anchor-link" href="#neutral"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Neutral”</span></a></div>
+<div class="rc-ramp"><div><span class="rc-chip" style="background:#ffffff"></span><strong>0</strong><br><code>#ffffff</code></div><div><span class="rc-chip" style="background:#f9fafc"></span><strong>50</strong><br><code>#f9fafc</code></div><div><span class="rc-chip" style="background:#f1f4f7"></span><strong>100</strong><br><code>#f1f4f7</code></div><div><span class="rc-chip" style="background:#e1e5ea"></span><strong>200</strong><br><code>#e1e5ea</code></div><div><span class="rc-chip" style="background:#ccd1d9"></span><strong>300</strong><br><code>#ccd1d9</code></div><div><span class="rc-chip" style="background:#9ea5af"></span><strong>400</strong><br><code>#9ea5af</code></div><div><span class="rc-chip" style="background:#737b85"></span><strong>500</strong><br><code>#737b85</code></div><div><span class="rc-chip" style="background:#575e68"></span><strong>600</strong><br><code>#575e68</code></div><div><span class="rc-chip" style="background:#3f464f"></span><strong>700</strong><br><code>#3f464f</code></div><div><span class="rc-chip" style="background:#282e36"></span><strong>800</strong><br><code>#282e36</code></div><div><span class="rc-chip" style="background:#161b21"></span><strong>900</strong><br><code>#161b21</code></div><div><span class="rc-chip" style="background:#0a0e12"></span><strong>950</strong><br><code>#0a0e12</code></div><div><span class="rc-chip" style="background:#000000"></span><strong>1000</strong><br><code>#000000</code></div></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="brand">Brand</h3><a class="sl-anchor-link" href="#brand"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Brand”</span></a></div>
+<div class="rc-ramp"><div><span class="rc-chip" style="background:#fff9e2"></span><strong>50</strong><br><code>#fff9e2</code></div><div><span class="rc-chip" style="background:#fef2c5"></span><strong>100</strong><br><code>#fef2c5</code></div><div><span class="rc-chip" style="background:#ffe891"></span><strong>200</strong><br><code>#ffe891</code></div><div><span class="rc-chip" style="background:#fddc5b"></span><strong>300</strong><br><code>#fddc5b</code></div><div><span class="rc-chip" style="background:#f7d22a"></span><strong>400</strong><br><code>#f7d22a</code></div><div><span class="rc-chip" style="background:#e6c103"></span><strong>500</strong><br><code>#e6c103</code></div><div><span class="rc-chip" style="background:#ba9c0a"></span><strong>600</strong><br><code>#ba9c0a</code></div><div><span class="rc-chip" style="background:#907904"></span><strong>700</strong><br><code>#907904</code></div><div><span class="rc-chip" style="background:#6c5901"></span><strong>800</strong><br><code>#6c5901</code></div><div><span class="rc-chip" style="background:#4c3f03"></span><strong>900</strong><br><code>#4c3f03</code></div><div><span class="rc-chip" style="background:#2f2601"></span><strong>950</strong><br><code>#2f2601</code></div></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="red">Red</h3><a class="sl-anchor-link" href="#red"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Red”</span></a></div>
+<div class="rc-ramp"><div><span class="rc-chip" style="background:#ffe4e0"></span><strong>100</strong><br><code>#ffe4e0</code></div><div><span class="rc-chip" style="background:#fdc9c2"></span><strong>200</strong><br><code>#fdc9c2</code></div><div><span class="rc-chip" style="background:#f8a59b"></span><strong>300</strong><br><code>#f8a59b</code></div><div><span class="rc-chip" style="background:#f57569"></span><strong>400</strong><br><code>#f57569</code></div><div><span class="rc-chip" style="background:#ed413b"></span><strong>500</strong><br><code>#ed413b</code></div><div><span class="rc-chip" style="background:#d01d21"></span><strong>600</strong><br><code>#d01d21</code></div><div><span class="rc-chip" style="background:#a91518"></span><strong>700</strong><br><code>#a91518</code></div><div><span class="rc-chip" style="background:#830d10"></span><strong>800</strong><br><code>#830d10</code></div><div><span class="rc-chip" style="background:#5c0e0d"></span><strong>900</strong><br><code>#5c0e0d</code></div><div><span class="rc-chip" style="background:#3d0a08"></span><strong>950</strong><br><code>#3d0a08</code></div></div>
+</div><footer class="sl-flex astro-dmtdzjtj"><div class="meta sl-flex astro-dmtdzjtj"></div><div class="pagination-links print:hidden astro-aurjgwcr" dir="ltr"><a href="/design-system/project/roadmap/" rel="prev" class="astro-aurjgwcr"><svg aria-hidden="true" class="astro-aurjgwcr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-aurjgwcr">Previous<br class="astro-aurjgwcr"><span class="link-title astro-aurjgwcr">Roadmap</span></span></a><a href="/design-system/foundations/contrast/" rel="next" class="astro-aurjgwcr"><svg aria-hidden="true" class="astro-aurjgwcr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-aurjgwcr">Next<br class="astro-aurjgwcr"><span class="link-title astro-aurjgwcr">Contrast</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
