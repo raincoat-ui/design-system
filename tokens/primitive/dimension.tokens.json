@@ -1,0 +1,76 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "dimension": {
+    "$type": "dimension",
+    "$description": "The raw size scale. Each token is named after its value in pixels.",
+    "0": {
+      "$value": { "value": 0, "unit": "px" },
+      "$description": "Zero: no space, no size, no radius."
+    },
+    "1": {
+      "$value": { "value": 1, "unit": "px" },
+      "$description": "One pixel, for hairline borders."
+    },
+    "2": {
+      "$value": { "value": 2, "unit": "px" },
+      "$description": "Two pixels, for thick borders and focus rings."
+    },
+    "4": { "$value": { "value": 4, "unit": "px" }, "$description": "Four pixels: one grid unit." },
+    "8": {
+      "$value": { "value": 8, "unit": "px" },
+      "$description": "Eight pixels: two grid units."
+    },
+    "12": {
+      "$value": { "value": 12, "unit": "px" },
+      "$description": "Twelve pixels: three grid units."
+    },
+    "16": {
+      "$value": { "value": 16, "unit": "px" },
+      "$description": "Sixteen pixels: four grid units."
+    },
+    "20": {
+      "$value": { "value": 20, "unit": "px" },
+      "$description": "Twenty pixels: five grid units."
+    },
+    "24": {
+      "$value": { "value": 24, "unit": "px" },
+      "$description": "Twenty-four pixels: six grid units."
+    },
+    "28": {
+      "$value": { "value": 28, "unit": "px" },
+      "$description": "Twenty-eight pixels: seven grid units."
+    },
+    "32": {
+      "$value": { "value": 32, "unit": "px" },
+      "$description": "Thirty-two pixels: eight grid units."
+    },
+    "36": {
+      "$value": { "value": 36, "unit": "px" },
+      "$description": "Thirty-six pixels: nine grid units."
+    },
+    "40": {
+      "$value": { "value": 40, "unit": "px" },
+      "$description": "Forty pixels: ten grid units."
+    },
+    "44": {
+      "$value": { "value": 44, "unit": "px" },
+      "$description": "Forty-four pixels: the minimum comfortable touch target."
+    },
+    "48": {
+      "$value": { "value": 48, "unit": "px" },
+      "$description": "Forty-eight pixels: twelve grid units."
+    },
+    "52": {
+      "$value": { "value": 52, "unit": "px" },
+      "$description": "Fifty-two pixels: thirteen grid units."
+    },
+    "64": {
+      "$value": { "value": 64, "unit": "px" },
+      "$description": "Sixty-four pixels: sixteen grid units."
+    },
+    "9999": {
+      "$value": { "value": 9999, "unit": "px" },
+      "$description": "A radius large enough to make any control fully rounded."
+    }
+  }
+}

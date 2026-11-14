@@ -1,0 +1,84 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "font": {
+    "$description": "Raw typographic values. Components use the composed styles under type.",
+    "family": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": ["Be Vietnam Pro", "system-ui", "sans-serif"],
+        "$description": "The default typeface for interface text. Covers Vietnamese fully.",
+        "$extensions": { "raincoat": { "overridable": true } }
+      },
+      "mono": {
+        "$value": ["JetBrains Mono", "ui-monospace", "monospace"],
+        "$description": "The typeface for code and tabular figures.",
+        "$extensions": { "raincoat": { "overridable": true } }
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$value": 400,
+        "$description": "Regular weight, for running text.",
+        "$extensions": { "raincoat": { "overridable": true } }
+      },
+      "medium": {
+        "$value": 500,
+        "$description": "Medium weight, for labels and emphasis.",
+        "$extensions": { "raincoat": { "overridable": true } }
+      },
+      "semibold": {
+        "$value": 600,
+        "$description": "Semibold weight, for headings.",
+        "$extensions": { "raincoat": { "overridable": true } }
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "$description": "Font sizes in rem, named after their size in pixels at the default root size.",
+      "12": {
+        "$value": { "value": 0.75, "unit": "rem" },
+        "$description": "12px equivalent: the smallest size, for captions only."
+      },
+      "14": {
+        "$value": { "value": 0.875, "unit": "rem" },
+        "$description": "14px equivalent: secondary text and small labels."
+      },
+      "16": {
+        "$value": { "value": 1, "unit": "rem" },
+        "$description": "16px equivalent: the base size for body text."
+      },
+      "18": {
+        "$value": { "value": 1.125, "unit": "rem" },
+        "$description": "18px equivalent: large labels and lead text."
+      },
+      "20": {
+        "$value": { "value": 1.25, "unit": "rem" },
+        "$description": "20px equivalent: small headings."
+      },
+      "24": {
+        "$value": { "value": 1.5, "unit": "rem" },
+        "$description": "24px equivalent: headings. Counts as large text for contrast."
+      }
+    },
+    "line-height": {
+      "$type": "number",
+      "$description": "Line heights as multiples of the font size.",
+      "snug": {
+        "$value": 1.4,
+        "$description": "For single-line labels. The lowest value that clears stacked Vietnamese diacritics."
+      },
+      "normal": {
+        "$value": 1.5,
+        "$description": "For body text in any supported script."
+      }
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "none": {
+        "$value": { "value": 0, "unit": "px" },
+        "$description": "No extra tracking. The default for every text style."
+      }
+    }
+  }
+}

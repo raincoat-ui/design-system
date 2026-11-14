@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "space": {
+    "$type": "dimension",
+    "$description": "The spacing scale. Step n is n times 4px. Locked: themes cannot change it.",
+    "0": { "$value": "{dimension.0}", "$description": "No space." },
+    "1": { "$value": "{dimension.4}", "$description": "4px: between an icon and its label." },
+    "2": { "$value": "{dimension.8}", "$description": "8px: between related items in a control." },
+    "3": { "$value": "{dimension.12}", "$description": "12px: padding inside small controls." },
+    "4": { "$value": "{dimension.16}", "$description": "16px: default padding inside controls." },
+    "5": { "$value": "{dimension.20}", "$description": "20px: padding inside large controls." },
+    "6": { "$value": "{dimension.24}", "$description": "24px: padding inside cards and dialogs." },
+    "8": { "$value": "{dimension.32}", "$description": "32px: between groups of content." },
+    "10": { "$value": "{dimension.40}", "$description": "40px: between page sections." },
+    "12": { "$value": "{dimension.48}", "$description": "48px: large gaps between page sections." },
+    "16": { "$value": "{dimension.64}", "$description": "64px: the largest gap, for page margins." }
+  }
+}

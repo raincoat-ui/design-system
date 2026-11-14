@@ -15,7 +15,8 @@ const curations = loadCurations(join(repoRoot, "licenses/curations.yml"));
 const today = new Date().toISOString().slice(0, 10);
 
 function report(flag) {
-  const result = spawnSync("pnpm", ["licenses", "list", "--json", flag], {
+  // --recursive is essential: without it the dependencies of workspace packages are skipped.
+  const result = spawnSync("pnpm", ["licenses", "list", "--json", "--recursive", flag], {
     cwd: repoRoot,
     encoding: "utf8",
     maxBuffer: 256 * 1024 * 1024,

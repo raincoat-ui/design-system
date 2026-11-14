@@ -1,4 +1,5 @@
-# Workspace settings. Workspace packages are added here when the first one lands (milestone 1).
+packages:
+  - "packages/*"
 
 # Supply chain
 # Refuse versions published less than 7 days ago (value is in minutes).

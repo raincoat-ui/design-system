@@ -45,7 +45,12 @@ pnpm validate    # the checks CI runs
 | Vulnerability scan | A dependency with a known vulnerability                                    |
 | Workflow lint      | An unsafe or invalid GitHub Actions workflow                               |
 
-More checks join as the platform packages land; this table is updated with them.
+Two more checks cover the token source: `pnpm tokens:lint` fails on an invalid token, a broken
+reference, or a tier violation, and `pnpm tokens:contrast` fails when any declared color pair
+misses its contrast requirement in any color mode. See
+[docs/contributing/add-a-token.md](docs/contributing/add-a-token.md).
+
+More checks join as the platform packages land.
 
 ## Dependencies
 

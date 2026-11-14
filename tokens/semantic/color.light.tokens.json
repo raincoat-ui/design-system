@@ -1,0 +1,290 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "color": {
+    "$type": "color",
+    "$description": "Color roles in the light scheme.",
+    "bg": {
+      "$description": "Backgrounds.",
+      "canvas": {
+        "$value": "{color.neutral.0}",
+        "$description": "The page background.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "surface": {
+        "$value": "{color.neutral.50}",
+        "$description": "Background of cards, sheets, and other raised surfaces.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "subtle": {
+        "$value": "{color.neutral.100}",
+        "$description": "A quiet fill for grouping content, such as a table header.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "inverse": {
+        "$value": "{color.neutral.900}",
+        "$description": "A surface in the opposite scheme, such as a toast.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "disabled": {
+        "$value": "{color.neutral.100}",
+        "$description": "Fill of a disabled control.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      }
+    },
+    "fg": {
+      "$description": "Text and icon colors.",
+      "default": {
+        "$value": "{color.neutral.900}",
+        "$description": "Primary text and icons.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": [
+              "color.bg.canvas",
+              "color.bg.surface",
+              "color.bg.subtle",
+              "color.control.default",
+              "color.control.hover",
+              "color.control.pressed"
+            ],
+            "contrast": "text"
+          }
+        }
+      },
+      "muted": {
+        "$value": "{color.neutral.600}",
+        "$description": "Secondary text, such as captions and help text.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "text"
+          }
+        }
+      },
+      "inverse": {
+        "$value": "{color.neutral.0}",
+        "$description": "Text and icons on the inverse surface.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.inverse"],
+            "contrast": "text"
+          }
+        }
+      },
+      "accent": {
+        "$value": "{color.brand.800}",
+        "$description": "Accent-colored text, such as links.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "text"
+          }
+        }
+      },
+      "danger": {
+        "$value": "{color.red.700}",
+        "$description": "Error text and destructive labels on a plain background.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "text"
+          }
+        }
+      },
+      "on-accent": {
+        "$value": "{color.neutral.950}",
+        "$description": "Text and icons on an accent fill.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.accent.default", "color.accent.hover", "color.accent.pressed"],
+            "contrast": "text"
+          }
+        }
+      },
+      "on-danger": {
+        "$value": "{color.neutral.0}",
+        "$description": "Text and icons on a danger fill.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.danger.default", "color.danger.hover", "color.danger.pressed"],
+            "contrast": "text"
+          }
+        }
+      },
+      "disabled": {
+        "$value": "{color.neutral.400}",
+        "$description": "Text and icons of a disabled control.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "contrast": "exempt",
+            "contrast-note": "Disabled content is exempt from contrast requirements (WCAG 1.4.3)."
+          }
+        }
+      }
+    },
+    "border": {
+      "$description": "Outlines and dividers.",
+      "default": {
+        "$value": "{color.neutral.300}",
+        "$description": "Dividers and the outline of cards.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "contrast": "exempt",
+            "contrast-note": "Decorative: no information is lost if it is not perceived."
+          }
+        }
+      },
+      "strong": {
+        "$value": "{color.neutral.500}",
+        "$description": "The outline of interactive controls.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "focus": {
+        "$value": "{color.neutral.900}",
+        "$description": "The focus ring.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "disabled": {
+        "$value": "{color.neutral.200}",
+        "$description": "The outline of a disabled control.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "contrast": "exempt",
+            "contrast-note": "Disabled controls are exempt from contrast requirements (WCAG 1.4.11)."
+          }
+        }
+      }
+    },
+    "accent": {
+      "$description": "Fills for the primary action.",
+      "default": {
+        "$value": "{color.brand.400}",
+        "$description": "Fill of the primary action.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "hover": {
+        "$value": "{color.brand.500}",
+        "$description": "Fill of the primary action when hovered.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "pressed": {
+        "$value": "{color.brand.600}",
+        "$description": "Fill of the primary action when pressed.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      }
+    },
+    "danger": {
+      "$description": "Fills for destructive actions.",
+      "default": {
+        "$value": "{color.red.600}",
+        "$description": "Fill of a destructive action.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "hover": {
+        "$value": "{color.red.700}",
+        "$description": "Fill of a destructive action when hovered.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "pressed": {
+        "$value": "{color.red.800}",
+        "$description": "Fill of a destructive action when pressed.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      }
+    },
+    "control": {
+      "$description": "Fills for neutral controls.",
+      "default": {
+        "$value": "{color.neutral.0}",
+        "$description": "Fill of a neutral control, such as a secondary button.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "hover": {
+        "$value": "{color.neutral.100}",
+        "$description": "Fill of a neutral control when hovered.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
+      "pressed": {
+        "$value": "{color.neutral.200}",
+        "$description": "Fill of a neutral control when pressed.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      }
+    }
+  }
+}
