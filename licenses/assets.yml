@@ -1,0 +1,13 @@
+# Every committed font file, and every file under themes/<id>/assets/, must match an entry here.
+#
+#   - path: themes/alpha/fonts/BeVietnamPro-*.woff2   # a path or glob, relative to the repo root
+#     kind: font                                      # font, icon, or brand
+#     license: OFL-1.1
+#     source: https://github.com/bettergui/BeVietnamPro
+#
+# Rules enforced by `pnpm licenses:assets`:
+#   font   must be OFL-1.1
+#   icon   must be a "ship" license from allowlist.yml
+#   brand  must be LicenseRef-Brand-Proprietary and live under themes/<id>/assets/
+version: 1
+assets: []

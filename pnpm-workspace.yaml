@@ -1,0 +1,15 @@
+# Workspace settings. Workspace packages are added here when the first one lands (milestone 1).
+
+# Supply chain
+# Refuse versions published less than 7 days ago (value is in minutes).
+minimumReleaseAge: 10080
+# Fail if a package's publishing trust level drops compared to its earlier releases.
+trustPolicy: no-downgrade
+# Record exact versions, never ranges.
+saveExact: true
+
+# Dependency install scripts are blocked unless reviewed here.
+strictDepBuilds: true
+allowBuilds:
+  # lefthook's postinstall only installs git hooks; the root "prepare" script does that instead.
+  lefthook: false

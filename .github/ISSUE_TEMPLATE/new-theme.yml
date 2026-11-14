@@ -1,0 +1,37 @@
+name: New theme
+description: Request a theme for an app or brand.
+labels: [theme]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        **Everything in this repository is public.** A theme's colors, fonts, and logos are
+        visible to everyone from the moment they are committed. Brands that must stay
+        confidential should use a private theme pack instead.
+  - type: input
+    id: theme-id
+    attributes:
+      label: Theme id
+      description: Lowercase letters, digits, and hyphens.
+      placeholder: "alpha"
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: The brand owner has agreed in writing to this brand being published here, or the brand is fictional.
+          required: true
+  - type: textarea
+    id: fonts
+    attributes:
+      label: Fonts
+      description: Font families and where they come from. Only fonts under the SIL Open Font License (OFL-1.1) can be included.
+    validations:
+      required: true
+  - type: textarea
+    id: brand
+    attributes:
+      label: Brand inputs
+      description: Colors, radius and density preferences, icon style, and voice. Do not attach logos unless the consent box above applies.

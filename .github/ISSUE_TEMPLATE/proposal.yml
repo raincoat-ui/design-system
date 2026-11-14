@@ -1,0 +1,35 @@
+name: Proposal
+description: Suggest a new component or a token change, before writing an RFC.
+labels: [proposal]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        New components and changes to semantic or component tokens need an accepted RFC
+        (see `rfcs/README.md`). Use this form to check interest first.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - New component
+        - Token change
+        - Change to what themes may override
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What can't you do today?
+      description: A concrete example from an app is the most useful thing you can give.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What do you propose?
+  - type: textarea
+    id: prior-art
+    attributes:
+      label: How do other design systems handle this?
+      description: See `docs/research/prior-art.md` for the systems we compare against.

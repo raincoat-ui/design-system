@@ -1,0 +1,45 @@
+# dependencies and caches
+node_modules/
+.pnpm-store/
+.turbo/
+.cache/
+
+# build output
+dist/
+build/
+*.tsbuildinfo
+
+# test output
+coverage/
+test-results/
+playwright-report/
+
+# Apple
+.build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.swiftpm/
+
+# Android and Gradle
+.gradle/
+local.properties
+*.iml
+.idea/
+captures/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/*
+!.vscode/extensions.json
+
+# secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+
+# staging output of the optional Claude Design package
+packages/claude-design/.stage/

@@ -1,0 +1,12 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.woff2 binary
+*.woff binary
+*.ttf binary
+*.otf binary
+
+pnpm-lock.yaml linguist-generated=true
+licenses/ALLOWLIST.md linguist-generated=true
+**/generated/** linguist-generated=true

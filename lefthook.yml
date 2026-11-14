@@ -1,0 +1,16 @@
+# Local git hooks. CI runs the same checks, so these only shorten the feedback loop.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome
+      glob: "*.{js,mjs,cjs,ts,tsx,json,jsonc,css}"
+      run: pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+    - name: gitleaks
+      run: node tools/ci/run-tool.mjs gitleaks git --pre-commit --staged --redact --no-banner
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm exec commitlint --edit {1}
+    - name: sign-off
+      run: node tools/ci/check-commits.mjs --message-file {1}

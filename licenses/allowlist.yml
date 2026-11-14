@@ -1,0 +1,25 @@
+# The single source for the license gate. Every identifier is an OSI-approved SPDX license.
+# After editing, run `pnpm licenses:render` to regenerate licenses/ALLOWLIST.md.
+version: 1
+scopes:
+  ship:
+    description: Linked into published artifacts (npm packages, Android artifacts, the Swift package).
+    licenses:
+      - MIT
+      - Apache-2.0
+      - BSD-2-Clause
+      - BSD-3-Clause
+      - ISC
+      - 0BSD
+      - Zlib
+  dev:
+    description: Build, test, and CI tooling that is never shipped. Includes everything in "ship".
+    extends: ship
+    licenses:
+      - MPL-2.0
+      - EPL-2.0
+      - Python-2.0
+  fonts:
+    description: Font files, wherever they are committed.
+    licenses:
+      - OFL-1.1

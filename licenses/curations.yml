@@ -1,0 +1,16 @@
+# Reviewed adjustments to what the license gate sees. Both lists start empty.
+#
+# corrections: a package whose published license metadata is missing or wrong.
+#   - package: name            # or name@version
+#     license: MIT             # the SPDX expression that actually applies
+#     evidence: https://...    # link to the LICENSE file that proves it
+#
+# exceptions: a package allowed although its license is not on the allowlist.
+#   - package: name@version    # a version is required, so an upgrade is reviewed again
+#     scope: dev               # ship or dev
+#     reason: why it cannot be avoided and what it is used for
+#     approved: 2026-11-14     # date of the review
+#     review-by: 2027-05-14    # the gate fails again after this date
+version: 1
+corrections: []
+exceptions: []

@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in Raincoat behaves differently from its spec or documentation.
+labels: [bug]
+body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      multiple: true
+      options:
+        - Web (React)
+        - iOS (SwiftUI)
+        - Android (Compose)
+        - Tokens or themes
+        - Documentation
+        - Repository tooling
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Raincoat version
+      placeholder: "0.1.0-next.0, or a commit hash"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: The smallest example that shows the problem. Include theme, color mode, locale, and text size if they matter.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "Browser and version, or device and OS version"
+  - type: checkboxes
+    id: accessibility
+    attributes:
+      label: Accessibility
+      options:
+        - label: This blocks or degrades use with a screen reader, keyboard, or large text.

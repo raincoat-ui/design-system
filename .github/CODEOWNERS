@@ -1,0 +1,4 @@
+# Review requests go to the maintainer. Code-owner approval is not required while the project
+# has a single maintainer; the merge gate is the `ci-gate` check. When a second maintainer
+# joins, replace this with a team.
+* @CliveTran
