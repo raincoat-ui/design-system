@@ -320,38 +320,22 @@ ${table(["Token", "Curve", "Use"], easingRows)}
 // ---------------------------------------------------------------------------------------------
 // Components: Button (static rendition from tokens, until the implementations land)
 
-const SURFACE = "color.bg.canvas";
-const buttonIn = (mode, variant, state) => {
-  const t = composed[mode];
-  const has = (id) => t.has(id);
-  const bgId =
-    state === "disabled"
-      ? "button.disabled.bg"
-      : has(`button.${variant}.bg.${state}`)
-        ? `button.${variant}.bg.${state}`
-        : null;
-  const fgId = state === "disabled" ? "button.disabled.fg" : `button.${variant}.fg`;
-  const borderId =
-    state === "disabled"
-      ? variant === "secondary"
-        ? "button.disabled.border"
-        : null
-      : has(`button.${variant}.border`)
-        ? `button.${variant}.border`
-        : null;
-  const style = [
-    `background:${bgId ? colorIn(mode, bgId) : "transparent"}`,
-    `color:${colorIn(mode, fgId)}`,
-    `border-color:${borderId ? colorIn(mode, borderId) : "transparent"}`,
-  ].join(";");
-  return `<span class="rc-button" style="${style}">${variant[0].toUpperCase()}${variant.slice(1)}</span>`;
-};
-const VARIANTS = ["primary", "secondary", "ghost", "danger"];
-const stages = MODES.map((mode) => {
-  const rest = VARIANTS.map((variant) => buttonIn(mode, variant, "default")).join("");
-  const disabled = buttonIn(mode, "secondary", "disabled").replace(">Secondary<", ">Disabled<");
-  return `### ${MODE_LABEL[mode]}\n\n<div class="rc-stage" style="background:${colorIn(mode, SURFACE)}">${rest}${disabled}</div>`;
-}).join("\n\n");
+// The renditions carry no colors of their own. Each panel sets data-theme (or data-density),
+// and site.css styles the buttons with the custom properties from the theme stylesheet, so
+// this page also shows that a color mode works on a nested element.
+const VARIANTS = ["primary", "secondary", "ghost", "danger", "disabled"];
+const buttons = VARIANTS.map(
+  (variant) =>
+    `<span class="rc-button" data-variant="${variant}">${variant[0].toUpperCase()}${variant.slice(1)}</span>`,
+).join("");
+const stages = MODES.map(
+  (mode) =>
+    `### ${MODE_LABEL[mode]}\n\n<div class="rc-stage" data-theme="${mode}">${buttons}</div>`,
+)
+  .concat(
+    `### Compact density\n\n<div class="rc-stage" data-theme="light" data-density="compact">${buttons}</div>`,
+  )
+  .join("\n\n");
 const buttonTokens = tokensWhere((t) => t.tier === "component" && t.path[0] === "button").map(
   (t) => {
     const type = resolvedType(t.id, base);
@@ -361,7 +345,7 @@ const buttonTokens = tokensWhere((t) => t.tier === "component" && t.path[0] === 
         : type === "dimension"
           ? dimension(resolveToken(t.id, base))
           : code(String(t.value));
-    return [code(t.id), code(String(t.value)), value, t.description];
+    return [`${code(t.id)}<br>${code(String(t.value))}`, value, t.description];
   },
 );
 
@@ -376,7 +360,9 @@ page(
 :::caution[In progress]
 The Button is specified in [RFC 0001](/design-system/project/rfcs/0001-foundation-tokens-and-button/)
 and its tokens exist. The React, SwiftUI, and Compose implementations are being built. What you
-see below is a static rendition drawn from the tokens, not the component.
+see below is a static rendition, not the component. It is styled only with the custom
+properties of the generated theme stylesheet, and each panel selects its mode with a
+${code("data-theme")} attribute.
 :::
 
 ## Variants
@@ -394,7 +380,7 @@ ${stages}
 
 Values shown are for the light mode at comfortable density.
 
-${table(["Token", "Points to", "Value", "Use"], buttonTokens)}
+${table(["Token, and what it points to", "Value", "Use"], buttonTokens)}
 `,
 );
 

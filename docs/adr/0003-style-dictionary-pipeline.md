@@ -1,6 +1,6 @@
 # 0003. Style Dictionary compiles the tokens
 
-- Status: accepted
+- Status: superseded by [0013](0013-own-token-emitters.md)
 - Date: 2026-11-14
 
 ## Context
