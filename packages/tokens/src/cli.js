@@ -4,8 +4,8 @@
 // raincoat-tokens build     generate every platform's output; --check fails if any is out of date
 // All read `<cwd>/tokens`; pass --root <dir> to point elsewhere. --all lists passing pairs too.
 import { resolve } from "node:path";
-import { build } from "./build/index.js";
 import { checkContrast } from "./contrast.js";
+import { build } from "./emit/index.js";
 import { lint } from "./lint.js";
 import { loadSource } from "./load.js";
 

@@ -1,11 +1,11 @@
-// Contract test for the web output. The stylesheet comes from the emitter in src/build; the
+// Contract test for the web output. The stylesheet comes from the emitter in src/emit; the
 // expected values are worked out here, separately, from the loader and resolver. The two must
 // agree on every token, in every color mode and density.
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { buildThemeCss } from "../src/build/css.js";
-import { build } from "../src/build/index.js";
+import { buildThemeCss } from "../src/emit/css.js";
+import { build } from "../src/emit/index.js";
 import { compose, hexOf, loadSource, MODES, resolvedType, resolveToken } from "../src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
