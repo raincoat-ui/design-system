@@ -1,5 +1,6 @@
 packages:
   - "packages/*"
+  - "apps/*"
 
 # Supply chain
 # Refuse versions published less than 7 days ago (value is in minutes).
@@ -9,8 +10,15 @@ trustPolicy: no-downgrade
 # Record exact versions, never ranges.
 saveExact: true
 
+# sharp bundles libvips, which is LGPL-3.0-or-later. The docs site does not process images,
+# so the optional dependency is left out rather than excepted.
+ignoredOptionalDependencies:
+  - sharp
+
 # Dependency install scripts are blocked unless reviewed here.
 strictDepBuilds: true
 allowBuilds:
   # lefthook's postinstall only installs git hooks; the root "prepare" script does that instead.
   lefthook: false
+  # esbuild's postinstall only verifies the platform binary that pnpm already installed.
+  esbuild: false

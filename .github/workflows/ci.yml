@@ -33,8 +33,10 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Lint, unit tests, license gates
+      - name: Lint, unit tests, token checks, license gates
         run: pnpm validate
+      - name: Build the documentation site
+        run: pnpm docs:build
       - name: Commit sign-off and pull request title
         if: github.event_name == 'pull_request'
         env:

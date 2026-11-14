@@ -49,4 +49,19 @@ for file in "$root"/.github/rulesets/*.json; do
   fi
 done
 
+echo "Pages"
+if gh api "repos/$repo/branches/gh-pages" --silent 2>/dev/null; then
+  if gh api "repos/$repo/pages" --silent 2>/dev/null; then
+    gh api --method PUT "repos/$repo/pages" -f 'source[branch]=gh-pages' -f 'source[path]=/' --silent
+    echo "  updated: served from the gh-pages branch"
+  else
+    gh api --method POST "repos/$repo/pages" -f 'source[branch]=gh-pages' -f 'source[path]=/' --silent
+    echo "  enabled: served from the gh-pages branch"
+  fi
+  owner="${repo%%/*}"
+  gh api --method PATCH "repos/$repo" -f homepage="https://${owner}.github.io/${repo##*/}/" --silent
+else
+  echo "  skipped: the gh-pages branch does not exist yet (the pages workflow creates it)"
+fi
+
 echo "Done. Verify under Settings > Rules > Rulesets, then try a direct push to main: it must be rejected."

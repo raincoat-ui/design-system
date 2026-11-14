@@ -1,0 +1,54 @@
+---
+title: Overview
+description: One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app.
+template: splash
+hero:
+  title: Raincoat
+  tagline: One design-system foundation, compiled to native code for iOS, Android, and the web, with a theme per app.
+  actions:
+    - text: See the foundations
+      link: /design-system/foundations/color/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/raincoat-ui/design-system
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+A raincoat is the layer that protects you when you are out in the rain. Raincoat is that layer
+for an app: it keeps accessibility, localization, and consistency intact whatever brand is worn
+on top.
+
+:::note[Status]
+Raincoat is in early development. The token source and its checks exist; the build pipeline and
+the first component, Button, are in progress. Nothing is published yet. See the
+[roadmap](/design-system/project/roadmap/).
+:::
+
+<CardGrid>
+  <Card title="One source of truth" icon="document">
+    Design tokens in the DTCG 2025.10 format and platform-neutral component specs. Every
+    platform's code is generated from them and checked for drift.
+  </Card>
+  <Card title="Native on every platform" icon="laptop">
+    SwiftUI for iOS, Jetpack Compose for Android, and React with shadcn/ui, Radix, and Tailwind
+    CSS for the web.
+  </Card>
+  <Card title="A theme per app" icon="puzzle">
+    Apps differ by theme, not by forks. Adding an app means adding a theme, not new components.
+  </Card>
+  <Card title="Accessible by construction" icon="approve-check">
+    Every text and border color declares what it sits on, and every pair is checked in light,
+    dark, and both high-contrast modes. See the [contrast table](/design-system/foundations/contrast/).
+  </Card>
+  <Card title="Built for many languages" icon="translate">
+    Right-to-left layout, long text, Vietnamese, Chinese, Japanese, and Korean are part of every
+    component's tests.
+  </Card>
+  <Card title="Free and open source" icon="open-book">
+    Apache-2.0. Every dependency must carry a license on the
+    [allowlist](/design-system/project/licenses/), and CI fails on anything else.
+  </Card>
+</CardGrid>

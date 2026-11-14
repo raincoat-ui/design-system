@@ -1,0 +1,20 @@
+{
+  "name": "@raincoat-ui/docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Raincoat documentation site, generated from the token source and the repository's documents.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "dev": "node scripts/generate.mjs && ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "node scripts/generate.mjs && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/markdown-remark": "7.3.6",
+    "@astrojs/starlight": "0.42.10",
+    "@raincoat-ui/tokens": "workspace:*",
+    "astro": "7.4.7"
+  }
+}

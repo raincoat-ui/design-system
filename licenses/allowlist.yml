@@ -19,6 +19,7 @@ scopes:
       - MPL-2.0
       - EPL-2.0
       - Python-2.0
+      - BlueOak-1.0.0
   fonts:
     description: Font files, wherever they are committed.
     licenses:

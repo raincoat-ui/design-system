@@ -13,4 +13,19 @@
 #     review-by: 2027-05-14    # the gate fails again after this date
 version: 1
 corrections: []
-exceptions: []
+exceptions:
+  # mdn-data is a table of CSS property definitions published by Mozilla under CC0-1.0, a
+  # public-domain dedication that the OSI has not approved. It reaches us through Astro
+  # (astro -> svgo -> css-tree -> mdn-data) and is used only while building the documentation
+  # site; nothing from it is shipped in a Raincoat package. There is no way to use Astro
+  # without it. Closest alternative: a documentation tool that does not minify CSS with css-tree.
+  - package: mdn-data@2.0.28
+    scope: dev
+    reason: CSS definition data required by Astro's CSS and SVG optimizers; build-time only, CC0 public-domain data.
+    approved: 2026-11-14
+    review-by: 2027-05-14
+  - package: mdn-data@2.27.1
+    scope: dev
+    reason: CSS definition data required by Astro's CSS and SVG optimizers; build-time only, CC0 public-domain data.
+    approved: 2026-11-14
+    review-by: 2027-05-14
