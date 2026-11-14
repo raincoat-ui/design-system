@@ -21,6 +21,8 @@
     "test": "node --test \"tools/**/*.test.mjs\" \"packages/*/test/*.test.js\"",
     "tokens:lint": "node packages/tokens/src/cli.js lint",
     "tokens:contrast": "node packages/tokens/src/cli.js contrast",
+    "docs:build": "pnpm --filter @raincoat-ui/docs build",
+    "docs:dev": "pnpm --filter @raincoat-ui/docs dev",
     "licenses:check": "node tools/license-gate/check.mjs",
     "licenses:render": "node tools/license-gate/render-allowlist.mjs",
     "licenses:assets": "node tools/license-gate/assets.mjs",

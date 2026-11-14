@@ -27,6 +27,21 @@ Done once, after the local bootstrap commit has been reviewed.
 4. Prove the license gate works on the hosted runner: open a pull request that adds a
    GPL-licensed dev dependency, confirm `validate` fails naming it, then close the pull request.
 
+## The documentation site
+
+The site at <https://raincoat-ui.github.io/design-system/> is built from `apps/docs` and served
+by GitHub Pages from the `gh-pages` branch.
+
+- **Content** is generated at build time by `apps/docs/scripts/generate.mjs`: token reference
+  pages from the token source, and copies of this repository's documents. Only the home page,
+  `apps/docs/src/content/docs/index.mdx`, is written by hand.
+- **Deployment** is automatic. The `pages` workflow rebuilds and publishes on every push to
+  `main`. It replaces everything on `gh-pages` except the `maven/` and `pr/` directories.
+- **Local preview**: `pnpm docs:dev`, then open the address it prints.
+- **Manual deployment**, if the workflow is unavailable:
+  `pnpm docs:build && node tools/ci/deploy-site.mjs apps/docs/dist`.
+- **Never edit `gh-pages` by hand.** The next deployment overwrites it.
+
 ## Changing repository rules
 
 Edit the JSON under `.github/rulesets/`, merge the change, then re-run

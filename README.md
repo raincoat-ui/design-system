@@ -6,8 +6,11 @@ A raincoat is the layer that protects you when you are out in the rain. Raincoat
 for an app: it keeps accessibility, localization, and consistency intact whatever brand is worn
 on top.
 
-> **Status: milestone 0 (bootstrap).** Nothing is published yet. See the
-> [roadmap](docs/roadmap.md) for what each milestone delivers.
+**Documentation: <https://raincoat-ui.github.io/design-system/>**
+
+> **Status: milestone 1 in progress.** The token source exists; the build pipeline and the first
+> component are being built. Nothing is published yet. See the [roadmap](docs/roadmap.md) for
+> what each milestone delivers.
 
 ## What it will be
 
