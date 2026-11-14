@@ -200,6 +200,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: 21.2.4
         version: 21.2.4
+      chordsheetjs:
+        specifier: 18.0.0
+        version: 18.0.0
       lefthook:
         specifier: 2.2.1
         version: 2.2.1
@@ -400,6 +403,15 @@ packages:
   callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
+
+  chordsheetjs@18.0.0:
+    resolution: {integrity: sha512-i5ElOU6I9ra5BEc1hfMwMnl67xnsVYs2C4eg7Mbs4BiVP9gdvjjCFutJ/I4MBZR3sBEHqmK+ug+X80YPdk48Iw==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      jspdf: ^4.0.0
+    peerDependenciesMeta:
+      jspdf:
+        optional: true
 
   cliui@9.0.1:
     resolution: {integrity: sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w==}
@@ -812,6 +824,8 @@ snapshots:
   argue-cli@3.2.0: {}
 
   callsites@3.1.0: {}
+
+  chordsheetjs@18.0.0: {}
 
   cliui@9.0.1:
     dependencies:
