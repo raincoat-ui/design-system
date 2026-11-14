@@ -68,9 +68,11 @@ A semantic color lives in four files, one per mode: `color.light`, `color.dark`,
 pnpm tokens:lint                 # structure, references, tiers, values
 pnpm tokens:contrast             # every declared pair in every color mode
 pnpm tokens:contrast -- --all    # also list the pairs that pass, with their ratios
+pnpm tokens:build                # regenerate every platform's output
 ```
 
-Both run in CI and block the merge.
+Commit the regenerated files together with your token change. All three checks run in CI and
+block the merge; CI also fails if a generated file does not match the token source.
 
 ## 5. Open the pull request
 

@@ -20,7 +20,11 @@ export default defineConfig({
           href: "https://github.com/raincoat-ui/design-system",
         },
       ],
-      customCss: ["./src/styles/generated.css", "./src/styles/site.css"],
+      customCss: [
+        "@raincoat-ui/theme-raincoat/theme.css",
+        "./src/styles/generated.css",
+        "./src/styles/site.css",
+      ],
       sidebar: [
         {
           label: "Start here",

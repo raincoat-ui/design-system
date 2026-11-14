@@ -9,7 +9,7 @@ Versions and licenses quoted in these records were verified on the date of the r
 | ------------------------------------------ | ----------------------------------------------------------------------- |
 | [0001](0001-monorepo-pnpm-turborepo.md)    | One monorepo with pnpm workspaces and Turborepo                         |
 | [0002](0002-dtcg-tokens-no-design-tool.md) | DTCG 2025.10 JSON is the token source; no design tool is                |
-| [0003](0003-style-dictionary-pipeline.md)  | Style Dictionary compiles the tokens                                    |
+| [0003](0003-style-dictionary-pipeline.md)  | Style Dictionary compiles the tokens (superseded by 0013)               |
 | [0004](0004-web-stack.md)                  | Web: React, Tailwind CSS v4, shadcn/ui on Radix                         |
 | [0005](0005-platform-targets.md)           | Minimum OS and browser targets                                          |
 | [0006](0006-github-hosted-ci.md)           | A public GitHub repository with hosted CI runners                       |
@@ -19,5 +19,6 @@ Versions and licenses quoted in these records were verified on the date of the r
 | [0010](0010-themes.md)                     | Themes are overlays, shipped one artifact per theme                     |
 | [0011](0011-claude-design-output.md)       | The Claude Design output is optional and isolated                       |
 | [0012](0012-name.md)                       | The name Raincoat                                                       |
+| [0013](0013-own-token-emitters.md)         | The token build uses its own emitters, not Style Dictionary             |
 
 To add one, copy `0000-template.md`.

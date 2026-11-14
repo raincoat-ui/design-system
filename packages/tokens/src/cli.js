@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 // raincoat-tokens lint      check the token source
 // raincoat-tokens contrast  check contrast for every declared pair in every color mode
-// Both read `<cwd>/tokens`; pass --root <dir> to point elsewhere. --all lists passing pairs too.
+// raincoat-tokens build     generate every platform's output; --check fails if any is out of date
+// All read `<cwd>/tokens`; pass --root <dir> to point elsewhere. --all lists passing pairs too.
 import { resolve } from "node:path";
 import { checkContrast } from "./contrast.js";
+import { build } from "./emit/index.js";
 import { lint } from "./lint.js";
 import { loadSource } from "./load.js";
 
@@ -43,7 +45,18 @@ if (command === "lint") {
     process.exit(1);
   }
   console.log(`Contrast: ${rows.length} color pair(s) pass across all color modes.`);
+} else if (command === "build") {
+  const check = args.includes("--check");
+  const results = await build(root, { check });
+  for (const { file, status } of results) console.log(`${status.padEnd(9)} ${file}`);
+  const stale = results.filter((result) => result.status === "stale");
+  if (stale.length > 0) {
+    console.error(
+      `\n${stale.length} generated file(s) are out of date or were edited by hand. Run \`pnpm tokens:build\` and commit the result.`,
+    );
+    process.exit(1);
+  }
 } else {
-  console.error("usage: raincoat-tokens <lint|contrast> [--root <dir>] [--all]");
+  console.error("usage: raincoat-tokens <lint|contrast|build> [--root <dir>] [--all] [--check]");
   process.exit(2);
 }
