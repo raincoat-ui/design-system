@@ -21,5 +21,12 @@ picker, table, and navigation bars follow in 1.x.
 
 ## Status
 
-M0 is in progress. The parts of M0 that need the hosted repository (merge rules, the first CI
-run, Scorecard) are completed when the repository is first pushed.
+M0 was completed on 2026-11-14. Evidence for each exit criterion:
+
+- A direct push to `main` was rejected by the `main` ruleset.
+- [Pull request 1](https://github.com/raincoat-ui/design-system/pull/1) planted a
+  GPL-2.0-only dependency. The license gate failed and named it, `ci-gate` failed, and the merge
+  was refused. Removing the dependency makes the gate pass, as the runs on `main` show.
+- Workflow lint and OpenSSF Scorecard ran successfully on the first push.
+
+M1 is next.
