@@ -59,6 +59,31 @@ add(
   existsSync(sdk) ? sdk : "not found",
 );
 
+// The React component tests run in the Chromium build that the pinned Playwright expects.
+// Playwright's dry run prints where that build belongs without downloading anything.
+const dryRun = spawnSync(
+  "pnpm",
+  [
+    "--filter",
+    "@raincoat-ui/react",
+    "exec",
+    "playwright",
+    "install",
+    "--dry-run",
+    "--only-shell",
+    "chromium",
+  ],
+  { cwd: repoRoot, encoding: "utf8" },
+);
+const chromium = /Install location:\s+(\S.*chromium_headless_shell\S*)/.exec(
+  dryRun.stdout ?? "",
+)?.[1];
+add(
+  "Chromium (React component tests)",
+  chromium && existsSync(chromium) ? "ok" : "later",
+  chromium && existsSync(chromium) ? chromium : "not installed; run: pnpm web:browsers",
+);
+
 const label = { ok: "ok     ", later: "later  ", missing: "MISSING" };
 for (const check of checks) console.log(`${label[check.status]}  ${check.name}: ${check.detail}`);
 

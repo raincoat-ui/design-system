@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
-import { specsKotlin, specsSwift } from "../src/emit/spec.js";
+import { specsKotlin, specsSwift, specsTypeScript } from "../src/emit/spec.js";
 import { enumerations, lintSpecs, loadSpecs } from "../src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
@@ -134,6 +134,22 @@ test("enumerations lists the properties with a fixed set of values", () => {
       ["size", "md", ["sm", "md", "lg"]],
     ],
   );
+});
+
+test("TypeScript types are generated for each enumeration, with its values and default", () => {
+  const typescript = specsTypeScript(repoRoot);
+  assert.match(
+    typescript,
+    /export type ButtonVariant = "primary" \| "secondary" \| "ghost" \| "danger";/,
+  );
+  assert.match(
+    typescript,
+    /export const BUTTON_VARIANTS = \["primary", "secondary", "ghost", "danger"\] as const satisfies readonly ButtonVariant\[\];/,
+  );
+  assert.match(typescript, /export const BUTTON_VARIANT_DEFAULT: ButtonVariant = "secondary";/);
+  assert.match(typescript, /export const BUTTON_SIZES = \["sm", "md", "lg"\] as const/);
+  assert.match(typescript, /export const BUTTON_SIZE_DEFAULT: ButtonSize = "md";/);
+  assert.match(typescript, / \* - `danger`: A destructive action, such as deleting\./);
 });
 
 test("Swift and Kotlin types are generated for each enumeration, with its default", () => {

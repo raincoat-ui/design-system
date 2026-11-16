@@ -1,5 +1,8 @@
 // Builds one theme stylesheet from the token source: every token as a CSS custom property,
 // for each color mode and density.
+//
+// Property names carry the prefix `--rc-`. Without it, names such as --color-red-500 and
+// --radius-md would collide with the theme variables of Tailwind CSS in a consuming app.
 import { rgba } from "../color.js";
 import { compose, DENSITIES, loadSource, MODES } from "../load.js";
 import { aliasTarget, resolvedType, resolveToken } from "../resolve.js";
@@ -107,7 +110,7 @@ export function cssValue(type, value) {
  */
 export function declarations(tokens) {
   const result = [];
-  const reference = (id, suffix = "") => `var(--${tokens.get(id).name}${suffix})`;
+  const reference = (id, suffix = "") => `var(--rc-${tokens.get(id).name}${suffix})`;
 
   for (const token of tokens.values()) {
     const type = resolvedType(token.id, tokens);
@@ -118,7 +121,7 @@ export function declarations(tokens) {
       for (const [field, suffix, fieldType] of TYPOGRAPHY_FIELDS) {
         const fieldTarget = target ? null : aliasTarget(token.value[field]);
         result.push({
-          name: `--${token.name}-${suffix}`,
+          name: `--rc-${token.name}-${suffix}`,
           value: target
             ? reference(target, `-${suffix}`)
             : fieldTarget
@@ -130,7 +133,7 @@ export function declarations(tokens) {
     } else {
       const final = cssValue(type, resolved);
       result.push({
-        name: `--${token.name}`,
+        name: `--rc-${token.name}`,
         value: target ? reference(target) : final,
         resolved: final,
       });

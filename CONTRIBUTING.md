@@ -18,6 +18,14 @@ pnpm install     # Node.js 24 and pnpm; installs pinned tools and git hooks
 pnpm validate    # the checks CI runs
 ```
 
+Each platform package has tests of its own:
+
+| Package                     | Command                                  | Needs                                             |
+| --------------------------- | ---------------------------------------- | ------------------------------------------------- |
+| React (`packages/web`)      | `pnpm web:typecheck` and `pnpm web:test` | Chromium, installed once with `pnpm web:browsers` |
+| Swift (`packages/ios`)      | `swift test --package-path packages/ios` | Swift 6.2 or later                                |
+| Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21                                            |
+
 ## Commits and pull requests
 
 1. **Sign off every commit.** Use `git commit -s`. The sign-off line certifies the
@@ -50,7 +58,10 @@ reference, or a tier violation, and `pnpm tokens:contrast` fails when any declar
 misses its contrast requirement in any color mode. See
 [docs/contributing/add-a-token.md](docs/contributing/add-a-token.md).
 
-More checks join as the platform packages land.
+The React components add three more: they are tested in a real browser against the token source
+(colors, sizes, keyboard, focus, and an automated accessibility audit in every color mode); the
+built stylesheet may contain no literal color or size; and every component must have an entry in
+`packages/web/shadcn.lock.json`. More checks join as the platform packages land.
 
 ## Dependencies
 

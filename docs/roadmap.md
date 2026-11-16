@@ -35,5 +35,8 @@ M1 is in progress. One token source now drives all three platforms at the token 
 - The web theme stylesheet, the Swift package, and the Kotlin modules are generated from it,
   each with a contract test that compares the generated values with the source.
 
-Still to come in M1: the Button's spec and its React, SwiftUI, and Compose implementations, and
-the first prerelease.
+- The Button's spec, from which each platform's variant and size types are generated.
+- The React Button (`@raincoat-ui/react`), tested in a real browser against the token source in
+  every color mode and density.
+
+Still to come in M1: the SwiftUI and Compose Buttons, and the first prerelease.

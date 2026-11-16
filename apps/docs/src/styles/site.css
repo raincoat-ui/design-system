@@ -58,9 +58,9 @@
   align-items: center;
   margin-block: 0.5rem 1.5rem;
   padding: 1.25rem;
-  background: var(--color-bg-canvas);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
+  background: var(--rc-color-bg-canvas);
+  border: 1px solid var(--rc-color-border-default);
+  border-radius: var(--rc-radius-lg);
 }
 
 .rc-stage > * {
@@ -71,40 +71,40 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-block-size: var(--button-height-md);
-  padding-inline: var(--button-padding-inline-md);
-  border: var(--button-border-width) solid transparent;
-  border-radius: var(--button-radius);
-  font-family: var(--button-label-md-font-family);
-  font-size: var(--button-label-md-font-size);
-  font-weight: var(--button-label-md-font-weight);
-  line-height: var(--button-label-md-line-height);
+  min-block-size: var(--rc-button-height-md);
+  padding-inline: var(--rc-button-padding-inline-md);
+  border: var(--rc-button-border-width) solid transparent;
+  border-radius: var(--rc-button-radius);
+  font-family: var(--rc-button-label-md-font-family);
+  font-size: var(--rc-button-label-md-font-size);
+  font-weight: var(--rc-button-label-md-font-weight);
+  line-height: var(--rc-button-label-md-line-height);
 }
 
 .rc-button[data-variant="primary"] {
-  background: var(--button-primary-bg-default);
-  color: var(--button-primary-fg);
+  background: var(--rc-button-primary-bg-default);
+  color: var(--rc-button-primary-fg);
 }
 
 .rc-button[data-variant="secondary"] {
-  background: var(--button-secondary-bg-default);
-  border-color: var(--button-secondary-border);
-  color: var(--button-secondary-fg);
+  background: var(--rc-button-secondary-bg-default);
+  border-color: var(--rc-button-secondary-border);
+  color: var(--rc-button-secondary-fg);
 }
 
 .rc-button[data-variant="ghost"] {
-  color: var(--button-ghost-fg);
+  color: var(--rc-button-ghost-fg);
 }
 
 .rc-button[data-variant="danger"] {
-  background: var(--button-danger-bg-default);
-  color: var(--button-danger-fg);
+  background: var(--rc-button-danger-bg-default);
+  color: var(--rc-button-danger-fg);
 }
 
 .rc-button[data-variant="disabled"] {
-  background: var(--button-disabled-bg);
-  border-color: var(--button-disabled-border);
-  color: var(--button-disabled-fg);
+  background: var(--rc-button-disabled-bg);
+  border-color: var(--rc-button-disabled-border);
+  color: var(--rc-button-disabled-fg);
 }
 
 /* Wide token tables scroll inside themselves instead of widening the page. */

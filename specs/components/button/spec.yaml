@@ -53,7 +53,9 @@ content:
 
 anatomy:
   container:
-    description: The shape that holds the content and receives input.
+    description: >-
+      The shape that holds the content and receives input. It is square when an icon is the
+      only content.
     tokens:
       - button.radius
       - button.border-width

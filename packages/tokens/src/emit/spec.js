@@ -49,6 +49,28 @@ export function specsSwift(root) {
   return `${HEADER}\n\n${types.join("\n\n")}\n`;
 }
 
+/** packages/web/src/generated/specs.ts */
+export function specsTypeScript(root) {
+  const constant = (name) => name.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
+  const types = allEnumerations(root).map((enumeration) => {
+    const values = enumeration.values.map(({ value }) => `"${value}"`);
+    return [
+      "/**",
+      ` * ${enumeration.component}: ${enumeration.description}`,
+      ...enumeration.values.map(({ value, description }) => ` * - \`${value}\`: ${description}`),
+      " */",
+      `export type ${enumeration.type} = ${values.join(" | ")};`,
+      "",
+      `/** Every ${enumeration.type}, in the order the spec lists them. */`,
+      `export const ${constant(enumeration.type)}S = [${values.join(", ")}] as const satisfies readonly ${enumeration.type}[];`,
+      "",
+      `/** The ${enumeration.type} used when none is given. */`,
+      `export const ${constant(enumeration.type)}_DEFAULT: ${enumeration.type} = "${enumeration.default}";`,
+    ].join("\n");
+  });
+  return `${HEADER}\n\n${types.join("\n\n")}\n`;
+}
+
 /** tokens/.../generated/ComponentSpecs.kt */
 export function specsKotlin(root) {
   const types = allEnumerations(root).map((enumeration) => {

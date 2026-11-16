@@ -1,0 +1,15 @@
+{
+  "$comment": "The shadcn/ui source each component was adapted from. The file named by `upstream` is that source, unmodified, so that a later upstream change can be compared with it and merged by hand. packages/web/test/shadcn.test.js checks this file.",
+  "style": "new-york-v4",
+  "base": "radix",
+  "license": ".shadcn-upstream/LICENSE.md",
+  "components": {
+    "button": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/button.json",
+      "upstream": ".shadcn-upstream/button.tsx",
+      "sha256": "79dd6f75f8136394442202d6b8b922fb269eaad0a5dba579397c9d5b41f893bb",
+      "fetched": "2026-11-16",
+      "local": "src/components/ui/button.tsx"
+    }
+  }
+}
