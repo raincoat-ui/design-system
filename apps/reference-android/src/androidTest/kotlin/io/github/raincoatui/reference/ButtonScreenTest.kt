@@ -61,7 +61,13 @@ class ButtonScreenTest {
         compose.onNodeWithTag("last-action").assertTextEquals("Last action: $expected")
     }
 
-    /** The node an accessibility service, such as TalkBack, is given for a button. */
+    /**
+     * The node an accessibility service, such as TalkBack, stops on for a button.
+     *
+     * Compose gives a service a container that takes focus and clicks. Under it are the name,
+     * as text or as a description, and a node that says "button". TalkBack reads them as one
+     * item: "Save changes, button".
+     */
     private fun serviceNode(name: String): AccessibilityNodeInfo {
         compose.waitForIdle()
         val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
@@ -70,8 +76,9 @@ class ButtonScreenTest {
         repeat(50) {
             seen = automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
             val found = seen.firstOrNull { node ->
-                node.className == "android.widget.Button" &&
-                    (node.text?.toString() == name || node.contentDescription?.toString() == name)
+                val children = children(node)
+                children.any { it.className == "android.widget.Button" } &&
+                    children.any { it.text?.toString() == name || it.contentDescription?.toString() == name }
             }
             if (found != null) return found
             Thread.sleep(100)
@@ -80,9 +87,12 @@ class ButtonScreenTest {
         throw AssertionError("no button named \"$name\" among the ${seen.size} nodes a service is given:\n$tree")
     }
 
+    private fun children(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
+        (0 until node.childCount).mapNotNull(node::getChild)
+
     /** A node and everything under it. Compose does not answer a search by text, so walk the tree. */
     private fun withDescendants(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
-        listOf(node) + (0 until node.childCount).mapNotNull(node::getChild).flatMap(::withDescendants)
+        listOf(node) + children(node).flatMap(::withDescendants)
 
     @Test
     fun everyButtonIsAButtonNamedByItsLabel() {
@@ -95,8 +105,13 @@ class ButtonScreenTest {
         for (name in names) {
             named(name).assertHasClickAction()
         }
-        assertEquals("Save changes", serviceNode("Save changes").text?.toString())
-        assertEquals("Delete page", serviceNode("Delete page").contentDescription?.toString())
+        // A service is given each of them as one item that it can stop on and activate.
+        for (name in listOf("Save changes", "Delete page")) {
+            val node = serviceNode(name)
+            assertTrue(name, node.isScreenReaderFocusable)
+            assertTrue(name, node.isClickable)
+            assertTrue(name, node.isEnabled)
+        }
     }
 
     @Test
@@ -120,11 +135,11 @@ class ButtonScreenTest {
         named("Send invite").assertIsEnabled().performClick()
         assertLastAction("Nothing yet")
 
-        // The name stays, and the state is what a screen reader says after it.
+        // The name stays, and the item carries the state for a screen reader to say with it.
         val loading = serviceNode("Send invite")
-        assertEquals("Send invite", loading.text?.toString())
         assertEquals("In progress", loading.stateDescription?.toString())
         assertTrue(loading.isEnabled)
+        assertTrue(loading.isScreenReaderFocusable)
 
         // No other button has a state to report, and a disabled button is not also in progress.
         assertNull(serviceNode("Save changes").stateDescription)
