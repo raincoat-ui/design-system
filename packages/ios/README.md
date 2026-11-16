@@ -57,6 +57,16 @@ RaincoatButton("Save changes") { save() }.disabled(!canSave)
   buttons.
 - The label and icons grow with the person's text size setting.
 - In right-to-left layouts the leading icon is on the right.
+- A loading button tells assistive technology that it is in progress, after its name: "Save
+  changes, In progress".
+
+### Languages
+
+The words a component says to assistive technology are translated into English, Vietnamese,
+Simplified Chinese, Traditional Chinese, Japanese, and Korean; other languages get English.
+iOS uses a package's translation only for a language your app supports. If your app is in fewer
+languages than its users, set `CFBundleAllowMixedLocalizations` to `YES` in its `Info.plist`.
+Everything a person reads on screen comes from your app.
 
 To give another control the same look, use the style:
 

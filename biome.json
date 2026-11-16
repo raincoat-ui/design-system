@@ -16,7 +16,8 @@
       "!licenses/allowlist.json",
       "!packages/web-themes/*/theme.css",
       "!CODE_OF_CONDUCT.md",
-      "!packages/web/.shadcn-upstream"
+      "!packages/web/.shadcn-upstream",
+      "!.changeset/*.md"
     ]
   },
   "css": {

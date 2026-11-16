@@ -2,7 +2,8 @@
 
 - Status: accepted
 - Date: 2026-11-16
-- Amended: 2026-11-16, touch targets no longer take layout space
+- Amended: 2026-11-16, touch targets no longer take layout space; the loading state is said in
+  words on iOS
 
 ## Context
 
@@ -24,7 +25,7 @@ platform's.
 | Focus          | The system focus indicator. People set its color, contrast, and size under Full Keyboard Access, and a ring of our own would override their choice                                       | Android draws no keyboard focus indicator for Compose content: the app's theme has to. The ring is drawn from the focus ring tokens, as on the web. TalkBack and Switch Access draw their own highlight, which follows the person's settings |
 | Touch target   | The layout size is the visible size. The hit shape is at least the minimum target, so around a smaller button it reaches past the container. Assistive technology is given the same area | The same. Compose grows the touch area of a small target itself: for touches and not for a mouse, and a touch in two areas goes to the nearer button. The minimum is the larger of the token and the platform's own (48dp)                   |
 | Text size      | The label and icons grow with the text size setting. The space above and below the label stays as it is, so the button grows taller                                                      | The same. Line height is a multiple of the font size, so it keeps its proportion when Android enlarges big text less                                                                                                                         |
-| Loading        | The button stays enabled, so it keeps focus, and ignores activation. The spinner presents itself as the system's progress indicator                                                      | The same. The button carries indeterminate progress semantics, for which Compose supplies the words "in progress" in the person's language                                                                                                   |
+| Loading        | The button stays enabled, so it keeps focus, and ignores activation. iOS has no busy state, so the button's accessibility value says "In progress", translated in the package            | The same. The button carries indeterminate progress semantics, for which Compose supplies the words "in progress" in the person's language                                                                                                   |
 | Reduced motion | Color changes are immediate when Reduce Motion is on                                                                                                                                     | Compose makes animations immediate when the person has turned them off                                                                                                                                                                       |
 | Fonts          | The first family of the font stack that is installed or registered by the app, and the system font otherwise                                                                             | The system font that the font stack ends in. Named families join when themes ship font files                                                                                                                                                 |
 
@@ -38,6 +39,21 @@ iOS adds a tolerance of its own around any target: on iOS 26 a touch up to about
 outside a button still reaches it when nothing else is there. The hit shape is declared anyway,
 because that tolerance is not documented and assistive technology does not see it.
 
+### Words for assistive technology on iOS
+
+Until 0.1.0-next.0 the spinner presented itself as the system's progress indicator. The
+reference app showed that this does not reach VoiceOver through a button: a loading button was
+read as its label alone. The button now carries the words itself, as its accessibility value.
+
+That makes the Swift package the first one to ship text. The rules for it:
+
+- Only words that assistive technology speaks and that an app cannot supply through the
+  component's own parameters. Everything a person reads on screen comes from the app.
+- Translated into the languages the system is tested in: English, Vietnamese, Simplified and
+  Traditional Chinese, Japanese, and Korean. Any other language gets English.
+- iOS uses a package's translation only for a language the app itself supports, or when the app
+  sets `CFBundleAllowMixedLocalizations`. The package's README says so.
+
 Component code is linted (`tools/component-lint`): a color built from literal values, a system
 color, or a size written as a number fails `pnpm test`.
 
@@ -50,8 +66,9 @@ color, or a size written as a number fails `pnpm test`.
   fills, outlines, wrapping, right-to-left order, and the spinner.
 - **iOS, on a simulator.** `apps/reference-ios` is an app that shows the Button in the states of
   its spec. Its UI tests check what unit tests cannot: the role and name each button is given,
-  activation, the disabled and loading states, the room a small button takes and the touch area
-  the system reports for it, growth at a large text size, and the system's accessibility audit.
+  activation, the disabled and loading states, what a loading button says in English,
+  Vietnamese, and Japanese, the room a small button takes and the touch area the system reports
+  for it, growth at a large text size, and the system's accessibility audit.
 - **Android.** The tests run on the JVM with Robolectric. They read the semantics that
   assistive technology is given, drive the button with touch, mouse, and keys, and read pixels
   back, including the pressed and hovered fills, the focus ring, and a doubled font size. Touches
@@ -60,10 +77,6 @@ color, or a size written as a number fails `pnpm test`.
 
 ## Not yet done
 
-- **The loading state is not announced on iOS.** The reference app showed that the spinner's
-  progress representation does not reach VoiceOver through the button: a loading button is read
-  as its label alone. iOS has no busy state to set, so the fix is a localized value on the
-  button, which is the next change.
 - **The audit's Dynamic Type check is not used.** It reports every font that was not made from
   a system text style, and Raincoat scales its token sizes itself. A UI test checks instead that
   buttons grow at a large text size.

@@ -56,12 +56,12 @@ M1 is in progress. One token source now drives all three platforms at the token 
 
 - The iOS reference app (`apps/reference-ios`), whose UI tests run the Button on a simulator:
   roles and names, activation, touch targets, text sizes, and the system's accessibility audit.
+  It showed that VoiceOver was not told when a button was loading, which is fixed: the button
+  says so in words, in six languages.
 
 Still to come in M1:
 
 - **npm and the Swift mirror.** Both are waiting for a credential: a one-time token for the two
   new npm package names, and a credential for the mirror repository. Until they exist a release
   reaches the Maven repository only. The runbook has the steps.
-- **The loading announcement on iOS.** The reference app showed that VoiceOver is not told that a
-  loading button is busy.
 - **The Android reference app**, with Google's accessibility checks on an emulator.
