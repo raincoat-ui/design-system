@@ -1,5 +1,4 @@
 ---
-
 "@raincoat-ui/react": minor
 "@raincoat-ui/theme-base": minor
 "@raincoat-ui/tokens": minor

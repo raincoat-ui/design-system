@@ -54,6 +54,10 @@ M1 is in progress. One token source now drives all three platforms at the token 
   the release's own check. Every file has a provenance attestation, and the bill of materials
   is attached to the release.
 
+- The second prerelease, [0.1.0-next.1](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.1),
+  on 2026-11-16. A Button takes only the room it shows on iOS and Android, and on iOS a loading
+  button says that it is in progress. The release page says which registries it reached.
+
 - The iOS reference app (`apps/reference-ios`), whose UI tests run the Button on a simulator:
   roles and names, activation, touch targets, text sizes, and the system's accessibility audit.
   It showed that VoiceOver was not told when a button was loading, which is fixed: the button

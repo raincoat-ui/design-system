@@ -35,8 +35,8 @@ not line up with its neighbours as drawn. The maintainer chose to change that. T
 the touch areas of small buttons placed closer than 8px reach onto each other; the Button
 guidelines say how to space them.
 
-iOS adds a tolerance of its own around any target: on iOS 26 a touch up to about 19 points
-outside a button still reaches it when nothing else is there. The hit shape is declared anyway,
+iOS adds a tolerance of its own around any target: measured on an iOS 26.5 simulator, a touch
+up to about 19 points outside a button still reaches it when nothing else is there. The hit shape is declared anyway,
 because that tolerance is not documented and assistive technology does not see it.
 
 ### Words for assistive technology on iOS

@@ -17,7 +17,7 @@
       "!packages/web-themes/*/theme.css",
       "!CODE_OF_CONDUCT.md",
       "!packages/web/.shadcn-upstream",
-      "!.changeset/*.md"
+      "!.changeset/**/*.md"
     ]
   },
   "css": {

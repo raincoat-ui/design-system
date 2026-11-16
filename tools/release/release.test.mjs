@@ -1,7 +1,15 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
@@ -63,6 +71,27 @@ test("versions sort as semantic versions, with a prerelease before its release",
   ]);
   assert.equal(isPrerelease("0.1.0-next.0"), true);
   assert.equal(isPrerelease("0.1.0"), false);
+});
+
+// A formatter once took the one-line frontmatter of a changeset for a heading and rewrote it,
+// and the changeset tool could then not read the file.
+test("every changeset, waiting or already in a prerelease, has its frontmatter", () => {
+  const directories = [".changeset", ".changeset/pre"].filter((dir) =>
+    existsSync(join(repoRoot, dir)),
+  );
+  const files = directories.flatMap((dir) =>
+    readdirSync(join(repoRoot, dir))
+      .filter((name) => name.endsWith(".md") && name !== "README.md")
+      .map((name) => join(dir, name)),
+  );
+  for (const file of files) {
+    const text = readFileSync(join(repoRoot, file), "utf8");
+    assert.match(
+      text,
+      /^---\n("@raincoat-ui\/[a-z-]+": (major|minor|patch)\n)+---\n/,
+      `${file} must start with frontmatter that names packages and bumps`,
+    );
+  }
 });
 
 test("every package has the same version, and Gradle has it too", () => {
