@@ -1,6 +1,6 @@
 {
   "name": "@raincoat-ui/tokens",
-  "version": "0.0.0",
+  "version": "0.1.0-next.0",
   "private": true,
   "description": "Raincoat design tokens and component specs: loading, validation, contrast checks, and the build that generates each platform's code.",
   "license": "Apache-2.0",
