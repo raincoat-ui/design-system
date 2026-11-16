@@ -12,3 +12,6 @@ licenses/ALLOWLIST.md linguist-generated=true
 **/generated/** linguist-generated=true
 packages/web-themes/*/theme.css linguist-generated=true
 **/Generated/** linguist-generated=true
+licenses/allowlist.json linguist-generated=true
+*.bat text eol=crlf
+*.jar binary

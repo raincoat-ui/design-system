@@ -44,8 +44,9 @@ The decisions behind this are recorded in [docs/adr](docs/adr/README.md).
 The token source lives in `tokens/`, checked by `schemas/tokens.schema.json` and the linter and
 contrast checker in `packages/tokens/`. To add a token, follow
 [docs/contributing/add-a-token.md](docs/contributing/add-a-token.md). `pnpm tokens:build` compiles them into
-the web theme stylesheet in `packages/web-themes/` and the Swift package in `packages/ios/`.
-Kotlin output, component specs, and the components themselves follow during milestone 1.
+the web theme stylesheet in `packages/web-themes/`, the Swift package in `packages/ios/`, and
+the Kotlin modules in `packages/android/`. Component specs and the components themselves follow
+during milestone 1.
 
 ## Development
 

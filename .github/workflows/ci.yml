@@ -141,12 +141,39 @@ jobs:
         working-directory: packages/ios
         run: xcodebuild -scheme Raincoat-Package -destination 'generic/platform=iOS Simulator' build
 
+  kotlin:
+    name: kotlin modules
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify the Gradle wrapper
+        run: sha256sum --check gradle/wrapper/gradle-wrapper.jar.sha256
+      - name: Cache Gradle downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', 'gradle/libs.versions.toml', '**/*.gradle.kts') }}
+      # The token and theme modules are plain Kotlin, so the Android contract test runs on a
+      # JVM without the Android SDK. licensee is the license gate for shipped dependencies.
+      - name: Test, and check the licenses of shipped dependencies
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew test licensee --no-daemon --console=plain
+
   # The only required status check. It passes when every job above passed, or was skipped by
   # a path rule, so path filters can never leave a required check waiting forever.
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [validate, secrets, workflows, vulnerabilities, swift-linux, swift-macos]
+    needs: [validate, secrets, workflows, vulnerabilities, swift-linux, swift-macos, kotlin]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}

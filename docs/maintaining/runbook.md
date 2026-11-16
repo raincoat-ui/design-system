@@ -69,6 +69,16 @@ Dependabot updates npm packages and GitHub Actions; these standalone binaries ar
 3. If it truly cannot be avoided, add a dated `exceptions` entry with an exact version, a reason,
    and a review date at most six months out. The gate fails again when that date passes.
 
+The same three options apply to a failure of `./gradlew licensee`, the gate for dependencies
+that ship with the Android modules. Its corrections and exceptions go in the `licensee { }` block
+of the module's `build.gradle.kts`, with the same evidence and dates in a comment.
+
+## Building the Android modules locally
+
+Gradle needs a JDK 21. With Homebrew: `brew install openjdk@21`, then run Gradle with
+`JAVA_HOME="$(brew --prefix openjdk@21)/libexec/openjdk.jdk/Contents/Home" ./gradlew test licensee`.
+The wrapper downloads Gradle itself and verifies its checksum.
+
 ## Rotating secrets
 
 None are stored yet. The first one arrives with releases in milestone 1 (the deploy key for the
