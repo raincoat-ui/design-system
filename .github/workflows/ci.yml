@@ -166,13 +166,18 @@ jobs:
           persist-credentials: false
       - name: Verify the Gradle wrapper
         run: sha256sum --check gradle/wrapper/gradle-wrapper.jar.sha256
-      - name: Cache Gradle downloads
+      # Robolectric downloads the Android runtime it tests against when the tests start, outside
+      # Gradle, into ~/.m2. Without a cache, a rate limit at Maven's mirror fails the tests. The
+      # restore key lets a changed build file start from the previous downloads.
+      - name: Cache Gradle and Robolectric downloads
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
+            ~/.m2/repository/org/robolectric
           key: gradle-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', 'gradle/libs.versions.toml', '**/*.gradle.kts') }}
+          restore-keys: gradle-${{ runner.os }}-
       # The token and theme modules are plain Kotlin. The Compose components are an Android
       # library, built with the Android SDK that the runner provides, and their tests run on
       # the JVM with Robolectric, so no emulator is needed. licensee is the license gate for
