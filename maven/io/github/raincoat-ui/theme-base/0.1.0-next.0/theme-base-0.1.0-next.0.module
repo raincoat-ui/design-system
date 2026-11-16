@@ -1,0 +1,116 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.raincoat-ui",
+    "module": "theme-base",
+    "version": "0.1.0-next.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.9.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "io.github.raincoat-ui",
+          "module": "tokens",
+          "version": {
+            "requires": "0.1.0-next.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "theme-base-0.1.0-next.0.jar",
+          "url": "theme-base-0.1.0-next.0.jar",
+          "size": 16819,
+          "sha512": "4e0b37670ce4757670f02303a07dc6c13b708dd9b393a28060f5b14cb33d7281ee069e72de511397160f30bb0e4293613065072e56d46964409613c2e8d9a7de",
+          "sha256": "4f92a73a91a87e07909c62aff39f1a881b9119fc250eafb033d57623231ac5bf",
+          "sha1": "7f8ab1371580f47aa1ebb9ab07c04737486a4d93",
+          "md5": "74c95d630c6cdb523ea4ebb33736a231"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "io.github.raincoat-ui",
+          "module": "tokens",
+          "version": {
+            "requires": "0.1.0-next.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "theme-base-0.1.0-next.0.jar",
+          "url": "theme-base-0.1.0-next.0.jar",
+          "size": 16819,
+          "sha512": "4e0b37670ce4757670f02303a07dc6c13b708dd9b393a28060f5b14cb33d7281ee069e72de511397160f30bb0e4293613065072e56d46964409613c2e8d9a7de",
+          "sha256": "4f92a73a91a87e07909c62aff39f1a881b9119fc250eafb033d57623231ac5bf",
+          "sha1": "7f8ab1371580f47aa1ebb9ab07c04737486a4d93",
+          "md5": "74c95d630c6cdb523ea4ebb33736a231"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "theme-base-0.1.0-next.0-sources.jar",
+          "url": "theme-base-0.1.0-next.0-sources.jar",
+          "size": 8502,
+          "sha512": "98819f4cefbcbda1c5067e9667c1bb67b41d848857255b8139c13e736dc406be4ca28bb8ac6eeb8cb117be14a5bbd877f5209262c55976f31b2210217213b559",
+          "sha256": "fbcab9419cd5ef370eff61060b7cd4274b697c7131da87cdda9600a544ef422b",
+          "sha1": "abb3d031769a5458cbf981f1e370d49f1c08607f",
+          "md5": "1bc568ace7e977976877e471367c5d8a"
+        }
+      ]
+    }
+  ]
+}
