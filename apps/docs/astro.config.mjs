@@ -21,7 +21,7 @@ export default defineConfig({
         },
       ],
       customCss: [
-        "@raincoat-ui/theme-raincoat/theme.css",
+        "@raincoat-ui/theme-base/theme.css",
         "./src/styles/generated.css",
         "./src/styles/site.css",
       ],

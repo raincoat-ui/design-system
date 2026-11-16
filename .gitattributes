@@ -11,3 +11,4 @@ pnpm-lock.yaml linguist-generated=true
 licenses/ALLOWLIST.md linguist-generated=true
 **/generated/** linguist-generated=true
 packages/web-themes/*/theme.css linguist-generated=true
+**/Generated/** linguist-generated=true
