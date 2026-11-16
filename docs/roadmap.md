@@ -49,4 +49,14 @@ M1 is in progress. One token source now drives all three platforms at the token 
   request, and publishing to npm, the Maven repository on GitHub Pages, and the Swift mirror,
   with provenance attestations and a bill of materials.
 
-Still to come in M1: the reference apps with their accessibility audits.
+- The first prerelease, [0.1.0-next.0](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.0),
+  on 2026-11-16. The Android modules are in the Maven repository and were installed from it by
+  the release's own check. Every file has a provenance attestation, and the bill of materials
+  is attached to the release.
+
+Still to come in M1:
+
+- **npm and the Swift mirror for 0.1.0-next.0.** Both are pending a credential: a one-time
+  token for the two new npm package names, and a credential for the mirror repository. The
+  runbook has the steps; running the `release` workflow by hand then finishes the release.
+- The reference apps with their accessibility audits.
