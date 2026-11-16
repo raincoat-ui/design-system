@@ -1,0 +1,33 @@
+# Reference app for Android
+
+An Android app that shows every Raincoat component the way an app uses it, and the tests that
+drive it on an emulator. It is never published.
+
+The emulator tests check what the JVM tests of the components cannot:
+
+- what an accessibility service, such as TalkBack, is given for each component: its name, its
+  state, whether it is available, and the area it covers
+- Google's Accessibility Test Framework, which checks names, touch targets, and contrast
+- touches on a real Android runtime
+
+## Run
+
+The app is a Gradle build of its own. It installs the modules from a Maven repository, the way
+an app does: by default the one this checkout stages. Start an emulator or connect a device with
+Android 11 or later, then:
+
+```sh
+./gradlew publishAllPublicationsToStagingRepository
+./gradlew -p apps/reference-android connectedDebugAndroidTest
+```
+
+Add `-PraincoatRepository=https://raincoat-ui.github.io/design-system/maven` and
+`-PraincoatVersion=<version>` to run it against a published release instead.
+
+CI runs the same tests on every pull request, in the `reference app (android)` job, on an
+open-source Android 14 image without Google services.
+
+## Adding a component
+
+Add a screen for it in `src/main/`, with one example for each state in its spec, and a test
+class in `src/androidTest/`.

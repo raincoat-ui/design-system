@@ -74,12 +74,15 @@ color, or a size written as a number fails `pnpm test`.
   back, including the pressed and hovered fills, the focus ring, and a doubled font size. Touches
   are sent just inside and just outside the minimum target, with a mouse, and between two small
   buttons.
+- **Android, on an emulator.** `apps/reference-android` is the same app for Android. It installs
+  the modules from a Maven repository, as an app does, and its tests check what an
+  accessibility service such as TalkBack is given (the name, the "In progress" state, whether
+  the button is available, and the area it covers) and run Google's Accessibility Test
+  Framework over the screen.
 
 ## Not yet done
 
 - **The audit's Dynamic Type check is not used.** It reports every font that was not made from
   a system text style, and Raincoat scales its token sizes itself. A UI test checks instead that
   buttons grow at a large text size.
-- **Google's Accessibility Test Framework on Android.** It does nothing under Robolectric: a
-  button planted without a name passed. It runs on an emulator, with the Android reference app.
 - Theme font files. Until a theme bundles them, text uses the system font.

@@ -1,0 +1,159 @@
+package io.github.raincoatui.reference
+
+import android.graphics.Rect
+import android.view.accessibility.AccessibilityNodeInfo
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.assertTouchHeightIsEqualTo
+import androidx.compose.ui.test.assertTouchWidthIsEqualTo
+import androidx.compose.ui.test.click
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.accessibility.enableAccessibilityChecks
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.tryPerformAccessibilityChecks
+import androidx.compose.ui.unit.dp
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import io.github.raincoatui.theme.base.BaseTheme
+import io.github.raincoatui.tokens.ColorMode
+import io.github.raincoatui.tokens.Density
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+/**
+ * The Button on an emulator, checked against specs/components/button/spec.yaml: what an
+ * accessibility service is given, Google's accessibility checks, and touches.
+ */
+@RunWith(AndroidJUnit4::class)
+class ButtonScreenTest {
+    @get:Rule
+    val compose = createAndroidComposeRule<MainActivity>()
+
+    private val button = BaseTheme.tokens(ColorMode.Light, Density.Comfortable).button
+
+    /** The platform's minimum touch target, which is larger than the token's. */
+    private val target = 48
+
+    private val isButton = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button)
+
+    private fun named(name: String): SemanticsNodeInteraction =
+        compose.onNode(isButton and (hasText(name) or hasContentDescription(name)))
+
+    private fun assertLastAction(expected: String) {
+        compose.onNodeWithTag("last-action").assertTextEquals("Last action: $expected")
+    }
+
+    /** The node an accessibility service, such as TalkBack, is given for a button. */
+    private fun serviceNode(name: String): AccessibilityNodeInfo {
+        compose.waitForIdle()
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        // The tree is built once a service is listening, which takes a moment.
+        repeat(50) {
+            val found = automation.rootInActiveWindow
+                ?.findAccessibilityNodeInfosByText(name)
+                ?.firstOrNull { it.className == "android.widget.Button" }
+            if (found != null) return found
+            Thread.sleep(100)
+        }
+        throw AssertionError("no button named \"$name\" in the accessibility tree")
+    }
+
+    @Test
+    fun everyButtonIsAButtonNamedByItsLabel() {
+        val names = listOf(
+            "Save changes", "Cancel", "Show details", "Delete project", "Small", "Medium", "Large", "Publish",
+            "Send invite", "Archive", "Continue", LONG_LABEL,
+            // An icon alone has no name; this one is given by the app.
+            "Delete page",
+        )
+        for (name in names) {
+            named(name).assertHasClickAction()
+        }
+        assertEquals("Save changes", serviceNode("Save changes").text?.toString())
+        assertEquals("Delete page", serviceNode("Delete page").contentDescription?.toString())
+    }
+
+    @Test
+    fun aTouchRunsTheAction() {
+        assertLastAction("Nothing yet")
+        named("Save changes").performClick()
+        assertLastAction("Save changes")
+        named("Delete page").performScrollTo().performClick()
+        assertLastAction("Delete page")
+    }
+
+    @Test
+    fun aDisabledButtonIsUnavailable() {
+        named("Publish").assertIsNotEnabled().performClick()
+        assertLastAction("Nothing yet")
+        assertTrue(!serviceNode("Publish").isEnabled)
+    }
+
+    @Test
+    fun aLoadingButtonSaysItIsInProgressStaysAvailableAndIgnoresActivation() {
+        named("Send invite").assertIsEnabled().performClick()
+        assertLastAction("Nothing yet")
+
+        // The name stays, and the state is what a screen reader says after it.
+        val loading = serviceNode("Send invite")
+        assertEquals("Send invite", loading.text?.toString())
+        assertEquals("In progress", loading.stateDescription?.toString())
+        assertTrue(loading.isEnabled)
+
+        // No other button has a state to report, and a disabled button is not also in progress.
+        assertNull(serviceNode("Save changes").stateDescription)
+        assertNull(serviceNode("Archive").stateDescription)
+    }
+
+    @Test
+    fun aSmallButtonTakesTheRoomItShowsAndTouchesJustOutsideItCount() {
+        val small = named("Delete page").performScrollTo()
+        val above = compose.onNodeWithTag("small-above").getUnclippedBoundsInRoot()
+        val below = compose.onNodeWithTag("small-below").getUnclippedBoundsInRoot()
+        val height = button.height.sm
+        assertTrue(height < target)
+
+        // The lines directly above and below are as far apart as the button is tall.
+        assertEquals(height, (below.top - above.bottom).value.toDouble(), 0.5)
+
+        // The touch target is larger, and an accessibility service is given the larger area.
+        small.assertTouchWidthIsEqualTo(target.dp).assertTouchHeightIsEqualTo(target.dp)
+        val bounds = Rect().also { serviceNode("Delete page").getBoundsInScreen(it) }
+        val pixelsPerDp = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
+        assertEquals(target * pixelsPerDp, bounds.height().toFloat(), 1.5f)
+        assertEquals(target * pixelsPerDp, bounds.width().toFloat(), 1.5f)
+
+        // A touch inside the target but above the visible button, on the line of text there.
+        val reach = (target - height.toFloat()) / 2 * pixelsPerDp
+        small.performTouchInput { click(Offset(centerX, -reach + 2)) }
+        assertLastAction("Delete page")
+    }
+
+    /** Google's Accessibility Test Framework: names, touch targets, contrast, clickable spans. */
+    @Test
+    fun theScreenPassesGooglesAccessibilityChecks() {
+        compose.enableAccessibilityChecks()
+        compose.onRoot().tryPerformAccessibilityChecks()
+        // The rest of the screen, once it is scrolled into view.
+        named(LONG_LABEL).performScrollTo()
+        compose.onRoot().tryPerformAccessibilityChecks()
+    }
+}

@@ -220,6 +220,58 @@ jobs:
           export JAVA_HOME="$JAVA_HOME_21_X64"
           ./gradlew test licensee --no-daemon --console=plain
 
+  # The Compose components in an app on an emulator: what an accessibility service is given,
+  # Google's accessibility checks, and touches.
+  android-reference:
+    name: reference app (android)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify the Gradle wrapper
+        run: sha256sum --check gradle/wrapper/gradle-wrapper.jar.sha256
+      - name: Cache Gradle downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-emulator-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', 'gradle/libs.versions.toml', '**/*.gradle.kts') }}
+          restore-keys: gradle-emulator-${{ runner.os }}-
+      # The emulator needs hardware acceleration, which the runner allows once KVM is opened up.
+      - name: Let the emulator use KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      # The app installs the modules from a Maven repository, as any app does: the one this
+      # checkout stages.
+      - name: Stage the Android modules
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew publishAllPublicationsToStagingRepository --no-daemon --console=plain --quiet
+      # An open-source Android image made for automated tests, with no Google services.
+      - name: Run the tests on an emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          target: aosp_atd
+          arch: x86_64
+          script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest --no-daemon --console=plain
+      - name: Keep the test report when a test fails
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reference-android-report
+          path: apps/reference-android/build/reports/androidTests
+          retention-days: 7
+
   web:
     name: react components
     runs-on: ubuntu-24.04
@@ -310,6 +362,7 @@ jobs:
         swift-macos,
         ios-reference,
         kotlin,
+        android-reference,
         web,
         release-rehearsal,
       ]
