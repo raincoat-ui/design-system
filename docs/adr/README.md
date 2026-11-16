@@ -22,5 +22,6 @@ Versions and licenses quoted in these records were verified on the date of the r
 | [0013](0013-own-token-emitters.md)          | The token build uses its own emitters, not Style Dictionary             |
 | [0014](0014-license-gates-per-ecosystem.md) | One license gate per ecosystem, all reading one allowlist               |
 | [0015](0015-web-components.md)              | Web components: adapted shadcn/ui source, styled only with tokens       |
+| [0016](0016-native-components.md)           | Native components follow the platform where it knows better             |
 
 To add one, copy `0000-template.md`.

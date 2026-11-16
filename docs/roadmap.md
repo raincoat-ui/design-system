@@ -39,4 +39,8 @@ M1 is in progress. One token source now drives all three platforms at the token 
 - The React Button (`@raincoat-ui/react`), tested in a real browser against the token source in
   every color mode and density.
 
-Still to come in M1: the SwiftUI and Compose Buttons, and the first prerelease.
+- The SwiftUI Button (`RaincoatButton` and the `.raincoat` button style), tested by drawing it
+  and reading the pixels back in every color mode and density.
+
+Still to come in M1: the Compose Button, the reference apps with their accessibility audits, and
+the first prerelease.
