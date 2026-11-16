@@ -19,7 +19,7 @@
         private let trailingIcon: Image?
         private let isFullWidth: Bool
         private let isLoading: Bool
-        private let action: @MainActor () -> Void
+        private let action: () -> Void
 
         /// Creates a button with a label.
         ///
@@ -41,7 +41,7 @@
             trailingIcon: Image? = nil,
             isFullWidth: Bool = false,
             isLoading: Bool = false,
-            action: @escaping @MainActor () -> Void
+            action: @escaping () -> Void
         ) {
             self.title = title
             accessibilityLabel = nil
@@ -63,7 +63,7 @@
             trailingIcon: Image? = nil,
             isFullWidth: Bool = false,
             isLoading: Bool = false,
-            action: @escaping @MainActor () -> Void
+            action: @escaping () -> Void
         ) {
             self.init(
                 Text(titleKey), variant: variant, size: size, leadingIcon: leadingIcon,
@@ -81,7 +81,7 @@
             trailingIcon: Image? = nil,
             isFullWidth: Bool = false,
             isLoading: Bool = false,
-            action: @escaping @MainActor () -> Void
+            action: @escaping () -> Void
         ) {
             self.init(
                 Text(title), variant: variant, size: size, leadingIcon: leadingIcon,
@@ -101,7 +101,7 @@
             variant: ButtonVariant = .standard,
             size: ButtonSize = .standard,
             isLoading: Bool = false,
-            action: @escaping @MainActor () -> Void
+            action: @escaping () -> Void
         ) {
             title = nil
             self.accessibilityLabel = accessibilityLabel

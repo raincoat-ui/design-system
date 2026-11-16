@@ -23,5 +23,6 @@ Versions and licenses quoted in these records were verified on the date of the r
 | [0014](0014-license-gates-per-ecosystem.md) | One license gate per ecosystem, all reading one allowlist               |
 | [0015](0015-web-components.md)              | Web components: adapted shadcn/ui source, styled only with tokens       |
 | [0016](0016-native-components.md)           | Native components follow the platform where it knows better             |
+| [0017](0017-release-pipeline.md)            | The release pipeline                                                    |
 
 To add one, copy `0000-template.md`.

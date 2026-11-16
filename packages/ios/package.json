@@ -1,0 +1,7 @@
+{
+  "name": "@raincoat-ui/swift",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Not an npm package. It gives the Swift package a version and a changelog; the package itself is distributed through SwiftPM.",
+  "license": "Apache-2.0"
+}

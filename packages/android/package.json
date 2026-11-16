@@ -1,0 +1,7 @@
+{
+  "name": "@raincoat-ui/android",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Not an npm package. It gives the Android modules a version and a changelog; the modules themselves are distributed through Maven.",
+  "license": "Apache-2.0"
+}

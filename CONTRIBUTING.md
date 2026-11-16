@@ -35,9 +35,13 @@ Each platform package has tests of its own:
 2. **Use Conventional Commits** for commit messages and the pull request title, for example
    `feat(tokens): add focus ring tokens` or `fix(web): restore dialog focus on close`.
    Pull requests are squash-merged, so the title becomes the commit on `main`.
-3. **Keep generated files generated.** Never edit a file marked `GENERATED`. Change its source
+3. **Say what changed for the people who use the packages.** If the change alters what a package
+   ships (component code, tokens, the theme), run `pnpm changeset` and commit the file it writes.
+   Tests, documents, and development dependencies do not need one. See
+   [.changeset/README.md](.changeset/README.md).
+4. **Keep generated files generated.** Never edit a file marked `GENERATED`. Change its source
    and regenerate; CI compares the two.
-4. **Do not record snapshot baselines locally.** Visual baselines are recorded in CI so that no
+5. **Do not record snapshot baselines locally.** Visual baselines are recorded in CI so that no
    one's machine influences them.
 
 ## What CI checks
@@ -48,6 +52,8 @@ Each platform package has tests of its own:
 | Unit tests         | `pnpm test` fails                                                          |
 | License gate       | A dependency with a license outside [the allowlist](licenses/ALLOWLIST.md) |
 | Asset licenses     | A font or brand asset missing from `licenses/assets.yml`                   |
+| Changeset          | A change to what a package ships with no changeset file                    |
+| Release rehearsal  | The packages cannot be built, packed, or installed the way an app would    |
 | Sign-off and title | A commit without `Signed-off-by`, or a non-conventional pull request title |
 | Secret scan        | A credential in the diff or history                                        |
 | Vulnerability scan | A dependency with a known vulnerability                                    |

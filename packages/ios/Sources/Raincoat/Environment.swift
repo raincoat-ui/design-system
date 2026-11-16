@@ -1,6 +1,9 @@
+// The token types, such as ButtonVariant and Density, are part of this module's API, so that
+// `import Raincoat` is all an app needs to use a component.
+@_exported import RaincoatTokens
+
 #if canImport(SwiftUI)
     import RaincoatThemeBase
-    import RaincoatTokens
     import SwiftUI
 
     extension EnvironmentValues {

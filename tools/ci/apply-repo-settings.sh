@@ -49,6 +49,18 @@ for file in "$root"/.github/rulesets/*.json; do
   fi
 done
 
+# Publishing jobs run in this environment. Only the main branch may use it, so a pull request
+# cannot reach the secrets stored there.
+echo "Release environment"
+gh api --method PUT "repos/$repo/environments/release" --silent --input - <<'JSON'
+{ "deployment_branch_policy": { "protected_branches": false, "custom_branch_policies": true } }
+JSON
+if ! gh api "repos/$repo/environments/release/deployment-branch-policies" --jq '.branch_policies[].name' | grep -qx main; then
+  gh api --method POST "repos/$repo/environments/release/deployment-branch-policies" \
+    -f name=main -f type=branch --silent
+fi
+echo "  release: only the main branch may deploy"
+
 echo "Pages"
 if gh api "repos/$repo/branches/gh-pages" --silent 2>/dev/null; then
   if gh api "repos/$repo/pages" --silent 2>/dev/null; then
