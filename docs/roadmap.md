@@ -29,4 +29,11 @@ M0 was completed on 2026-11-14. Evidence for each exit criterion:
   was refused. Removing the dependency makes the gate pass, as the runs on `main` show.
 - Workflow lint and OpenSSF Scorecard ran successfully on the first push.
 
-M1 is next.
+M1 is in progress. One token source now drives all three platforms at the token level:
+
+- The token source, its linter, and the contrast checker.
+- The web theme stylesheet, the Swift package, and the Kotlin modules are generated from it,
+  each with a contract test that compares the generated values with the source.
+
+Still to come in M1: the Button's spec and its React, SwiftUI, and Compose implementations, and
+the first prerelease.
