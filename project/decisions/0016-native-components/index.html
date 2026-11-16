@@ -74,6 +74,7 @@
 </script></div></div></div></sl-sidebar-pane></nav><div class="main-frame astro-qp7chj4o"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-2os67nxe"><aside class="right-sidebar-container print:hidden astro-2os67nxe"><div class="right-sidebar astro-2os67nxe"><div class="lg:sl-hidden astro-zdcbiy5i"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-efofsdh7"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-efofsdh7"><details id="starlight__mobile-toc" class="astro-efofsdh7"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-efofsdh7"><span class="toggle sl-flex astro-efofsdh7">On this page<svg aria-hidden="true" class="caret astro-efofsdh7 astro-hv56guoi" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-efofsdh7"></span></summary><div class="dropdown astro-efofsdh7"><ul class="isMobile astro-oz7ufljt" style="--depth: 0;"><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#_top" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Overview</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#context" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Context</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#decision" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Decision</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#testing" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Testing</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#not-yet-done" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Not yet done</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-zdcbiy5i"><div class="sl-container astro-zdcbiy5i"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-oz7ufljt" style="--depth: 0;"><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#_top" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Overview</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#context" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Context</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#decision" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Decision</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#testing" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Testing</span></a></li><li style="--depth: 0;" class="astro-oz7ufljt"><a href="#not-yet-done" style="--depth: 0;" class="astro-oz7ufljt"><span style="--depth: 0;" class="astro-oz7ufljt">Not yet done</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane astro-2os67nxe"><main data-pagefind-body class="astro-cwbxgmvm" lang="en" dir="ltr"><div class="content-panel astro-pobciv3d"><div class="sl-container astro-pobciv3d"><h1 id="_top" class="astro-3hlje7sc">0016. Native components follow the platform where it knows better</h1></div></div><div class="content-panel astro-pobciv3d"><div class="sl-container astro-pobciv3d"><div class="sl-markdown-content"><ul>
 <li>Status: accepted</li>
 <li>Date: 2026-11-16</li>
+<li>Amended: 2026-11-16, touch targets no longer take layout space</li>
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="context">Context</h2><a class="sl-anchor-link" href="#context"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Context”</span></a></div>
 <p>The component specs are platform-neutral, and the tokens are the same values everywhere. Building
@@ -110,12 +111,12 @@ platform’s.</p>
 <tr>
 <td>Focus</td>
 <td>The system focus indicator. People set its color, contrast, and size under Full Keyboard Access, and a ring of our own would override their choice</td>
-<td>Compose draws no focus indicator of its own, so the ring is drawn from the focus ring tokens, as on the web</td>
+<td>Android draws no keyboard focus indicator for Compose content: the app’s theme has to. The ring is drawn from the focus ring tokens, as on the web. TalkBack and Switch Access draw their own highlight, which follows the person’s settings</td>
 </tr>
 <tr>
 <td>Touch target</td>
-<td>The layout size is at least the minimum target, with the visible container centered in it</td>
-<td>The same, and the minimum is the larger of the token and the platform’s own (48dp)</td>
+<td>The layout size is the visible size. The hit shape is at least the minimum target, so around a smaller button it reaches past the container. Assistive technology is given the same area</td>
+<td>The same. Compose grows the touch area of a small target itself: for touches and not for a mouse, and a touch in two areas goes to the nearer button. The minimum is the larger of the token and the platform’s own (48dp)</td>
 </tr>
 <tr>
 <td>Text size</td>
@@ -139,8 +140,14 @@ platform’s.</p>
 </tr>
 </tbody>
 </table>
-<p>On both platforms a small button therefore takes more room than it shows, which is how the
-platforms’ own controls behave.</p>
+<p>A button takes the room it shows on every platform. In 0.1.0-next.0 the minimum target was part
+of the layout size on iOS and Android, so a small button took more room than it showed and did
+not line up with its neighbours as drawn. The maintainer chose to change that. The cost is that
+the touch areas of small buttons placed closer than 8px reach onto each other; the Button
+guidelines say how to space them.</p>
+<p>iOS adds a tolerance of its own around any target: on iOS 26 a touch up to about 19 points
+outside a button still reaches it when nothing else is there. The hit shape is declared anyway,
+because that tolerance is not documented and assistive technology does not see it.</p>
 <p>Component code is linted (<code dir="auto">tools/component-lint</code>): a color built from literal values, a system
 color, or a size written as a number fails <code dir="auto">pnpm test</code>.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="testing">Testing</h2><a class="sl-anchor-link" href="#testing"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Testing”</span></a></div>
@@ -149,18 +156,26 @@ color, or a size written as a number fails <code dir="auto">pnpm test</code>.</p
 values are looked up by token id, not by repeating the mapping. The Swift tests also run on
 Linux.</li>
 <li><strong>iOS.</strong> On macOS the tests draw real buttons into a bitmap and read the pixels back: heights,
-fills, outlines, the touch target, wrapping, right-to-left order, and the spinner.</li>
+fills, outlines, wrapping, right-to-left order, and the spinner.</li>
+<li><strong>iOS, on a simulator.</strong> <code dir="auto">apps/reference-ios</code> is an app that shows the Button in the states of
+its spec. Its UI tests check what unit tests cannot: the role and name each button is given,
+activation, the disabled and loading states, the room a small button takes and the touch area
+the system reports for it, growth at a large text size, and the system’s accessibility audit.</li>
 <li><strong>Android.</strong> The tests run on the JVM with Robolectric. They read the semantics that
 assistive technology is given, drive the button with touch, mouse, and keys, and read pixels
-back, including the pressed and hovered fills, the focus ring, and a doubled font size.</li>
+back, including the pressed and hovered fills, the focus ring, and a doubled font size. Touches
+are sent just inside and just outside the minimum target, with a mouse, and between two small
+buttons.</li>
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="not-yet-done">Not yet done</h2><a class="sl-anchor-link" href="#not-yet-done"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Not yet done”</span></a></div>
 <ul>
-<li><strong>Accessibility as assistive technology sees it.</strong> SwiftUI builds its accessibility tree only
-for a real assistive client, so unit tests cannot read it. The role, the name, the busy
-announcement, and an accessibility audit are checked by UI tests in the iOS reference app,
-which is the next piece of milestone 1. Until then the loading announcement is unverified.</li>
-<li>Tests at larger text sizes on iOS, which need a simulator.</li>
+<li><strong>The loading state is not announced on iOS.</strong> The reference app showed that the spinner’s
+progress representation does not reach VoiceOver through the button: a loading button is read
+as its label alone. iOS has no busy state to set, so the fix is a localized value on the
+button, which is the next change.</li>
+<li><strong>The audit’s Dynamic Type check is not used.</strong> It reports every font that was not made from
+a system text style, and Raincoat scales its token sizes itself. A UI test checks instead that
+buttons grow at a large text size.</li>
 <li><strong>Google’s Accessibility Test Framework on Android.</strong> It does nothing under Robolectric: a
 button planted without a name passed. It runs on an emulator, with the Android reference app.</li>
 <li>Theme font files. Until a theme bundles them, text uses the system font.</li>
