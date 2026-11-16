@@ -325,7 +325,8 @@ jobs:
     name: install the published release
     needs: [plan, publish-maven, publish-swift, publish-npm]
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    # The npm step may wait half an hour for npm to serve a new version.
+    timeout-minutes: 60
     permissions:
       contents: read
     env:
