@@ -146,8 +146,8 @@ of the layout size on iOS and Android, so a small button took more room than it 
 not line up with its neighbours as drawn. The maintainer chose to change that. The cost is that
 the touch areas of small buttons placed closer than 8px reach onto each other; the Button
 guidelines say how to space them.</p>
-<p>iOS adds a tolerance of its own around any target: on iOS 26 a touch up to about 19 points
-outside a button still reaches it when nothing else is there. The hit shape is declared anyway,
+<p>iOS adds a tolerance of its own around any target: measured on an iOS 26.5 simulator, a touch
+up to about 19 points outside a button still reaches it when nothing else is there. The hit shape is declared anyway,
 because that tolerance is not documented and assistive technology does not see it.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="words-for-assistive-technology-on-ios">Words for assistive technology on iOS</h3><a class="sl-anchor-link" href="#words-for-assistive-technology-on-ios"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Words for assistive technology on iOS”</span></a></div>
 <p>Until 0.1.0-next.0 the spinner presented itself as the system’s progress indicator. The

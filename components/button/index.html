@@ -300,11 +300,11 @@ types used by every platform’s implementation are generated from this spec.</p
 </tr>
 <tr>
 <td>Focus</td>
-<td>A ring at least 2px wide with 3:1 contrast against the surface behind the button, shown for keyboard focus. On the web and on Android the button draws it from the focus ring tokens, because neither platform draws one for it. On iOS the system draws its own focus indicator, which follows the person’s Full Keyboard Access settings.</td>
+<td>A ring at least 2px wide with 3:1 contrast against the surface behind the button, shown for keyboard focus. On the web and on Android the button draws it from the focus ring tokens. On iOS the system draws its own focus indicator, which follows the person’s Full Keyboard Access settings.</td>
 </tr>
 <tr>
 <td>Target size</td>
-<td>The area that takes touches is at least 44pt on iOS, 48dp on Android, and 44px on a touch screen on the web, whatever the visible size. The button’s layout size is its visible size: around a smaller button the touch area reaches past the container without taking room. A mouse has to be on the container itself.</td>
+<td>The area that takes touches is at least 44pt on iOS, 48dp on Android, and 44px on a touch screen on the web, whatever the visible size. The button’s layout size is its visible size: around a smaller button the touch area reaches past the container without taking room. On the web and on Android a mouse has to be on the container itself.</td>
 </tr>
 <tr>
 <td>Contrast</td>
@@ -395,10 +395,10 @@ button cannot say why it is disabled.</li>
 <p>A button takes the room it shows. A button shorter or narrower than the minimum touch target
 still takes touches across that minimum, so its touch area reaches a few pixels past its edges.</p>
 <ul>
-<li>Leave at least 8px (<code dir="auto">space.2</code>) between small buttons, so the touch areas of two buttons do
-not reach onto each other.</li>
-<li>With less room than that, a touch in the space the two areas share goes to one of them: the
-nearer button on Android, and the button that is drawn later on iOS and the web.</li>
+<li>Leave at least 8px (<code dir="auto">space.2</code>) between small buttons, so that the touch area of one button
+never covers part of another.</li>
+<li>Between two buttons that close, the touch areas can share the gap. Android gives a touch
+there to the nearer button; on iOS and the web, do not count on which one gets it.</li>
 <li>Do not rely on the touch area to separate a small button from other content. Give it the
 spacing you would give any control.</li>
 </ul>
