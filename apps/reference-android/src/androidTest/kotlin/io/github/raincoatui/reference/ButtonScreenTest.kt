@@ -148,6 +148,14 @@ class ButtonScreenTest {
 
     @Test
     fun aSmallButtonTakesTheRoomItShowsAndTouchesJustOutsideItCount() {
+        // An accessibility service is given the touch target, not only the visible button,
+        // wherever no other item is in the way. The small button in the row of sizes has room
+        // around it. (This is read before anything is scrolled: an item at the edge of the
+        // scrolling area is cut off there.)
+        val bounds = Rect().also { serviceNode("Small").getBoundsInScreen(it) }
+        val pixelsPerDp = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
+        assertEquals(target * pixelsPerDp, bounds.height().toFloat(), 1.5f)
+
         val small = named("Delete page").performScrollTo()
         val above = compose.onNodeWithTag("small-above").getUnclippedBoundsInRoot()
         val below = compose.onNodeWithTag("small-below").getUnclippedBoundsInRoot()
@@ -157,12 +165,8 @@ class ButtonScreenTest {
         // The lines directly above and below are as far apart as the button is tall.
         assertEquals(height, (below.top - above.bottom).value.toDouble(), 0.5)
 
-        // The touch target is larger, and an accessibility service is given the larger area.
+        // The touch target is larger than the button.
         small.assertTouchWidthIsEqualTo(target.dp).assertTouchHeightIsEqualTo(target.dp)
-        val bounds = Rect().also { serviceNode("Delete page").getBoundsInScreen(it) }
-        val pixelsPerDp = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
-        assertEquals(target * pixelsPerDp, bounds.height().toFloat(), 1.5f)
-        assertEquals(target * pixelsPerDp, bounds.width().toFloat(), 1.5f)
 
         // A touch inside the target but above the visible button, on the line of text there.
         val reach = (target - height.toFloat()) / 2 * pixelsPerDp

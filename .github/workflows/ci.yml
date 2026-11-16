@@ -263,6 +263,8 @@ jobs:
           api-level: 34
           target: aosp_atd
           arch: x86_64
+          # A phone-sized screen, so that the first sections of the app fit without scrolling.
+          profile: pixel_6
           script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest --no-daemon --console=plain
       - name: Keep the test report when a test fails
         if: failure()

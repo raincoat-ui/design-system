@@ -25,7 +25,8 @@ Add `-PraincoatRepository=https://raincoat-ui.github.io/design-system/maven` and
 `-PraincoatVersion=<version>` to run it against a published release instead.
 
 CI runs the same tests on every pull request, in the `reference app (android)` job, on an
-open-source Android 14 image without Google services.
+open-source Android 14 image without Google services, with the screen of a Pixel 6. The tests
+expect a phone-sized screen.
 
 ## Adding a component
 
