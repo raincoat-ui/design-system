@@ -34,6 +34,18 @@ another page, use a link.
 - Prefer leaving a button enabled and explaining what is missing when it is activated. A disabled
   button cannot say why it is disabled.
 
+## Spacing
+
+A button takes the room it shows. A button shorter or narrower than the minimum touch target
+still takes touches across that minimum, so its touch area reaches a few pixels past its edges.
+
+- Leave at least 8px (`space.2`) between small buttons, so the touch areas of two buttons do
+  not reach onto each other.
+- With less room than that, a touch in the space the two areas share goes to one of them: the
+  nearer button on Android, and the button that is drawn later on iOS and the web.
+- Do not rely on the touch area to separate a small button from other content. Give it the
+  spacing you would give any control.
+
 ## Do and don't
 
 | Do                                                              | Don't                                            |

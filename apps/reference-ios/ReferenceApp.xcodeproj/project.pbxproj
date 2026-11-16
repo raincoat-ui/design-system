@@ -1,0 +1,389 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5A0000000000000000000101 /* Raincoat in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000000000000000000111 /* Raincoat */; };
+		5A0000000000000000000102 /* RaincoatThemeBase in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000000000000000000112 /* RaincoatThemeBase */; };
+		5A0000000000000000000103 /* RaincoatThemeBase in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000000000000000000113 /* RaincoatThemeBase */; };
+		5A0000000000000000000104 /* RaincoatTokens in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000000000000000000114 /* RaincoatTokens */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5A0000000000000000000201 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A0000000000000000000301;
+			remoteInfo = ReferenceApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5A0000000000000000000401 /* ReferenceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReferenceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A0000000000000000000402 /* ReferenceAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReferenceAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5A0000000000000000000501 /* ReferenceApp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ReferenceApp;
+			sourceTree = "<group>";
+		};
+		5A0000000000000000000502 /* ReferenceAppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ReferenceAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5A0000000000000000000601 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0000000000000000000101 /* Raincoat in Frameworks */,
+				5A0000000000000000000102 /* RaincoatThemeBase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A0000000000000000000602 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0000000000000000000103 /* RaincoatThemeBase in Frameworks */,
+				5A0000000000000000000104 /* RaincoatTokens in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5A0000000000000000000701 = {
+			isa = PBXGroup;
+			children = (
+				5A0000000000000000000501 /* ReferenceApp */,
+				5A0000000000000000000502 /* ReferenceAppUITests */,
+				5A0000000000000000000702 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5A0000000000000000000702 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5A0000000000000000000401 /* ReferenceApp.app */,
+				5A0000000000000000000402 /* ReferenceAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5A0000000000000000000301 /* ReferenceApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A0000000000000000000902 /* Build configuration list for PBXNativeTarget "ReferenceApp" */;
+			buildPhases = (
+				5A0000000000000000000801 /* Sources */,
+				5A0000000000000000000601 /* Frameworks */,
+				5A0000000000000000000811 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5A0000000000000000000501 /* ReferenceApp */,
+			);
+			name = ReferenceApp;
+			packageProductDependencies = (
+				5A0000000000000000000111 /* Raincoat */,
+				5A0000000000000000000112 /* RaincoatThemeBase */,
+			);
+			productName = ReferenceApp;
+			productReference = 5A0000000000000000000401 /* ReferenceApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5A0000000000000000000302 /* ReferenceAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A0000000000000000000903 /* Build configuration list for PBXNativeTarget "ReferenceAppUITests" */;
+			buildPhases = (
+				5A0000000000000000000802 /* Sources */,
+				5A0000000000000000000602 /* Frameworks */,
+				5A0000000000000000000812 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5A0000000000000000000202 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5A0000000000000000000502 /* ReferenceAppUITests */,
+			);
+			name = ReferenceAppUITests;
+			packageProductDependencies = (
+				5A0000000000000000000113 /* RaincoatThemeBase */,
+				5A0000000000000000000114 /* RaincoatTokens */,
+			);
+			productName = ReferenceAppUITests;
+			productReference = 5A0000000000000000000402 /* ReferenceAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5A0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					5A0000000000000000000301 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					5A0000000000000000000302 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 5A0000000000000000000301;
+					};
+				};
+			};
+			buildConfigurationList = 5A0000000000000000000901 /* Build configuration list for PBXProject "ReferenceApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5A0000000000000000000701;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5A0000000000000000000121 /* XCLocalSwiftPackageReference "../../packages/ios" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5A0000000000000000000702 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5A0000000000000000000301 /* ReferenceApp */,
+				5A0000000000000000000302 /* ReferenceAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5A0000000000000000000811 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A0000000000000000000812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5A0000000000000000000801 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A0000000000000000000802 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5A0000000000000000000202 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A0000000000000000000301 /* ReferenceApp */;
+			targetProxy = 5A0000000000000000000201 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5A0000000000000000000A01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		5A0000000000000000000A02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5A0000000000000000000A11 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Raincoat;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.raincoat-ui.reference";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5A0000000000000000000A12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Raincoat;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.raincoat-ui.reference";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5A0000000000000000000A21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.raincoat-ui.reference.uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ReferenceApp;
+			};
+			name = Debug;
+		};
+		5A0000000000000000000A22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.raincoat-ui.reference.uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ReferenceApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5A0000000000000000000901 /* Build configuration list for PBXProject "ReferenceApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A0000000000000000000A01 /* Debug */,
+				5A0000000000000000000A02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A0000000000000000000902 /* Build configuration list for PBXNativeTarget "ReferenceApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A0000000000000000000A11 /* Debug */,
+				5A0000000000000000000A12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A0000000000000000000903 /* Build configuration list for PBXNativeTarget "ReferenceAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A0000000000000000000A21 /* Debug */,
+				5A0000000000000000000A22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		5A0000000000000000000121 /* XCLocalSwiftPackageReference "../../packages/ios" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../packages/ios;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5A0000000000000000000111 /* Raincoat */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Raincoat;
+		};
+		5A0000000000000000000112 /* RaincoatThemeBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RaincoatThemeBase;
+		};
+		5A0000000000000000000113 /* RaincoatThemeBase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RaincoatThemeBase;
+		};
+		5A0000000000000000000114 /* RaincoatTokens */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RaincoatTokens;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5A0000000000000000000001 /* Project object */;
+}

@@ -4,12 +4,14 @@ Raincoat components for React 19. They are [shadcn/ui](https://ui.shadcn.com) co
 [Radix](https://www.radix-ui.com) primitives, and every color, size, and duration they use comes
 from a Raincoat theme.
 
-This package is not published yet. The first prerelease will be `0.1.0-next.0`.
+Prereleases are published to npm with the `next` tag. The
+[releases page](https://github.com/raincoat-ui/design-system/releases) says which registries each
+version has reached.
 
 ## Install
 
 ```sh
-pnpm add @raincoat-ui/react @raincoat-ui/theme-base
+pnpm add @raincoat-ui/react@next @raincoat-ui/theme-base@next
 ```
 
 Then load the styles in one of two ways.
@@ -81,7 +83,8 @@ Every other prop of a `<button>` is passed through, including `ref`.
 - **Icons are decoration.** They are hidden from assistive technology and take their size from
   the theme. In right-to-left layouts the leading icon is on the right.
 - **Touch.** On a touch screen a small button can still be hit across the theme's minimum
-  target size.
+  target size. The extra area takes no room in the layout, so leave 8px or more between small
+  buttons.
 
 `buttonVariants({ variant, size, fullWidth })` returns the class names alone.
 
