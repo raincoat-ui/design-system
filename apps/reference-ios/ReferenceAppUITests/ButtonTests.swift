@@ -9,11 +9,14 @@ final class ButtonTests: XCTestCase {
     private let longLabel = "Save all of these changes and send the updated version to every reviewer"
 
     @MainActor
-    private func launch(textSize: String? = nil) -> XCUIApplication {
+    private func launch(textSize: String? = nil, language: String? = nil) -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
         if let textSize {
             app.launchArguments += ["-UIPreferredContentSizeCategoryName", textSize]
+        }
+        if let language {
+            app.launchArguments += ["-AppleLanguages", "(\(language))"]
         }
         app.launch()
         XCTAssertTrue(app.buttons["Save changes"].waitForExistence(timeout: 30))
@@ -30,7 +33,7 @@ final class ButtonTests: XCTestCase {
         let app = launch()
         let names = [
             "Save changes", "Cancel", "Show details", "Delete project", "Small", "Medium", "Large", "Publish",
-            "Send invite", "Continue", longLabel,
+            "Send invite", "Archive", "Continue", longLabel,
             // An icon alone has no name; this one is given by the app.
             "Delete page",
         ]
@@ -59,19 +62,38 @@ final class ButtonTests: XCTestCase {
     }
 
     @MainActor
-    func testALoadingButtonStaysAvailableAndIgnoresActivation() {
+    func testALoadingButtonSaysItIsInProgressStaysAvailableAndIgnoresActivation() {
         let app = launch()
         let button = app.buttons["Send invite"]
+        // The name stays, and the state follows it as the value: "Send invite, In progress".
+        XCTAssertEqual(button.label, "Send invite")
+        XCTAssertEqual(button.value as? String, "In progress")
         XCTAssertTrue(button.isEnabled)
         button.tap()
         XCTAssertEqual(lastAction(app), "Last action: Nothing yet")
+
+        // No other button has a state to report, and a disabled button is not also in progress.
+        for name in ["Save changes", "Publish", "Archive", "Delete page"] {
+            XCTAssertEqual(app.buttons[name].value as? String ?? "", "", name)
+        }
+        XCTAssertFalse(app.buttons["Archive"].isEnabled)
+    }
+
+    @MainActor
+    func testTheLoadingStateIsSaidInThePersonsLanguage() {
+        let expected = ["vi": "Đang xử lý", "ja": "処理中", "fr": "In progress"]
+        for (language, words) in expected {
+            let app = launch(language: language)
+            XCTAssertEqual(app.buttons["Send invite"].value as? String, words, language)
+            app.terminate()
+        }
     }
 
     @MainActor
     func testEveryTouchTargetIsAtLeastTheMinimum() {
         let app = launch()
         let buttons = app.buttons.allElementsBoundByIndex
-        XCTAssertGreaterThanOrEqual(buttons.count, 12)
+        XCTAssertGreaterThanOrEqual(buttons.count, 13)
         // The frame is the area that takes touches, and the one assistive technology is given.
         for button in buttons {
             XCTAssertGreaterThanOrEqual(button.frame.width, tokens.targetMinimum - 0.5, button.label)

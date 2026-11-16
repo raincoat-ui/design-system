@@ -8,6 +8,7 @@ The UI tests check what the package's unit tests cannot:
 
 - the role and name that assistive technology is given for each component
 - activation by touch, and that disabled and loading components ignore it
+- what a loading component says, in more than one language
 - the room a component takes, and the touch area the system reports for it
 - growth at a large text size
 - the system's accessibility audit (`performAccessibilityAudit`)

@@ -25,6 +25,8 @@
         private let isLoading: Bool
         private let action: () -> Void
 
+        @Environment(\.isEnabled) private var isEnabled
+
         /// Creates a button with a label.
         ///
         /// - Parameters:
@@ -35,7 +37,8 @@
         ///   - trailingIcon: An icon after the label.
         ///   - isFullWidth: Whether the button stretches to the width of its container.
         ///   - isLoading: Whether the action is in progress. A loading button keeps its label and
-        ///     focus, shows a spinner in place of the leading icon, and ignores activation.
+        ///     focus, shows a spinner in place of the leading icon, ignores activation, and tells
+        ///     assistive technology that it is in progress.
         ///   - action: What the button does.
         public init(
             _ title: Text,
@@ -133,6 +136,9 @@
                 )
             }
             .buttonStyle(style)
+            // iOS has no busy state to set, so assistive technology is told in words, after the
+            // name: "Save changes, In progress". A disabled button is not also busy.
+            .accessibilityValue(isLoading && isEnabled ? Text("button.loading", bundle: .module) : Text(verbatim: ""))
 
             if let accessibilityLabel {
                 button.accessibilityLabel(accessibilityLabel)
@@ -328,9 +334,8 @@
             .onAppear {
                 withAnimation(.linear(duration: 1).repeatForever(autoreverses: false)) { isTurning = true }
             }
-            // Assistive technology meets the system's own progress indicator, which says that
-            // something is in progress in the person's language.
-            .accessibilityRepresentation { ProgressView() }
+            // The ring is decoration. The button says that its action is in progress.
+            .accessibilityHidden(true)
         }
     }
 #endif

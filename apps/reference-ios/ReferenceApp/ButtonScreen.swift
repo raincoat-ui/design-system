@@ -31,10 +31,17 @@ struct ButtonScreen: View {
                 }
 
                 section("Disabled and loading") {
-                    HStack(spacing: tokens.space._4) {
-                        RaincoatButton("Publish", variant: .primary) { lastAction = "Publish" }
+                    VStack(alignment: .leading, spacing: tokens.space._3) {
+                        HStack(spacing: tokens.space._4) {
+                            RaincoatButton("Publish", variant: .primary) { lastAction = "Publish" }
+                                .disabled(true)
+                            RaincoatButton("Send invite", variant: .primary, isLoading: true) {
+                                lastAction = "Send invite"
+                            }
+                        }
+                        // Disabled wins: this button is not also in progress.
+                        RaincoatButton("Archive", variant: .secondary, isLoading: true) { lastAction = "Archive" }
                             .disabled(true)
-                        RaincoatButton("Send invite", variant: .primary, isLoading: true) { lastAction = "Send invite" }
                     }
                 }
 
