@@ -1,0 +1,7 @@
+[versions]
+kotlin = "2.4.21"
+licensee = "1.14.1"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+licensee = { id = "app.cash.licensee", version.ref = "licensee" }

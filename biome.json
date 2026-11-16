@@ -13,6 +13,7 @@
       "!**/__snapshots__",
       "!**/__screenshots__",
       "!licenses/ALLOWLIST.md",
+      "!licenses/allowlist.json",
       "!packages/web-themes/*/theme.css",
       "!CODE_OF_CONDUCT.md"
     ]

@@ -1,4 +1,4 @@
-# Dependency updates. Gradle and Swift entries are added with those builds in milestone 1.
+# Dependency updates. A Swift entry is added when the Swift package gains a dependency.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -27,4 +27,17 @@ updates:
       prefix: "chore(ci)"
     groups:
       actions:
+        patterns: ["*"]
+
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      gradle:
         patterns: ["*"]

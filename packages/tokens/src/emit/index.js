@@ -4,6 +4,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { buildThemeCss } from "./css.js";
+import { expectedKotlin, themeKotlin, tokenSetKotlin } from "./kotlin.js";
 import { expectedSwift, themeSwift, tokenSetSwift } from "./swift.js";
 
 // The base theme is the token source itself. Overlay themes join this list in milestone 2.
@@ -13,14 +14,22 @@ const pascal = (id) => id[0].toUpperCase() + id.slice(1);
 
 /** Every generated file and its content. */
 function outputs(root) {
+  const kotlin = "src/main/kotlin/io/github/raincoatui";
+  const kotlinTest = "src/test/kotlin/io/github/raincoatui";
   const files = [
     {
       file: "packages/ios/Sources/RaincoatTokens/Generated/TokenSet.swift",
       content: tokenSetSwift(root),
     },
+    {
+      file: `packages/android/tokens/${kotlin}/tokens/generated/TokenSet.kt`,
+      content: tokenSetKotlin(root),
+    },
   ];
   for (const { id } of THEMES) {
     const name = pascal(id);
+    const module = `packages/android/theme-${id}`;
+    const kotlinPackage = `theme/${id.replaceAll("-", "")}/generated`;
     files.push(
       { file: `packages/web-themes/${id}/theme.css`, content: buildThemeCss(root) },
       {
@@ -30,6 +39,14 @@ function outputs(root) {
       {
         file: `packages/ios/Tests/RaincoatTheme${name}Tests/Generated/Expected${name}Tokens.swift`,
         content: expectedSwift(root, id),
+      },
+      {
+        file: `${module}/${kotlin}/${kotlinPackage}/${name}Theme.kt`,
+        content: themeKotlin(root, id),
+      },
+      {
+        file: `${module}/${kotlinTest}/${kotlinPackage}/Expected${name}Tokens.kt`,
+        content: expectedKotlin(root, id),
       },
     );
   }
