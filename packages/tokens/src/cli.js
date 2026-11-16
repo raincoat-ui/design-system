@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// raincoat-tokens lint      check the token source
+// raincoat-tokens lint      check the token source and the component specs
 // raincoat-tokens contrast  check contrast for every declared pair in every color mode
 // raincoat-tokens build     generate every platform's output; --check fails if any is out of date
 // All read `<cwd>/tokens`; pass --root <dir> to point elsewhere. --all lists passing pairs too.
@@ -8,6 +8,7 @@ import { checkContrast } from "./contrast.js";
 import { build } from "./emit/index.js";
 import { lint } from "./lint.js";
 import { loadSource } from "./load.js";
+import { lintSpecs, loadSpecs } from "./specs.js";
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -15,7 +16,7 @@ const rootIndex = args.indexOf("--root");
 const root = resolve(rootIndex === -1 ? process.cwd() : args[rootIndex + 1]);
 
 if (command === "lint") {
-  const problems = lint(root);
+  const problems = [...lint(root), ...lintSpecs(root)];
   if (problems.length > 0) {
     let file = null;
     for (const problem of problems) {
@@ -25,11 +26,12 @@ if (command === "lint") {
       }
       console.error(`  ${problem.message}`);
     }
-    console.error(`\n${problems.length} token problem(s).`);
+    console.error(`\n${problems.length} problem(s) in the token source or component specs.`);
     process.exit(1);
   }
   const count = new Set(loadSource(root).flatMap((entry) => entry.tokens.map((t) => t.id))).size;
   console.log(`Tokens: ${count} tokens valid in every color mode and density.`);
+  console.log(`Specs: ${loadSpecs(root).length} component spec(s) valid.`);
 } else if (command === "contrast") {
   const rows = checkContrast(root);
   const failures = rows.filter((row) => !row.pass);
