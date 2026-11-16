@@ -111,14 +111,14 @@ accessibility:
     state, in words after the name, such as "Save changes, In progress".
   focus: >-
     A ring at least 2px wide with 3:1 contrast against the surface behind the button, shown for
-    keyboard focus. On the web and on Android the button draws it from the focus ring tokens,
-    because neither platform draws one for it. On iOS the system draws its own focus indicator,
-    which follows the person's Full Keyboard Access settings.
+    keyboard focus. On the web and on Android the button draws it from the focus ring tokens.
+    On iOS the system draws its own focus indicator, which follows the person's Full Keyboard
+    Access settings.
   target-size: >-
     The area that takes touches is at least 44pt on iOS, 48dp on Android, and 44px on a touch
     screen on the web, whatever the visible size. The button's layout size is its visible size:
     around a smaller button the touch area reaches past the container without taking room.
-    A mouse has to be on the container itself.
+    On the web and on Android a mouse has to be on the container itself.
   contrast: The label has 4.5:1 against the fill in every state, and 7:1 in high-contrast modes.
 
 internationalization:

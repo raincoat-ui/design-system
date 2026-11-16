@@ -39,10 +39,10 @@ another page, use a link.
 A button takes the room it shows. A button shorter or narrower than the minimum touch target
 still takes touches across that minimum, so its touch area reaches a few pixels past its edges.
 
-- Leave at least 8px (`space.2`) between small buttons, so the touch areas of two buttons do
-  not reach onto each other.
-- With less room than that, a touch in the space the two areas share goes to one of them: the
-  nearer button on Android, and the button that is drawn later on iOS and the web.
+- Leave at least 8px (`space.2`) between small buttons, so that the touch area of one button
+  never covers part of another.
+- Between two buttons that close, the touch areas can share the gap. Android gives a touch
+  there to the nearer button; on iOS and the web, do not count on which one gets it.
 - Do not rely on the touch area to separate a small button from other content. Give it the
   spacing you would give any control.
 
