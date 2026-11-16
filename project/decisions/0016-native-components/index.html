@@ -77,8 +77,8 @@
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="context">Context</h2><a class="sl-anchor-link" href="#context"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Context”</span></a></div>
 <p>The component specs are platform-neutral, and the tokens are the same values everywhere. Building
-the SwiftUI Button raised four places where copying the web implementation would have made a
-worse iOS component.</p>
+the SwiftUI and Compose Buttons raised several places where copying the web implementation would
+have made a worse native component.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="decision">Decision</h2><a class="sl-anchor-link" href="#decision"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Decision”</span></a></div>
 <p>A native component follows its spec and takes every color and size from tokens. Where the
 platform already provides a behavior that people can configure, the component uses the
@@ -87,48 +87,72 @@ platform’s.</p>
 <thead>
 <tr>
 <th>Topic</th>
-<th>Decision</th>
+<th>iOS (SwiftUI)</th>
+<th>Android (Compose)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Names</td>
-<td>Swift types carry the prefix <code dir="auto">Raincoat</code> when the plain name belongs to SwiftUI: <code dir="auto">RaincoatButton</code>, not <code dir="auto">Button</code>. A <code dir="auto">ButtonStyle</code>, <code dir="auto">.raincoat(variant:size:)</code>, gives the same look to a <code dir="auto">Link</code>, a <code dir="auto">Menu</code>, or a <code dir="auto">NavigationLink</code></td>
+<td><code dir="auto">RaincoatButton</code>, because <code dir="auto">Button</code> belongs to SwiftUI. A <code dir="auto">ButtonStyle</code>, <code dir="auto">.raincoat(variant:size:)</code>, gives the same look to a <code dir="auto">Link</code> or a <code dir="auto">NavigationLink</code></td>
+<td><code dir="auto">RaincoatButton</code>, because most apps also import Material’s <code dir="auto">Button</code></td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>SwiftUI only</td>
+<td>Compose Foundation only. No Material dependency, so an app is free to use Material beside it, or not</td>
 </tr>
 <tr>
 <td>Disabled</td>
-<td>The platform’s own mechanism: <code dir="auto">disabled(_:)</code> on iOS. There is no <code dir="auto">disabled</code> parameter</td>
+<td>SwiftUI’s <code dir="auto">disabled(_:)</code>. There is no parameter</td>
+<td>An <code dir="auto">enabled</code> parameter, as Compose controls have</td>
 </tr>
 <tr>
 <td>Focus</td>
-<td>iOS draws the system focus indicator. People set its color, contrast, and size under Full Keyboard Access, and a ring of our own would override their choice. The focus ring tokens are used on the web</td>
+<td>The system focus indicator. People set its color, contrast, and size under Full Keyboard Access, and a ring of our own would override their choice</td>
+<td>Compose draws no focus indicator of its own, so the ring is drawn from the focus ring tokens, as on the web</td>
 </tr>
 <tr>
 <td>Touch target</td>
-<td>The button’s layout size is at least the minimum target, and the visible container is centered in it. A small button therefore takes more room than it shows, which is how both platforms’ own controls behave</td>
+<td>The layout size is at least the minimum target, with the visible container centered in it</td>
+<td>The same, and the minimum is the larger of the token and the platform’s own (48dp)</td>
 </tr>
 <tr>
 <td>Text size</td>
-<td>The label and icons grow with the person’s text size setting. The space above and below the label stays as it is, so the button grows taller instead of clipping</td>
+<td>The label and icons grow with the text size setting. The space above and below the label stays as it is, so the button grows taller</td>
+<td>The same. Line height is a multiple of the font size, so it keeps its proportion when Android enlarges big text less</td>
 </tr>
 <tr>
 <td>Loading</td>
-<td>The button stays enabled, so it keeps focus, and ignores activation. The spinner presents itself to assistive technology as the system’s progress indicator, which says “in progress” in the person’s language without strings of our own</td>
+<td>The button stays enabled, so it keeps focus, and ignores activation. The spinner presents itself as the system’s progress indicator</td>
+<td>The same. The button carries indeterminate progress semantics, for which Compose supplies the words “in progress” in the person’s language</td>
+</tr>
+<tr>
+<td>Reduced motion</td>
+<td>Color changes are immediate when Reduce Motion is on</td>
+<td>Compose makes animations immediate when the person has turned them off</td>
 </tr>
 <tr>
 <td>Fonts</td>
-<td>A text style uses the first family of its font stack that is installed or registered by the app, and the system font otherwise</td>
+<td>The first family of the font stack that is installed or registered by the app, and the system font otherwise</td>
+<td>The system font that the font stack ends in. Named families join when themes ship font files</td>
 </tr>
 </tbody>
 </table>
+<p>On both platforms a small button therefore takes more room than it shows, which is how the
+platforms’ own controls behave.</p>
 <p>Component code is linted (<code dir="auto">tools/component-lint</code>): a color built from literal values, a system
 color, or a size written as a number fails <code dir="auto">pnpm test</code>.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="testing">Testing</h2><a class="sl-anchor-link" href="#testing"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Testing”</span></a></div>
 <ul>
-<li>The mapping from variant, size, and state to tokens is pure Swift and is tested on Linux and
-macOS. Expected values are looked up by token id, not by repeating the mapping.</li>
-<li>On macOS the tests draw real buttons into a bitmap and read the pixels back: heights, fills,
-outlines, the touch target, wrapping, right-to-left order, and the spinner.</li>
+<li>The mapping from variant, size, and state to tokens is plain Swift and plain Kotlin. Expected
+values are looked up by token id, not by repeating the mapping. The Swift tests also run on
+Linux.</li>
+<li><strong>iOS.</strong> On macOS the tests draw real buttons into a bitmap and read the pixels back: heights,
+fills, outlines, the touch target, wrapping, right-to-left order, and the spinner.</li>
+<li><strong>Android.</strong> The tests run on the JVM with Robolectric. They read the semantics that
+assistive technology is given, drive the button with touch, mouse, and keys, and read pixels
+back, including the pressed and hovered fills, the focus ring, and a doubled font size.</li>
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="not-yet-done">Not yet done</h2><a class="sl-anchor-link" href="#not-yet-done"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Not yet done”</span></a></div>
 <ul>
@@ -136,7 +160,9 @@ outlines, the touch target, wrapping, right-to-left order, and the spinner.</li>
 for a real assistive client, so unit tests cannot read it. The role, the name, the busy
 announcement, and an accessibility audit are checked by UI tests in the iOS reference app,
 which is the next piece of milestone 1. Until then the loading announcement is unverified.</li>
-<li>Tests at larger text sizes, which need an iOS simulator.</li>
+<li>Tests at larger text sizes on iOS, which need a simulator.</li>
+<li><strong>Google’s Accessibility Test Framework on Android.</strong> It does nothing under Robolectric: a
+button planted without a name passed. It runs on an emulator, with the Android reference app.</li>
 <li>Theme font files. Until a theme bundles them, text uses the system font.</li>
 </ul>
 </div><footer class="sl-flex astro-kkjcfvrw"><div class="meta sl-flex astro-kkjcfvrw"></div><div class="pagination-links print:hidden astro-p36qsldh" dir="ltr"><a href="/design-system/project/decisions/0015-web-components/" rel="prev" class="astro-p36qsldh"><svg aria-hidden="true" class="astro-p36qsldh astro-hv56guoi" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-p36qsldh">Previous<br class="astro-p36qsldh"><span class="link-title astro-p36qsldh">0015. Web components: adapted shadcn/ui source, styled only with tokens</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
