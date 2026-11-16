@@ -42,5 +42,8 @@ M1 is in progress. One token source now drives all three platforms at the token 
 - The SwiftUI Button (`RaincoatButton` and the `.raincoat` button style), tested by drawing it
   and reading the pixels back in every color mode and density.
 
-Still to come in M1: the Compose Button, the reference apps with their accessibility audits, and
-the first prerelease.
+- The Compose Button (`RaincoatButton` in `io.github.raincoat-ui:ui`), tested on the JVM: what
+  assistive technology is told, touch, mouse, and keyboard input, and the pixels it draws.
+
+Still to come in M1: the reference apps with their accessibility audits, and the first
+prerelease.

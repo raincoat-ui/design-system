@@ -46,7 +46,33 @@ const SWIFT_RULES = [
   },
 ];
 
-const RULES = { swift: SWIFT_RULES };
+const KOTLIN_RULES = [
+  {
+    // Color(0xFFF7D22A), Color(red = …), Color(247, 210, 42)
+    pattern: /\bColor\(\s*(?:0x|\d|red\s*=|alpha\s*=)/,
+    message: "builds a color from literal values; use a token color",
+  },
+  {
+    // Color.Red and the like. Transparent and Unspecified are not colors of a design.
+    pattern: /\bColor\.(?!Transparent\b|Unspecified\b)[A-Z]\w*/,
+    message: "names a fixed color; use a token color",
+  },
+  {
+    pattern: /\b(?:MaterialTheme\.|colorResource\(|dimensionResource\()/,
+    message: "reads a color or size from somewhere other than the Raincoat tokens",
+  },
+  {
+    // 8.dp, 14.sp, 1.5.em. Zero is allowed.
+    pattern: /(?<![\w.])(?!0\.(?:dp|sp|em)\b)\d+(?:\.\d+)?\.(?:dp|sp|em)\b/,
+    message: "gives a size as a number; use a token",
+  },
+  {
+    pattern: /\b(?:Dp|TextUnit)\(\s*\d/,
+    message: "gives a size as a number; use a token",
+  },
+];
+
+const RULES = { swift: SWIFT_RULES, kotlin: KOTLIN_RULES };
 
 /** Removes comments, so that prose is not mistaken for code. Line numbers are kept. */
 function withoutComments(source) {
@@ -57,7 +83,7 @@ function withoutComments(source) {
 
 /**
  * Lints the source of one native component file.
- * @param {"swift"} language
+ * @param {"swift" | "kotlin"} language
  * @returns {{line: number, text: string, message: string}[]} problems, empty when clean.
  */
 export function lintComponentSource(language, source) {
@@ -76,4 +102,9 @@ export function lintComponentSource(language, source) {
 /** Where each platform keeps its component sources, relative to the repository root. */
 export const COMPONENT_SOURCES = [
   { language: "swift", dir: "packages/ios/Sources/Raincoat/Components", extension: ".swift" },
+  {
+    language: "kotlin",
+    dir: "packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components",
+    extension: ".kt",
+  },
 ];
