@@ -28,8 +28,10 @@ function npm(args, { env = process.env } = {}) {
 }
 /** What the registry knows: "version" (this version exists), "package" (others do), or "none". */
 function known(name, version) {
-  if (npm(["view", `${name}@${version}`, "version", "--json"]).stdout.includes(version))
-    return "version";
+  const exact = npm(["view", `${name}@${version}`, "version", "--json"]);
+  // For a version that exists, npm prints it as a JSON string. For one that does not, npm's
+  // error message names the version too, so finding the text in the output proves nothing.
+  if (exact.status === 0 && exact.stdout.trim() === JSON.stringify(version)) return "version";
   return npm(["view", name, "name", "--json"]).status === 0 ? "package" : "none";
 }
 function manifestOf(tarball) {
