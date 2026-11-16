@@ -97,6 +97,11 @@ versions are prereleases such as `0.1.0-next.0`, published to npm under the tag 
 4. **Check.** The `install the published release` job must be green. To check a file yourself:
    `gh attestation verify <file> --repo raincoat-ui/design-system`.
 
+npm checks a new version before it serves it. npm says that typically takes around five minutes
+and can take longer; on 2026-11-16 it took two. Until then the registry answers "not found",
+so the install job waits for up to half an hour. Do not run the `release` workflow again during
+that wait: it cannot yet see that npm has the version, and would try to publish it again.
+
 To leave prerelease mode for a stable release, run `pnpm changeset pre exit` before step 1.
 
 Nothing published is ever changed. Each publishing step skips what is already there, so **a
@@ -119,6 +124,18 @@ that up for a package that already exists, so a new package name needs a token o
 5. Delete the secret (`gh secret delete NPM_TOKEN --env release`) and revoke the token on
    npmjs.com. A trusted publisher that is not used within two days expires and must be set up
    again, so do this shortly before a release if none follows immediately.
+
+What the first publish leaves behind, seen with `@raincoat-ui/react` and
+`@raincoat-ui/theme-base` on 2026-11-16:
+
+- **The first version also gets the tag `latest`**, whatever tag it was published with, because
+  a package must have one. Until the first stable release, `npm install <name>` without a tag
+  installs the prerelease.
+- **A second version, `0.0.0-stage`**, which npm adds as a placeholder while it checks a new
+  name. It holds no code. npm's documentation describes it for staged publishing only and does
+  not say whether it is removed.
+- **The email address of the npm account is public**, in the registry's record of every package
+  the account publishes. Use an address that may be public for an account that publishes.
 
 ### Rolling back
 

@@ -56,7 +56,9 @@ M1 is in progress. One token source now drives all three platforms at the token 
 
 - The second prerelease, [0.1.0-next.1](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.1),
   on 2026-11-16. A Button takes only the room it shows on iOS and Android, and on iOS a loading
-  button says that it is in progress. The release page says which registries it reached.
+  button says that it is in progress. It is the first release on all three registries: the
+  Maven repository, npm (`@raincoat-ui/react` and `@raincoat-ui/theme-base`, with provenance),
+  and the Swift mirror `raincoat-ui/design-system-swift`.
 
 - The iOS reference app (`apps/reference-ios`), whose UI tests run the Button on a simulator:
   roles and names, activation, touch targets, text sizes, and the system's accessibility audit.
@@ -69,6 +71,9 @@ M1 is in progress. One token source now drives all three platforms at the token 
 
 Still to come in M1:
 
-- **npm and the Swift mirror.** Both are waiting for a credential: a one-time token for the two
-  new npm package names, and a credential for the mirror repository. Until they exist a release
-  reaches the Maven repository only. The runbook has the steps.
+- **The reference apps install the published release.** The release's own check installs each
+  published package into a small project. The iOS and Android reference apps are built from
+  this repository's tree, and there is no web reference app yet.
+- **npm without a token.** The first publish of the two npm packages used a one-time token.
+  Trusted publishing is set up for each package before the next release, and the token is
+  revoked. The runbook has the steps.

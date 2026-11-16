@@ -5,6 +5,11 @@
 //   node tools/release/consumers/npm-check.mjs --version <version>  from the npm registry
 //
 // It uses npm, not pnpm, and no file of this repository, so it sees what a stranger sees.
+//
+// npm checks a newly published version before it serves it. npm says that typically takes
+// around five minutes and can take longer, and until then the registry answers as it does for a
+// version that does not exist. So from the registry, the install is tried again until it works
+// or NPM_CHECK_WAIT_MINUTES (30 unless set) have passed.
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -22,17 +27,23 @@ const raincoat =
         .map((name) => join(resolve(value), name))
     : [`@raincoat-ui/react@${value}`, `@raincoat-ui/theme-base@${value}`];
 
+const waitMinutes = Number(process.env.NPM_CHECK_WAIT_MINUTES ?? 30);
+
 const project = mkdtempSync(join(tmpdir(), "raincoat-npm-consumer-"));
-function run(command, args) {
-  const result = spawnSync(command, args, {
+function attempt(command, args) {
+  return spawnSync(command, args, {
     cwd: project,
     encoding: "utf8",
     shell: process.platform === "win32",
   });
-  if (result.status !== 0) {
-    console.error(`${command} ${args.join(" ")} failed:\n${result.stdout}${result.stderr}`);
-    process.exit(1);
-  }
+}
+function fail(command, args, result) {
+  console.error(`${command} ${args.join(" ")} failed:\n${result.stdout}${result.stderr}`);
+  process.exit(1);
+}
+function run(command, args) {
+  const result = attempt(command, args);
+  if (result.status !== 0) fail(command, args, result);
   return result.stdout;
 }
 
@@ -41,7 +52,7 @@ writeFileSync(
   JSON.stringify({ name: "consumer", private: true, type: "module" }),
 );
 // What a React app has, plus TypeScript to check the type declarations.
-run("npm", [
+const install = [
   "install",
   "--no-audit",
   "--no-fund",
@@ -51,7 +62,28 @@ run("npm", [
   "@types/react@19.3.0",
   "@types/react-dom@19.3.0",
   "typescript@7.0.2",
-]);
+];
+if (mode === "--tarballs") {
+  run("npm", install);
+} else {
+  // Never answer from npm's cache: the question is what the registry serves now.
+  const fromRegistry = [...install, "--prefer-online"];
+  const deadline = Date.now() + waitMinutes * 60_000;
+  for (;;) {
+    const result = attempt("npm", fromRegistry);
+    if (result.status === 0) break;
+    const output = `${result.stdout}${result.stderr}`;
+    // E404: npm does not serve the package. ETARGET: it serves the package without the version.
+    const notServedYet = /\b(E404|ETARGET)\b/.test(output) && output.includes("@raincoat-ui");
+    if (!notServedYet) fail("npm", fromRegistry, result);
+    if (Date.now() > deadline) {
+      console.error(`npm did not serve ${value} within ${waitMinutes} minutes.`);
+      fail("npm", fromRegistry, result);
+    }
+    console.log(`npm does not serve ${value} yet. Trying again in 20 seconds.`);
+    await new Promise((resolve) => setTimeout(resolve, 20_000));
+  }
+}
 
 writeFileSync(
   join(project, "run.mjs"),
