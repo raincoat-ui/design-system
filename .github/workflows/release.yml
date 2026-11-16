@@ -147,9 +147,33 @@ jobs:
             release/design-system-swift-*.tar.gz
             release/raincoat-*.cdx.json
 
+  # The tag is made before anything is published. From here on this version is this commit:
+  # the next push to main does not release it again, and finishing it by hand is refused if
+  # what the packages ship has changed.
+  tag:
+    name: tag the commit
+    needs: [plan, stage, swift, attest]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Create the tag, or leave the one that exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.plan.outputs.tag }}
+        run: |
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" > /dev/null 2>&1; then
+            echo "$RELEASE_TAG exists."
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+              -f "ref=refs/tags/$RELEASE_TAG" -f "sha=$GITHUB_SHA" --silent
+            echo "Tagged $GITHUB_SHA as $RELEASE_TAG."
+          fi
+
   publish-maven:
     name: publish to the Maven repository
-    needs: [plan, stage, swift, attest]
+    needs: [plan, tag]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment: release
@@ -176,7 +200,7 @@ jobs:
 
   publish-swift:
     name: publish to the Swift mirror
-    needs: [plan, stage, swift, attest]
+    needs: [plan, tag]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment: release
@@ -210,7 +234,7 @@ jobs:
 
   publish-npm:
     name: publish to npm
-    needs: [plan, stage, swift, attest]
+    needs: [plan, tag]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment: release
@@ -288,7 +312,7 @@ jobs:
             flags+=(--prerelease)
           fi
           gh release create "$RELEASE_TAG" \
-            --target "$GITHUB_SHA" \
+            --verify-tag \
             --title "Raincoat $RELEASE_VERSION" \
             --notes-file notes.md \
             "${flags[@]}" \

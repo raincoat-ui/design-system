@@ -33,7 +33,9 @@ and a maintainer opens the pull request. A bot that opens it would need a stored
 pull requests opened with the workflow's own token do not start CI.
 
 **Merging releases.** The `release` workflow runs on every push to `main` and releases when the
-packages' version has no tag.
+packages' version has no tag. The tag is created after the release has been built, checked, and
+attested, and before anything is published, so a version is tied to one commit from the moment
+publishing starts.
 
 **Builders cannot publish, and publishers do not build.** One job builds every file of the
 release with read-only permission. The publishing jobs run in the `release` environment, which
