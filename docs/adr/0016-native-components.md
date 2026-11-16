@@ -78,10 +78,22 @@ color, or a size written as a number fails `pnpm test`.
   the modules from a Maven repository, as an app does, and its tests check what an
   accessibility service such as TalkBack is given (the name, the "In progress" state, whether
   the button is available, and the area it covers) and run Google's Accessibility Test
-  Framework over the screen.
+  Framework over the screen. A clickable picture planted without a name made that check fail,
+  which it had not done under Robolectric.
+
+What the emulator showed about Compose, which the tests now rely on:
+
+- A service is given a button as a container that takes focus and clicks, with the name and a
+  node that says "button" under it. A screen reader reads them as one item.
+- A service is given the touch target of a small button, not only the visible button, except
+  where another item touches it: there the neighbour keeps its own area.
 
 ## Not yet done
 
+- **What a screen reader says out loud.** The tests read what each platform gives an assistive
+  service; they do not run VoiceOver or TalkBack. On Android a loading button carries "In
+  progress" as its state on a node of the progress-bar class, and how TalkBack words that is
+  to be heard in the manual audit that precedes a minor release.
 - **The audit's Dynamic Type check is not used.** It reports every font that was not made from
   a system text style, and Raincoat scales its token sizes itself. A UI test checks instead that
   buttons grow at a large text size.

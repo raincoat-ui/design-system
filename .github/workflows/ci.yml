@@ -256,6 +256,13 @@ jobs:
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
           ./gradlew publishAllPublicationsToStagingRepository --no-daemon --console=plain --quiet
+      # Built before the emulator starts, so that a build failure is not mistaken for a test
+      # failure and does not wait for the emulator to boot.
+      - name: Build the app and its tests
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew -p apps/reference-android assembleDebug assembleDebugAndroidTest \
+            --no-daemon --console=plain --stacktrace
       # An open-source Android image made for automated tests, with no Google services.
       - name: Run the tests on an emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
@@ -265,7 +272,7 @@ jobs:
           arch: x86_64
           # A phone-sized screen, so that the first sections of the app fit without scrolling.
           profile: pixel_6
-          script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest --no-daemon --console=plain
+          script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest --no-daemon --console=plain --stacktrace
       - name: Keep the test report when a test fails
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
