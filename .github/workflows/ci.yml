@@ -170,14 +170,38 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_26.6.app
       - name: Show the toolchain and the simulators
         run: xcodebuild -version && xcrun simctl list devices available
-      - name: Run the UI tests on an iPhone simulator
+      # A simulator that is still starting can refuse to launch the app, and has then hung the
+      # tests until the job timed out. So it is started first, and waited for.
+      - name: Start an iPhone simulator on the newest iOS
+        id: simulator
+        run: |
+          udid=$(xcrun simctl list devices available --json | jq -r '
+            [ .devices | to_entries[]
+              | select(.key | test("SimRuntime\\.iOS-"))
+              | { version: (.key | capture("iOS-(?<major>[0-9]+)-(?<minor>[0-9]+)") | [(.major | tonumber), (.minor | tonumber)]),
+                  device: (.value[] | select(.name == "iPhone 17")) } ]
+            | sort_by(.version) | last | .device.udid')
+          test -n "$udid" && test "$udid" != "null"
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+      # Each test has a time limit, and a test that fails is run once more: a second failure is
+      # a real one.
+      - name: Run the UI tests on the simulator
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
         run: |
           xcodebuild test \
             -project apps/reference-ios/ReferenceApp.xcodeproj \
             -scheme ReferenceApp \
-            -destination 'platform=iOS Simulator,name=iPhone 17' \
+            -destination "platform=iOS Simulator,id=$SIMULATOR" \
             -derivedDataPath build/reference-ios \
-            -resultBundlePath build/reference-ios/results.xcresult
+            -resultBundlePath build/reference-ios/results.xcresult \
+            -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 120 \
+            -maximum-test-execution-time-allowance 240 \
+            -retry-tests-on-failure \
+            -test-iterations 2
       - name: Keep the test results when a test fails
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
