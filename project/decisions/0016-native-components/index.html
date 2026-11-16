@@ -181,14 +181,29 @@ assistive technology is given, drive the button with touch, mouse, and keys, and
 back, including the pressed and hovered fills, the focus ring, and a doubled font size. Touches
 are sent just inside and just outside the minimum target, with a mouse, and between two small
 buttons.</li>
+<li><strong>Android, on an emulator.</strong> <code dir="auto">apps/reference-android</code> is the same app for Android. It installs
+the modules from a Maven repository, as an app does, and its tests check what an
+accessibility service such as TalkBack is given (the name, the “In progress” state, whether
+the button is available, and the area it covers) and run Google’s Accessibility Test
+Framework over the screen. A clickable picture planted without a name made that check fail,
+which it had not done under Robolectric.</li>
+</ul>
+<p>What the emulator showed about Compose, which the tests now rely on:</p>
+<ul>
+<li>A service is given a button as a container that takes focus and clicks, with the name and a
+node that says “button” under it. A screen reader reads them as one item.</li>
+<li>A service is given the touch target of a small button, not only the visible button, except
+where another item touches it: there the neighbour keeps its own area.</li>
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="not-yet-done">Not yet done</h2><a class="sl-anchor-link" href="#not-yet-done"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Not yet done”</span></a></div>
 <ul>
+<li><strong>What a screen reader says out loud.</strong> The tests read what each platform gives an assistive
+service; they do not run VoiceOver or TalkBack. On Android a loading button carries “In
+progress” as its state on a node of the progress-bar class, and how TalkBack words that is
+to be heard in the manual audit that precedes a minor release.</li>
 <li><strong>The audit’s Dynamic Type check is not used.</strong> It reports every font that was not made from
 a system text style, and Raincoat scales its token sizes itself. A UI test checks instead that
 buttons grow at a large text size.</li>
-<li><strong>Google’s Accessibility Test Framework on Android.</strong> It does nothing under Robolectric: a
-button planted without a name passed. It runs on an emulator, with the Android reference app.</li>
 <li>Theme font files. Until a theme bundles them, text uses the system font.</li>
 </ul>
 </div><footer class="sl-flex astro-kkjcfvrw"><div class="meta sl-flex astro-kkjcfvrw"></div><div class="pagination-links print:hidden astro-p36qsldh" dir="ltr"><a href="/design-system/project/decisions/0015-web-components/" rel="prev" class="astro-p36qsldh"><svg aria-hidden="true" class="astro-p36qsldh astro-hv56guoi" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-p36qsldh">Previous<br class="astro-p36qsldh"><span class="link-title astro-p36qsldh">0015. Web components: adapted shadcn/ui source, styled only with tokens</span></span></a><a href="/design-system/project/decisions/0017-release-pipeline/" rel="next" class="astro-p36qsldh"><svg aria-hidden="true" class="astro-p36qsldh astro-hv56guoi" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-p36qsldh">Next<br class="astro-p36qsldh"><span class="link-title astro-p36qsldh">0017. The release pipeline</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

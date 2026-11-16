@@ -110,8 +110,9 @@ the brand owner’s consent, because everything in this repository is public.</l
 </tr>
 </tbody>
 </table>
-<p>The iOS reference app (<code dir="auto">apps/reference-ios</code>) shows the components in an app and tests them on a
-simulator; its <a href="https://github.com/raincoat-ui/design-system/blob/main/apps/reference-ios/README.md">README</a> has the command.</p>
+<p>The reference apps show the components in an app and test them on a simulator
+(<a href="https://github.com/raincoat-ui/design-system/blob/main/apps/reference-ios/README.md">iOS</a>) and an emulator (<a href="https://github.com/raincoat-ui/design-system/blob/main/apps/reference-android/README.md">Android</a>);
+each README has the command.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="commits-and-pull-requests">Commits and pull requests</h2><a class="sl-anchor-link" href="#commits-and-pull-requests"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Commits and pull requests”</span></a></div>
 <ol>
 <li><strong>Sign off every commit.</strong> Use <code dir="auto">git commit -s</code>. The sign-off line certifies the
@@ -189,8 +190,9 @@ misses its contrast requirement in any color mode. See
 (colors, sizes, keyboard, focus, and an automated accessibility audit in every color mode); the
 built stylesheet may contain no literal color or size; and every component must have an entry in
 <code dir="auto">packages/web/shadcn.lock.json</code>.</p>
-<p>The SwiftUI components are also tested on an iOS simulator, through the reference app: what
-assistive technology is told, touch targets, text sizes, and the system’s accessibility audit.</p>
+<p>The SwiftUI and Compose components are also tested in the reference apps, on an iOS simulator
+and an Android emulator: what assistive technology is told, touch targets, and each platform’s
+accessibility audit.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="dependencies">Dependencies</h2><a class="sl-anchor-link" href="#dependencies"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Dependencies”</span></a></div>
 <p>Every dependency, font, and icon must be free or open source under an OSI-approved license on
 the allowlist. Fonts must be OFL-1.1. If you believe an exception is justified, say why in the
