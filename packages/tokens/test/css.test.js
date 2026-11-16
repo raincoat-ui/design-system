@@ -98,9 +98,9 @@ function cssValue(type, value) {
 function expected(token, tokens) {
   const type = resolvedType(token.id, tokens);
   const value = resolveToken(token.id, tokens);
-  if (type !== "typography") return [[`--${token.name}`, cssValue(type, value)]];
+  if (type !== "typography") return [[`--rc-${token.name}`, cssValue(type, value)]];
   return Object.entries(FIELD).map(([field, suffix]) => [
-    `--${token.name}-${suffix}`,
+    `--rc-${token.name}-${suffix}`,
     cssValue(TYPE_OF_FIELD[field], value[field]),
   ]);
 }
@@ -159,7 +159,7 @@ test("a mode block redeclares every property whose value differs, so modes can b
       .sort();
     assert.deepEqual([...scope.keys()].sort(), differing, mode);
     // Component tokens are among them: they are what a nested scope would otherwise get wrong.
-    assert.ok(differing.some((name) => name.startsWith("--button-")));
+    assert.ok(differing.some((name) => name.startsWith("--rc-button-")));
   }
 });
 
@@ -180,7 +180,7 @@ test("the system-preference blocks mirror the explicit mode blocks", () => {
 
 test("colors are written as six-digit hex, with no functions that older tools cannot read", () => {
   for (const [name, value] of base) {
-    if (name.startsWith("--color-") && !value.startsWith("var(")) {
+    if (name.startsWith("--rc-color-") && !value.startsWith("var(")) {
       assert.match(value, /^#[0-9a-f]{6}$/, name);
     }
   }

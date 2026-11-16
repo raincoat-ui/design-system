@@ -168,12 +168,42 @@ jobs:
           export JAVA_HOME="$JAVA_HOME_21_X64"
           ./gradlew test licensee --no-daemon --console=plain
 
+  web:
+    name: react components
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check types
+        run: pnpm web:typecheck
+      # The browser build is the one the pinned Playwright version expects.
+      - name: Install Chromium
+        run: pnpm --filter @raincoat-ui/react exec playwright install --with-deps --only-shell chromium
+      # Builds the package, checks what was built, then runs the component tests in Chromium
+      # against the token source, in every color mode and density.
+      - name: Build and test
+        run: pnpm web:test
+
   # The only required status check. It passes when every job above passed, or was skipped by
   # a path rule, so path filters can never leave a required check waiting forever.
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [validate, secrets, workflows, vulnerabilities, swift-linux, swift-macos, kotlin]
+    needs: [validate, secrets, workflows, vulnerabilities, swift-linux, swift-macos, kotlin, web]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}

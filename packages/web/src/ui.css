@@ -1,0 +1,14 @@
+/*
+ * The source of dist/ui.css: the components' styles compiled ahead of time, for apps that do
+ * not use Tailwind CSS. Such an app imports a Raincoat theme and this file:
+ *
+ *   @import "@raincoat-ui/theme-base/theme.css";
+ *   @import "@raincoat-ui/react/ui.css";
+ *
+ * Tailwind's reset is left out so that the file changes nothing but Raincoat components. The
+ * rules are not in a cascade layer, because rules outside layers win over rules inside them,
+ * and an app's own reset (button { border: 0 }, for example) would then undo the components.
+ */
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css" source(none);
+@import "./tailwind.css";

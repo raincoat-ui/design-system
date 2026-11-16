@@ -1,0 +1,3 @@
+/* What an app without Tailwind CSS writes: a theme and the stylesheet that ships in dist/. */
+@import "@raincoat-ui/theme-base/theme.css";
+@import "../../dist/ui.css";

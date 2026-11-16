@@ -23,3 +23,6 @@ allowBuilds:
   lefthook: false
   # esbuild's postinstall only verifies the platform binary that pnpm already installed.
   esbuild: false
+  # @parcel/watcher (the Tailwind CLI's file watcher) ships prebuilt binaries as optional
+  # dependencies; its install script only compiles from source when asked to.
+  "@parcel/watcher": false

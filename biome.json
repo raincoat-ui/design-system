@@ -15,8 +15,14 @@
       "!licenses/ALLOWLIST.md",
       "!licenses/allowlist.json",
       "!packages/web-themes/*/theme.css",
-      "!CODE_OF_CONDUCT.md"
+      "!CODE_OF_CONDUCT.md",
+      "!packages/web/.shadcn-upstream"
     ]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   },
   "formatter": {
     "enabled": true,

@@ -1,0 +1,61 @@
+/*
+ * Raincoat for Tailwind CSS v4. Import it after Tailwind and a Raincoat theme:
+ *
+ *   @import "tailwindcss";
+ *   @import "@raincoat-ui/theme-base/theme.css";
+ *   @import "@raincoat-ui/react/tailwind.css";
+ *
+ * It tells Tailwind where the components' class names are, defines the variants they use,
+ * and maps the shadcn/ui color contract onto Raincoat tokens.
+ */
+
+/* The class names used by the components in this package. */
+@source "./components/**/*.{js,tsx}";
+
+/* A control that responds to input: neither disabled nor busy. */
+@custom-variant rc-interactive (&:not(:disabled, [data-disabled], [data-loading]));
+/* A disabled control, whether through the disabled attribute, a disabled fieldset, or a prop. */
+@custom-variant rc-disabled (&:is(:disabled, [data-disabled]));
+
+/*
+ * The shadcn/ui contract. Utilities such as bg-background and text-muted-foreground, and
+ * components copied from the shadcn registry, take their values from the theme, so they follow
+ * its color modes without a dark: variant. Charts and the sidebar have no tokens yet.
+ */
+@theme inline {
+  --color-background: var(--rc-color-bg-canvas);
+  --color-foreground: var(--rc-color-fg-default);
+  --color-card: var(--rc-color-bg-surface);
+  --color-card-foreground: var(--rc-color-fg-default);
+  --color-popover: var(--rc-color-bg-surface);
+  --color-popover-foreground: var(--rc-color-fg-default);
+  --color-primary: var(--rc-color-accent-default);
+  --color-primary-foreground: var(--rc-color-fg-on-accent);
+  --color-secondary: var(--rc-color-bg-subtle);
+  --color-secondary-foreground: var(--rc-color-fg-default);
+  --color-muted: var(--rc-color-bg-subtle);
+  --color-muted-foreground: var(--rc-color-fg-muted);
+  --color-accent: var(--rc-color-control-hover);
+  --color-accent-foreground: var(--rc-color-fg-default);
+  --color-destructive: var(--rc-color-danger-default);
+  --color-destructive-foreground: var(--rc-color-fg-on-danger);
+  --color-border: var(--rc-color-border-default);
+  --color-input: var(--rc-color-border-strong);
+  --color-ring: var(--rc-color-border-focus);
+  --radius-sm: var(--rc-radius-sm);
+  --radius-md: var(--rc-radius-md);
+  --radius-lg: var(--rc-radius-lg);
+  --font-sans: var(--rc-type-body-md-font-family);
+}
+
+/* The spinner of a busy control. The keyframes carry a prefix so that they cannot replace, or
+   be replaced by, an app's own "spin". */
+@theme inline {
+  --animate-rc-spin: rc-spin 1s linear infinite;
+
+  @keyframes rc-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
