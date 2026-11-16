@@ -9,9 +9,16 @@
 
     private let languages = ["en", "vi", "zh-Hans", "zh-Hant", "ja", "ko"]
 
+    /// The language folders in the built package. Some versions of SwiftPM write their names in
+    /// lower case, so languages are compared without regard to case.
+    private func languageFolders() throws -> [String: URL] {
+        let folders = try #require(Bundle.module.urls(forResourcesWithExtension: "lproj", subdirectory: nil))
+        return Dictionary(uniqueKeysWithValues: folders.map { ($0.deletingPathExtension().lastPathComponent.lowercased(), $0) })
+    }
+
     private func translation(of key: String, in language: String) throws -> String {
-        let path = try #require(Bundle.module.path(forResource: language, ofType: "lproj"), "no \(language).lproj")
-        let bundle = try #require(Bundle(path: path))
+        let folder = try #require(try languageFolders()[language.lowercased()], "no folder for \(language)")
+        let bundle = try #require(Bundle(url: folder))
         return bundle.localizedString(forKey: key, value: "", table: nil)
     }
 
@@ -25,8 +32,6 @@
     }
 
     @Test func noOtherLanguageIsShippedHalfTranslated() throws {
-        let shipped = try #require(Bundle.module.urls(forResourcesWithExtension: "lproj", subdirectory: nil))
-            .map { $0.deletingPathExtension().lastPathComponent }
-        #expect(Set(shipped) == Set(languages))
+        #expect(try Set(languageFolders().keys) == Set(languages.map { $0.lowercased() }))
     }
 #endif

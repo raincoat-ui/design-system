@@ -1,6 +1,6 @@
 ---
-
-## "@raincoat-ui/swift": patch
+"@raincoat-ui/swift": patch
+---
 
 A loading Button tells VoiceOver that it is in progress.
 

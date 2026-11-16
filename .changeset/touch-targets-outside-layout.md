@@ -1,5 +1,4 @@
 ---
-
 "@raincoat-ui/swift": patch
 "@raincoat-ui/android": patch
 ---

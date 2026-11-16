@@ -81,7 +81,11 @@ final class ButtonTests: XCTestCase {
 
     @MainActor
     func testTheLoadingStateIsSaidInThePersonsLanguage() {
-        let expected = ["vi": "Đang xử lý", "ja": "処理中", "fr": "In progress"]
+        // French has no translation, so it gets English.
+        let expected = [
+            "vi": "Đang xử lý", "zh-Hans": "进行中", "zh-Hant": "進行中", "ja": "処理中", "ko": "진행 중",
+            "fr": "In progress",
+        ]
         for (language, words) in expected {
             let app = launch(language: language)
             XCTAssertEqual(app.buttons["Send invite"].value as? String, words, language)
