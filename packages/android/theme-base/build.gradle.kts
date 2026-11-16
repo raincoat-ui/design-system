@@ -3,9 +3,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.licensee)
+    `maven-publish`
 }
 
 group = "io.github.raincoat-ui"
+description = "The Raincoat base theme: every token, for four color modes and two densities."
 
 // The base theme's generated values. Each theme is its own module, so an app depends only on
 // the one it uses.
@@ -20,6 +22,15 @@ kotlin {
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
 
 // Fails the build when a dependency that ships with this module carries a license outside

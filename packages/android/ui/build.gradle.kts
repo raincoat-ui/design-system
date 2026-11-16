@@ -4,9 +4,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.licensee)
+    `maven-publish`
 }
 
 group = "io.github.raincoat-ui"
+description = "Raincoat components for Jetpack Compose, drawn only with Raincoat design tokens."
 
 // The Compose components. They are built on Compose Foundation alone: no Material dependency,
 // so an app is free to use Material, or not, beside them.
@@ -31,6 +33,21 @@ android {
         unitTests {
             // The component tests run on the JVM with Robolectric, which needs the resources.
             isIncludeAndroidResources = true
+        }
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("maven") {
+            // The release component exists only once the Android plugin has been configured.
+            afterEvaluate { from(components["release"]) }
         }
     }
 }

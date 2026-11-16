@@ -37,6 +37,11 @@ jobs:
         run: pnpm validate
       - name: Build the documentation site
         run: pnpm docs:build
+      # A change to what a package ships must say so, in a changeset file. Tests, documents,
+      # and development dependencies do not need one.
+      - name: Changeset for changes that ship
+        if: github.event_name == 'pull_request'
+        run: pnpm exec changeset status --since=origin/main
       - name: Commit sign-off and pull request title
         if: github.event_name == 'pull_request'
         env:
@@ -140,6 +145,13 @@ jobs:
       - name: Build for iOS
         working-directory: packages/ios
         run: xcodebuild -scheme Raincoat-Package -destination 'generic/platform=iOS Simulator' build
+      # The Swift package is published through a mirror repository. This builds an app target
+      # against the tree the mirror would receive, so the mirror is known to stand on its own.
+      - name: Build an app target against the Swift mirror tree
+        run: |
+          node tools/release/swift-mirror.mjs build/release/design-system-swift
+          RAINCOAT_SWIFT_PATH="$PWD/build/release/design-system-swift" \
+            swift build --package-path tools/release/consumers/swift
 
   kotlin:
     name: android modules
@@ -200,12 +212,68 @@ jobs:
       - name: Build and test
         run: pnpm web:test
 
+  # A rehearsal of the release: everything it would publish is built and then installed the
+  # way an app would install it. Nothing is published.
+  release-rehearsal:
+    name: release rehearsal
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify the Gradle wrapper
+        run: sha256sum --check gradle/wrapper/gradle-wrapper.jar.sha256
+      - name: Cache Gradle downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', 'gradle/libs.versions.toml', '**/*.gradle.kts') }}
+      - name: Build everything a release publishes
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          node tools/release/stage.mjs
+      - name: Install the npm packages as an app would
+        run: node tools/release/consumers/npm-check.mjs --tarballs build/release/npm
+      - name: Build an Android app module against the staged Maven repository
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          version="$(node --print 'require("./build/release/release.json").version')"
+          ./gradlew -p tools/release/consumers/android compileDebugKotlin \
+            "-PraincoatRepository=$PWD/build/release/maven" "-PraincoatVersion=$version" \
+            --no-daemon --console=plain
+
   # The only required status check. It passes when every job above passed, or was skipped by
   # a path rule, so path filters can never leave a required check waiting forever.
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [validate, secrets, workflows, vulnerabilities, swift-linux, swift-macos, kotlin, web]
+    needs:
+      [
+        validate,
+        secrets,
+        workflows,
+        vulnerabilities,
+        swift-linux,
+        swift-macos,
+        kotlin,
+        web,
+        release-rehearsal,
+      ]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}

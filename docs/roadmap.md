@@ -45,5 +45,8 @@ M1 is in progress. One token source now drives all three platforms at the token 
 - The Compose Button (`RaincoatButton` in `io.github.raincoat-ui:ui`), tested on the JVM: what
   assistive technology is told, touch, mouse, and keyboard input, and the pixels it draws.
 
-Still to come in M1: the reference apps with their accessibility audits, and the first
-prerelease.
+- The release pipeline: one version for every package, a rehearsal of the release on every pull
+  request, and publishing to npm, the Maven repository on GitHub Pages, and the Swift mirror,
+  with provenance attestations and a bill of materials.
+
+Still to come in M1: the reference apps with their accessibility audits.

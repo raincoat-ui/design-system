@@ -32,10 +32,14 @@
     "licenses:render": "node tools/license-gate/render-allowlist.mjs",
     "licenses:assets": "node tools/license-gate/assets.mjs",
     "tool": "node tools/ci/run-tool.mjs",
+    "changeset": "changeset",
+    "release:version": "changeset version && node tools/release/sync-versions.mjs && biome check --write .",
+    "release:stage": "node tools/release/stage.mjs",
     "validate": "pnpm lint && pnpm test && pnpm tokens:lint && pnpm tokens:contrast && pnpm tokens:build --check && pnpm licenses:render --check && pnpm licenses:assets && pnpm licenses:check"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
+    "@changesets/cli": "3.0.3",
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
     "lefthook": "2.2.1",

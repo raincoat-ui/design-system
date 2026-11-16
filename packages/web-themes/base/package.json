@@ -1,19 +1,32 @@
 {
   "name": "@raincoat-ui/theme-base",
   "version": "0.0.0",
-  "private": true,
   "description": "The Raincoat base theme: every token as CSS custom properties, for light, dark, and high-contrast modes.",
   "license": "Apache-2.0",
+  "homepage": "https://raincoat-ui.github.io/design-system/",
+  "bugs": "https://github.com/raincoat-ui/design-system/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/raincoat-ui/design-system.git",
     "directory": "packages/web-themes/base"
   },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "css",
+    "theme",
+    "dark-mode",
+    "high-contrast"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     "./theme.css": "./theme.css"
   },
   "files": [
-    "theme.css"
+    "theme.css",
+    "NOTICE"
   ],
   "sideEffects": [
     "*.css"

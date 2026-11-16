@@ -1,0 +1,360 @@
+name: release
+
+# Publishes a version to npm, to the Maven repository on GitHub Pages, and to the Swift mirror,
+# then creates the GitHub release. A version is released when it reaches main and has no tag
+# yet; tools/release/plan.mjs decides. docs/maintaining/runbook.md describes the procedure.
+#
+# The jobs that build never hold permission to publish, and the jobs that publish run no build:
+# they only move files that the build job produced.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+# One release at a time, and never cancel one that has started publishing.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: decide whether to release
+    if: github.repository == 'raincoat-ui/design-system'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+    steps:
+      # The whole history: finishing a release compares this commit with the release's tag.
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Decide
+        id: plan
+        run: node tools/release/plan.mjs >> "$GITHUB_OUTPUT"
+
+  stage:
+    name: build the release
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      # No dependency cache here: a release is built only from what the lockfile names.
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify the Gradle wrapper
+        run: sha256sum --check gradle/wrapper/gradle-wrapper.jar.sha256
+      - name: Build everything the release publishes
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          node tools/release/stage.mjs
+      - name: Install the npm packages as an app would
+        run: node tools/release/consumers/npm-check.mjs --tarballs build/release/npm
+      - name: Build an Android app module against the staged Maven repository
+        env:
+          RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew -p tools/release/consumers/android compileDebugKotlin \
+            "-PraincoatRepository=$PWD/build/release/maven" "-PraincoatVersion=$RELEASE_VERSION" \
+            --no-daemon --console=plain
+      - name: Hand the release to the publishing jobs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release
+          path: build/release
+          retention-days: 14
+          if-no-files-found: error
+
+  swift:
+    name: check the Swift mirror
+    needs: stage
+    runs-on: macos-26
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Select Xcode 26.6
+        run: sudo xcode-select --switch /Applications/Xcode_26.6.app
+      - name: Fetch the release
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: build/release
+      # The mirror must stand on its own: its tests run from the mirror tree, not from here.
+      - name: Test the mirror tree
+        run: swift test --package-path build/release/design-system-swift
+      - name: Build an app target against the mirror tree
+        run: |
+          RAINCOAT_SWIFT_PATH="$PWD/build/release/design-system-swift" \
+            swift build --package-path tools/release/consumers/swift
+
+  # Provenance for every file of the release, signed by this workflow's identity. Anyone can
+  # check a file with: gh attestation verify <file> --repo raincoat-ui/design-system
+  attest:
+    name: attest provenance
+    needs: [stage, swift]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Fetch the release
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: release
+      - name: Attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            release/npm/*.tgz
+            release/maven/**/*.aar
+            release/maven/**/*.jar
+            release/maven/**/*.pom
+            release/maven/**/*.module
+            release/design-system-swift-*.tar.gz
+            release/raincoat-*.cdx.json
+
+  # The tag is made before anything is published. From here on this version is this commit:
+  # the next push to main does not release it again, and finishing it by hand is refused if
+  # what the packages ship has changed.
+  tag:
+    name: tag the commit
+    needs: [plan, stage, swift, attest]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Create the tag, or leave the one that exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.plan.outputs.tag }}
+        run: |
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" > /dev/null 2>&1; then
+            echo "$RELEASE_TAG exists."
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+              -f "ref=refs/tags/$RELEASE_TAG" -f "sha=$GITHUB_SHA" --silent
+            echo "Tagged $GITHUB_SHA as $RELEASE_TAG."
+          fi
+
+  publish-maven:
+    name: publish to the Maven repository
+    needs: [plan, tag]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Fetch the release
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: release
+      - name: Add the modules to the repository on GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/release/publish-maven.mjs release/maven
+
+  publish-swift:
+    name: publish to the Swift mirror
+    needs: [plan, tag]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: read
+    outputs:
+      pending: ${{ steps.publish.outputs.pending }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Fetch the release
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: release
+      # One of the two credentials is stored, not both. With neither, the package is reported
+      # as pending and the rest of the release goes ahead.
+      - name: Push the mirror tree and tag it
+        id: publish
+        env:
+          SWIFT_MIRROR_DEPLOY_KEY: ${{ secrets.SWIFT_MIRROR_DEPLOY_KEY }}
+          SWIFT_MIRROR_TOKEN: ${{ secrets.SWIFT_MIRROR_TOKEN }}
+          RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+        run: node tools/release/publish-swift.mjs release/design-system-swift "$RELEASE_VERSION"
+
+  publish-npm:
+    name: publish to npm
+    needs: [plan, tag]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: read
+      # npm's trusted publishing, and the provenance statement npm attaches to each package.
+      id-token: write
+    outputs:
+      pending: ${{ steps.publish.outputs.pending }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Fetch the release
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: release
+      # NPM_TOKEN is normally not set: npm trusts this workflow. It exists only for the first
+      # publish of a new package name, and is deleted afterwards. See the runbook.
+      - name: Publish
+        id: publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          tag="$(node --print 'require("./release/release.json").npmTag')"
+          node tools/release/publish-npm.mjs release/npm "$tag"
+
+  github-release:
+    name: create the GitHub release
+    needs: [plan, publish-maven, publish-swift, publish-npm]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Fetch the release
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release
+          path: release
+      # The files of a release are never changed. Its notes are rewritten when a release is
+      # finished, because they say which registries it has reached.
+      - name: Create the release, or bring the notes of the one that exists up to date
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.plan.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+          NPM_PENDING: ${{ needs.publish-npm.outputs.pending }}
+          SWIFT_PENDING: ${{ needs.publish-swift.outputs.pending }}
+        run: |
+          notes=(--npm-pending "$NPM_PENDING")
+          if [ "$SWIFT_PENDING" = "true" ]; then notes+=(--swift-pending); fi
+          node tools/release/notes.mjs "${notes[@]}" > notes.md
+          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            gh release edit "$RELEASE_TAG" --notes-file notes.md
+            echo "$RELEASE_TAG already has a release. Its notes were brought up to date."
+            exit 0
+          fi
+          flags=()
+          if [ "$(node --print 'require("./release/release.json").prerelease')" = "true" ]; then
+            flags+=(--prerelease)
+          fi
+          gh release create "$RELEASE_TAG" \
+            --verify-tag \
+            --title "Raincoat $RELEASE_VERSION" \
+            --notes-file notes.md \
+            "${flags[@]}" \
+            release/npm/*.tgz \
+            release/design-system-swift-*.tar.gz \
+            release/raincoat-*.cdx.json
+
+  # Installs what was just published, from where it was published, the way an app would.
+  verify:
+    name: install the published release
+    needs: [plan, publish-maven, publish-swift, publish-npm]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+      MAVEN_REPOSITORY: https://raincoat-ui.github.io/design-system/maven
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Wait for GitHub Pages to serve the new modules
+        run: |
+          node tools/release/wait-for-url.mjs \
+            "$MAVEN_REPOSITORY/io/github/raincoat-ui/ui/$RELEASE_VERSION/ui-$RELEASE_VERSION.pom" 15
+      - name: Android, from the Maven repository on GitHub Pages
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew -p tools/release/consumers/android compileDebugKotlin \
+            "-PraincoatRepository=$MAVEN_REPOSITORY" "-PraincoatVersion=$RELEASE_VERSION" \
+            --no-daemon --console=plain
+      # On Linux this resolves the mirror at the new tag and builds the token modules; the
+      # SwiftUI layer was built from the same tree on macOS before publishing.
+      - name: Swift, from the mirror repository
+        if: needs.publish-swift.outputs.pending != 'true'
+        run: RAINCOAT_VERSION="$RELEASE_VERSION" swift build --package-path tools/release/consumers/swift
+      - name: npm, from the registry
+        if: needs.publish-npm.outputs.pending == ''
+        run: node tools/release/consumers/npm-check.mjs --version "$RELEASE_VERSION"

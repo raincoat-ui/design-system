@@ -3,9 +3,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.licensee)
+    `maven-publish`
 }
 
 group = "io.github.raincoat-ui"
+description = "The Raincoat token types: colors, sizes, text styles, and the theme that holds them. Plain Kotlin."
 
 // Pure Kotlin with no Android dependency, so the token contract is testable on any JVM.
 kotlin {
@@ -19,6 +21,15 @@ kotlin {
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
 
 // Fails the build when a dependency that ships with this module carries a license outside
