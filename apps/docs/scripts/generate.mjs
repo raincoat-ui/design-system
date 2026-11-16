@@ -10,6 +10,7 @@ import {
   compose,
   hexOf,
   loadSource,
+  loadSpecs,
   MODES,
   resolvedType,
   resolveToken,
@@ -349,32 +350,99 @@ const buttonTokens = tokensWhere((t) => t.tier === "component" && t.path[0] === 
   },
 );
 
+const { spec: buttonSpec } = loadSpecs(repoRoot).find((entry) => entry.id === "button");
+const readable = (key) => `${key[0].toUpperCase()}${key.slice(1).replaceAll("-", " ")}`;
+const propertyRows = Object.entries(buttonSpec.properties).map(([name, property]) => [
+  code(name),
+  property.values ? Object.keys(property.values).map(code).join(", ") : "true, false",
+  code(String(property.default)),
+  property.description,
+]);
+const valueTables = Object.entries(buttonSpec.properties)
+  .filter(([, property]) => property.values)
+  .map(
+    ([name, property]) =>
+      `### ${readable(name)}\n\n${table(
+        ["Value", "Use"],
+        Object.entries(property.values).map(([value, use]) => [code(value), use]),
+      )}`,
+  )
+  .join("\n\n");
+const stateRows = Object.entries(buttonSpec.states).map(([name, state]) => [
+  readable(name),
+  state.description,
+]);
+const anatomyRows = Object.entries(buttonSpec.anatomy).map(([part, detail]) => [
+  readable(part),
+  detail.description,
+  (detail.tokens ?? []).map(code).join("<br>"),
+]);
+const keyboardRows = buttonSpec.accessibility.keyboard.map(({ keys, action }) => [
+  keys.map((key) => `<kbd>${key}</kbd>`).join(" or "),
+  action,
+]);
+const accessibilityRows = Object.entries(buttonSpec.accessibility)
+  .filter(([key]) => key !== "keyboard")
+  .map(([key, value]) => [readable(key), value]);
+const internationalizationRows = Object.entries(buttonSpec.internationalization).map(
+  ([key, value]) => [readable(key), value],
+);
+const guidelines = readFileSync(join(repoRoot, "specs/components/button/guidelines.md"), "utf8")
+  .replace(/^# .+\n+/, "")
+  .replace(/^## /gm, "### ");
+
 page(
   "components/button.md",
   {
     title: "Button",
-    description: "The Button's variants in every color mode, drawn from its tokens.",
+    description: buttonSpec.summary,
     order: 1,
   },
   `
 :::caution[In progress]
-The Button is specified in [RFC 0001](/design-system/project/rfcs/0001-foundation-tokens-and-button/)
-and its tokens exist. The React, SwiftUI, and Compose implementations are being built. What you
-see below is a static rendition, not the component. It is styled only with the custom
-properties of the generated theme stylesheet, and each panel selects its mode with a
-${code("data-theme")} attribute.
+The Button's spec and tokens exist; the React, SwiftUI, and Compose implementations are being
+built. The panels under "In every color mode" are static renditions, not the component. They are
+styled only with the custom properties of the generated theme stylesheet, and each panel selects
+its mode with a ${code("data-theme")} attribute.
 :::
 
-## Variants
+${buttonSpec.summary}
 
-| Variant | Use |
-| --- | --- |
-| Primary | The main action in a view. At most one per view. |
-| Secondary | An alternative action beside the primary one. |
-| Ghost | A low-emphasis action with no fill at rest. |
-| Danger | A destructive action. Say what is destroyed: "Delete page", not "Delete". |
+Spec version ${buttonSpec.specVersion}, proposed in
+[RFC 0001](/design-system/project/rfcs/0001-foundation-tokens-and-button/). The variant and size
+types used by every platform's implementation are generated from this spec.
+
+## Properties
+
+${table(["Property", "Values", "Default", "Description"], propertyRows)}
+
+${valueTables}
+
+## In every color mode
 
 ${stages}
+
+## States
+
+${table(["State", "Description"], stateRows)}
+
+## Anatomy
+
+${table(["Part", "Description", "Tokens"], anatomyRows)}
+
+## Accessibility
+
+${table(["Keys", "Action"], keyboardRows)}
+
+${table(["Requirement", "Detail"], accessibilityRows)}
+
+## Internationalization
+
+${table(["Concern", "Behavior"], internationalizationRows)}
+
+## Guidelines
+
+${guidelines}
 
 ## Tokens
 

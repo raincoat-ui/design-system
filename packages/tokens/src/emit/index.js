@@ -5,6 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { buildThemeCss } from "./css.js";
 import { expectedKotlin, themeKotlin, tokenSetKotlin } from "./kotlin.js";
+import { specsKotlin, specsSwift } from "./spec.js";
 import { expectedSwift, themeSwift, tokenSetSwift } from "./swift.js";
 
 // The base theme is the token source itself. Overlay themes join this list in milestone 2.
@@ -24,6 +25,14 @@ function outputs(root) {
     {
       file: `packages/android/tokens/${kotlin}/tokens/generated/TokenSet.kt`,
       content: tokenSetKotlin(root),
+    },
+    {
+      file: "packages/ios/Sources/RaincoatTokens/Generated/ComponentSpecs.swift",
+      content: specsSwift(root),
+    },
+    {
+      file: `packages/android/tokens/${kotlin}/tokens/generated/ComponentSpecs.kt`,
+      content: specsKotlin(root),
     },
   ];
   for (const { id } of THEMES) {
