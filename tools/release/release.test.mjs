@@ -13,6 +13,7 @@ import {
   readJson,
   releaseVersion,
   repoRoot,
+  shippedChangesSince,
   VERSIONED,
 } from "./lib.mjs";
 import { add, artifacts, metadata } from "./maven-repo.mjs";
@@ -30,6 +31,12 @@ const temp = () => {
 after(() => {
   for (const dir of scratch) rmSync(dir, { recursive: true, force: true });
 });
+
+const git = (cwd, ...args) => {
+  const result = spawnSync("git", args, { cwd, encoding: "utf8" });
+  assert.equal(result.status, 0, `git ${args.join(" ")}: ${result.stderr}`);
+  return result.stdout.trim();
+};
 
 // Versions
 
@@ -87,6 +94,67 @@ test("exactly the packages meant for npm are publishable, each with the license 
     assert.ok(existsSync(join(repoRoot, dir, "NOTICE")), `${dir}/NOTICE`);
     assert.ok(existsSync(join(repoRoot, dir, "README.md")), `${dir}/README.md`);
   }
+});
+
+test("only a change to something that ships stops a tagged release from being finished", () => {
+  const repository = temp();
+  const write = (file, content) => {
+    mkdirSync(join(repository, file, ".."), { recursive: true });
+    writeFileSync(join(repository, file), content);
+  };
+  const commit = (message) => {
+    git(repository, "add", "--all");
+    git(
+      repository,
+      "-c",
+      "user.name=t",
+      "-c",
+      "user.email=t@example.invalid",
+      "commit",
+      "--quiet",
+      "--message",
+      message,
+    );
+  };
+  git(repository, "init", "--quiet", "--initial-branch", "main");
+  for (const file of [
+    "packages/web/src/index.ts",
+    "packages/web/test/browser/button.suite.tsx",
+    "packages/android/README.md",
+    "packages/android/ui/src/main/kotlin/Button.kt",
+    "packages/android/ui/src/test/kotlin/ButtonTest.kt",
+    "packages/ios/Tests/RaincoatTests/ButtonTests.swift",
+    "docs/roadmap.md",
+    "tools/release/plan.mjs",
+  ]) {
+    write(file, "one");
+  }
+  commit("release");
+  git(repository, "tag", "v0.1.0");
+
+  // Documents, tools, and tests that are not shipped may move on.
+  for (const file of [
+    "docs/roadmap.md",
+    "tools/release/plan.mjs",
+    "packages/android/README.md",
+    "packages/web/test/browser/button.suite.tsx",
+    "packages/android/ui/src/test/kotlin/ButtonTest.kt",
+  ]) {
+    write(file, "two");
+  }
+  commit("documents and tests");
+  assert.deepEqual(shippedChangesSince("v0.1.0", repository), []);
+
+  // Component code, and the Swift tests that the mirror carries, may not.
+  write("packages/web/src/index.ts", "two");
+  write("packages/android/ui/src/main/kotlin/Button.kt", "two");
+  write("packages/ios/Tests/RaincoatTests/ButtonTests.swift", "two");
+  commit("code");
+  assert.deepEqual(shippedChangesSince("v0.1.0", repository), [
+    "packages/android/ui/src/main/kotlin/Button.kt",
+    "packages/ios/Tests/RaincoatTests/ButtonTests.swift",
+    "packages/web/src/index.ts",
+  ]);
 });
 
 // The Maven repository
@@ -307,11 +375,6 @@ test("the bill of materials lists each component once, in a fixed order, and is 
 
 // Publishing, against local repositories
 
-const git = (cwd, ...args) => {
-  const result = spawnSync("git", args, { cwd, encoding: "utf8" });
-  assert.equal(result.status, 0, `git ${args.join(" ")}: ${result.stderr}`);
-  return result.stdout.trim();
-};
 const script = (name, args, env) =>
   spawnSync(process.execPath, [join(repoRoot, "tools/release", name), ...args], {
     encoding: "utf8",

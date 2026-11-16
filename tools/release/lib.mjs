@@ -1,4 +1,5 @@
 // Shared by the release scripts: where things are, and the one version every package has.
+import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -74,6 +75,54 @@ export function compareVersions(a, b) {
     if (difference !== 0) return difference;
   }
   return 0;
+}
+
+/**
+ * What a release is built from: the files that reach npm, the Maven repository, or the Swift
+ * mirror, or that decide what does. Tests of the web and Android packages, and documents that
+ * are not shipped, are not here. These are git pathspecs.
+ */
+export const SHIPPED = [
+  "LICENSE",
+  "NOTICE",
+  "tokens",
+  "specs",
+  // npm
+  "packages/web/src",
+  "packages/web/scripts",
+  "packages/web/package.json",
+  "packages/web/tsconfig.json",
+  "packages/web/tsconfig.build.json",
+  "packages/web/README.md",
+  "packages/web/LICENSE",
+  "packages/web/NOTICE",
+  "packages/web-themes",
+  // Maven
+  ":(glob)packages/android/*/src/main/**",
+  ":(glob)packages/android/*/build.gradle.kts",
+  "gradle/libs.versions.toml",
+  "gradle.properties",
+  "build.gradle.kts",
+  "settings.gradle.kts",
+  // The Swift mirror, which carries the tests and the documents too
+  "packages/ios/Package.swift",
+  "packages/ios/Sources",
+  "packages/ios/Tests",
+  "packages/ios/README.md",
+  "packages/ios/CHANGELOG.md",
+];
+
+/**
+ * The shipped files that differ between a tag and the current commit.
+ * @returns {string[]} their paths; empty when a release of that tag can still be finished.
+ */
+export function shippedChangesSince(tag, root = repoRoot) {
+  const result = spawnSync("git", ["diff", "--name-only", tag, "HEAD", "--", ...SHIPPED], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (result.status !== 0) throw new Error(`could not compare with ${tag}:\n${result.stderr}`);
+  return result.stdout.split("\n").filter(Boolean);
 }
 
 /** Whether a version is a prerelease, such as 0.1.0-next.0. */
