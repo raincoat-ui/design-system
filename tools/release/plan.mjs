@@ -7,7 +7,7 @@
 // if its tag exists: every publishing step skips what is already published, so this is how a
 // release that stopped halfway is finished.
 import { spawnSync } from "node:child_process";
-import { releaseVersion, repoRoot } from "./lib.mjs";
+import { releaseVersion, repoRoot, shippedChangesSince } from "./lib.mjs";
 
 const version = releaseVersion();
 const tag = `v${version}`;
@@ -28,41 +28,21 @@ if (remote.status !== 0 && remote.status !== 2) {
 }
 const tagged = remote.status === 0;
 
-// What a package ships is built from these. A release that is being finished must still be the
-// release that was tagged.
-const SHIPPED = [
-  "packages",
-  "tokens",
-  "specs",
-  "gradle/libs.versions.toml",
-  "gradle.properties",
-  "build.gradle.kts",
-  "settings.gradle.kts",
-];
+// A release that is being finished must still be the release that was tagged.
 if (tagged && manual) {
   const fetched = spawnSync(
     "git",
     ["fetch", "--quiet", "--no-tags", "origin", `refs/tags/${tag}:refs/tags/${tag}`],
-    {
-      cwd: repoRoot,
-      encoding: "utf8",
-    },
+    { cwd: repoRoot, encoding: "utf8" },
   );
   if (fetched.status !== 0) {
     console.error(`could not fetch ${tag}:\n${fetched.stderr}`);
     process.exit(1);
   }
-  const changed = spawnSync("git", ["diff", "--name-only", tag, "HEAD", "--", ...SHIPPED], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
-  if (changed.status !== 0) {
-    console.error(`could not compare with ${tag}:\n${changed.stderr}`);
-    process.exit(1);
-  }
-  if (changed.stdout.trim() !== "") {
+  const changed = shippedChangesSince(tag);
+  if (changed.length > 0) {
     console.error(
-      `${tag} cannot be finished from this commit: what the packages ship has changed since the tag.\n${changed.stdout}\nRelease a new version instead.`,
+      `${tag} cannot be finished from this commit: what the packages ship has changed since the tag.\n${changed.join("\n")}\nRelease a new version instead.`,
     );
     process.exit(1);
   }
