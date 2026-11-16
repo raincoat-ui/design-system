@@ -65,16 +65,24 @@ class ButtonScreenTest {
     private fun serviceNode(name: String): AccessibilityNodeInfo {
         compose.waitForIdle()
         val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        var seen = emptyList<AccessibilityNodeInfo>()
         // The tree is built once a service is listening, which takes a moment.
         repeat(50) {
-            val found = automation.rootInActiveWindow
-                ?.findAccessibilityNodeInfosByText(name)
-                ?.firstOrNull { it.className == "android.widget.Button" }
+            seen = automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
+            val found = seen.firstOrNull { node ->
+                node.className == "android.widget.Button" &&
+                    (node.text?.toString() == name || node.contentDescription?.toString() == name)
+            }
             if (found != null) return found
             Thread.sleep(100)
         }
-        throw AssertionError("no button named \"$name\" in the accessibility tree")
+        val tree = seen.joinToString("\n") { "${it.className} text=${it.text} description=${it.contentDescription}" }
+        throw AssertionError("no button named \"$name\" among the ${seen.size} nodes a service is given:\n$tree")
     }
+
+    /** A node and everything under it. Compose does not answer a search by text, so walk the tree. */
+    private fun withDescendants(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
+        listOf(node) + (0 until node.childCount).mapNotNull(node::getChild).flatMap(::withDescendants)
 
     @Test
     fun everyButtonIsAButtonNamedByItsLabel() {
