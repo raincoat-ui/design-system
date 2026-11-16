@@ -70,6 +70,54 @@ test("swift: tokens, zero, and unrelated numbers are allowed", () => {
   }
 });
 
+test("kotlin: literal and fixed colors, and other sources of them, are reported", () => {
+  for (const line of [
+    "val fill = Color(0xFFF7D22A)",
+    "val fill = Color(red = 0.97f, green = 0.82f, blue = 0.16f)",
+    "val fill = Color(247, 210, 42)",
+    "Modifier.background(Color.Red)",
+    "drawRect(Color.Black)",
+    "val fill = MaterialTheme.colorScheme.primary",
+    "val fill = colorResource(R.color.brand)",
+    "val gap = dimensionResource(R.dimen.gap)",
+  ]) {
+    assert.equal(messages("kotlin", line).length, 1, line);
+  }
+});
+
+test("kotlin: sizes written as numbers are reported", () => {
+  for (const line of [
+    "Modifier.padding(8.dp)",
+    "Modifier.padding(horizontal = 16.dp, vertical = 0.dp)",
+    "fontSize = 14.sp,",
+    "lineHeight = 1.5.em,",
+    "Modifier.size(Dp(24f))",
+    "RoundedCornerShape(8.dp)",
+  ]) {
+    assert.ok(messages("kotlin", line).length >= 1, line);
+  }
+});
+
+test("kotlin: tokens, zero, and unrelated numbers are allowed", () => {
+  for (const line of [
+    "val shape = RoundedCornerShape(button.radius.dp)",
+    "Modifier.background(colors.fill.toColor(), shape)",
+    "horizontal = if (text == null) 0.dp else measurements.paddingInline.dp,",
+    "colors.fill?.toColor() ?: clearFill ?: Color.Transparent,",
+    "val unset = Color.Unspecified",
+    "val iconSize = with(density) { measurements.iconSize.sp.toDp() }",
+    "animationSpec = infiniteRepeatable(tween(durationMillis = 1000, easing = LinearEasing)),",
+    "val stroke = this.size.minDimension / 8",
+    "drawArc(color().copy(alpha = 0.25f), 0f, 360f, false, topLeft, arc, style = Stroke(stroke))",
+    "modifier = Modifier.weight(1f, fill = false),",
+    "private fun ButtonSpinner(size: Dp, color: () -> Color) {",
+    "lineHeight = lineHeight.em,",
+    "// a comment may say Color.Red or 8.dp",
+  ]) {
+    assert.deepEqual(messages("kotlin", line), [], line);
+  }
+});
+
 test("problems name the line they are on", () => {
   const source = ["struct Example {", "    // fine", "    let fill = Color.red", "}"].join("\n");
   assert.deepEqual(lintComponentSource("swift", source), [

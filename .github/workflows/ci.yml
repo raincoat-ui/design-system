@@ -142,7 +142,7 @@ jobs:
         run: xcodebuild -scheme Raincoat-Package -destination 'generic/platform=iOS Simulator' build
 
   kotlin:
-    name: kotlin modules
+    name: android modules
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -161,8 +161,10 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', 'gradle/libs.versions.toml', '**/*.gradle.kts') }}
-      # The token and theme modules are plain Kotlin, so the Android contract test runs on a
-      # JVM without the Android SDK. licensee is the license gate for shipped dependencies.
+      # The token and theme modules are plain Kotlin. The Compose components are an Android
+      # library, built with the Android SDK that the runner provides, and their tests run on
+      # the JVM with Robolectric, so no emulator is needed. licensee is the license gate for
+      # shipped dependencies.
       - name: Test, and check the licenses of shipped dependencies
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"

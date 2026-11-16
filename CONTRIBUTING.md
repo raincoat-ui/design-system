@@ -24,7 +24,7 @@ Each platform package has tests of its own:
 | --------------------------- | ---------------------------------------- | ------------------------------------------------- |
 | React (`packages/web`)      | `pnpm web:typecheck` and `pnpm web:test` | Chromium, installed once with `pnpm web:browsers` |
 | Swift (`packages/ios`)      | `swift test --package-path packages/ios` | Swift 6.2 or later                                |
-| Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21                                            |
+| Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21 and the Android SDK (platform 37)          |
 
 ## Commits and pull requests
 
