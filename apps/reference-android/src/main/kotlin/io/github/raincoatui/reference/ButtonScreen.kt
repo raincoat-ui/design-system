@@ -1,15 +1,12 @@
 package io.github.raincoatui.reference
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -62,13 +59,6 @@ fun ButtonScreen() {
         verticalArrangement = Arrangement.spacedBy(tokens.space._6.dp),
     ) {
         BasicText("Last action: $lastAction", Modifier.testTag("last-action"), style = body)
-        // PLANTED, to be reverted: a clickable picture with no name. The accessibility checks
-        // must fail on it.
-        Image(
-            painter = PlaceholderIcon,
-            contentDescription = null,
-            modifier = Modifier.size(tokens.size.target.minimum.dp).clickable { lastAction = "Planted" },
-        )
 
         Section("Variants", caption) {
             Column(verticalArrangement = Arrangement.spacedBy(tokens.space._3.dp)) {
