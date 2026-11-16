@@ -26,6 +26,9 @@ Each platform package has tests of its own:
 | Swift (`packages/ios`)      | `swift test --package-path packages/ios` | Swift 6.2 or later                                |
 | Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21 and the Android SDK (platform 37)          |
 
+The iOS reference app (`apps/reference-ios`) shows the components in an app and tests them on a
+simulator; its [README](apps/reference-ios/README.md) has the command.
+
 ## Commits and pull requests
 
 1. **Sign off every commit.** Use `git commit -s`. The sign-off line certifies the
@@ -67,7 +70,10 @@ misses its contrast requirement in any color mode. See
 The React components add three more: they are tested in a real browser against the token source
 (colors, sizes, keyboard, focus, and an automated accessibility audit in every color mode); the
 built stylesheet may contain no literal color or size; and every component must have an entry in
-`packages/web/shadcn.lock.json`. More checks join as the platform packages land.
+`packages/web/shadcn.lock.json`.
+
+The SwiftUI components are also tested on an iOS simulator, through the reference app: what
+assistive technology is told, touch targets, text sizes, and the system's accessibility audit.
 
 ## Dependencies
 

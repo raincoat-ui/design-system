@@ -3,8 +3,9 @@
 Raincoat components for iOS 17 and later, written in SwiftUI. Every color, size, and text style
 they use comes from a Raincoat theme.
 
-This package is not published yet. The first prerelease will be `0.1.0-next.0`, from
-`https://github.com/raincoat-ui/design-system-swift`.
+Prereleases are tagged in `https://github.com/raincoat-ui/design-system-swift`. The
+[releases page](https://github.com/raincoat-ui/design-system/releases) says which registries each
+version has reached.
 
 ## Products
 
@@ -51,7 +52,9 @@ RaincoatButton("Save changes") { save() }.disabled(!canSave)
 
 - The title is a `LocalizedStringKey`, a `String`, or a `Text`.
 - Long labels wrap. The button grows taller; the label is never truncated.
-- The touch target is at least 44 points, whatever the visible height.
+- The button takes the room it shows. The area that takes touches is at least 44 points across,
+  so around a small button it reaches past the edges. Leave 8 points or more between small
+  buttons.
 - The label and icons grow with the person's text size setting.
 - In right-to-left layouts the leading icon is on the right.
 

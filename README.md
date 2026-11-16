@@ -8,9 +8,10 @@ on top.
 
 **Documentation: <https://raincoat-ui.github.io/design-system/>**
 
-> **Status: milestone 1 in progress.** The token source exists; the build pipeline and the first
-> component are being built. Nothing is published yet. See the [roadmap](docs/roadmap.md) for
-> what each milestone delivers.
+> **Status: milestone 1 in progress.** One token source drives a Button on the web, iOS, and
+> Android, and prereleases are being published. The
+> [releases page](https://github.com/raincoat-ui/design-system/releases) says which registries
+> each one has reached, and the [roadmap](docs/roadmap.md) what each milestone delivers.
 
 ## What it will be
 

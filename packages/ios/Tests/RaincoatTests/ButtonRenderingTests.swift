@@ -1,6 +1,6 @@
 #if canImport(SwiftUI) && canImport(CoreGraphics)
     import CoreGraphics
-    import Raincoat
+    @testable import Raincoat
     import RaincoatThemeBase
     import RaincoatTokens
     import SwiftUI
@@ -162,18 +162,15 @@
 
     @MainActor
     @Test(arguments: Density.allCases, ButtonSize.allCases)
-    func aButtonIsAsTallAsItsTokenInsideATargetOfAtLeastTheMinimum(density: Density, size: ButtonSize) throws {
+    func aButtonIsAsTallAsItsTokenAndTakesNoMoreRoomThanItShows(density: Density, size: ButtonSize) throws {
         let button = tokens(.light, density).button
         let height = Int(ButtonHeight(button, size))
-        let target = max(height, Int(button.targetMinimum))
         let drawing = try Drawing(RaincoatButton("Save", variant: .primary, size: size) {}, density: density)
 
-        // The layout size is the touch target; the painted container is the token height,
-        // centered in it.
-        #expect(drawing.height == target)
-        let rows = try #require(drawing.paintedRows(inColumn: drawing.width / 4))
-        #expect(rows.count == height)
-        #expect(rows.lowerBound == (target - height) / 2)
+        // The layout size is the painted container. (A quarter of the way along is clear of
+        // the round corners.)
+        #expect(drawing.height == height)
+        #expect(drawing.paintedRows(inColumn: drawing.width / 4)?.count == height)
     }
 
     @MainActor
@@ -181,15 +178,14 @@
     func anIconOnlyButtonIsSquare(density: Density, size: ButtonSize) throws {
         let button = tokens(.light, density).button
         let side = Int(ButtonHeight(button, size))
-        let target = max(side, Int(button.targetMinimum))
         let drawing = try Drawing(
             RaincoatButton(icon: marker(magenta), accessibilityLabel: Text("Delete page"), variant: .primary, size: size) {},
             density: density
         )
-        #expect(drawing.width == target)
-        #expect(drawing.height == target)
-        #expect(drawing.paintedRows(inColumn: target / 2)?.count == side)
-        #expect(drawing.paintedColumns(inRow: target / 2)?.count == side)
+        #expect(drawing.width == side)
+        #expect(drawing.height == side)
+        #expect(drawing.paintedRows(inColumn: side / 2)?.count == side)
+        #expect(drawing.paintedColumns(inRow: side / 2)?.count == side)
 
         // The icon is drawn at the token's icon size.
         let iconSize: Double =
@@ -199,6 +195,16 @@
             case .lg: button.iconSize.lg
             }
         #expect(drawing.columns(with: magenta).count == Int(iconSize))
+    }
+
+    @Test func theTouchTargetIsAtLeastTheMinimumAroundASmallerButton() {
+        let target = TouchTarget(minimum: 44)
+        // A small square button: the target reaches the same distance past every side.
+        #expect(target.path(in: CGRect(x: 0, y: 0, width: 32, height: 32)).boundingRect == CGRect(x: -6, y: -6, width: 44, height: 44))
+        // A wide button: only the height is short of the minimum.
+        #expect(target.path(in: CGRect(x: 0, y: 0, width: 120, height: 40)).boundingRect == CGRect(x: 0, y: -2, width: 120, height: 44))
+        // A button that is already large enough: the target is the button.
+        #expect(target.path(in: CGRect(x: 0, y: 0, width: 120, height: 48)).boundingRect == CGRect(x: 0, y: 0, width: 120, height: 48))
     }
 
     @MainActor

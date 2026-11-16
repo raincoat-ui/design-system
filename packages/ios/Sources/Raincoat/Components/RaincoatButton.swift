@@ -10,6 +10,10 @@
     ///
     /// Disable it with `disabled(_:)`, as any SwiftUI control. Colors, sizes, and text styles
     /// come from the theme in the environment; see `View.raincoatTheme(_:)`.
+    ///
+    /// The button takes the room it shows. A button smaller than the minimum touch target also
+    /// takes touches that land just outside it, so leave at least that much room between two
+    /// small buttons.
     public struct RaincoatButton: View {
         private let title: Text?
         private let accessibilityLabel: Text?
@@ -221,15 +225,10 @@
                         shape.strokeBorder(Color(border), lineWidth: button.borderWidth)
                     }
                 }
-                // The touch target is at least the minimum size, whatever the visible height.
-                // The visible container stays centered in it.
-                .frame(
-                    minWidth: button.targetMinimum,
-                    maxWidth: style.isFullWidth ? .infinity : nil,
-                    minHeight: button.targetMinimum
-                )
-                .contentShape(Rectangle())
                 .onHover { isHovered = $0 }
+                // The button's layout size is what it shows. The area that takes touches, and
+                // that assistive technology is given, is at least the minimum target.
+                .contentShape(TouchTarget(minimum: button.targetMinimum))
                 // Color changes ease in. With reduced motion they are immediate.
                 .animation(
                     reduceMotion
@@ -239,6 +238,21 @@
                         ),
                     value: interaction
                 )
+        }
+    }
+
+    /// The area of a button that takes touches: the container, and where the container is
+    /// smaller than the minimum target, the space around it out to that size.
+    struct TouchTarget: Shape {
+        let minimum: CGFloat
+
+        func path(in rect: CGRect) -> Path {
+            Path(
+                rect.insetBy(
+                    dx: min(0, (rect.width - minimum) / 2),
+                    dy: min(0, (rect.height - minimum) / 2)
+                )
+            )
         }
     }
 

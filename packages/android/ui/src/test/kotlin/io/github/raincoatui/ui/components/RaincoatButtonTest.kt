@@ -1,7 +1,9 @@
 package io.github.raincoatui.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -23,6 +25,7 @@ import androidx.compose.ui.input.InputMode
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.Role
@@ -33,9 +36,14 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertTouchHeightIsEqualTo
+import androidx.compose.ui.test.assertTouchWidthIsEqualTo
+import androidx.compose.ui.test.assertWidthIsEqualTo
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -47,6 +55,7 @@ import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -333,22 +342,22 @@ class RaincoatButtonTest {
     // Measurements
 
     @Test
-    fun `a button is as tall as its token, inside a touch target of at least the minimum`() {
+    fun `a button is as tall as its token and takes no more room than it shows`() {
         for (density in Density.entries) {
             val button = tokens(density = density).button
             for (size in ButtonSize.entries) {
                 val where = "$size at ${density.id}"
                 val visible = height(button, size)
-                // The platform's minimum of 48dp is larger than the token's.
-                val target = maxOf(visible, 48)
                 show(density = density) {
                     RaincoatButton("Save", onClick = {}, variant = ButtonVariant.Primary, size = size)
                 }
-                val pixels = compose.onNodeWithText("Save").pixels()
-                assertEquals(where, target, pixels.height)
-                val rows = pixels.paintedRows(pixels.width / 4)
-                assertEquals(where, visible, rows.size)
-                assertEquals(where, (target - visible) / 2, rows.first())
+                val node = compose.onNodeWithText("Save")
+                node.assertHeightIsEqualTo(visible.dp)
+                // The fill covers the whole height. (A quarter of the way along is clear of the
+                // round corners.)
+                val pixels = node.pixels()
+                assertEquals(where, visible, pixels.height)
+                assertEquals(where, visible, pixels.paintedRows(pixels.width / 4).size)
             }
         }
     }
@@ -360,7 +369,6 @@ class RaincoatButtonTest {
             for (size in ButtonSize.entries) {
                 val where = "$size at ${density.id}"
                 val side = height(button, size)
-                val target = maxOf(side, 48)
                 show(density = density) {
                     RaincoatButton(
                         icon = Block,
@@ -370,11 +378,11 @@ class RaincoatButtonTest {
                         size = size,
                     )
                 }
-                val pixels = compose.onNodeWithContentDescription("Delete page").pixels()
-                assertEquals(where, target, pixels.width)
-                assertEquals(where, target, pixels.height)
-                assertEquals(where, side, pixels.paintedRows(target / 2).size)
-                assertEquals(where, side, pixels.paintedColumns(target / 2).size)
+                val node = compose.onNodeWithContentDescription("Delete page")
+                node.assertWidthIsEqualTo(side.dp).assertHeightIsEqualTo(side.dp)
+                val pixels = node.pixels()
+                assertEquals(where, side, pixels.paintedRows(side / 2).size)
+                assertEquals(where, side, pixels.paintedColumns(side / 2).size)
 
                 val iconSize = when (size) {
                     ButtonSize.Sm -> button.iconSize.sm
@@ -384,6 +392,127 @@ class RaincoatButtonTest {
                 assertEquals(where, iconSize, pixels.columnsFilledWith(button.primary.fg, rows = iconSize).size)
             }
         }
+    }
+
+    // Touch target
+
+    /** The platform's minimum touch target, which is larger than the token's. */
+    private val target = 48
+
+    @Test
+    fun `the touch target is at least the minimum, whatever the visible size`() {
+        for (density in Density.entries) {
+            val button = tokens(density = density).button
+            for (size in ButtonSize.entries) {
+                val side = height(button, size)
+                show(density = density) {
+                    RaincoatButton(icon = Block, contentDescription = "Delete page", onClick = {}, size = size)
+                }
+                // This is the area that assistive technology is given, too.
+                compose.onNodeWithContentDescription("Delete page")
+                    .assertTouchWidthIsEqualTo(maxOf(side, target).dp)
+                    .assertTouchHeightIsEqualTo(maxOf(side, target).dp)
+            }
+        }
+    }
+
+    @Test
+    fun `a small button takes touches that land just outside it, as far as the minimum target`() {
+        val side = height(tokens().button, ButtonSize.Sm)
+        val reach = (target - side) / 2f
+        assertTrue("the small button is smaller than the target", reach >= 2)
+        var clicks = 0
+        show {
+            RaincoatButton(
+                icon = Block,
+                contentDescription = "Delete page",
+                onClick = { clicks++ },
+                size = ButtonSize.Sm,
+            )
+        }
+        val node = compose.onNodeWithContentDescription("Delete page")
+        val middle = side / 2f
+
+        // One pixel inside the edge of the target, on each side.
+        val inside = listOf(
+            Offset(middle, -reach + 1),
+            Offset(middle, side + reach - 1),
+            Offset(-reach + 1, middle),
+            Offset(side + reach - 1, middle),
+        )
+        for ((index, point) in inside.withIndex()) {
+            node.performTouchInput { click(point) }
+            assertEquals("a touch at $point", index + 1, clicks)
+        }
+
+        // Two pixels outside it.
+        val outside = listOf(
+            Offset(middle, -reach - 2),
+            Offset(middle, side + reach + 2),
+            Offset(-reach - 2, middle),
+            Offset(side + reach + 2, middle),
+        )
+        for (point in outside) {
+            node.performTouchInput { click(point) }
+            assertEquals("a touch at $point", inside.size, clicks)
+        }
+    }
+
+    @Test
+    fun `a mouse has to be on the button itself`() {
+        val side = height(tokens().button, ButtonSize.Sm)
+        var clicks = 0
+        show {
+            RaincoatButton(
+                icon = Block,
+                contentDescription = "Delete page",
+                onClick = { clicks++ },
+                size = ButtonSize.Sm,
+            )
+        }
+        val node = compose.onNodeWithContentDescription("Delete page")
+        node.performMouseInput { click(Offset(side / 2f, -2f)) }
+        assertEquals(0, clicks)
+        node.performMouseInput { click(Offset(side / 2f, 2f)) }
+        assertEquals(1, clicks)
+    }
+
+    @Test
+    fun `a touch between two small buttons goes to the nearer one`() {
+        val side = height(tokens().button, ButtonSize.Sm)
+        val gap = 4
+        val clicked = mutableListOf<String>()
+        show {
+            Column(verticalArrangement = Arrangement.spacedBy(gap.dp)) {
+                RaincoatButton("First", onClick = { clicked += "First" }, size = ButtonSize.Sm)
+                RaincoatButton("Second", onClick = { clicked += "Second" }, size = ButtonSize.Sm)
+            }
+        }
+        // Both targets cover the gap. Positions are measured from the first button.
+        val first = compose.onNodeWithText("First")
+        first.performTouchInput { click(Offset(centerX, side + 1f)) }
+        first.performTouchInput { click(Offset(centerX, side + gap - 1f)) }
+        assertEquals(listOf("First", "Second"), clicked)
+    }
+
+    @Test
+    fun `the larger of the platform's minimum target and the token's is used`() {
+        fun configuration(target: Int) = object : ViewConfiguration {
+            override val longPressTimeoutMillis = 400L
+            override val doubleTapTimeoutMillis = 300L
+            override val doubleTapMinTimeMillis = 40L
+            override val touchSlop = 7f
+            override val minimumTouchTargetSize = DpSize(target.dp, target.dp)
+        }
+
+        val platformIsLarger = configuration(48)
+        assertTrue(platformIsLarger.withMinimumTouchTarget(44.dp) === platformIsLarger)
+
+        val tokenIsLarger = configuration(40).withMinimumTouchTarget(44.dp)
+        assertEquals(DpSize(44.dp, 44.dp), tokenIsLarger.minimumTouchTargetSize)
+        // Everything else is the platform's.
+        assertEquals(7f, tokenIsLarger.touchSlop)
+        assertEquals(400L, tokenIsLarger.longPressTimeoutMillis)
     }
 
     @Test

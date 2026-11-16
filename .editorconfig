@@ -13,3 +13,7 @@ trim_trailing_whitespace = false
 
 [*.{swift,kt,kts}]
 indent_size = 4
+
+# Xcode writes its project files with tabs.
+[*.pbxproj]
+indent_style = tab

@@ -78,7 +78,9 @@ RaincoatButton(
 | `interactionSource` | `MutableInteractionSource?` | `null`                    | Observes or drives presses, hovers, and focus                            |
 
 - Long labels wrap. The button grows taller; the label is never truncated.
-- The touch target is at least 48dp, whatever the visible height.
+- The button takes the room it shows. The area that takes touches is at least 48dp across, so
+  around a small button it reaches past the edges, and a touch between two buttons goes to the
+  nearer one. A mouse has to be on the button itself.
 - The label and icons grow with the person's font size setting.
 - In right-to-left layouts the leading icon is on the right.
 - With a keyboard, the focused button shows the theme's focus ring.

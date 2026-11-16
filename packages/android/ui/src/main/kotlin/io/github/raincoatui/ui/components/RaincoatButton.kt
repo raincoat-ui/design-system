@@ -17,7 +17,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +26,7 @@ import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,11 +42,13 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.raincoatui.tokens.ButtonSize
@@ -61,6 +63,10 @@ import kotlin.math.ceil
  *
  * Colors, sizes, and text styles come from the theme given to
  * [RaincoatTheme][io.github.raincoatui.ui.RaincoatTheme].
+ *
+ * The button takes the room it shows. A button smaller than the minimum touch target also takes
+ * touches that land just outside it, so leave at least that much room between two small buttons,
+ * or a touch between them goes to the nearer one.
  *
  * @param text The label. It wraps when it does not fit and is never truncated.
  * @param onClick What the button does.
@@ -186,9 +192,6 @@ private fun ButtonLayout(
     val density = LocalDensity.current
     val shape = RoundedCornerShape(button.radius.dp)
     val height = measurements.height.dp
-    // The touch target is at least the minimum size, whatever the visible height. The platform
-    // has a minimum of its own, and the larger one wins.
-    val target = maxOf(button.targetMinimum.dp, LocalViewConfiguration.current.minimumTouchTargetSize.height)
     // Icons grow with the text.
     val iconSize = with(density) { measurements.iconSize.sp.toDp() }
     // The space above and below the label centers one line in the height. It is worked out in
@@ -200,32 +203,16 @@ private fun ButtonLayout(
         (maxOf(0, height.roundToPx() - line) / 2).toDp()
     }
 
-    Box(
-        modifier = modifier
-            .then(if (fullWidth) Modifier.fillMaxWidth() else Modifier)
-            .defaultMinSize(minWidth = target, minHeight = target)
-            // A loading button stays enabled so that it keeps focus; it ignores activation.
-            .clickable(
-                interactionSource = source,
-                indication = null,
-                enabled = enabled,
-                role = Role.Button,
-                onClick = { if (!loading) onClick() },
-            )
-            // Assistive technology is told that something is in progress, in words that Compose
-            // supplies in the person's language.
-            .then(if (busy) Modifier.progressSemantics() else Modifier)
-            .then(
-                if (contentDescription != null) {
-                    Modifier.semantics { this.contentDescription = contentDescription }
-                } else {
-                    Modifier
-                },
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
+    // The button's layout size is what it shows. Where that is smaller than the minimum touch
+    // target, Compose also gives the button the touches that land just outside it, and reports
+    // the larger area to assistive technology.
+    val platform = LocalViewConfiguration.current
+    val viewConfiguration = remember(platform, button.targetMinimum) {
+        platform.withMinimumTouchTarget(button.targetMinimum.dp)
+    }
+    CompositionLocalProvider(LocalViewConfiguration provides viewConfiguration) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .then(if (fullWidth) Modifier.fillMaxWidth() else Modifier)
                 .focusRing(
                     visible = focused,
@@ -233,6 +220,24 @@ private fun ButtonLayout(
                     width = button.focusRing.width.dp,
                     offset = button.focusRing.offset.dp,
                     radius = button.radius.dp,
+                )
+                // A loading button stays enabled so that it keeps focus; it ignores activation.
+                .clickable(
+                    interactionSource = source,
+                    indication = null,
+                    enabled = enabled,
+                    role = Role.Button,
+                    onClick = { if (!loading) onClick() },
+                )
+                // Assistive technology is told that something is in progress, in words that
+                // Compose supplies in the person's language.
+                .then(if (busy) Modifier.progressSemantics() else Modifier)
+                .then(
+                    if (contentDescription != null) {
+                        Modifier.semantics { this.contentDescription = contentDescription }
+                    } else {
+                        Modifier
+                    },
                 )
                 .defaultMinSize(minWidth = height, minHeight = height)
                 .background(fill, shape)
@@ -266,6 +271,19 @@ private fun ButtonLayout(
                 ButtonIcon(trailingIcon, iconSize, foreground)
             }
         }
+    }
+}
+
+/**
+ * This configuration with a touch target of at least [minimum] in each direction. The platform
+ * has a minimum of its own, and the larger one wins.
+ */
+internal fun ViewConfiguration.withMinimumTouchTarget(minimum: Dp): ViewConfiguration {
+    val own = minimumTouchTargetSize
+    if (own.width >= minimum && own.height >= minimum) return this
+    val larger = DpSize(maxOf(own.width, minimum), maxOf(own.height, minimum))
+    return object : ViewConfiguration by this {
+        override val minimumTouchTargetSize: DpSize = larger
     }
 }
 
