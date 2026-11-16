@@ -102,12 +102,51 @@ jobs:
       - name: Scan the lockfile for known vulnerabilities
         run: node tools/ci/run-tool.mjs osv-scanner scan source --lockfile pnpm-lock.yaml
 
+  swift-linux:
+    name: swift tokens (linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Show the toolchain
+        run: swift --version
+      # The token and theme modules use Foundation only. Testing them on Linux proves it, and
+      # runs the iOS contract test without a macOS runner.
+      - name: Build and test
+        run: swift test --package-path packages/ios
+
+  swift-macos:
+    name: swift package (macos)
+    runs-on: macos-26
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Select Xcode 26.6
+        run: sudo xcode-select --switch /Applications/Xcode_26.6.app
+      - name: Show the toolchain
+        run: xcodebuild -version && swift --version
+      - name: Test on macOS, including the SwiftUI layer
+        run: swift test --package-path packages/ios
+      - name: Build for iOS
+        working-directory: packages/ios
+        run: xcodebuild -scheme Raincoat-Package -destination 'generic/platform=iOS Simulator' build
+
   # The only required status check. It passes when every job above passed, or was skipped by
   # a path rule, so path filters can never leave a required check waiting forever.
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [validate, secrets, workflows, vulnerabilities]
+    needs: [validate, secrets, workflows, vulnerabilities, swift-linux, swift-macos]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}

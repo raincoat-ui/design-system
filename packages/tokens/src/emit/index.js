@@ -4,23 +4,43 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { buildThemeCss } from "./css.js";
+import { expectedSwift, themeSwift, tokenSetSwift } from "./swift.js";
 
 // The base theme is the token source itself. Overlay themes join this list in milestone 2.
-const THEMES = [{ id: "raincoat" }];
+const THEMES = [{ id: "base" }];
+
+const pascal = (id) => id[0].toUpperCase() + id.slice(1);
+
+/** Every generated file and its content. */
+function outputs(root) {
+  const files = [
+    {
+      file: "packages/ios/Sources/RaincoatTokens/Generated/TokenSet.swift",
+      content: tokenSetSwift(root),
+    },
+  ];
+  for (const { id } of THEMES) {
+    const name = pascal(id);
+    files.push(
+      { file: `packages/web-themes/${id}/theme.css`, content: buildThemeCss(root) },
+      {
+        file: `packages/ios/Sources/RaincoatTheme${name}/Generated/${name}Theme.swift`,
+        content: themeSwift(root, id),
+      },
+      {
+        file: `packages/ios/Tests/RaincoatTheme${name}Tests/Generated/Expected${name}Tokens.swift`,
+        content: expectedSwift(root, id),
+      },
+    );
+  }
+  return files;
+}
 
 /**
  * @returns {Promise<{file: string, status: "written" | "unchanged" | "stale"}[]>}
  */
 export async function build(root, { check = false } = {}) {
-  const outputs = [];
-  for (const theme of THEMES) {
-    outputs.push({
-      file: `packages/web-themes/${theme.id}/theme.css`,
-      content: await buildThemeCss(root),
-    });
-  }
-
-  return outputs.map(({ file, content }) => {
+  return outputs(root).map(({ file, content }) => {
     const path = join(root, file);
     let current = null;
     try {
