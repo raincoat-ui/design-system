@@ -63,9 +63,12 @@ M1 is in progress. One token source now drives all three platforms at the token 
   It showed that VoiceOver was not told when a button was loading, which is fixed: the button
   says so in words, in six languages.
 
+- The Android reference app (`apps/reference-android`), whose tests run the Button on an
+  emulator: what an accessibility service is given, touch targets, and Google's accessibility
+  checks.
+
 Still to come in M1:
 
 - **npm and the Swift mirror.** Both are waiting for a credential: a one-time token for the two
   new npm package names, and a credential for the mirror repository. Until they exist a release
   reaches the Maven repository only. The runbook has the steps.
-- **The Android reference app**, with Google's accessibility checks on an emulator.

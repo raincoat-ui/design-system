@@ -26,8 +26,9 @@ Each platform package has tests of its own:
 | Swift (`packages/ios`)      | `swift test --package-path packages/ios` | Swift 6.2 or later                                |
 | Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21 and the Android SDK (platform 37)          |
 
-The iOS reference app (`apps/reference-ios`) shows the components in an app and tests them on a
-simulator; its [README](apps/reference-ios/README.md) has the command.
+The reference apps show the components in an app and test them on a simulator
+([iOS](apps/reference-ios/README.md)) and an emulator ([Android](apps/reference-android/README.md));
+each README has the command.
 
 ## Commits and pull requests
 
@@ -72,8 +73,9 @@ The React components add three more: they are tested in a real browser against t
 built stylesheet may contain no literal color or size; and every component must have an entry in
 `packages/web/shadcn.lock.json`.
 
-The SwiftUI components are also tested on an iOS simulator, through the reference app: what
-assistive technology is told, touch targets, text sizes, and the system's accessibility audit.
+The SwiftUI and Compose components are also tested in the reference apps, on an iOS simulator
+and an Android emulator: what assistive technology is told, touch targets, and each platform's
+accessibility audit.
 
 ## Dependencies
 
