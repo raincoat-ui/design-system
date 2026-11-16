@@ -128,5 +128,12 @@ GPL-2.0-only dependency. The license gate failed and named it, <code dir="auto">
 was refused. Removing the dependency makes the gate pass, as the runs on <code dir="auto">main</code> show.</li>
 <li>Workflow lint and OpenSSF Scorecard ran successfully on the first push.</li>
 </ul>
-<p>M1 is next.</p>
+<p>M1 is in progress. One token source now drives all three platforms at the token level:</p>
+<ul>
+<li>The token source, its linter, and the contrast checker.</li>
+<li>The web theme stylesheet, the Swift package, and the Kotlin modules are generated from it,
+each with a contract test that compares the generated values with the source.</li>
+</ul>
+<p>Still to come in M1: the Button’s spec and its React, SwiftUI, and Compose implementations, and
+the first prerelease.</p>
 </div><footer class="sl-flex astro-dmtdzjtj"><div class="meta sl-flex astro-dmtdzjtj"></div><div class="pagination-links print:hidden astro-aurjgwcr" dir="ltr"><a href="/design-system/" rel="prev" class="astro-aurjgwcr"><svg aria-hidden="true" class="astro-aurjgwcr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-aurjgwcr">Previous<br class="astro-aurjgwcr"><span class="link-title astro-aurjgwcr">Overview</span></span></a><a href="/design-system/foundations/color/" rel="next" class="astro-aurjgwcr"><svg aria-hidden="true" class="astro-aurjgwcr astro-zzlu2q4j" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-aurjgwcr">Next<br class="astro-aurjgwcr"><span class="link-title astro-aurjgwcr">Color</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
