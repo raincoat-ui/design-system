@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { dcoProblem, isBot, parseGitLog, signOffs } from "./commits.mjs";
+import { dcoProblem, isBot, parseGitLog, signOffs, titleToLint } from "./commits.mjs";
 
 const author = "12345+someone@users.noreply.github.com";
 const commit = (overrides) => ({
@@ -46,6 +46,23 @@ test("bot commits and merge commits are exempt", () => {
   assert.equal(isBot(bot), true);
   assert.equal(dcoProblem(bot), null);
   assert.equal(dcoProblem(commit({ parents: 2, message: "Merge branch 'x'\n" })), null);
+});
+
+test("a bot's capitalized first word is lowercased before the title is linted", () => {
+  const dependabot = "dependabot[bot]";
+  assert.equal(
+    titleToLint("chore(deps): Bump the npm group with 2 updates", dependabot),
+    "chore(deps): bump the npm group with 2 updates",
+  );
+  assert.equal(titleToLint("chore(ci): Bump X to 2", dependabot), "chore(ci): bump X to 2");
+  assert.equal(titleToLint("chore!: Bump x", dependabot), "chore!: bump x");
+});
+
+test("a person's title, and the rest of a bot's title, are linted as written", () => {
+  const title = "chore(deps): Bump React to 19";
+  assert.equal(titleToLint(title, "CliveTran"), title);
+  assert.equal(titleToLint(title), title);
+  assert.equal(titleToLint("Bump react", "dependabot[bot]"), "Bump react");
 });
 
 test("parseGitLog splits records and counts parents", () => {

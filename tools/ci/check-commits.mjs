@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // Two modes:
 //   --message-file <path>           commit-msg hook: the message must carry a sign-off.
-//   --range <base>..<head> [--title <text>]
+//   --range <base>..<head> [--title <text> [--author <login>]]
 //                                   CI: every commit in the range is signed off, and the
 //                                   pull request title follows Conventional Commits.
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { dcoProblem, parseGitLog, signOffs } from "./commits.mjs";
+import { dcoProblem, parseGitLog, signOffs, titleToLint } from "./commits.mjs";
 
 function option(name) {
   const index = process.argv.indexOf(name);
@@ -19,10 +19,11 @@ const problems = [];
 const messageFile = option("--message-file");
 const range = option("--range");
 const title = option("--title");
+const author = option("--author");
 
 if (!messageFile && !range) {
   console.error(
-    "usage: check-commits.mjs --message-file <path> | --range <base>..<head> [--title <text>]",
+    "usage: check-commits.mjs --message-file <path> | --range <base>..<head> [--title <text> [--author <login>]]",
   );
   process.exit(2);
 }
@@ -53,7 +54,10 @@ if (range) {
 }
 
 if (title !== undefined) {
-  const lint = spawnSync("pnpm", ["exec", "commitlint"], { input: `${title}\n`, encoding: "utf8" });
+  const lint = spawnSync("pnpm", ["exec", "commitlint"], {
+    input: `${titleToLint(title, author)}\n`,
+    encoding: "utf8",
+  });
   if (lint.status !== 0) {
     problems.push(
       `The pull request title is not a Conventional Commit:\n${(lint.stdout || lint.stderr).trim()}`,
