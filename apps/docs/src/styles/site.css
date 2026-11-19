@@ -32,7 +32,7 @@
   --sl-color-hairline: var(--sl-color-gray-6);
   --sl-color-hairline-shade: var(--sl-color-gray-6);
 
-  --rc-site-rule: var(--sl-color-white);
+  --rc-site-rule: var(--rc-color-border-strong);
   --rc-site-signal: var(--rc-color-accent-default);
   --rc-site-on-signal: var(--rc-color-fg-on-accent);
   --rc-site-corner: var(--rc-radius-md);
@@ -89,7 +89,7 @@ html {
 
 :focus-visible {
   outline: var(--rc-border-width-focus) solid var(--rc-color-border-focus);
-  outline-offset: 2px;
+  outline-offset: var(--rc-button-focus-ring-offset);
 }
 
 input,
@@ -621,7 +621,7 @@ starlight-toc a[aria-current="true"]:hover {
   display: inline-block;
   block-size: 0.75rem;
   background: var(--sl-color-white);
-  border-radius: 1px;
+  border-radius: var(--rc-site-corner);
   vertical-align: middle;
 }
 
