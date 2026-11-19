@@ -7,15 +7,15 @@ in the rain", drawn as a shape.
 These files are Raincoat's own identity, licensed with the rest of the repository. They are not a
 theme asset: brand apps built on Raincoat never show them.
 
-| File                         | Use                                                    |
-| ---------------------------- | ------------------------------------------------------ |
-| `raincoat-logo.svg`          | Mark and wordmark, on light backgrounds                |
-| `raincoat-logo-reversed.svg` | Mark and wordmark, on dark backgrounds                 |
-| `raincoat-logo-mono.svg`     | One color (`currentColor`), for print or embossing     |
-| `raincoat-mark.svg`          | The mark alone, on light backgrounds                   |
-| `raincoat-mark-reversed.svg` | The mark alone, on dark backgrounds                    |
-| `raincoat-mark-mono.svg`     | The mark alone in one color (`currentColor`)           |
-| `raincoat-app-icon.svg`      | Rounded-square tile, for avatars and app icons         |
+| File                         | Use                                                |
+| ---------------------------- | -------------------------------------------------- |
+| `raincoat-logo.svg`          | Mark and wordmark, on light backgrounds            |
+| `raincoat-logo-reversed.svg` | Mark and wordmark, on dark backgrounds             |
+| `raincoat-logo-mono.svg`     | One color (`currentColor`), for print or embossing |
+| `raincoat-mark.svg`          | The mark alone, on light backgrounds               |
+| `raincoat-mark-reversed.svg` | The mark alone, on dark backgrounds                |
+| `raincoat-mark-mono.svg`     | The mark alone in one color (`currentColor`)       |
+| `raincoat-app-icon.svg`      | Rounded-square tile, for avatars and app icons     |
 
 The docs favicon (`apps/docs/public/favicon.svg`) is the app icon at 32 units.
 
