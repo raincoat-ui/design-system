@@ -1,0 +1,231 @@
+name: reference apps
+
+# The reference apps show each component in an app and test it on an iOS simulator, an Android
+# emulator, and in Chromium. They take Raincoat from one of two places:
+#
+# - This checkout (`tree: true`). The packages are built from the commit being tested. CI runs
+#   the apps this way on every pull request and every push to main.
+# - A published release. Each app installs Raincoat from where an app installs it: npm, the Maven
+#   repository on GitHub Pages, or the Swift mirror (tools/release/use-published.mjs). The release
+#   workflow runs the apps this way once it has published a version. A maintainer can for any
+#   version (Actions, reference apps, Run workflow). A pull request that changes how runs it too.
+#
+# The tests are the ones in the commit that runs them, so they can only pass for a version that
+# ships what that commit's apps show. Run a version from its release commit, or from a later
+# commit with no new components.
+on:
+  workflow_call:
+    inputs:
+      tree:
+        description: Use the packages built from this checkout instead of a published version.
+        type: boolean
+        default: false
+      version:
+        description: The published version to install. Empty for the version this checkout names.
+        type: string
+        default: ""
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The published version to install. Empty for the version this checkout names.
+        type: string
+        required: false
+  pull_request:
+    paths:
+      - .github/workflows/reference-apps.yml
+      - tools/release/use-published.mjs
+
+permissions: {}
+
+# The workflow that calls this one has a group of its own, so these never wait for each other.
+concurrency:
+  group: reference-apps-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # The SwiftUI components in an app on a simulator: what assistive technology is told, touch
+  # targets, text sizes, and the system's accessibility audit.
+  ios:
+    name: reference app (ios)
+    runs-on: macos-26
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Select Xcode 26.6
+        run: sudo xcode-select --switch /Applications/Xcode_26.6.app
+      - name: Show the toolchain and the simulators
+        run: xcodebuild -version && xcrun simctl list devices available
+      - name: Set up Node.js
+        if: ${{ !inputs.tree }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      # The app takes the Swift package from packages/ios unless told otherwise.
+      - name: Install Raincoat from the Swift mirror
+        if: ${{ !inputs.tree }}
+        env:
+          RAINCOAT_VERSION: ${{ inputs.version }}
+        run: node tools/release/use-published.mjs ios "$RAINCOAT_VERSION"
+      # A simulator that is still starting can refuse to launch the app, and has then hung the
+      # tests until the job timed out. So it is started first, and waited for.
+      - name: Start an iPhone simulator on the newest iOS
+        id: simulator
+        run: |
+          udid=$(xcrun simctl list devices available --json | jq -r '
+            [ .devices | to_entries[]
+              | select(.key | test("SimRuntime\\.iOS-"))
+              | { version: (.key | capture("iOS-(?<major>[0-9]+)-(?<minor>[0-9]+)") | [(.major | tonumber), (.minor | tonumber)]),
+                  device: (.value[] | select(.name == "iPhone 17")) } ]
+            | sort_by(.version) | last | .device.udid')
+          test -n "$udid" && test "$udid" != "null"
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+      # Each test has a time limit, and a test that fails is run once more: a second failure is
+      # a real one.
+      - name: Run the UI tests on the simulator
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          xcodebuild test \
+            -project apps/reference-ios/ReferenceApp.xcodeproj \
+            -scheme ReferenceApp \
+            -destination "platform=iOS Simulator,id=$SIMULATOR" \
+            -derivedDataPath build/reference-ios \
+            -resultBundlePath build/reference-ios/results.xcresult \
+            -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 120 \
+            -maximum-test-execution-time-allowance 240 \
+            -retry-tests-on-failure \
+            -test-iterations 2
+      - name: Keep the test results when a test fails
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reference-ios-results
+          path: build/reference-ios/results.xcresult
+          retention-days: 7
+
+  # The Compose components in an app on an emulator: what an accessibility service is given,
+  # Google's accessibility checks, and touches.
+  android:
+    name: reference app (android)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify the Gradle wrapper
+        run: sha256sum --check gradle/wrapper/gradle-wrapper.jar.sha256
+      - name: Cache Gradle downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-emulator-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', 'gradle/libs.versions.toml', '**/*.gradle.kts') }}
+          restore-keys: gradle-emulator-${{ runner.os }}-
+      # The emulator needs hardware acceleration, which the runner allows once KVM is opened up.
+      - name: Let the emulator use KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      # The app installs the modules from a Maven repository, as any app does: by default the
+      # one this checkout stages.
+      - name: Stage the Android modules
+        if: inputs.tree
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew publishAllPublicationsToStagingRepository --no-daemon --console=plain --quiet
+      - name: Set up Node.js
+        if: ${{ !inputs.tree }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Install Raincoat from the Maven repository on GitHub Pages
+        if: ${{ !inputs.tree }}
+        env:
+          RAINCOAT_VERSION: ${{ inputs.version }}
+        run: node tools/release/use-published.mjs android "$RAINCOAT_VERSION"
+      # Built before the emulator starts, so that a build failure is not mistaken for a test
+      # failure and does not wait for the emulator to boot.
+      - name: Build the app and its tests
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          ./gradlew -p apps/reference-android assembleDebug assembleDebugAndroidTest \
+            --no-daemon --console=plain --stacktrace
+      # An open-source Android image made for automated tests, with no Google services.
+      - name: Run the tests on an emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          target: aosp_atd
+          arch: x86_64
+          # A phone-sized screen, so that the first sections of the app fit without scrolling.
+          profile: pixel_6
+          script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest --no-daemon --console=plain --stacktrace
+      - name: Keep the test report when a test fails
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reference-android-report
+          path: apps/reference-android/build/reports/androidTests
+          retention-days: 7
+
+  # The React components in an app built for production, in Chromium: what assistive technology
+  # is given, the mouse, the keyboard, touch, the browser's font size, and axe.
+  web:
+    name: reference app (web)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm --filter @raincoat-ui/reference-web-vite exec playwright install --with-deps --only-shell chromium
+      # Builds the React package, which the app installs from this workspace, checks the app's
+      # types, then builds the app for production and runs its tests against it in Chromium.
+      - name: Build and test
+        if: inputs.tree
+        run: pnpm web:reference
+      - name: Install Raincoat from npm
+        if: ${{ !inputs.tree }}
+        env:
+          RAINCOAT_VERSION: ${{ inputs.version }}
+        run: node tools/release/use-published.mjs web "$RAINCOAT_VERSION"
+      - name: Check types, then build and test
+        if: ${{ !inputs.tree }}
+        run: |
+          pnpm --filter @raincoat-ui/reference-web-vite typecheck
+          pnpm --filter @raincoat-ui/reference-web-vite test
+      - name: Keep the test traces when a test fails
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reference-web-results
+          path: apps/reference-web-vite/test-results
+          retention-days: 7

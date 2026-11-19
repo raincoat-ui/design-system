@@ -25,7 +25,8 @@ Out of scope: vulnerabilities in applications that use Raincoat, unless Raincoat
 
 ## How releases are protected
 
-- Dependencies are pinned, and versions younger than seven days are refused.
+- Dependencies are pinned, and versions younger than seven days are refused. Raincoat's own
+  packages are the exception: the reference apps install each release as soon as it is published.
 - npm packages are published from CI with provenance; other artifacts carry build attestations.
 - Each release ships a software bill of materials.
 
