@@ -1,4 +1,5 @@
-// Commit rules shared by the local hook and CI: Developer Certificate of Origin sign-off.
+// Commit rules shared by the local hook and CI: Developer Certificate of Origin sign-off, and
+// the pull request title that commitlint checks.
 
 const SIGN_OFF = /^Signed-off-by:\s*(.+?)\s*<([^<>\s]+)>\s*$/gim;
 
@@ -32,6 +33,22 @@ export function dcoProblem(commit) {
     return `is signed off by ${trailers.map((t) => t.email).join(", ")}, not by its author (${commit.authorEmail})`;
   }
   return null;
+}
+
+/**
+ * The pull request title commitlint checks. Dependabot capitalizes its first word ("chore(deps):
+ * Bump …") because it copies the case it finds after a colon in recent commit messages, and our
+ * `Co-Authored-By:` trailers read to it as capitalized subjects. It has no setting to stop that,
+ * so for a bot's pull request only that one letter is lowercased; every other rule still applies.
+ * @param {string} title the pull request title
+ * @param {string} [authorLogin] the login of the account that opened the pull request
+ */
+export function titleToLint(title, authorLogin = "") {
+  if (!/\[bot\]$/i.test(authorLogin)) return title;
+  return title.replace(
+    /^([a-z]+(?:\([^)]*\))?!?: )([A-Z])/,
+    (_, head, first) => `${head}${first.toLowerCase()}`,
+  );
 }
 
 /** Parses the output of `git log --format=%H%x00%P%x00%ae%x00%ce%x00%B%x01`. */
