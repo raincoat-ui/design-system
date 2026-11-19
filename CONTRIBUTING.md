@@ -84,7 +84,9 @@ Every dependency, font, and icon must be free or open source under an OSI-approv
 the allowlist. Fonts must be OFL-1.1. If you believe an exception is justified, say why in the
 pull request; exceptions are individual, dated, and recorded in `licenses/curations.yml`.
 
-Versions are pinned exactly, and versions published less than seven days ago are refused.
+Versions are pinned exactly, and versions published less than seven days ago are refused, except
+Raincoat's own `@raincoat-ui` packages, which the reference apps install as soon as a release is
+published.
 
 ## Borrowing from other design systems
 
