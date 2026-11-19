@@ -78,11 +78,14 @@ M1 is in progress. One token source now drives all three platforms at the token 
   installs it, npm, the Maven repository, or the Swift mirror, instead of from this
   repository's tree (`tools/release/use-published.mjs`). The release workflow runs all three
   this way once it has published a version, and a maintainer can run them so for any version.
+  [The first such run](https://github.com/raincoat-ui/design-system/actions/runs/44600180198),
+  on [pull request 31](https://github.com/raincoat-ui/design-system/pull/31), installed
+  0.1.0-next.1 into all three: from npm into the web app, from the Maven repository into the
+  Android app, and from the Swift mirror into the iOS app. Every test passed: in Chromium, on
+  an emulator, and on a simulator.
 
 Still to come in M1:
 
-- **A prerelease through the reference apps.** No published version has been installed into
-  them and passed their tests yet. That run is the evidence for the exit criterion.
 - **A web reference app on Next.js**, to show the components rendered on a server.
 - **npm without a token.** The first publish of the two npm packages used a one-time token.
   Trusted publishing is set up for each package before the next release, and the token is
