@@ -27,8 +27,9 @@ Each platform package has tests of its own:
 | Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21 and the Android SDK (platform 37)          |
 
 The reference apps show the components in an app and test them on a simulator
-([iOS](apps/reference-ios/README.md)) and an emulator ([Android](apps/reference-android/README.md));
-each README has the command.
+([iOS](apps/reference-ios/README.md)), an emulator ([Android](apps/reference-android/README.md)),
+and in Chromium ([web](apps/reference-web-vite/README.md), with `pnpm web:reference`); each README
+has the command.
 
 ## Commits and pull requests
 
@@ -73,8 +74,8 @@ The React components add three more: they are tested in a real browser against t
 built stylesheet may contain no literal color or size; and every component must have an entry in
 `packages/web/shadcn.lock.json`.
 
-The SwiftUI and Compose components are also tested in the reference apps, on an iOS simulator
-and an Android emulator: what assistive technology is told, touch targets, and each platform's
+Every component is also tested in the reference apps, on an iOS simulator, an Android emulator,
+and in Chromium: what assistive technology is told, touch targets, and each platform's
 accessibility audit.
 
 ## Dependencies

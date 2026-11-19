@@ -72,7 +72,8 @@ Raincoat in awesome-design-systems.
 - Documentation site: <https://raincoat-ui.github.io/design-system/> (`apps/docs`, Astro and
   Starlight). Its token pages are generated from the token source.
 - Reference apps: `apps/reference-ios` and `apps/reference-android` run the components on a
-  simulator or emulator. There is no web reference app yet.
+  simulator or emulator, and `apps/reference-web-vite` runs them in Chromium. A Next.js
+  reference app, for server rendering, is still to come.
 - The release procedure is in `docs/maintaining/runbook.md`, and progress is tracked in
   `docs/roadmap.md`.
 

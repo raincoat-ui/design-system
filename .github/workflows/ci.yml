@@ -338,6 +338,40 @@ jobs:
       - name: Build and test
         run: pnpm web:test
 
+  web-reference:
+    name: reference app (web)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm --filter @raincoat-ui/reference-web-vite exec playwright install --with-deps --only-shell chromium
+      # Builds the React package, which the app installs from this workspace, checks the app's
+      # types, then builds the app for production and runs its tests against it in Chromium.
+      - name: Build and test
+        run: pnpm web:reference
+      - name: Keep the test traces when a test fails
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reference-web-results
+          path: apps/reference-web-vite/test-results
+          retention-days: 7
+
   # A rehearsal of the release: everything it would publish is built and then installed the
   # way an app would install it. Nothing is published.
   release-rehearsal:
@@ -400,6 +434,7 @@ jobs:
         kotlin,
         android-reference,
         web,
+        web-reference,
         release-rehearsal,
       ]
     runs-on: ubuntu-24.04

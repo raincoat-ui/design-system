@@ -1,0 +1,63 @@
+/* The styles load as the package's README describes for an app without Tailwind. */
+@import "@raincoat-ui/theme-base/theme.css";
+@import "@raincoat-ui/react/ui.css";
+
+/* The rest is the app's own layout, also from the theme's tokens. */
+body {
+  margin: 0;
+  background: var(--rc-color-bg-canvas);
+  color: var(--rc-color-fg-default);
+  font-family: var(--rc-type-body-md-font-family);
+  font-size: var(--rc-type-body-md-font-size);
+  line-height: var(--rc-type-body-md-line-height);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rc-space-6);
+  padding: var(--rc-space-6);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--rc-font-size-24);
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rc-space-2);
+}
+
+h2 {
+  margin: 0;
+  color: var(--rc-color-fg-muted);
+  font-size: var(--rc-type-body-sm-font-size);
+  font-weight: var(--rc-type-body-sm-font-weight);
+}
+
+p {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rc-space-4);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--rc-space-3);
+}
+
+/* The lines above and below the small button touch it, so the room it takes can be measured. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

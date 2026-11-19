@@ -1,0 +1,30 @@
+{
+  "name": "@raincoat-ui/reference-web-vite",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A React app built with Vite that shows every Raincoat component the way an app uses it, and the browser tests that drive it.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vite build && playwright test"
+  },
+  "dependencies": {
+    "@raincoat-ui/react": "workspace:*",
+    "@raincoat-ui/theme-base": "workspace:*",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "axe-core": "4.14.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.8"
+  }
+}

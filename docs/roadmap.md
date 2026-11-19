@@ -69,11 +69,16 @@ M1 is in progress. One token source now drives all three platforms at the token 
   emulator: what an accessibility service is given, touch targets, and Google's accessibility
   checks.
 
+- The web reference app (`apps/reference-web-vite`), a React app built with Vite, whose tests
+  run its production build in Chromium: what assistive technology is given, the mouse, the
+  keyboard, and touch, touch targets, the browser's font size, and axe in each system color and
+  contrast setting.
+
 Still to come in M1:
 
 - **The reference apps install the published release.** The release's own check installs each
-  published package into a small project. The iOS and Android reference apps are built from
-  this repository's tree, and there is no web reference app yet.
+  published package into a small project. The reference apps are built from this repository's
+  tree. A second web reference app, on Next.js, is to show the components rendered on a server.
 - **npm without a token.** The first publish of the two npm packages used a one-time token.
   Trusted publishing is set up for each package before the next release, and the token is
   revoked. The runbook has the steps.
