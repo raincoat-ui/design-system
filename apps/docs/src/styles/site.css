@@ -309,8 +309,9 @@ site-search kbd kbd {
   text-wrap: pretty;
 }
 
-/* The lede: the first paragraph before any section heading. */
-.sl-markdown-content > p:first-of-type:not(.sl-heading-wrapper ~ p) {
+/* The lede: the first paragraph before any section heading. The home page's hero tagline is
+   its lede, so the rule skips it. */
+:root:not([data-has-hero]) .sl-markdown-content > p:first-of-type:not(.sl-heading-wrapper ~ p) {
   max-inline-size: 50ch;
   color: var(--sl-color-gray-1);
   font-size: 1.1875rem;
@@ -391,6 +392,21 @@ site-search kbd kbd {
 .sl-markdown-content td code,
 .sl-markdown-content td:has(.rc-swatch) {
   white-space: nowrap;
+}
+
+/* Swatch cells stay on one line at a smaller size, so the description column keeps its width. */
+.sl-markdown-content td:has(.rc-swatch) {
+  padding-inline-end: 0.75rem;
+}
+
+.sl-markdown-content td:has(.rc-swatch) code {
+  font-size: 0.75rem;
+}
+
+.sl-markdown-content td .rc-swatch {
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-inline-end: 0.3rem;
 }
 
 /* Notes are ruled boxes, not tinted ones: the variant shows in the outline and the title. */
