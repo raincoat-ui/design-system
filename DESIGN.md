@@ -199,8 +199,8 @@ One evenly stepped ink ramp, one yellow, one red; everything else is paper.
 - **Yellow Ink** (`brand.800`, `color.fg.accent`): the accent as readable text on paper, where yellow itself would fail contrast. Dark mode uses `brand.300`.
 
 ### Neutral
-- **Ink** (`neutral.900`): default text (`color.fg.default`), the strong border (`color.border.strong`) and the light-mode focus ring. The logo shell is this ink.
-- **Ink Deep** (`neutral.950`): text on yellow (`color.fg.on-accent`) and the docs site's own rules and headings in light mode.
+- **Ink** (`neutral.900`): default text (`color.fg.default`), the strong border (`color.border.strong`) and the light-mode focus ring. Every ink rule on the docs site (the header rule, section openers, table heads, caution notes) is `color.border.strong`, so it follows the token in each mode (`neutral.100` in dark). The logo shell is this ink.
+- **Ink Deep** (`neutral.950`): text on yellow (`color.fg.on-accent`) and the docs site's headings in light mode.
 - **Graphite** (`neutral.600`): muted text (`color.fg.muted`) and the sidebar's section numbers.
 - **Number Grey** (`neutral.500`): the section number before a page title, and the resting underline of links.
 - **Pencil** (`neutral.400`): disabled text.
@@ -233,7 +233,7 @@ Every theme ships four modes, selected by `data-theme` (or by `prefers-color-sch
 - **Display** (700, clamp(3rem, 9vw, 6rem), 0.95, -0.04em): the cover title on the home page only.
 - **Headline** (700, 3.5rem; 2.5rem below 50em; 1.05, -0.03em): every page title, led by its section number in Number Grey at the same size, weight 400, tabular figures. Titles over 32 characters drop to clamp(1.75rem, 3vw, 2.25rem).
 - **Title** (600, 1.75rem; 1.5rem below 50em; 1.2, -0.01em): section headings (h2). h3 is 1.25rem, 600.
-- **Lede** (400, 1.1875rem, 1.6): the first paragraph of a page, to 50ch.
+- **Lede** (400, 1.1875rem, 1.6): the first paragraph of a doc page, to 50ch. The home (splash) page has no lede of this kind: its hero tagline is the cover's only lede, and the intro under it stays at body size.
 - **Body** (400, 1rem, 1.5 in the token; the docs reading column sets 1.7): running text to 60ch, `text-wrap: pretty`.
 - **Label** (600, 1rem / 0.875rem / 1.125rem, 1.4, no tracking): button labels, sidebar group names, table heads, note titles.
 - **Mono number** (JetBrains Mono 400, 0.75rem): sidebar section numbers; inline code at 0.875em.
@@ -265,7 +265,7 @@ The system is flat. No surface casts a shadow; Starlight's shadows on menus, pag
 
 Every corner is **2px** (`radius.sm`, `radius.md`, `radius.lg` all resolve to 2px): buttons, the search field, notes, plates, swatches, the sidebar highlight, code blocks (Expressive Code `borderRadius: 2px`). `radius.full` exists for themes that want pills; the base never uses it. The home principle cards drop to 0 because they are ruled entries, not boxes.
 
-Borders come in three weights, all locked: 1px thin (controls, hairlines), 2px thick (section rules), 2px focus ring offset by 2px.
+Borders come in three weights, all locked: 1px thin (controls, hairlines), 2px thick (section rules), 2px focus ring offset by 2px (`button.focus-ring.offset`, also used for the site-wide `:focus-visible` outline).
 
 The mark is the one curved form: a layered raindrop, an ink shell around a yellow core, built on a 64-unit grid (`brand/README.md`). Only the core may change color, and only to show theming.
 
@@ -293,13 +293,13 @@ Plain, flat, firm: a filled block or an outlined one, never a pill.
 Ruled, untinted boxes: 1px Hairline outline, 2px corner, transparent fill, 16px / 20px padding, 600 title. Caution notes take the ink outline; danger notes take the red outline and red title. Variant shows in outline and title only.
 
 ### Specification tables
-Small text, tabular figures, no fills and no zebra striping: an ink rule under the head row, 1px hairlines between rows, 10px vertical cell padding, values in mono that do not wrap.
+Small text, tabular figures, no fills and no zebra striping: an ink rule (`color.border.strong`) under the head row, 1px hairlines between rows, 10px vertical cell padding, values in mono that do not wrap.
 
 ### Specimen plates
 A component shown in a framed panel that sets its own `data-theme` and `data-density`: canvas fill, 1px `color.border.default` frame, 2px corner, 32px / 24px padding, 12px between specimens. Every value comes from the theme's custom properties, so one plate per mode shows the component in all four.
 
 ### Token swatches and ramps
-20px swatches and 56px ramp chips with a 2px corner and a faint currentColor outline; scale bars in ink.
+20px swatches and 56px ramp chips with a 2px corner and a faint currentColor outline; scale bars in ink with the 2px corner. Inside token tables a swatch cell stays on one line: a 1rem swatch, the hex in mono at 0.75rem, and 0.75rem end padding, so the description column keeps its width.
 
 ## Do's and Don'ts
 
