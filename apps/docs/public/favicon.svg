@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <title>Raincoat</title>
-  <rect width="32" height="32" rx="7" fill="#f7d22a"/>
-  <path d="M16 7c-4 5.200-6 8.600-6 11.500a6 6 0 0 0 12 0C22 15.600 20 12.200 16 7z" fill="#161b21"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img"><title>Raincoat</title><rect width="32" height="32" rx="7" fill="#161b21"/><g transform="translate(4.4 3.6) scale(0.36)"><path fill="#ffffff" fill-rule="evenodd" d="M32 4L48.74 27.66A20.5 20.5 0 1 1 15.26 27.66ZM32 14.39L43.84 31.13A14.5 14.5 0 1 1 20.16 31.13Z"/><path fill="#f7d22a" d="M32 21.75L40.37 33.58A10.25 10.25 0 1 1 23.63 33.58Z"/></g></svg>

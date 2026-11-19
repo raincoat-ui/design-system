@@ -1,4 +1,9 @@
-# Raincoat
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="brand/raincoat-logo-reversed.svg">
+    <img src="brand/raincoat-logo.svg" alt="Raincoat" height="48">
+  </picture>
+</h1>
 
 One design-system foundation, compiled to native code for each platform, with a theme per app.
 
