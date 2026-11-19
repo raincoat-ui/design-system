@@ -1,3 +1,4 @@
+/* biome-ignore-all lint/style/noDescendingSpecificity: the rule compares unrelated elements (sidebar links, content links, title parts); rules here are grouped by region, not by specificity. */
 /* The documentation site, set as a standards manual: white paper, near-neutral ink, raincoat
    yellow as the one signal, 2px corners, hairlines that divide and 2px ink rules that open a
    section. Every color is a custom property from the base theme stylesheet, which switches
