@@ -13,6 +13,12 @@ export default defineConfig({
       description:
         "One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app.",
       favicon: "/favicon.svg",
+      logo: {
+        light: "./assets/raincoat-logo-light.svg",
+        dark: "./assets/raincoat-logo-dark.svg",
+        alt: "Raincoat",
+        replacesTitle: true,
+      },
       social: [
         {
           icon: "github",
