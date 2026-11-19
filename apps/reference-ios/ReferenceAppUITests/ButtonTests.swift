@@ -79,18 +79,48 @@ final class ButtonTests: XCTestCase {
         XCTAssertFalse(app.buttons["Archive"].isEnabled)
     }
 
+    // What a loading button says, in the person's language. Each language needs a launch of its
+    // own, so each is a test of its own: on CI, six launches in one test can take longer than the
+    // time a test is allowed.
+
     @MainActor
-    func testTheLoadingStateIsSaidInThePersonsLanguage() {
-        // French has no translation, so it gets English.
-        let expected = [
-            "vi": "Đang xử lý", "zh-Hans": "进行中", "zh-Hant": "進行中", "ja": "処理中", "ko": "진행 중",
-            "fr": "In progress",
-        ]
-        for (language, words) in expected {
-            let app = launch(language: language)
-            XCTAssertEqual(app.buttons["Send invite"].value as? String, words, language)
-            app.terminate()
-        }
+    func testTheLoadingStateIsSaidInVietnamese() {
+        assertLoadingState(language: "vi", says: "Đang xử lý")
+    }
+
+    @MainActor
+    func testTheLoadingStateIsSaidInSimplifiedChinese() {
+        assertLoadingState(language: "zh-Hans", says: "进行中")
+    }
+
+    @MainActor
+    func testTheLoadingStateIsSaidInTraditionalChinese() {
+        assertLoadingState(language: "zh-Hant", says: "進行中")
+    }
+
+    @MainActor
+    func testTheLoadingStateIsSaidInJapanese() {
+        assertLoadingState(language: "ja", says: "処理中")
+    }
+
+    @MainActor
+    func testTheLoadingStateIsSaidInKorean() {
+        assertLoadingState(language: "ko", says: "진행 중")
+    }
+
+    /// French has no translation, so it gets English.
+    @MainActor
+    func testTheLoadingStateIsSaidInEnglishWithoutATranslation() {
+        assertLoadingState(language: "fr", says: "In progress")
+    }
+
+    @MainActor
+    private func assertLoadingState(
+        language: String, says words: String, file: StaticString = #filePath, line: UInt = #line
+    ) {
+        let app = launch(language: language)
+        XCTAssertEqual(
+            app.buttons["Send invite"].value as? String, words, language, file: file, line: line)
     }
 
     @MainActor
