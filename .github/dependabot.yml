@@ -15,6 +15,12 @@ updates:
       npm-minor-and-patch:
         patterns: ["*"]
         update-types: [minor, patch]
+    ignore:
+      # Published by hand without a provenance attestation, unlike 2.2.1 and the releases
+      # before it, so pnpm's trustPolicy refuses it and every npm update job fails on it.
+      # Remove this entry once a later lefthook release is published with provenance again.
+      - dependency-name: lefthook
+        versions: ["2.2.2"]
 
   - package-ecosystem: github-actions
     directory: /
