@@ -15,7 +15,7 @@
     ]
   ],
   "linked": [],
-  "ignore": [],
+  "ignore": ["@raincoat-ui/reference-web-vite"],
   "changedFilePatterns": [
     "src/**",
     "theme.css",

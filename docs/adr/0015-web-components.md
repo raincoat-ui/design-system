@@ -46,6 +46,14 @@ function, a busy button needs a Client Component; an idle one renders in a Serve
 from the token source, resolved separately from the stylesheet, so a comparison covers the path
 from a token to what the browser draws.
 
+**In an app.** `apps/reference-web-vite` is a React app built with Vite that shows the Button in
+the states of its spec and loads the precompiled stylesheet. Its Playwright tests run the
+production build in Chromium and check what only an app shows: the role, name, and state that
+Chromium's accessibility tree gives each control, keyboard order, touch on a phone-sized
+screen, the browser's font size setting, and axe in each system color and contrast setting.
+Chromium moves a tap that lands near a target onto it, up to 8px beyond the edge in these tests,
+so the edge of a touch target is checked by hit testing rather than by tapping.
+
 ## Consequences
 
 - The precompiled stylesheet defines Tailwind's utility class names (`.inline-flex`,
