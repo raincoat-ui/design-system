@@ -132,7 +132,8 @@ notes up to date.</p>
 publish and installs it the way an app would: the npm tarballs into an empty project with npm,
 rendered on a server and type-checked; the Maven repository into an Android module that
 compiles a screen; the Swift mirror tree into a package that compiles a view. After a real
-release the same three checks run against the real registries.</p>
+release the same three checks run against the real registries, and then the reference apps run
+their tests with every package installed from its registry.</p>
 <p><strong>The bill of materials comes from the license gates.</strong> <code dir="auto">tools/release/sbom.mjs</code> writes
 CycloneDX from pnpm’s license report and licensee’s reports, the same data the gates check, so
 the two cannot disagree. No separate scanner is installed.</p>
@@ -156,8 +157,6 @@ the JARs carry it.</li>
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="not-yet-done">Not yet done</h2><a class="sl-anchor-link" href="#not-yet-done"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Not yet done”</span></a></div>
 <ul>
-<li>Reference apps. The consumer checks compile against the packages; apps that run, with the
-accessibility audits that need a simulator or an emulator, are the next piece of milestone 1.</li>
 <li>A check that two builds of the same commit produce identical files (milestone 4).</li>
 </ul>
 </div><footer class="sl-flex astro-427jk743"><div class="meta sl-flex astro-427jk743"></div><div class="pagination-links print:hidden astro-stfaxj7g" dir="ltr"><a href="/design-system/project/decisions/0016-native-components/" rel="prev" class="astro-stfaxj7g"><svg aria-hidden="true" class="astro-stfaxj7g astro-iplovrwm" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-stfaxj7g">Previous<br class="astro-stfaxj7g"><span class="link-title astro-stfaxj7g">0016. Native components follow the platform where it knows better</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
