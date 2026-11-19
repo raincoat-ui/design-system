@@ -108,7 +108,7 @@ jobs:
         with:
           node-version-file: .node-version
       - name: Scan the lockfile for known vulnerabilities
-        run: node tools/ci/run-tool.mjs osv-scanner scan source --lockfile pnpm-lock.yaml
+        run: node tools/ci/run-tool.mjs osv-scanner scan source --config osv-scanner.toml --lockfile pnpm-lock.yaml
 
   swift-linux:
     name: swift tokens (linux)

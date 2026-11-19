@@ -1,0 +1,11 @@
+# Reviewed exceptions to the vulnerability gate (osv-scanner in ci.yml). The list is empty.
+#
+# An exception names one advisory, says why it cannot harm Raincoat or its users, and expires:
+# after effectiveUntil, osv-scanner reports the advisory again and the gate fails until it is
+# reviewed. Keep each one short-lived, and remove it as soon as a fixed version can be installed
+# or the advisory is withdrawn (osv-scanner then lists it under "unused ignores").
+#
+#   [[IgnoredVulns]]
+#   id = "GHSA-xxxx-xxxx-xxxx"
+#   effectiveUntil = 2026-12-17   # at most about a month ahead
+#   reason = "where it is used, why it cannot be reached, and what would remove it"

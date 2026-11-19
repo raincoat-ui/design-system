@@ -73,6 +73,21 @@ The same three options apply to a failure of `./gradlew licensee`, the gate for 
 that ship with the Android modules. Its corrections and exceptions go in the `licensee { }` block
 of the module's `build.gradle.kts`, with the same evidence and dates in a comment.
 
+## Handling a vulnerability scan failure
+
+The `vulnerability scan` job runs osv-scanner over `pnpm-lock.yaml`. An advisory can appear, or
+change, without any change here, so it can fail every open pull request at once. Reproduce it
+with `pnpm tool osv-scanner scan source --config osv-scanner.toml --lockfile pnpm-lock.yaml`.
+
+1. Prefer installing a fixed version: update the direct dependency, or add a `pnpm.overrides`
+   entry for a transitive one.
+2. If no fixed version exists and the flaw cannot be reached here (find every path to the
+   package with `pnpm why <package> -r`), add an `[[IgnoredVulns]]` entry to `osv-scanner.toml`
+   with the advisory id, a reason, and an `effectiveUntil` date about a month out. The scan
+   fails again when that date passes.
+3. Remove the entry as soon as a fixed version can be installed, or when the advisory is
+   withdrawn: osv-scanner then lists it under "unused ignores".
+
 ## Building the Android modules locally
 
 Gradle needs a JDK 21. With Homebrew: `brew install openjdk@21`, then run Gradle with
