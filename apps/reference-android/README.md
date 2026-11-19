@@ -22,7 +22,11 @@ Android 11 or later, then:
 ```
 
 Add `-PraincoatRepository=https://raincoat-ui.github.io/design-system/maven` and
-`-PraincoatVersion=<version>` to run it against a published release instead.
+`-PraincoatVersion=<version>` to run it against a published release instead, or run
+`node tools/release/use-published.mjs android <version>` once, which writes both into the app's
+own `gradle.properties`; delete that file to go back. The release workflow runs the app this way
+once it has published a version, and a maintainer can for any version: Actions,
+reference apps, Run workflow.
 
 CI runs the same tests on every pull request, in the `reference app (android)` job, on an
 open-source Android 14 image without Google services, with the screen of a Pixel 6. The tests

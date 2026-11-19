@@ -29,6 +29,7 @@ import { entries, notes } from "./notes.mjs";
 import { promisedFiles, tarballProblems } from "./pack-npm.mjs";
 import { bom, mavenComponents, npmComponents } from "./sbom.mjs";
 import { writeMirror } from "./swift-mirror.mjs";
+import { androidProperties, isVersion, projectWithMirror, webPackages } from "./use-published.mjs";
 
 const scratch = [];
 const temp = () => {
@@ -514,5 +515,110 @@ test("the Swift mirror holds the package at its root, and nothing that belongs t
   assert.equal(
     readFileSync(join(out, "LICENSE"), "utf8"),
     readFileSync(join(repoRoot, "LICENSE"), "utf8"),
+  );
+});
+
+// The reference apps on a published release
+
+test("only a semantic version is ever written into a reference app", () => {
+  for (const good of ["0.1.0", "0.1.0-next.1", "1.20.3-rc.0", "2.0.0-alpha-2"]) {
+    assert.ok(isVersion(good), good);
+  }
+  for (const bad of [
+    "",
+    "v0.1.0",
+    "0.1",
+    "01.0.0",
+    "0.1.0-",
+    "0.1.0-next..1",
+    '0.1.0"; x',
+    "0.1.0\n",
+  ]) {
+    assert.ok(!isVersion(bad), JSON.stringify(bad));
+  }
+  const refused = script("use-published.mjs", ["ios", "0.1.0; touch x"]);
+  assert.equal(refused.status, 2);
+  const unknown = script("use-published.mjs", ["windows", "0.1.0"]);
+  assert.equal(unknown.status, 2);
+});
+
+test("the web app trades exactly the Raincoat packages it takes from this workspace", () => {
+  assert.deepEqual(webPackages(readJson("apps/reference-web-vite/package.json")), [
+    "@raincoat-ui/react",
+    "@raincoat-ui/theme-base",
+  ]);
+  assert.deepEqual(
+    webPackages({
+      dependencies: { "@raincoat-ui/react": "0.1.0", react: "19.3.1" },
+      devDependencies: { "@raincoat-ui/tokens": "workspace:*", "other-tool": "workspace:*" },
+    }),
+    ["@raincoat-ui/tokens"],
+  );
+});
+
+test("the Android app is pointed at the Maven repository on GitHub Pages", () => {
+  const properties = androidProperties("0.1.0-next.1");
+  assert.match(
+    properties,
+    /^raincoatRepository=https:\/\/raincoat-ui\.github\.io\/design-system\/maven$/m,
+  );
+  assert.match(properties, /^raincoatVersion=0\.1\.0-next\.1$/m);
+  // The property names are the ones the app's build reads.
+  const settings = readFileSync(
+    join(repoRoot, "apps/reference-android/settings.gradle.kts"),
+    "utf8",
+  );
+  const build = readFileSync(join(repoRoot, "apps/reference-android/build.gradle.kts"), "utf8");
+  assert.match(settings, /gradleProperty\("raincoatRepository"\)/);
+  assert.match(build, /gradleProperty\("raincoatVersion"\)/);
+});
+
+test("the iOS app is pointed at the Swift mirror, at exactly the version, and nothing else changes", () => {
+  const file = join(repoRoot, "apps/reference-ios/ReferenceApp.xcodeproj/project.pbxproj");
+  const project = readFileSync(file, "utf8");
+  const changed = projectWithMirror(project, "0.1.0-next.1");
+
+  // The lines of `to` that `from` does not have, counting a line that occurs more than once.
+  const difference = (from, to) => {
+    const left = from.split("\n");
+    return to.split("\n").filter((line) => {
+      const at = left.indexOf(line);
+      if (at !== -1) left.splice(at, 1);
+      return at === -1;
+    });
+  };
+  const removed = difference(changed, project);
+  const added = difference(project, changed);
+  // The local reference, and where the project lists it.
+  assert.deepEqual(removed, [
+    '\t\t\t\t5A0000000000000000000121 /* XCLocalSwiftPackageReference "../../packages/ios" */,',
+    "/* Begin XCLocalSwiftPackageReference section */",
+    '\t\t5A0000000000000000000121 /* XCLocalSwiftPackageReference "../../packages/ios" */ = {',
+    "\t\t\tisa = XCLocalSwiftPackageReference;",
+    "\t\t\trelativePath = ../../packages/ios;",
+    "/* End XCLocalSwiftPackageReference section */",
+  ]);
+  const reference =
+    '5A0000000000000000000121 /* XCRemoteSwiftPackageReference "design-system-swift" */';
+  assert.deepEqual(added, [
+    `\t\t\t\t${reference},`,
+    "/* Begin XCRemoteSwiftPackageReference section */",
+    `\t\t${reference} = {`,
+    "\t\t\tisa = XCRemoteSwiftPackageReference;",
+    '\t\t\trepositoryURL = "https://github.com/raincoat-ui/design-system-swift";',
+    "\t\t\trequirement = {",
+    "\t\t\t\tkind = exactVersion;",
+    '\t\t\t\tversion = "0.1.0-next.1";',
+    "\t\t\t};",
+    "/* End XCRemoteSwiftPackageReference section */",
+    // Every product the two targets use comes from the mirror.
+    ...Array(4).fill(`\t\t\tpackage = ${reference};`),
+  ]);
+  assert.equal(changed.match(/isa = XCSwiftPackageProductDependency;/g).length, 4);
+
+  assert.throws(() => projectWithMirror(changed, "0.1.0-next.1"), /already using a release/);
+  assert.throws(
+    () => projectWithMirror(project.replaceAll("../../packages/ios", "../Elsewhere"), "0.1.0"),
+    /should refer to \.\.\/\.\.\/packages\/ios/,
   );
 });

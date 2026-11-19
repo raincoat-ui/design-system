@@ -108,9 +108,17 @@ versions are prereleases such as `0.1.0-next.0`, published to npm under the tag 
 3. **Merge it.** The `release` workflow sees a version on `main` that has no tag and publishes
    it: the Android modules to the Maven repository on GitHub Pages, the Swift package to
    `raincoat-ui/design-system-swift`, the npm packages to npmjs.com. It then creates the GitHub
-   release with the bill of materials, and installs the published release from each registry.
-4. **Check.** The `install the published release` job must be green. To check a file yourself:
+   release with the bill of materials, and installs the published release from each registry:
+   first into a small project per platform, then into the reference apps, which run their tests
+   on a simulator, an emulator, and in Chromium.
+4. **Check.** The `install the published release` job and the three
+   `reference apps on the published release` jobs must be green. To check a file yourself:
    `gh attestation verify <file> --repo raincoat-ui/design-system`.
+
+The reference apps can be run against any published version later: Actions, reference apps,
+Run workflow. Choose the release's tag, or `main` if no component has been added since, and
+leave the version empty for the one that commit names. The apps' tests are those of the commit
+chosen, so they only pass for a version that ships what that commit's apps show.
 
 npm checks a new version before it serves it. npm says that typically takes around five minutes
 and can take longer; on 2026-11-16 it took two. Until then the registry answers "not found",

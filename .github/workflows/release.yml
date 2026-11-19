@@ -359,3 +359,17 @@ jobs:
       - name: npm, from the registry
         if: needs.publish-npm.outputs.pending == ''
         run: node tools/release/consumers/npm-check.mjs --version "$RELEASE_VERSION"
+
+  # The reference apps, each installing the release from where it was published, and their
+  # tests on a simulator, an emulator, and in Chromium. Once every registry has the release: a
+  # release finished by hand later runs them then.
+  reference-apps:
+    name: reference apps on the published release
+    needs: [plan, publish-npm, publish-swift, verify]
+    if: needs.publish-npm.outputs.pending == '' && needs.publish-swift.outputs.pending != 'true'
+    permissions:
+      contents: read
+    # zizmor asks for GitHub's newer `$/` form, which actionlint 1.7.12 rejects.
+    uses: ./.github/workflows/reference-apps.yml # zizmor: ignore[self-repository]
+    with:
+      version: ${{ needs.plan.outputs.version }}
