@@ -124,6 +124,13 @@ function, a busy button needs a Client Component; an idle one renders in a Serve
 <p><strong>Tests.</strong> Component tests run in Chromium through Vitest’s browser mode. Expected values come
 from the token source, resolved separately from the stylesheet, so a comparison covers the path
 from a token to what the browser draws.</p>
+<p><strong>In an app.</strong> <code dir="auto">apps/reference-web-vite</code> is a React app built with Vite that shows the Button in
+the states of its spec and loads the precompiled stylesheet. Its Playwright tests run the
+production build in Chromium and check what only an app shows: the role, name, and state that
+Chromium’s accessibility tree gives each control, keyboard order, touch on a phone-sized
+screen, the browser’s font size setting, and axe in each system color and contrast setting.
+Chromium moves a tap that lands near a target onto it, up to 8px beyond the edge in these tests,
+so the edge of a touch target is checked by hit testing rather than by tapping.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="consequences">Consequences</h2><a class="sl-anchor-link" href="#consequences"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Consequences”</span></a></div>
 <ul>
 <li>The precompiled stylesheet defines Tailwind’s utility class names (<code dir="auto">.inline-flex</code>,
