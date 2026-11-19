@@ -52,7 +52,7 @@ test("values are written as Kotlin literals of the right type", () => {
   assert.match(theme, /TokenEasing\(0\.2, 0\.0, 0\.0, 1\.0\)/);
   assert.match(
     theme,
-    /TokenTextStyle\(families = listOf\("Be Vietnam Pro", "system-ui", "sans-serif"\), size = 16\.0, weight = 500, letterSpacing = 0\.0, lineHeight = 1\.4\)/,
+    /TokenTextStyle\(families = listOf\("Be Vietnam Pro", "system-ui", "sans-serif"\), size = 16\.0, weight = 600, letterSpacing = 0\.0, lineHeight = 1\.4\)/,
   );
 });
 

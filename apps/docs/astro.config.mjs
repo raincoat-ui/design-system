@@ -27,10 +27,22 @@ export default defineConfig({
         },
       ],
       customCss: [
+        "./src/styles/fonts.css",
         "@raincoat-ui/theme-base/theme.css",
-        "./src/styles/generated.css",
         "./src/styles/site.css",
       ],
+      components: {
+        PageTitle: "./src/components/PageTitle.astro",
+      },
+      expressiveCode: {
+        styleOverrides: {
+          borderRadius: "2px",
+          borderColor: "var(--sl-color-gray-5)",
+          codeFontFamily: "var(--sl-font-mono)",
+          uiFontFamily: "var(--sl-font)",
+          frames: { shadowColor: "transparent" },
+        },
+      },
       sidebar: [
         {
           label: "Start here",
