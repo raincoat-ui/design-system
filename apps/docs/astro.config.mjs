@@ -14,8 +14,8 @@ export default defineConfig({
         "One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app.",
       favicon: "/favicon.svg",
       logo: {
-        light: "./src/assets/raincoat-logo-light.svg",
-        dark: "./src/assets/raincoat-logo-dark.svg",
+        light: "./assets/raincoat-logo-light.svg",
+        dark: "./assets/raincoat-logo-dark.svg",
         alt: "Raincoat",
         replacesTitle: true,
       },
