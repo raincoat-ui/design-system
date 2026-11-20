@@ -116,10 +116,11 @@ Raincoat in awesome-design-systems.
 - **Name:** Raincoat, chosen by the maintainer for its meaning: a layer that protects you when
   you are out in the rain. The identifiers in ADR 0012 are hard-coded by consumers and must not
   change.
-- **Mark:** a layered raindrop: an ink shell, a gap, and a yellow core (`brand/`, usage in
-  `brand/README.md`). The shell is the layer Raincoat provides; the core is what it protects. The
-  wordmark is lowercase "raincoat" in Be Vietnam Pro SemiBold, converted to outlines. The docs
-  favicon and header use it. It replaces the earlier raindrop-in-a-square favicon.
+- **Mark:** a yellow raincoat with its hood up and an ink lining (`brand/`, usage in
+  `brand/README.md`). The coat is the layer Raincoat provides; every brand app gets the same cut,
+  and a theme changes only its color. The wordmark is lowercase "raincoat" in Be Vietnam Pro
+  SemiBold, converted to outlines. The docs favicon and header use it. It replaces the earlier
+  layered raindrop and, before that, a raindrop-in-a-square favicon.
 - **Raincoat has no brand voice of its own in the apps.** Each brand's voice belongs to its
   theme. A system-wide voice-and-tone guide for UI text is planned but not yet written.
 

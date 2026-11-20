@@ -1,8 +1,9 @@
 # Raincoat brand marks
 
-The mark is a layered raindrop. The ink shell is the layer Raincoat provides, and the yellow core
-is the app it protects. That is the README's line, "the layer that protects you when you are out
-in the rain", drawn as a shape.
+The mark is a yellow raincoat with its hood up. The coat is the layer Raincoat provides, and the
+ink inside the hood is the app it protects. That is the README's line, "the layer that protects
+you when you are out in the rain", drawn as the coat itself. Every brand app gets the same cut,
+and a theme changes only its color.
 
 These files are Raincoat's own identity, licensed with the rest of the repository. They are not a
 theme asset: brand apps built on Raincoat never show them.
@@ -39,18 +40,26 @@ pnpm exec playwright screenshot --viewport-size "1200, 630" --wait-for-timeout 5
 
 ## Construction
 
-- The shell is a circle and its two tangents to an apex point. The hole and the core are the same
-  shape inset by 6 and 10.25 units on a 64-unit grid, so the shell and the gap keep an even width
-  all the way round, apex included.
+- The coat is drawn on a 64-unit grid and fills a 56-unit square, 4 units in from every edge. The
+  hood is a circle of radius 11 centered at (32, 15). Its sides drop straight to the shoulders, the
+  sleeves hang from the shoulders and end square at the cuff, 8.5 units wide, and the body flares
+  from the underarm to a straight hem.
+- The hood's opening is a circle of radius 6 on the same center, so the hood wall is 5 units all
+  the way round. The opening narrows to a point at the collar and runs on as the closed front,
+  2 units wide, to the hem. The coat is one shape with this opening cut into it: on light
+  backgrounds an ink lining fills the opening, and on dark backgrounds and in one color it is
+  left open.
 - The wordmark is "raincoat" set lowercase in Be Vietnam Pro SemiBold (OFL-1.1), the system's own
   `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font.
-- Colors are primitive tokens: ink `color.neutral.900` (`#191b1d`) and yellow `color.brand.400`
-  (`#f7d22a`). On dark backgrounds the shell turns white and the core stays yellow.
+- Colors are primitive tokens: yellow `color.brand.400` (`#f7d22a`) for the coat, and ink
+  `color.neutral.900` (`#191b1d`) for the lining and the wordmark. On dark backgrounds the coat
+  stays yellow, the lining is left open and the wordmark turns white. The app icon is the coat in
+  yellow on an ink tile.
 
 ## Rules
 
-- Keep clear space of at least the shell's width (6/64 of the mark's height) on every side.
+- Keep clear space of at least the hood wall's width (5/64 of the mark's height) on every side.
 - Use the mark at 16 px or larger, or the app icon below that. Use the full logo at 20 px tall or
   larger.
-- Do not recolor the shell, outline the mark, add effects, or set the wordmark in another
-  typeface. The core is the only part that may change color, and only to show what theming does.
+- Do not recolor the lining, outline the mark, add effects, or set the wordmark in another
+  typeface. The coat is the only part that may change color, and only to show what theming does.
