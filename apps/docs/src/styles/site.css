@@ -508,6 +508,11 @@ starlight-toc a[aria-current="true"]:hover {
   color: var(--sl-color-white);
 }
 
+/* In the reading column a link button keeps the button's own label, not a link's underline. */
+.sl-markdown-content .sl-link-button:not(.minimal) {
+  text-decoration: none;
+}
+
 .sl-link-button.minimal {
   color: var(--sl-color-white);
   text-decoration: underline;
@@ -580,6 +585,72 @@ starlight-toc a[aria-current="true"]:hover {
   .hero .tagline {
     max-inline-size: 34ch;
   }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Not found: the manual's contents, numbered as the sidebar numbers them */
+
+.sl-markdown-content .rc-contents {
+  margin-block-start: 1.25rem;
+}
+
+.rc-contents ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Groups run down each column, then across, as a printed contents page does. */
+.sl-markdown-content .rc-contents-groups {
+  max-inline-size: none;
+  columns: 15rem 3;
+  column-gap: 2.5rem;
+}
+
+.rc-contents-group {
+  break-inside: avoid;
+  margin-block-end: 2rem;
+  border-block-start: 1px solid var(--sl-color-gray-5);
+  padding-block-start: 0.75rem;
+}
+
+.rc-contents h3 {
+  display: flex;
+  align-items: baseline;
+  margin: 0 0 0.375rem;
+  color: var(--sl-color-white);
+  font-size: var(--sl-text-base);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.rc-contents a {
+  display: flex;
+  align-items: baseline;
+  padding-block: 0.3125rem;
+  color: var(--sl-color-gray-2);
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.rc-contents a:hover {
+  color: var(--sl-color-white);
+}
+
+.rc-contents a:hover > span:last-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.rc-contents-number {
+  flex: none;
+  min-inline-size: 2.25rem;
+  color: var(--sl-color-gray-3);
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------------------------------------------------------------------------------------------

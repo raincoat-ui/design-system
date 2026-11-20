@@ -7,17 +7,35 @@ in the rain", drawn as a shape.
 These files are Raincoat's own identity, licensed with the rest of the repository. They are not a
 theme asset: brand apps built on Raincoat never show them.
 
-| File                         | Use                                                |
-| ---------------------------- | -------------------------------------------------- |
-| `raincoat-logo.svg`          | Mark and wordmark, on light backgrounds            |
-| `raincoat-logo-reversed.svg` | Mark and wordmark, on dark backgrounds             |
-| `raincoat-logo-mono.svg`     | One color (`currentColor`), for print or embossing |
-| `raincoat-mark.svg`          | The mark alone, on light backgrounds               |
-| `raincoat-mark-reversed.svg` | The mark alone, on dark backgrounds                |
-| `raincoat-mark-mono.svg`     | The mark alone in one color (`currentColor`)       |
-| `raincoat-app-icon.svg`      | Rounded-square tile, for avatars and app icons     |
+| File                           | Use                                                              |
+| ------------------------------ | ---------------------------------------------------------------- |
+| `raincoat-logo.svg`            | Mark and wordmark, on light backgrounds                          |
+| `raincoat-logo-reversed.svg`   | Mark and wordmark, on dark backgrounds                           |
+| `raincoat-logo-mono.svg`       | One color (`currentColor`), for print or embossing               |
+| `raincoat-mark.svg`            | The mark alone, on light backgrounds                             |
+| `raincoat-mark-reversed.svg`   | The mark alone, on dark backgrounds                              |
+| `raincoat-mark-mono.svg`       | The mark alone in one color (`currentColor`)                     |
+| `raincoat-app-icon.svg`        | Rounded-square tile, for avatars and app icons                   |
+| `raincoat-app-icon-square.svg` | The tile with square corners, for platforms that round their own |
+| `social-preview.html`          | The source of the docs site's share image                        |
 
-The docs favicon (`apps/docs/public/favicon.svg`) is the app icon at 32 units.
+The docs site's icons and share image come from these files:
+
+- `apps/docs/public/favicon.svg` is the app icon at 32 units.
+- `apps/docs/public/apple-touch-icon.png` is the square tile at 180 px. iOS rounds the corners
+  itself, and would fill transparent corners with black.
+- `apps/docs/public/social-preview.png` is `social-preview.html` at 1200 × 630 px, the size link
+  previews expect. It is set like the site's cover, from the logo, the site's fonts and the base
+  theme's colors.
+
+Render the two images again after changing a source. The commands use the repository's own
+Playwright, so run `pnpm web:browsers` once first:
+
+```sh
+cd packages/web
+pnpm exec playwright screenshot --viewport-size "180, 180" "file://$PWD/../../brand/raincoat-app-icon-square.svg" ../../apps/docs/public/apple-touch-icon.png
+pnpm exec playwright screenshot --viewport-size "1200, 630" --wait-for-timeout 500 "file://$PWD/../../brand/social-preview.html" ../../apps/docs/public/social-preview.png
+```
 
 ## Construction
 

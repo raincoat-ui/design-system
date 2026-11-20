@@ -29,7 +29,13 @@ import { entries, notes } from "./notes.mjs";
 import { promisedFiles, tarballProblems } from "./pack-npm.mjs";
 import { bom, mavenComponents, npmComponents } from "./sbom.mjs";
 import { writeMirror } from "./swift-mirror.mjs";
-import { androidProperties, isVersion, projectWithMirror, webPackages } from "./use-published.mjs";
+import {
+  androidProperties,
+  isVersion,
+  projectWithMirror,
+  WEB_APPS,
+  webPackages,
+} from "./use-published.mjs";
 
 const scratch = [];
 const temp = () => {
@@ -542,11 +548,14 @@ test("only a semantic version is ever written into a reference app", () => {
   assert.equal(unknown.status, 2);
 });
 
-test("the web app trades exactly the Raincoat packages it takes from this workspace", () => {
-  assert.deepEqual(webPackages(readJson("apps/reference-web-vite/package.json")), [
-    "@raincoat-ui/react",
-    "@raincoat-ui/theme-base",
-  ]);
+test("each web app trades exactly the Raincoat packages it takes from this workspace", () => {
+  assert.deepEqual(WEB_APPS, ["apps/reference-web-vite", "apps/reference-web-next"]);
+  for (const app of WEB_APPS) {
+    assert.deepEqual(webPackages(readJson(`${app}/package.json`)), [
+      "@raincoat-ui/react",
+      "@raincoat-ui/theme-base",
+    ]);
+  }
   assert.deepEqual(
     webPackages({
       dependencies: { "@raincoat-ui/react": "0.1.0", react: "19.3.1" },

@@ -2,15 +2,15 @@
 // Points a reference app at a published release, so that it installs Raincoat from where an app
 // installs it instead of from this checkout:
 //
-//   node tools/release/use-published.mjs web [version]      from npm
+//   node tools/release/use-published.mjs web [version]      from npm, for both web apps
 //   node tools/release/use-published.mjs android [version]  from the Maven repository
 //   node tools/release/use-published.mjs ios [version]      from the Swift mirror
 //
 // Without a version, the one this checkout names. The app's tests then run as they always do.
 //
-// It changes the checkout the way an app's own change would: the web app's package.json and the
-// lockfile, a gradle.properties for the Android app, the iOS app's Xcode project. CI runs it on a
-// fresh checkout. To go back, restore those files with git, then run `pnpm install`; for Android,
+// It changes the checkout the way an app's own change would: the web apps' package.json files
+// and the lockfile, a gradle.properties for the Android app, the iOS app's Xcode project. CI runs
+// it on a fresh checkout. To go back, restore those files with git, then run `pnpm install`; for Android,
 // delete apps/reference-android/gradle.properties.
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
@@ -27,9 +27,10 @@ export const isVersion = (value) =>
 
 // Web
 
-const WEB_APP = "apps/reference-web-vite";
+/** The web apps: a single-page app built with Vite, and a Next.js app rendered on a server. */
+export const WEB_APPS = ["apps/reference-web-vite", "apps/reference-web-next"];
 
-/** The Raincoat packages the web app installs from this workspace. */
+/** The Raincoat packages a web app installs from this workspace. */
 export function webPackages(manifest) {
   return Object.entries({ ...manifest.dependencies, ...manifest.devDependencies })
     .filter(([name, range]) => name.startsWith("@raincoat-ui/") && range.startsWith("workspace:"))
@@ -37,10 +38,14 @@ export function webPackages(manifest) {
 }
 
 function useNpm(version) {
-  const manifest = readJson(`${WEB_APP}/package.json`);
+  for (const app of WEB_APPS) useNpmIn(app, version);
+}
+
+function useNpmIn(app, version) {
+  const manifest = readJson(`${app}/package.json`);
   const packages = webPackages(manifest);
   if (packages.length === 0) {
-    throw new Error(`${WEB_APP} installs no Raincoat package from this workspace`);
+    throw new Error(`${app} installs no Raincoat package from this workspace`);
   }
   const added = spawnSync(
     "pnpm",
@@ -53,11 +58,11 @@ function useNpm(version) {
     ],
     { cwd: repoRoot, stdio: "inherit", shell: process.platform === "win32" },
   );
-  if (added.status !== 0) throw new Error(`pnpm could not install ${version} from npm`);
+  if (added.status !== 0) throw new Error(`pnpm could not install ${version} from npm in ${app}`);
 
   // The tests would pass just as well against this workspace, so make sure they will not.
   for (const name of packages) {
-    const installed = realpathSync(join(repoRoot, WEB_APP, "node_modules", name));
+    const installed = realpathSync(join(repoRoot, app, "node_modules", name));
     if (!installed.includes(`${sep}node_modules${sep}.pnpm${sep}`)) {
       throw new Error(`${name} resolves to ${installed}, not to the package from npm`);
     }
@@ -162,5 +167,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     process.exit(2);
   }
   app.use(version);
-  console.log(`The ${app.label} reference app now installs Raincoat ${version} from ${app.from}.`);
+  const apps =
+    name === "web" ? "web reference apps now install" : `${app.label} reference app now installs`;
+  console.log(`The ${apps} Raincoat ${version} from ${app.from}.`);
 }

@@ -1,0 +1,7 @@
+/* The styles load as the package's README describes for an app with Tailwind CSS v4. */
+@import "tailwindcss";
+@import "@raincoat-ui/theme-base/theme.css";
+@import "@raincoat-ui/react/tailwind.css";
+
+/* The app's own markup uses Tailwind utilities: the shadcn/ui color names, which the theme
+   maps, and the theme's tokens. Nothing here is a literal color. */

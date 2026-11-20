@@ -1,0 +1,58 @@
+---
+// The manual's contents, numbered as the sidebar numbers them: "2" for a group, "2.3" for a
+// page in it. Built from the current route's sidebar, so it always matches the site. A group
+// one level down (the ADRs and the RFCs) is listed once, linking to its first document.
+import type { StarlightRouteData } from "@astrojs/starlight/route-data";
+
+type Entry = StarlightRouteData["sidebar"][number];
+type Link = Extract<Entry, { type: "link" }>;
+
+const firstLink = (entry: Entry): Link | undefined =>
+  entry.type === "link" ? entry : entry.entries.map(firstLink).find(Boolean);
+
+const groups = Astro.locals.starlightRoute.sidebar.flatMap((entry, index) =>
+  entry.type === "group"
+    ? [
+        {
+          number: `${index + 1}`,
+          label: entry.label,
+          pages: entry.entries.flatMap((child, childIndex) => {
+            const link = firstLink(child);
+            return link
+              ? [{ number: `${index + 1}.${childIndex + 1}`, label: child.label, href: link.href }]
+              : [];
+          }),
+        },
+      ]
+    : [],
+);
+---
+
+<nav class="rc-contents not-content" aria-labelledby="contents">
+  <ol class="rc-contents-groups">
+    {
+      groups.map((group) => (
+        <li class="rc-contents-group">
+          <h3>
+            <span class="rc-contents-number" aria-hidden="true">
+              {group.number}
+            </span>
+            {group.label}
+          </h3>
+          <ol>
+            {group.pages.map((page) => (
+              <li>
+                <a href={page.href}>
+                  <span class="rc-contents-number" aria-hidden="true">
+                    {page.number}
+                  </span>
+                  <span>{page.label}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </li>
+      ))
+    }
+  </ol>
+</nav>

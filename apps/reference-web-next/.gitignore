@@ -1,0 +1,3 @@
+# Written by `next build` and `next dev`.
+.next/
+next-env.d.ts

@@ -50,6 +50,42 @@ test("where React has no client hooks, as in a Server Component, the hydration c
   assert.deepEqual(JSON.parse(output), ["undefined", false, true]);
 });
 
+test("until hydrated, a busy or disabled Button gives its element no function", () => {
+  // A Server Component may not pass a function to an element: React refuses to render it. Such
+  // a Button is never hydrated, and until a Button is, the browser refuses activation for it,
+  // so it needs no handler. Rendering on a server, as here, is the same unhydrated state.
+  const script = `
+    const React = await import("react");
+    const { renderToString } = await import("react-dom/server");
+    const { Button } = await import("./dist/index.js");
+    const link = () => React.createElement("a", { href: "/next" }, "Next");
+    const rendered = [];
+    const Capture = (props) => {
+      const element = Button(props);
+      rendered.push(element);
+      return element;
+    };
+    renderToString(React.createElement(React.Fragment, null,
+      React.createElement(Capture, { loading: true, type: "submit", children: "Send invitation" }),
+      React.createElement(Capture, { asChild: true, disabled: true, children: link() }),
+      React.createElement(Capture, { asChild: true, loading: true, children: link() }),
+    ));
+    console.log(JSON.stringify(rendered.map(({ props }) => ({
+      functions: Object.keys(props).filter((name) => typeof props[name] === "function"),
+      unhydrated: "data-unhydrated" in props,
+    }))));
+  `;
+  const output = execFileSync(process.execPath, ["--input-type=module", "--eval", script], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.deepEqual(JSON.parse(output), [
+    { functions: [], unhydrated: true },
+    { functions: [], unhydrated: true },
+    { functions: [], unhydrated: true },
+  ]);
+});
+
 test("the built files use only custom properties that a theme defines", () => {
   const used = new Set();
   for (const file of filesUnder("dist").filter((name) => /\.(js|css)$/.test(name))) {

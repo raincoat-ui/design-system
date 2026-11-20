@@ -92,6 +92,9 @@ Every other prop of a `<button>` is passed through, including `ref`.
   screen reader can still follow it, because a link cannot be disabled in HTML. Either one
   carries `data-unhydrated` until React hydrates it. A button that becomes busy after
   hydration keeps focus as usual.
+- **Server Components.** A Button can be rendered by a React Server Component. It is never
+  hydrated there, so a busy Button or a disabled link stays as it is before hydration, for
+  good. For a busy state that ends, or an `onClick`, render the Button in a Client Component.
 
 `buttonVariants({ variant, size, fullWidth })` returns the class names alone.
 
