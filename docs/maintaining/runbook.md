@@ -34,7 +34,8 @@ by GitHub Pages from the `gh-pages` branch.
 
 - **Content** is generated at build time by `apps/docs/scripts/generate.mjs`: token reference
   pages from the token source, and copies of this repository's documents. Only the home page,
-  `apps/docs/src/content/docs/index.mdx`, is written by hand.
+  `apps/docs/src/content/docs/index.mdx`, and the not-found page, `apps/docs/src/pages/404.astro`,
+  are written by hand.
 - **Deployment** is automatic. The `pages` workflow rebuilds and publishes on every push to
   `main`. It replaces everything on `gh-pages` except the `maven/` and `pr/` directories.
 - **Local preview**: `pnpm docs:dev`, then open the address it prints.

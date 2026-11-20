@@ -243,7 +243,7 @@ Every theme ships four modes, selected by `data-theme` (or by `prefers-color-sch
 
 **The Face Alone Rule.** Inline code is told apart by its face only: no pill, no fill, no padding.
 
-**The Number Leads Rule.** A page title is preceded by its section number on the same line, wrapping with the title ("3.1 Button"). The number never stands alone above the title. ADRs and RFCs keep their own document numbers instead.
+**The Number Leads Rule.** A page title is preceded by its section number on the same line, wrapping with the title ("3.1 Button"). The number never stands alone above the title. ADRs and RFCs keep their own document numbers instead, and the not-found page takes its status code ("404").
 
 ## Layout
 
@@ -288,6 +288,7 @@ Plain, flat, firm: a filled block or an outlined one, never a pill.
 - **Sidebar:** numbered contents. Top-level groups carry a mono number (1 to 5) on a 2.25rem column and a 600 label; pages carry "2.3" sub-numbers; no tree indent lines. The current page is a solid yellow bar with Ink Deep 600 text, number included.
 - **On this page:** 600 heading at small size, links in grey, the current one in ink at 600.
 - **Previous / next:** hairline boxes, 2px corners, ink outline on hover.
+- **Not found:** the status code leads the title as a section number does ("404 Page not found"), then a lede, the yellow primary action back to the overview, and the manual's contents: each top-level group under a 1px hairline with its mono number, and its pages numbered as the sidebar numbers them ("2.3"), running down three columns and then across.
 
 ### Notes
 Ruled, untinted boxes: 1px Hairline outline, 2px corner, transparent fill, 16px / 20px padding, 600 title. Caution notes take the ink outline; danger notes take the red outline and red title. Variant shows in outline and title only.

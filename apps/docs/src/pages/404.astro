@@ -1,0 +1,31 @@
+---
+// The page a broken link lands on. GitHub Pages serves dist/404.html for any address the site
+// does not have. It says what happened, offers the overview, and sets out the manual's
+// contents, read from the same sidebar the other pages show, so it never lists a page that
+// does not exist. Starlight's own 404 route is turned off in astro.config.mjs.
+import { LinkButton } from "@astrojs/starlight/components";
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import Contents from "../components/Contents.astro";
+
+const home = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<StarlightPage
+  frontmatter={{
+    title: "Page not found",
+    description: "There is no page at this address in the Raincoat documentation.",
+    template: "splash",
+    editUrl: false,
+    pagefind: false,
+  }}
+>
+  <p>
+    There is no page at this address. The link may be mistyped, or the page may have moved.
+    Start again from the overview, search the manual, or pick a page from the contents below.
+  </p>
+
+  <LinkButton href={home} icon="right-arrow">Go to the overview</LinkButton>
+
+  <div class="sl-heading-wrapper level-h2"><h2 id="contents">Contents</h2></div>
+  <Contents />
+</StarlightPage>
