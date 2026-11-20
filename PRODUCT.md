@@ -81,9 +81,10 @@ Raincoat in awesome-design-systems.
 
 ## Capabilities and Constraints
 
-- **Today (0.1.0-next.1, milestone 1):** the token source with its linter and contrast checker;
-  the generated web theme stylesheet, Swift package, and Kotlin modules; and a Button on all
-  three platforms, published to all three registries.
+- **Today (0.1.0-next.2; milestone 1 complete, milestone 2 next):** the token source with its
+  linter and contrast checker; the generated web theme stylesheet, Swift package, and Kotlin
+  modules; and a Button on all three platforms, published to all three registries and tested in
+  the reference apps from each of them.
 - **v1 component set:** Button, Input, Card, Dialog/Sheet, Tabs, Toast, Typography. Select,
   Checkbox, Radio, Switch, Menu, Tooltip, date picker, table, and navigation bars follow in 1.x.
 - **Token model:** primitive, semantic, and component tiers. Every theme has four color modes
@@ -124,8 +125,10 @@ Raincoat in awesome-design-systems.
 
 ## Evidence on Hand
 
-- The prereleases 0.1.0-next.0 and 0.1.0-next.1 on GitHub Releases, with provenance attestations
-  and a bill of materials. 0.1.0-next.1 is on npm, the Maven repository, and the Swift mirror.
+- The prereleases 0.1.0-next.0, 0.1.0-next.1, and 0.1.0-next.2 on GitHub Releases, with
+  provenance attestations and a bill of materials. 0.1.0-next.1 and 0.1.0-next.2 are on npm, the
+  Maven repository, and the Swift mirror; 0.1.0-next.2 was published to npm through trusted
+  publishing, with no token, and its release run passed every reference app's tests.
 - The contrast table on the docs site (`foundations/contrast`): every declared color pair in
   every mode, all checks passing.
 - Platform test evidence: the reference apps' accessibility audits, the pixel tests of the

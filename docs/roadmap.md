@@ -29,7 +29,32 @@ M0 was completed on 2026-11-14. Evidence for each exit criterion:
   was refused. Removing the dependency makes the gate pass, as the runs on `main` show.
 - Workflow lint and OpenSSF Scorecard ran successfully on the first push.
 
-M1 is in progress. One token source now drives all three platforms at the token level:
+M1 was completed on 2026-11-20. Evidence for each exit criterion:
+
+- **One token edit changes every platform's output with no other edits.**
+  [Pull request 33](https://github.com/raincoat-ui/design-system/pull/33) changed the base
+  theme's colors, radii, and label weights in the token source. The web theme stylesheet, the
+  Swift package, and the Kotlin modules changed through their generated files alone; the one
+  other edit in `packages/` was a sample value in the Kotlin generator's own test. CI fails when
+  a generated file differs from what the source produces.
+- **Drift, contract, contrast, and accessibility checks are green and required.** `ci-gate` is
+  the only required status check on `main`, and it passes only when every job passed: the drift
+  check and the contrast checker, the Swift and Kotlin contract tests, the React components'
+  accessibility tests, and the reference apps' accessibility audits. It was green on the release
+  pull request, [pull request 36](https://github.com/raincoat-ui/design-system/pull/36).
+- **A prerelease installs from npm, the Maven repository, and the Swift mirror into the
+  reference apps, with provenance and a bill of materials.**
+  [0.1.0-next.2](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2)
+  was published on 2026-11-20, and
+  [its release run](https://github.com/raincoat-ui/design-system/actions/runs/44716343554)
+  installed it into every reference app: from npm into the Next.js and Vite apps (14 and 13
+  tests passed in Chromium), from the Maven repository into the Android app (on an emulator),
+  and from the Swift mirror into the iOS app (on a simulator). Every published file has a
+  provenance attestation, and the bill of materials is attached to the release. It was the
+  first release published to npm through trusted publishing: the workflow held no token, and
+  the token used for the first publish has been revoked.
+
+What M1 built, one token source driving all three platforms:
 
 - The token source, its linter, and the contrast checker.
 - The web theme stylesheet, the Swift package, and the Kotlin modules are generated from it,
@@ -92,11 +117,9 @@ M1 is in progress. One token source now drives all three platforms at the token 
   found that a busy Button, or a disabled link styled as one, stopped a Server Component from
   rendering, which is fixed.
 
-Still to come in M1:
+- The third prerelease, [0.1.0-next.2](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2),
+  on 2026-11-20. The base theme takes the standards-manual look, a busy Button no longer submits
+  its form before React hydrates the page, and a Server Component can render a busy or disabled
+  Button. npm published it through trusted publishing, with no token.
 
-- **The Next.js app on a published release.** It needs the first prerelease after
-  0.1.0-next.1, which has the fix. The release workflow installs that prerelease into both web
-  apps from npm once it is published.
-- **npm without a token.** The first publish of the two npm packages used a one-time token.
-  Trusted publishing is set up for each package before the next release, and the token is
-  revoked. The runbook has the steps.
+M2, a second and deliberately different theme, is next.
