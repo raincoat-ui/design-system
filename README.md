@@ -13,8 +13,9 @@ on top.
 
 **Documentation: <https://raincoat-ui.github.io/design-system/>**
 
-> **Status: milestone 1 in progress.** One token source drives a Button on the web, iOS, and
-> Android, and prereleases are being published. The
+> **Status: milestone 1 complete; milestone 2, a second theme, is next.** One token source
+> drives a Button on the web, iOS, and Android, published as prereleases to npm, the Maven
+> repository, and the Swift mirror. The
 > [releases page](https://github.com/raincoat-ui/design-system/releases) says which registries
 > each one has reached, and the [roadmap](docs/roadmap.md) what each milestone delivers.
 
@@ -51,8 +52,8 @@ The token source lives in `tokens/`, checked by `schemas/tokens.schema.json` and
 contrast checker in `packages/tokens/`. To add a token, follow
 [docs/contributing/add-a-token.md](docs/contributing/add-a-token.md). `pnpm tokens:build` compiles them into
 the web theme stylesheet in `packages/web-themes/`, the Swift package in `packages/ios/`, and
-the Kotlin modules in `packages/android/`. Component specs and the components themselves follow
-during milestone 1.
+the Kotlin modules in `packages/android/`. Component specs live in `specs/`, and each
+platform's components in its package.
 
 ## Development
 
