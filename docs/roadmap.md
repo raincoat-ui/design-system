@@ -84,9 +84,19 @@ M1 is in progress. One token source now drives all three platforms at the token 
   Android app, and from the Swift mirror into the iOS app. Every test passed: in Chromium, on
   an emulator, and on a simulator.
 
+- The web reference app on Next.js (`apps/reference-web-next`), which renders the Button on a
+  server, both in a Client Component and from a Server Component, and loads the styles through
+  Tailwind CSS. Its tests run its production build in Chromium: the HTML before any JavaScript
+  runs, hydration without a mismatch, forms that post to Server Actions with JavaScript on and
+  off, the token colors, touch targets, and axe in each system color and contrast setting. It
+  found that a busy Button, or a disabled link styled as one, stopped a Server Component from
+  rendering, which is fixed.
+
 Still to come in M1:
 
-- **A web reference app on Next.js**, to show the components rendered on a server.
+- **The Next.js app on a published release.** It needs the first prerelease after
+  0.1.0-next.1, which has the fix. The release workflow installs that prerelease into both web
+  apps from npm once it is published.
 - **npm without a token.** The first publish of the two npm packages used a one-time token.
   Trusted publishing is set up for each package before the next release, and the token is
   revoked. The runbook has the steps.

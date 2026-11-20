@@ -28,8 +28,9 @@ Each platform package has tests of its own:
 
 The reference apps show the components in an app and test them on a simulator
 ([iOS](apps/reference-ios/README.md)), an emulator ([Android](apps/reference-android/README.md)),
-and in Chromium ([web](apps/reference-web-vite/README.md), with `pnpm web:reference`); each README
-has the command.
+and in Chromium, in a single-page app ([Vite](apps/reference-web-vite/README.md)) and in an app
+rendered on a server ([Next.js](apps/reference-web-next/README.md)), both with
+`pnpm web:reference`; each README has the command.
 
 ## Commits and pull requests
 

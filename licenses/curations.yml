@@ -29,3 +29,13 @@ exceptions:
     reason: CSS definition data required by Astro's CSS and SVG optimizers; build-time only, CC0 public-domain data.
     approved: 2026-11-14
     review-by: 2027-05-14
+  # caniuse-lite is the Can I Use browser-support table, published under CC-BY-4.0, a data
+  # license that asks for attribution and is not OSI-approved. Next.js requires it to decide
+  # which browsers its build targets, and it is used only by the Next.js reference app
+  # (apps/reference-web-next), which is never published or deployed. Nothing from it is shipped
+  # in a Raincoat package. There is no way to build with Next.js without it.
+  - package: caniuse-lite@1.0.30001826
+    scope: dev
+    reason: Browser-support data required by Next.js to build the Next.js reference app; build-time only, never shipped.
+    approved: 2026-11-20
+    review-by: 2027-05-20
