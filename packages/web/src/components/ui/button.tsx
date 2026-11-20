@@ -168,6 +168,9 @@ function Button({
   // the Tab order and ignores the pointer. With JavaScript off, that lasts.
   const hydrated = useHydrated(refuses);
   const waiting = refuses && !hydrated;
+  // So the handler is given only once hydrated. A Server Component renders the Button without
+  // ever hydrating it, and may not pass a function to an element at all.
+  const refusesItself = refuses && hydrated;
 
   return (
     <Comp
@@ -183,7 +186,7 @@ function Button({
       {...(disabled && { "data-disabled": "" })}
       {...(asChild && disabled && { "aria-disabled": true, tabIndex: -1 })}
       {...(busy && { "data-loading": "", "aria-busy": true, "aria-disabled": true })}
-      {...(refuses && { onClickCapture: ignoreActivation })}
+      {...(refusesItself && { onClickCapture: ignoreActivation })}
       {...(waiting && {
         "data-unhydrated": "",
         ...(asChild ? { tabIndex: -1 } : { disabled: true }),
