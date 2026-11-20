@@ -26,7 +26,17 @@ xcodebuild test \
   -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
-CI runs the same tests on every pull request, in the `reference app (ios)` job.
+CI runs the same tests on every pull request, in the `reference app (ios)` job, in four steps:
+
+1. Start an iPhone simulator, and wait until it has finished starting. A simulator that is still
+   starting can refuse to launch the app.
+2. Build the app and its tests with `xcodebuild build-for-testing`.
+3. Install the app on the simulator, start it once with `xcrun simctl launch`, and stop it. The
+   app's first start on a newly booted simulator is slow, once: on CI it has taken more than two
+   minutes, and every later start a few seconds. Started here, that cost is not counted in the
+   first test's time.
+4. Run the tests on what was built, with `xcodebuild test-without-building`. Each test may take
+   two minutes, and a test that fails is run once more, so a second failure is a real one.
 
 ### Against a published release
 

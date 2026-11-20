@@ -86,13 +86,40 @@ jobs:
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b
           echo "udid=$udid" >> "$GITHUB_OUTPUT"
+      # Built on its own, so that a build failure is not mistaken for a test failure, and so that
+      # the app can be started once before the tests.
+      - name: Build the app and its tests
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          xcodebuild build-for-testing \
+            -project apps/reference-ios/ReferenceApp.xcodeproj \
+            -scheme ReferenceApp \
+            -destination "platform=iOS Simulator,id=$SIMULATOR" \
+            -derivedDataPath build/reference-ios
+      # The app's first start on a newly booted simulator is slow, once: on a runner it has taken
+      # more than two minutes, and every later start a few seconds. In the first UI test, that
+      # time counted against the test's limit, and the test failed as hung although its own steps
+      # had passed. So the app is started here once, given time to draw its first screen, and
+      # stopped. This step's time is that one-time cost, and each test's time is its own.
+      - name: Start the app once before the tests
+        timeout-minutes: 10
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          app=build/reference-ios/Build/Products/Debug-iphonesimulator/ReferenceApp.app
+          bundle_id=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$app/Info.plist")
+          xcrun simctl install "$SIMULATOR" "$app"
+          time xcrun simctl launch "$SIMULATOR" "$bundle_id"
+          sleep 10
+          xcrun simctl terminate "$SIMULATOR" "$bundle_id"
       # Each test has a time limit, and a test that fails is run once more: a second failure is
       # a real one.
       - name: Run the UI tests on the simulator
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
         run: |
-          xcodebuild test \
+          xcodebuild test-without-building \
             -project apps/reference-ios/ReferenceApp.xcodeproj \
             -scheme ReferenceApp \
             -destination "platform=iOS Simulator,id=$SIMULATOR" \
