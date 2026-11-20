@@ -1,9 +1,9 @@
 # Raincoat brand marks
 
-The mark is a yellow raincoat with its hood up. The coat is the layer Raincoat provides, and the
-ink inside the hood is the app it protects. That is the README's line, "the layer that protects
-you when you are out in the rain", drawn as the coat itself. Every brand app gets the same cut,
-and a theme changes only its color.
+The mark is a capital R drawn as a raincoat seen from the side, hood up. The bowl is the hood, the
+stem is the coat's back and the leg is its front, falling to the hem. The ink R is the layer
+Raincoat provides, and the yellow lining showing in the hood is the app it protects. That is the
+README's line, "the layer that protects you when you are out in the rain", drawn as a letter.
 
 These files are Raincoat's own identity, licensed with the rest of the repository. They are not a
 theme asset: brand apps built on Raincoat never show them.
@@ -40,26 +40,27 @@ pnpm exec playwright screenshot --viewport-size "1200, 630" --wait-for-timeout 5
 
 ## Construction
 
-- The coat is drawn on a 64-unit grid and fills a 56-unit square, 4 units in from every edge. The
-  hood is a circle of radius 11 centered at (32, 15). Its sides drop straight to the shoulders, the
-  sleeves hang from the shoulders and end square at the cuff, 8.5 units wide, and the body flares
-  from the underarm to a straight hem.
-- The hood's opening is a circle of radius 6 on the same center, so the hood wall is 5 units all
-  the way round. The opening narrows to a point at the collar and runs on as the closed front,
-  2 units wide, to the hem. The coat is one shape with this opening cut into it: on light
-  backgrounds an ink lining fills the opening, and on dark backgrounds and in one color it is
-  left open.
+- The R is drawn on a 64-unit grid, from y = 4 to the baseline at y = 60. The hood is a circle of
+  radius 18 centered at (28, 22). The stem drops from its left edge to the baseline, 11 units wide.
+- The hood's opening is a circle of radius 10, set 3 units forward of the hood's center and
+  0.5 units lower. The hood wall is therefore 11 units at the back, the stem's width, and thins to
+  5 at the brim, the way a hood frames a face.
+- The leg is the coat's front. Its outer edge leaves the hood 22° below the hood's right-hand
+  side and runs straight to the hem at x = 54. Its inner edge starts where the hood meets the
+  stem, so the space under the hood is a single triangle. The hem is 12.5 units wide.
+- On light and dark backgrounds a yellow lining fills the opening. It is drawn under the R and a
+  unit larger than the opening, so no seam shows at its edge. In one color the opening is left
+  open.
 - The wordmark is "raincoat" set lowercase in Be Vietnam Pro SemiBold (OFL-1.1), the system's own
   `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font.
-- Colors are primitive tokens: yellow `color.brand.400` (`#f7d22a`) for the coat, and ink
-  `color.neutral.900` (`#191b1d`) for the lining and the wordmark. On dark backgrounds the coat
-  stays yellow, the lining is left open and the wordmark turns white. The app icon is the coat in
-  yellow on an ink tile.
+- Colors are primitive tokens: ink `color.neutral.900` (`#191b1d`) for the R and the wordmark,
+  and yellow `color.brand.400` (`#f7d22a`) for the lining. On dark backgrounds the R and the
+  wordmark turn white and the lining stays yellow. The app icon is the white R on an ink tile.
 
 ## Rules
 
-- Keep clear space of at least the hood wall's width (5/64 of the mark's height) on every side.
+- Keep clear space of at least the brim's width (5/64 of the mark's height) on every side.
 - Use the mark at 16 px or larger, or the app icon below that. Use the full logo at 20 px tall or
   larger.
-- Do not recolor the lining, outline the mark, add effects, or set the wordmark in another
-  typeface. The coat is the only part that may change color, and only to show what theming does.
+- Do not recolor the R, outline the mark, add effects, or set the wordmark in another typeface.
+  The lining is the only part that may change color, and only to show what theming does.

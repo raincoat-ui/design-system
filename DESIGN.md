@@ -194,12 +194,12 @@ The world refuses the stock docs theme's tinted callouts, icon cards, pill-shape
 One evenly stepped ink ramp, one yellow, one red; everything else is paper.
 
 ### Primary
-- **Raincoat Yellow** (`color.brand.400`, oklch(0.87 0.17 95)): the signal. The 4px stripe across the top of the header, the primary button, the current page in the sidebar. In dark mode it also draws the focus ring. Hover steps down the ramp to Raincoat Yellow Hover (`brand.500`) and pressed to Raincoat Yellow Pressed (`brand.600`); in dark mode hover steps up to `brand.300`. Outside the interface it is the coat in the logo.
+- **Raincoat Yellow** (`color.brand.400`, oklch(0.87 0.17 95)): the signal. The 4px stripe across the top of the header, the primary button, the current page in the sidebar. In dark mode it also draws the focus ring. Hover steps down the ramp to Raincoat Yellow Hover (`brand.500`) and pressed to Raincoat Yellow Pressed (`brand.600`); in dark mode hover steps up to `brand.300`.
 - **Yellow Highlight** (`brand.200`): text selection only, under deep ink.
 - **Yellow Ink** (`brand.800`, `color.fg.accent`): the accent as readable text on paper, where yellow itself would fail contrast. Dark mode uses `brand.300`.
 
 ### Neutral
-- **Ink** (`neutral.900`): default text (`color.fg.default`), the strong border (`color.border.strong`) and the light-mode focus ring. Every ink rule on the docs site (the header rule, section openers, table heads, caution notes) is `color.border.strong`, so it follows the token in each mode (`neutral.100` in dark). The logo's lining is this ink.
+- **Ink** (`neutral.900`): default text (`color.fg.default`), the strong border (`color.border.strong`) and the light-mode focus ring. Every ink rule on the docs site (the header rule, section openers, table heads, caution notes) is `color.border.strong`, so it follows the token in each mode (`neutral.100` in dark). The logo's R is this ink.
 - **Ink Deep** (`neutral.950`): text on yellow (`color.fg.on-accent`) and the docs site's headings in light mode.
 - **Graphite** (`neutral.600`): muted text (`color.fg.muted`) and the sidebar's section numbers.
 - **Number Grey** (`neutral.500`): the section number before a page title, and the resting underline of links.
@@ -267,7 +267,7 @@ Every corner is **2px** (`radius.sm`, `radius.md`, `radius.lg` all resolve to 2p
 
 Borders come in three weights, all locked: 1px thin (controls, hairlines), 2px thick (section rules), 2px focus ring offset by 2px (`button.focus-ring.offset`, also used for the site-wide `:focus-visible` outline).
 
-The mark is a yellow raincoat with its hood up and an ink lining, built on a 64-unit grid (`brand/README.md`); its hood is the one curved form. Only the coat may change color, and only to show theming.
+The mark is a capital R drawn as a hooded raincoat seen from the side, built on a 64-unit grid (`brand/README.md`); its hood is the one curved form. Only the yellow lining in the hood may change color, and only to show theming.
 
 ## Components
 
@@ -321,4 +321,4 @@ A component shown in a framed panel that sets its own `data-theme` and `data-den
 - **Don't** set headings, labels or buttons in JetBrains Mono.
 - **Don't** place eyebrow labels above titles; the section number leads the title on its line.
 - **Don't** change spacing, border widths, the 44px minimum target, focus ring rules or contrast minimums in a theme; they are locked.
-- **Don't** recolor the logo's lining, outline the mark, or set the wordmark in another face.
+- **Don't** recolor the logo's R, outline the mark, or set the wordmark in another face.
