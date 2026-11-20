@@ -1,6 +1,7 @@
 // Checks on the built package in dist/, which is what gets published. Run them after a build:
 // `pnpm test` does both.
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -31,6 +32,22 @@ test("every file named in the package's exports exists", () => {
   );
   assert.ok(targets.length >= 4);
   for (const target of targets) assert.ok(existsSync(join(root, target)), `${target} is missing`);
+});
+
+test("where React has no client hooks, as in a Server Component, the hydration check still answers", () => {
+  // Every Button asks whether it has been hydrated, so an idle one would stop rendering in a
+  // Server Component if asking needed a client hook.
+  const script = `
+    const React = await import("react");
+    const { useHydrated } = await import("./dist/lib/hydration.js");
+    console.log(JSON.stringify([typeof React.useSyncExternalStore, useHydrated(true), useHydrated(false)]));
+  `;
+  const output = execFileSync(
+    process.execPath,
+    ["--conditions=react-server", "--input-type=module", "--eval", script],
+    { cwd: root, encoding: "utf8" },
+  );
+  assert.deepEqual(JSON.parse(output), ["undefined", false, true]);
 });
 
 test("the built files use only custom properties that a theme defines", () => {

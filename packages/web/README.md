@@ -85,6 +85,13 @@ Every other prop of a `<button>` is passed through, including `ref`.
 - **Touch.** On a touch screen a small button can still be hit across the theme's minimum
   target size. The extra area takes no room in the layout, so leave 8px or more between small
   buttons.
+- **Before hydration.** A busy button rendered on a server is disabled until React hydrates
+  it, and for good with JavaScript off. Nothing submits its form until then: not a click, not
+  Enter or Space, and not Enter in a field. It cannot take focus until then either. A busy or
+  disabled link (`asChild`) leaves the Tab order and ignores the pointer until then, but a
+  screen reader can still follow it, because a link cannot be disabled in HTML. Either one
+  carries `data-unhydrated` until React hydrates it. A button that becomes busy after
+  hydration keeps focus as usual.
 
 `buttonVariants({ variant, size, fullWidth })` returns the class names alone.
 

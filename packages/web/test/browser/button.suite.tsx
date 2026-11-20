@@ -4,9 +4,18 @@
 // Expected colors and sizes come from the token source (expected-tokens.js), not from the
 // stylesheet, so each comparison covers the whole path from a token to what the browser draws.
 import axe from "axe-core";
-import { createRef, type FormEvent, type ReactNode } from "react";
-import { beforeEach, describe, expect, inject, test, vi } from "vitest";
-import { cdp, userEvent } from "vitest/browser";
+import {
+  createRef,
+  type FormEvent,
+  Profiler,
+  type ProfilerOnRenderCallback,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import { hydrateRoot, type Root } from "react-dom/client";
+import { renderToString } from "react-dom/server";
+import { afterEach, beforeEach, describe, expect, inject, test, vi } from "vitest";
+import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { BUTTON_SIZES, BUTTON_VARIANTS, Button } from "../../src/index.js";
 
@@ -90,6 +99,51 @@ function SubmitForm({
       </form>
     </Stage>
   );
+}
+
+/** Undoes what serverRender and recordSubmissions set up. Run after each test that uses them. */
+const serverRendered: (() => void)[] = [];
+
+/**
+ * Puts the HTML that React renders on a server into the page, as a browser receives it, and
+ * runs none of the Button's JavaScript: the page before React hydrates it, or with JavaScript
+ * off. `hydrate` then lets React take the HTML over, as an app's script does once it loads,
+ * and returns the errors React reports while it does.
+ */
+function serverRender(ui: ReactElement) {
+  const container = document.createElement("div");
+  container.innerHTML = renderToString(ui);
+  document.body.append(container);
+  let root: Root | undefined;
+  serverRendered.push(() => {
+    root?.unmount();
+    container.remove();
+  });
+  return {
+    screen: page.elementLocator(container),
+    hydrate() {
+      const errors: unknown[] = [];
+      const logged = vi.spyOn(console, "error").mockImplementation((...args) => errors.push(args));
+      serverRendered.push(() => logged.mockRestore());
+      root = hydrateRoot(container, ui, { onRecoverableError: (error) => errors.push(error) });
+      return errors;
+    },
+  };
+}
+
+/**
+ * Stops every form submission in the page, so that none can navigate away, and lists the name
+ * of the button that submitted each one.
+ */
+function recordSubmissions() {
+  const submitters: string[] = [];
+  const record = (event: SubmitEvent) => {
+    event.preventDefault();
+    submitters.push(event.submitter?.getAttribute("name") ?? "the form itself");
+  };
+  document.addEventListener("submit", record, true);
+  serverRendered.push(() => document.removeEventListener("submit", record, true));
+  return submitters;
 }
 
 const computed = (element: Element) => getComputedStyle(element);
@@ -604,6 +658,167 @@ export function describeButton(environment: string) {
         expect(clicks[0]?.defaultPrevented).toBe(true);
         expect(onClick).not.toHaveBeenCalled();
         expect(location.hash).not.toBe("#never");
+      });
+    });
+
+    describe("server-rendered, before hydration", () => {
+      afterEach(() => {
+        for (const undo of serverRendered.splice(0).reverse()) undo();
+      });
+
+      /** A form whose only submit button is busy, and one whose busy submit button comes first. */
+      const forms = (
+        <Stage>
+          <form>
+            <input aria-label="Email" name="email" defaultValue="ada@example.com" />
+            <Button type="submit" variant="primary" loading name="send">
+              Send invite
+            </Button>
+          </form>
+          <form>
+            <input aria-label="Title" name="title" defaultValue="Release notes" />
+            <Button type="submit" loading name="draft">
+              Save draft
+            </Button>
+            <Button type="submit" name="publish">
+              Publish
+            </Button>
+          </form>
+        </Stage>
+      );
+
+      test("a busy submit button cannot submit its form, and keeps its busy look", async () => {
+        const { screen } = serverRender(forms);
+        const submissions = recordSubmissions();
+        const send = screen.getByRole("button", { name: "Send invite" });
+        const field = (name: string) => screen.getByLabelText(name, { exact: true });
+        const press = (name: string) => async () => {
+          await field(name).click();
+          await userEvent.keyboard("{Enter}");
+        };
+
+        // What submits a form: a click on its submit button, Enter or Space on that button
+        // once Tab reaches it, and Enter in a field, which clicks the form's first submit
+        // button. Both forms' first submit buttons are busy.
+        const attempts = {
+          "a click on Send invite": () => send.click({ force: true }),
+          "a click on Save draft": () =>
+            screen.getByRole("button", { name: "Save draft" }).click({ force: true }),
+          "Enter in the Email field": press("Email"),
+          "Enter in the Title field": press("Title"),
+          "Tab from the Email field, then Enter": async () => {
+            await field("Email").click();
+            await userEvent.tab();
+            await userEvent.keyboard("{Enter}");
+          },
+          "Tab from the Email field, then Space": async () => {
+            await field("Email").click();
+            await userEvent.tab();
+            await userEvent.keyboard(" ");
+          },
+        };
+        const submitted: Record<string, string[]> = {};
+        for (const [attempt, run] of Object.entries(attempts)) {
+          await run();
+          submitted[attempt] = submissions.splice(0);
+        }
+        expect(submitted).toEqual(Object.fromEntries(Object.keys(attempts).map((a) => [a, []])));
+
+        // Until hydration the browser refuses it: the button is disabled, so Tab passes it.
+        // (toBeDisabled would not tell: it counts aria-disabled, which a busy button always has.)
+        await expect.element(send).toHaveAttribute("disabled");
+        await field("Email").click();
+        await userEvent.tab();
+        await expect.element(field("Title")).toHaveFocus();
+        // It still says it is busy, and looks it rather than disabled.
+        await expect.element(send).toHaveAttribute("aria-busy", "true");
+        expect(computed(send.element()).backgroundColor).toBe(color("button.primary.bg.default"));
+        expect(send.element().querySelector('[data-slot="button-spinner"]')).not.toBeNull();
+        // An idle button is not affected.
+        const publish = screen.getByRole("button", { name: "Publish" });
+        await expect.element(publish).not.toHaveAttribute("disabled");
+        await expect.element(publish).not.toHaveAttribute("data-unhydrated");
+      });
+
+      test("once hydrated, a busy button can take focus and still ignores activation", async () => {
+        const { screen, hydrate } = serverRender(forms);
+        const submissions = recordSubmissions();
+        const errors = hydrate();
+        const send = screen.getByRole("button", { name: "Send invite" });
+        await expect.element(send).not.toHaveAttribute("data-unhydrated");
+        await expect.element(send).not.toHaveAttribute("disabled");
+        await expect.element(send).toHaveAttribute("aria-disabled", "true");
+
+        await screen.getByLabelText("Email", { exact: true }).click();
+        await userEvent.keyboard("{Enter}");
+        await userEvent.tab();
+        await expect.element(send).toHaveFocus();
+        await userEvent.keyboard("{Enter}");
+        await userEvent.keyboard(" ");
+        await send.click({ force: true });
+        await expect.element(send).toHaveFocus();
+        expect(submissions).toEqual([]);
+        // React found the server's HTML to be what it renders itself.
+        expect(errors).toEqual([]);
+      });
+
+      test("hydration renders a busy button a second time, and an idle one only once", async () => {
+        const renders: Record<string, number> = { idle: 0, busy: 0 };
+        const count: ProfilerOnRenderCallback = (id) => {
+          renders[id] = (renders[id] ?? 0) + 1;
+        };
+        const { screen, hydrate } = serverRender(
+          <Stage>
+            <Profiler id="idle" onRender={count}>
+              <Button>Save</Button>
+            </Profiler>
+            <Profiler id="busy" onRender={count}>
+              <Button loading>Send</Button>
+            </Profiler>
+          </Stage>,
+        );
+        const errors = hydrate();
+        const busy = screen.getByRole("button", { name: "Send" });
+        await expect.element(busy).not.toHaveAttribute("data-unhydrated");
+        await settle(100);
+        expect(renders).toEqual({ idle: 1, busy: 2 });
+        expect(errors).toEqual([]);
+      });
+
+      test("a disabled or busy link cannot be followed, and Tab passes it", async () => {
+        const { screen, hydrate } = serverRender(
+          <Stage>
+            <Button>Before</Button>
+            <Button asChild disabled>
+              <a href="#previous">Previous page</a>
+            </Button>
+            <Button asChild loading>
+              <a href="#next">Next page</a>
+            </Button>
+            <Button>After</Button>
+          </Stage>,
+        );
+        const hash = location.hash;
+        const before = screen.getByRole("button", { name: "Before" });
+        const next = screen.getByRole("link", { name: "Next page" });
+
+        await screen.getByRole("link", { name: "Previous page" }).click({ force: true });
+        await next.click({ force: true });
+        expect(location.hash).toBe(hash);
+        await before.click();
+        await userEvent.tab();
+        await expect.element(screen.getByRole("button", { name: "After" })).toHaveFocus();
+
+        // Once hydrated, the busy link is back in the Tab order, and still is not followed.
+        const errors = hydrate();
+        await expect.element(next).not.toHaveAttribute("data-unhydrated");
+        await before.click();
+        await userEvent.tab();
+        await expect.element(next).toHaveFocus();
+        await userEvent.keyboard("{Enter}");
+        await next.click({ force: true });
+        expect(location.hash).toBe(hash);
+        expect(errors).toEqual([]);
       });
     });
 
