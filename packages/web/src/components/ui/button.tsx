@@ -12,6 +12,7 @@ import {
   type ButtonSize,
   type ButtonVariant,
 } from "../../generated/specs.js";
+import { useHydrated } from "../../lib/hydration.js";
 import { cn } from "../../lib/utils.js";
 
 const buttonVariants = cva(
@@ -32,6 +33,8 @@ const buttonVariants = cva(
     // Disabled. Every variant looks the same.
     "rc-disabled:cursor-not-allowed rc-disabled:border-(--rc-button-disabled-border) rc-disabled:bg-(--rc-button-disabled-bg) rc-disabled:text-(--rc-button-disabled-fg)",
     "data-loading:cursor-default",
+    // Before hydration the browser refuses activation itself. See the Button below.
+    "data-unhydrated:pointer-events-none",
     // On touch screens the target is at least the minimum size, whatever the visible height.
     "pointer-coarse:after:absolute pointer-coarse:after:inset-[min(0px,calc((100%_-_var(--rc-button-target-minimum))_/_2))] pointer-coarse:after:content-['']",
   ],
@@ -89,7 +92,8 @@ type ButtonProps = Omit<React.ComponentProps<"button">, "children"> &
     fullWidth?: boolean;
     /**
      * Shows that the action is in progress. The button keeps its label and focus, ignores
-     * activation, and reports itself as busy. Needs a Client Component.
+     * activation, and reports itself as busy. Needs a Client Component. In server-rendered
+     * HTML, until React hydrates it, it is disabled instead.
      */
     loading?: boolean;
     /** An icon before the label. For a button that is only an icon, pass it here. */
@@ -158,6 +162,12 @@ function Button({
   // Only a button element can be disabled by the browser. Anything else, and a busy button,
   // has to refuse activation itself.
   const refuses = busy || (asChild && disabled);
+  // Refusing takes the click handler below, which runs only once React has hydrated the
+  // server's HTML. Until then the browser refuses activation: a button is disabled, which also
+  // stops Enter in a field from submitting its form, and anything else, such as a link, leaves
+  // the Tab order and ignores the pointer. With JavaScript off, that lasts.
+  const hydrated = useHydrated(refuses);
+  const waiting = refuses && !hydrated;
 
   return (
     <Comp
@@ -174,6 +184,10 @@ function Button({
       {...(asChild && disabled && { "aria-disabled": true, tabIndex: -1 })}
       {...(busy && { "data-loading": "", "aria-busy": true, "aria-disabled": true })}
       {...(refuses && { onClickCapture: ignoreActivation })}
+      {...(waiting && {
+        "data-unhydrated": "",
+        ...(asChild ? { tabIndex: -1 } : { disabled: true }),
+      })}
     >
       {busy ? (
         <Icon>

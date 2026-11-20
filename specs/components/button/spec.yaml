@@ -3,7 +3,7 @@
 # Proposed and accepted in rfcs/0001-foundation-tokens-and-button.md.
 id: button
 name: Button
-specVersion: 1.1.0
+specVersion: 1.2.0
 rfc: 1
 group: Actions
 summary: Triggers an action or submits a form.
@@ -108,7 +108,10 @@ accessibility:
   loading: >-
     Stays focusable and keeps focus. Activation is ignored. Assistive technology is told the
     button is busy: by the busy state on the web and on Android, and on iOS, which has no such
-    state, in words after the name, such as "Save changes, In progress".
+    state, in words after the name, such as "Save changes, In progress". On the web, ignoring
+    activation while keeping focus takes a script. In HTML from a server, a busy button is
+    disabled until its script runs, and for good with JavaScript off: until then it cannot be
+    focused, and nothing submits a form through it, not even Enter in a field.
   focus: >-
     A ring at least 2px wide with 3:1 contrast against the surface behind the button, shown for
     keyboard focus. On the web and on Android the button draws it from the focus ring tokens.
