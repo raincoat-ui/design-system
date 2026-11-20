@@ -45,9 +45,10 @@ pnpm exec playwright screenshot --viewport-size "1200, 630" --wait-for-timeout 5
 - The hood's opening is a circle of radius 10, set 3 units forward of the hood's center and
   0.5 units lower. The hood wall is therefore 11 units at the back, the stem's width, and thins to
   5 at the brim, the way a hood frames a face.
-- The leg is the coat's front. Its outer edge leaves the hood 22° below the hood's right-hand
-  side and runs straight to the hem at x = 54. Its inner edge starts where the hood meets the
-  stem, so the space under the hood is a single triangle. The hem is 12.5 units wide.
+- The leg is the coat's front. Its edges leave the hood 34° and 72° below the hood's right-hand
+  side, measured from the hood's center, and run straight to a hem 13.5 units wide that ends at
+  x = 53.5. The inner edge is the steeper one, so the leg flares a little toward the hem, and the
+  hood's round underside shows between the leg and the stem.
 - On light and dark backgrounds a yellow lining fills the opening. It is drawn under the R and a
   unit larger than the opening, so no seam shows at its edge. In one color the opening is left
   open.
