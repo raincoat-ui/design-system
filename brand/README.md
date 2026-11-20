@@ -41,26 +41,29 @@ pnpm exec playwright screenshot --viewport-size "1200, 630" --wait-for-timeout 5
 ## Construction
 
 - The R is drawn on a 64-unit grid, from y = 4 to the baseline at y = 60. The hood is a circle of
-  radius 18 centered at (28, 22). The stem drops from its left edge to the baseline, 11 units wide.
-- The hood's opening is a circle of radius 10, set 3 units forward of the hood's center and
-  0.5 units lower. The hood wall is therefore 11 units at the back, the stem's width, and thins to
-  5 at the brim, the way a hood frames a face.
-- The leg is the coat's front. Its edges leave the hood 34° and 72° below the hood's right-hand
-  side, measured from the hood's center, and run straight to a hem 13.5 units wide that ends at
-  x = 53.5. The inner edge is the steeper one, so the leg flares a little toward the hem, and the
-  hood's round underside shows between the leg and the stem.
+  radius 16 centered at (27.5, 20), so it takes the top 32 units, a little over half the height.
+  The stem drops from its left edge to the baseline, 9 units wide.
+- The hood's opening is a circle of radius 8.5, set 1.5 units forward of the hood's center, so
+  its back is tangent to the line of the stem's inner edge. The hood wall is 9 units at the back,
+  the stem's width, 7.5 at the top and bottom, and thins to 6 at the brim, the way a hood frames
+  a face.
+- The leg is the coat's front. Its edges leave the hood 42° and 78° below the hood's right-hand
+  side, measured from the hood's center, and run straight to a hem 11 units wide that ends at
+  x = 52. Measured across the stroke the leg is about as heavy as the stem, flaring very slightly
+  toward the hem, and the hood's round underside shows between the leg and the stem.
 - On light and dark backgrounds a yellow lining fills the opening. It is drawn under the R and a
   unit larger than the opening, so no seam shows at its edge. In one color the opening is left
   open.
 - The wordmark is "raincoat" set lowercase in Be Vietnam Pro SemiBold (OFL-1.1), the system's own
-  `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font.
+  `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font. In
+  the lockup it starts 24 units after the leg's foot, on a canvas 291.4 by 64 units.
 - Colors are primitive tokens: ink `color.neutral.900` (`#191b1d`) for the R and the wordmark,
   and yellow `color.brand.400` (`#f7d22a`) for the lining. On dark backgrounds the R and the
   wordmark turn white and the lining stays yellow. The app icon is the white R on an ink tile.
 
 ## Rules
 
-- Keep clear space of at least the brim's width (5/64 of the mark's height) on every side.
+- Keep clear space of at least the brim's width (6/64 of the mark's height) on every side.
 - Use the mark at 16 px or larger, or the app icon below that. Use the full logo at 20 px tall or
   larger.
 - Do not recolor the R, outline the mark, add effects, or set the wordmark in another typeface.
