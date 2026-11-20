@@ -29,3 +29,14 @@ exceptions:
     reason: CSS definition data required by Astro's CSS and SVG optimizers; build-time only, CC0 public-domain data.
     approved: 2026-11-14
     review-by: 2027-05-14
+  # caniuse-lite is the "Can I use" table of browser support, published under CC-BY-4.0, which
+  # the OSI has not approved. It reaches us through Next.js (next -> caniuse-lite), which reads it
+  # while building apps/reference-web-next to choose the browsers it compiles for. The app is
+  # private and never published, and nothing from the table is shipped in a Raincoat package.
+  # There is no way to use Next.js without it. Its version moves with each data release, so a
+  # lockfile update that brings a new one is reviewed again here.
+  - package: caniuse-lite@1.0.30001826
+    scope: dev
+    reason: Browser support data that Next.js reads while building the Next.js reference app; build-time only, never shipped.
+    approved: 2026-11-20
+    review-by: 2027-05-20
