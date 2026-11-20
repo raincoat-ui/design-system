@@ -2,7 +2,8 @@
 
 An iOS app that shows every Raincoat component the way an app uses it, and the UI tests that
 drive it on a simulator. It uses the Swift package in `packages/ios` directly, so it always
-runs the code in this repository.
+runs the code in this repository. After a release, it runs again with the package resolved from
+the Swift mirror.
 
 The UI tests check what the package's unit tests cannot:
 
@@ -26,6 +27,20 @@ xcodebuild test \
 ```
 
 CI runs the same tests on every pull request, in the `reference app (ios)` job.
+
+### Against a published release
+
+To take the package from the Swift mirror, `raincoat-ui/design-system-swift`, at exactly one
+version instead of from `packages/ios`:
+
+```sh
+node tools/release/use-published.mjs ios 0.1.0-next.1
+```
+
+Then run the tests as above. Without a version, the script uses the one this checkout names. It
+changes only the package reference in `ReferenceApp.xcodeproj/project.pbxproj`; restore that file
+with git to go back. The release workflow runs the app this way once it has published a
+version, and a maintainer can for any version: Actions, reference apps, Run workflow.
 
 ## Adding a component
 

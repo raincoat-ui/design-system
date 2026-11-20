@@ -6,6 +6,11 @@ packages:
 # Supply chain
 # Refuse versions published less than 7 days ago (value is in minutes).
 minimumReleaseAge: 10080
+# Except Raincoat's own packages, which only this repository's release workflow publishes, with
+# provenance. The reference apps install a release minutes after it is published
+# (tools/release/use-published.mjs). trustPolicy below still applies to them.
+minimumReleaseAgeExclude:
+  - "@raincoat-ui/*"
 # Fail if a package's publishing trust level drops compared to its earlier releases.
 trustPolicy: no-downgrade
 # Record exact versions, never ranges.

@@ -6,8 +6,8 @@ the browser tests that drive it. It is never published.
 It loads the styles the way the [package README](../../packages/web/README.md) describes for an
 app without Tailwind: `@raincoat-ui/theme-base/theme.css`, then `@raincoat-ui/react/ui.css`. It
 installs the packages from this workspace, so it always runs the code in this repository, and
-resolves them through their published `exports`, as an app does. The release's own check
-installs the packed packages into an empty project.
+resolves them through their published `exports`, as an app does. After a release, it runs again
+with the packages installed from npm.
 
 The tests run the production build in Chromium, with Playwright, and check what the component
 tests in `packages/web` cannot:
@@ -41,6 +41,22 @@ pnpm web:reference
 after `pnpm web:build`.
 
 CI runs the same tests on every pull request, in the `reference app (web)` job.
+
+### Against a published release
+
+To install `@raincoat-ui/react` and `@raincoat-ui/theme-base` from npm instead of this
+workspace, then check the app's types and build and test it:
+
+```sh
+node tools/release/use-published.mjs web 0.1.0-next.1
+pnpm --filter @raincoat-ui/reference-web-vite typecheck
+pnpm --filter @raincoat-ui/reference-web-vite test
+```
+
+Without a version, the script installs the one this checkout names. It changes the app's
+`package.json` and `pnpm-lock.yaml`; restore both with git and run `pnpm install` to go back.
+The release workflow runs the app this way once it has published a version, and a maintainer
+can for any version: Actions, reference apps, Run workflow.
 
 ## Adding a component
 

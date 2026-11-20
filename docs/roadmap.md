@@ -74,11 +74,19 @@ M1 is in progress. One token source now drives all three platforms at the token 
   keyboard, and touch, touch targets, the browser's font size, and axe in each system color and
   contrast setting.
 
+- The reference apps on a published release. Each can install Raincoat from where an app
+  installs it, npm, the Maven repository, or the Swift mirror, instead of from this
+  repository's tree (`tools/release/use-published.mjs`). The release workflow runs all three
+  this way once it has published a version, and a maintainer can run them so for any version.
+  [The first such run](https://github.com/raincoat-ui/design-system/actions/runs/44600180198),
+  on [pull request 31](https://github.com/raincoat-ui/design-system/pull/31), installed
+  0.1.0-next.1 into all three: from npm into the web app, from the Maven repository into the
+  Android app, and from the Swift mirror into the iOS app. Every test passed: in Chromium, on
+  an emulator, and on a simulator.
+
 Still to come in M1:
 
-- **The reference apps install the published release.** The release's own check installs each
-  published package into a small project. The reference apps are built from this repository's
-  tree. A second web reference app, on Next.js, is to show the components rendered on a server.
+- **A web reference app on Next.js**, to show the components rendered on a server.
 - **npm without a token.** The first publish of the two npm packages used a one-time token.
   Trusted publishing is set up for each package before the next release, and the token is
   revoked. The runbook has the steps.

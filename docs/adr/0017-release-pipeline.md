@@ -55,7 +55,8 @@ notes up to date.
 publish and installs it the way an app would: the npm tarballs into an empty project with npm,
 rendered on a server and type-checked; the Maven repository into an Android module that
 compiles a screen; the Swift mirror tree into a package that compiles a view. After a real
-release the same three checks run against the real registries.
+release the same three checks run against the real registries, and then the reference apps run
+their tests with every package installed from its registry.
 
 **The bill of materials comes from the license gates.** `tools/release/sbom.mjs` writes
 CycloneDX from pnpm's license report and licensee's reports, the same data the gates check, so
@@ -83,6 +84,4 @@ repository on `gh-pages` and lists every version present.
 
 ## Not yet done
 
-- Reference apps. The consumer checks compile against the packages; apps that run, with the
-  accessibility audits that need a simulator or an emulator, are the next piece of milestone 1.
 - A check that two builds of the same commit produce identical files (milestone 4).
