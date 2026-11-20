@@ -14,8 +14,9 @@
 
 /* A control that responds to input: neither disabled nor busy. */
 @custom-variant rc-interactive (&:not(:disabled, [data-disabled], [data-loading]));
-/* A disabled control, whether through the disabled attribute, a disabled fieldset, or a prop. */
-@custom-variant rc-disabled (&:is(:disabled, [data-disabled]));
+/* A disabled control, whether through the disabled attribute, a disabled fieldset, or a prop.
+   A busy control that is disabled only until it hydrates keeps its busy look. */
+@custom-variant rc-disabled (&:is(:disabled, [data-disabled]):not([data-loading][data-unhydrated]));
 
 /*
  * The shadcn/ui contract. Utilities such as bg-background and text-muted-foreground, and
