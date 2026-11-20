@@ -63,7 +63,7 @@ instead of this workspace, then check their types and build and test them:
 ```sh
 node tools/release/use-published.mjs web
 pnpm --filter "@raincoat-ui/reference-web-*" typecheck
-pnpm --filter "@raincoat-ui/reference-web-*" --workspace-concurrency=1 test
+pnpm --filter "@raincoat-ui/reference-web-*" --workspace-concurrency=1 --no-bail test
 ```
 
 The script installs the version this checkout names, or the one given after `web`. It changes
