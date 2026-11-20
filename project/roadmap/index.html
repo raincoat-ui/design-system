@@ -128,7 +128,32 @@ GPL-2.0-only dependency. The license gate failed and named it, <code dir="auto">
 was refused. Removing the dependency makes the gate pass, as the runs on <code dir="auto">main</code> show.</li>
 <li>Workflow lint and OpenSSF Scorecard ran successfully on the first push.</li>
 </ul>
-<p>M1 is in progress. One token source now drives all three platforms at the token level:</p>
+<p>M1 was completed on 2026-11-20. Evidence for each exit criterion:</p>
+<ul>
+<li><strong>One token edit changes every platform’s output with no other edits.</strong>
+<a href="https://github.com/raincoat-ui/design-system/pull/33">Pull request 33</a> changed the base
+theme’s colors, radii, and label weights in the token source. The web theme stylesheet, the
+Swift package, and the Kotlin modules changed through their generated files alone; the one
+other edit in <code dir="auto">packages/</code> was a sample value in the Kotlin generator’s own test. CI fails when
+a generated file differs from what the source produces.</li>
+<li><strong>Drift, contract, contrast, and accessibility checks are green and required.</strong> <code dir="auto">ci-gate</code> is
+the only required status check on <code dir="auto">main</code>, and it passes only when every job passed: the drift
+check and the contrast checker, the Swift and Kotlin contract tests, the React components’
+accessibility tests, and the reference apps’ accessibility audits. It was green on the release
+pull request, <a href="https://github.com/raincoat-ui/design-system/pull/36">pull request 36</a>.</li>
+<li><strong>A prerelease installs from npm, the Maven repository, and the Swift mirror into the
+reference apps, with provenance and a bill of materials.</strong>
+<a href="https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2">0.1.0-next.2</a>
+was published on 2026-11-20, and
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/44716343554">its release run</a>
+installed it into every reference app: from npm into the Next.js and Vite apps (14 and 13
+tests passed in Chromium), from the Maven repository into the Android app (on an emulator),
+and from the Swift mirror into the iOS app (on a simulator). Every published file has a
+provenance attestation, and the bill of materials is attached to the release. It was the
+first release published to npm through trusted publishing: the workflow held no token, and
+the token used for the first publish has been revoked.</li>
+</ul>
+<p>What M1 built, one token source driving all three platforms:</p>
 <ul>
 <li>
 <p>The token source, its linter, and the contrast checker.</p>
@@ -207,14 +232,12 @@ off, the token colors, touch targets, and axe in each system color and contrast 
 found that a busy Button, or a disabled link styled as one, stopped a Server Component from
 rendering, which is fixed.</p>
 </li>
+<li>
+<p>The third prerelease, <a href="https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2">0.1.0-next.2</a>,
+on 2026-11-20. The base theme takes the standards-manual look, a busy Button no longer submits
+its form before React hydrates the page, and a Server Component can render a busy or disabled
+Button. npm published it through trusted publishing, with no token.</p>
+</li>
 </ul>
-<p>Still to come in M1:</p>
-<ul>
-<li><strong>The Next.js app on a published release.</strong> It needs the first prerelease after
-0.1.0-next.1, which has the fix. The release workflow installs that prerelease into both web
-apps from npm once it is published.</li>
-<li><strong>npm without a token.</strong> The first publish of the two npm packages used a one-time token.
-Trusted publishing is set up for each package before the next release, and the token is
-revoked. The runbook has the steps.</li>
-</ul>
+<p>M2, a second and deliberately different theme, is next.</p>
 </div><footer class="sl-flex astro-427jk743"><div class="meta sl-flex astro-427jk743"></div><div class="pagination-links print:hidden astro-stfaxj7g" dir="ltr"><a href="/design-system/" rel="prev" class="astro-stfaxj7g"><svg aria-hidden="true" class="astro-stfaxj7g astro-iplovrwm" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-stfaxj7g">Previous<br class="astro-stfaxj7g"><span class="link-title astro-stfaxj7g">Overview</span></span></a><a href="/design-system/foundations/color/" rel="next" class="astro-stfaxj7g"><svg aria-hidden="true" class="astro-stfaxj7g astro-iplovrwm" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-stfaxj7g">Next<br class="astro-stfaxj7g"><span class="link-title astro-stfaxj7g">Color</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
