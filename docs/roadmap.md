@@ -44,13 +44,15 @@ M1 was completed on 2026-11-20. Evidence for each exit criterion:
   pull request, [pull request 36](https://github.com/raincoat-ui/design-system/pull/36).
 - **A prerelease installs from npm, the Maven repository, and the Swift mirror into the
   reference apps, with provenance and a bill of materials.**
-  [0.1.0-next.2](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2) was published on 2026-11-20, and
-  [its release run](https://github.com/raincoat-ui/design-system/actions/runs/44716343554) installed it into every reference app: from npm into the Next.js and
-  Vite apps (14 and 13 tests passed in Chromium), from the Maven repository into the Android app
-  (on an emulator), and from the Swift mirror into the iOS app (on a simulator). Every published
-  file has a provenance attestation, and the bill of materials is attached to the release. It
-  was the first release published to npm through trusted publishing: the workflow held no
-  token, and the token used for the first publish has been revoked.
+  [0.1.0-next.2](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2)
+  was published on 2026-11-20, and
+  [its release run](https://github.com/raincoat-ui/design-system/actions/runs/44716343554)
+  installed it into every reference app: from npm into the Next.js and Vite apps (14 and 13
+  tests passed in Chromium), from the Maven repository into the Android app (on an emulator),
+  and from the Swift mirror into the iOS app (on a simulator). Every published file has a
+  provenance attestation, and the bill of materials is attached to the release. It was the
+  first release published to npm through trusted publishing: the workflow held no token, and
+  the token used for the first publish has been revoked.
 
 What M1 built, one token source driving all three platforms:
 
@@ -115,9 +117,9 @@ What M1 built, one token source driving all three platforms:
   found that a busy Button, or a disabled link styled as one, stopped a Server Component from
   rendering, which is fixed.
 
-- The third prerelease, [0.1.0-next.2](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2), on 2026-11-20. The base theme takes the
-  standards-manual look, a busy Button no longer submits its form before React hydrates the
-  page, and a Server Component can render a busy or disabled Button. npm published it through
-  trusted publishing, with no token.
+- The third prerelease, [0.1.0-next.2](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.2),
+  on 2026-11-20. The base theme takes the standards-manual look, a busy Button no longer submits
+  its form before React hydrates the page, and a Server Component can render a busy or disabled
+  Button. npm published it through trusted publishing, with no token.
 
 M2, a second and deliberately different theme, is next.
