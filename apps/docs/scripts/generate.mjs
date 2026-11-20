@@ -319,7 +319,7 @@ ${table(["Token", "Curve", "Use"], easingRows)}
 );
 
 // ---------------------------------------------------------------------------------------------
-// Components: Button (static rendition from tokens, until the implementations land)
+// Components: Button (static renditions from tokens)
 
 // The renditions carry no colors of their own. Each panel sets data-theme (or data-density),
 // and site.css styles the buttons with the custom properties from the theme stylesheet, so
@@ -405,11 +405,12 @@ Spec version ${buttonSpec.specVersion}, proposed in
 [RFC 0001](/design-system/project/rfcs/0001-foundation-tokens-and-button/). The variant and size
 types used by every platform's implementation are generated from this spec.
 
-:::caution[In progress]
-The Button's spec and tokens exist; the React, SwiftUI, and Compose implementations are being
-built. The panels under "In every color mode" are static renditions, not the component. They are
-styled only with the custom properties of the generated theme stylesheet, and each panel selects
-its mode with a ${code("data-theme")} attribute.
+:::note[About the renditions]
+The Button is implemented in React (${code("@raincoat-ui/react")}), SwiftUI (${code("RaincoatButton")}),
+and Compose (${code("RaincoatButton")} in ${code("io.github.raincoat-ui:ui")}), and ships in the
+prereleases. The panels under "In every color mode" are static renditions, not the component.
+They are styled only with the custom properties of the generated theme stylesheet, and each panel
+selects its mode with a ${code("data-theme")} attribute.
 :::
 
 ## Properties
