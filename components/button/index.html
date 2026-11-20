@@ -76,7 +76,7 @@ built. The panels under “In every color mode” are static renditions, not the
 styled only with the custom properties of the generated theme stylesheet, and each panel selects
 its mode with a <code dir="auto">data-theme</code> attribute.</p></div></aside>
 <p>Triggers an action or submits a form.</p>
-<p>Spec version 1.1.0, proposed in
+<p>Spec version 1.2.0, proposed in
 <a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/">RFC 0001</a>. The variant and size
 types used by every platform’s implementation are generated from this spec.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="properties">Properties</h2><a class="sl-anchor-link" href="#properties"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Properties”</span></a></div>
@@ -296,7 +296,7 @@ types used by every platform’s implementation are generated from this spec.</p
 </tr>
 <tr>
 <td>Loading</td>
-<td>Stays focusable and keeps focus. Activation is ignored. Assistive technology is told the button is busy: by the busy state on the web and on Android, and on iOS, which has no such state, in words after the name, such as “Save changes, In progress”.</td>
+<td>Stays focusable and keeps focus. Activation is ignored. Assistive technology is told the button is busy: by the busy state on the web and on Android, and on iOS, which has no such state, in words after the name, such as “Save changes, In progress”. On the web, ignoring activation while keeping focus takes a script. In HTML from a server, a busy button is disabled until its script runs, and for good with JavaScript off: until then it cannot be focused, and nothing submits a form through it, not even Enter in a field.</td>
 </tr>
 <tr>
 <td>Focus</td>
