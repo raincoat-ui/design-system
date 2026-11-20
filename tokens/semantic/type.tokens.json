@@ -30,7 +30,7 @@
         "$value": {
           "fontFamily": "{font.family.sans}",
           "fontSize": "{font.size.14}",
-          "fontWeight": "{font.weight.medium}",
+          "fontWeight": "{font.weight.semibold}",
           "letterSpacing": "{font.letter-spacing.none}",
           "lineHeight": "{font.line-height.snug}"
         },
@@ -40,7 +40,7 @@
         "$value": {
           "fontFamily": "{font.family.sans}",
           "fontSize": "{font.size.16}",
-          "fontWeight": "{font.weight.medium}",
+          "fontWeight": "{font.weight.semibold}",
           "letterSpacing": "{font.letter-spacing.none}",
           "lineHeight": "{font.line-height.snug}"
         },
@@ -50,7 +50,7 @@
         "$value": {
           "fontFamily": "{font.family.sans}",
           "fontSize": "{font.size.18}",
-          "fontWeight": "{font.weight.medium}",
+          "fontWeight": "{font.weight.semibold}",
           "letterSpacing": "{font.letter-spacing.none}",
           "lineHeight": "{font.line-height.snug}"
         },

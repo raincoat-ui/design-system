@@ -26,7 +26,7 @@ The docs favicon (`apps/docs/public/favicon.svg`) is the app icon at 32 units.
   all the way round, apex included.
 - The wordmark is "raincoat" set lowercase in Be Vietnam Pro SemiBold (OFL-1.1), the system's own
   `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font.
-- Colors are primitive tokens: ink `color.neutral.900` (`#161b21`) and yellow `color.brand.400`
+- Colors are primitive tokens: ink `color.neutral.900` (`#191b1d`) and yellow `color.brand.400`
   (`#f7d22a`). On dark backgrounds the shell turns white and the core stays yellow.
 
 ## Rules

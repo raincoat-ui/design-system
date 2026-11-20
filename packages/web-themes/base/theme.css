@@ -3,17 +3,17 @@
 :root,
 [data-theme="light"] {
   --rc-color-neutral-0: #ffffff;
-  --rc-color-neutral-50: #f9fafc;
-  --rc-color-neutral-100: #f1f4f7;
-  --rc-color-neutral-200: #e1e5ea;
-  --rc-color-neutral-300: #ccd1d9;
-  --rc-color-neutral-400: #9ea5af;
-  --rc-color-neutral-500: #737b85;
-  --rc-color-neutral-600: #575e68;
-  --rc-color-neutral-700: #3f464f;
-  --rc-color-neutral-800: #282e36;
-  --rc-color-neutral-900: #161b21;
-  --rc-color-neutral-950: #0a0e12;
+  --rc-color-neutral-50: #fafafb;
+  --rc-color-neutral-100: #f3f3f4;
+  --rc-color-neutral-200: #e3e5e6;
+  --rc-color-neutral-300: #cfd1d4;
+  --rc-color-neutral-400: #a2a5a8;
+  --rc-color-neutral-500: #787a7e;
+  --rc-color-neutral-600: #5b5e61;
+  --rc-color-neutral-700: #434548;
+  --rc-color-neutral-800: #2c2e31;
+  --rc-color-neutral-900: #191b1d;
+  --rc-color-neutral-950: #0c0d0f;
   --rc-color-neutral-1000: #000000;
   --rc-color-brand-50: #fff9e2;
   --rc-color-brand-100: #fef2c5;
@@ -87,7 +87,7 @@
   --rc-color-fg-on-danger: var(--rc-color-neutral-0);
   --rc-color-fg-disabled: var(--rc-color-neutral-400);
   --rc-color-border-default: var(--rc-color-neutral-300);
-  --rc-color-border-strong: var(--rc-color-neutral-500);
+  --rc-color-border-strong: var(--rc-color-neutral-900);
   --rc-color-border-focus: var(--rc-color-neutral-900);
   --rc-color-border-disabled: var(--rc-color-neutral-200);
   --rc-color-accent-default: var(--rc-color-brand-400);
@@ -108,9 +108,9 @@
   --rc-motion-easing-interactive: var(--rc-motion-easing-standard);
   --rc-motion-easing-leave: var(--rc-motion-easing-exit);
   --rc-radius-none: var(--rc-dimension-0);
-  --rc-radius-sm: var(--rc-dimension-4);
-  --rc-radius-md: var(--rc-dimension-8);
-  --rc-radius-lg: var(--rc-dimension-12);
+  --rc-radius-sm: var(--rc-dimension-2);
+  --rc-radius-md: var(--rc-dimension-2);
+  --rc-radius-lg: var(--rc-dimension-2);
   --rc-radius-full: var(--rc-dimension-9999);
   --rc-border-width-thin: var(--rc-dimension-1);
   --rc-border-width-thick: var(--rc-dimension-2);
@@ -141,17 +141,17 @@
   --rc-type-body-sm-line-height: var(--rc-font-line-height-normal);
   --rc-type-label-sm-font-family: var(--rc-font-family-sans);
   --rc-type-label-sm-font-size: var(--rc-font-size-14);
-  --rc-type-label-sm-font-weight: var(--rc-font-weight-medium);
+  --rc-type-label-sm-font-weight: var(--rc-font-weight-semibold);
   --rc-type-label-sm-letter-spacing: var(--rc-font-letter-spacing-none);
   --rc-type-label-sm-line-height: var(--rc-font-line-height-snug);
   --rc-type-label-md-font-family: var(--rc-font-family-sans);
   --rc-type-label-md-font-size: var(--rc-font-size-16);
-  --rc-type-label-md-font-weight: var(--rc-font-weight-medium);
+  --rc-type-label-md-font-weight: var(--rc-font-weight-semibold);
   --rc-type-label-md-letter-spacing: var(--rc-font-letter-spacing-none);
   --rc-type-label-md-line-height: var(--rc-font-line-height-snug);
   --rc-type-label-lg-font-family: var(--rc-font-family-sans);
   --rc-type-label-lg-font-size: var(--rc-font-size-18);
-  --rc-type-label-lg-font-weight: var(--rc-font-weight-medium);
+  --rc-type-label-lg-font-weight: var(--rc-font-weight-semibold);
   --rc-type-label-lg-letter-spacing: var(--rc-font-letter-spacing-none);
   --rc-type-label-lg-line-height: var(--rc-font-line-height-snug);
   --rc-button-radius: var(--rc-radius-md);
@@ -221,6 +221,7 @@
   --rc-color-fg-danger: var(--rc-color-red-300);
   --rc-color-fg-disabled: var(--rc-color-neutral-600);
   --rc-color-border-default: var(--rc-color-neutral-700);
+  --rc-color-border-strong: var(--rc-color-neutral-100);
   --rc-color-border-focus: var(--rc-color-brand-400);
   --rc-color-border-disabled: var(--rc-color-neutral-700);
   --rc-color-accent-hover: var(--rc-color-brand-300);
@@ -235,6 +236,7 @@
   --rc-button-secondary-bg-hover: var(--rc-color-control-hover);
   --rc-button-secondary-bg-pressed: var(--rc-color-control-pressed);
   --rc-button-secondary-fg: var(--rc-color-fg-default);
+  --rc-button-secondary-border: var(--rc-color-border-strong);
   --rc-button-ghost-bg-hover: var(--rc-color-control-hover);
   --rc-button-ghost-bg-pressed: var(--rc-color-control-pressed);
   --rc-button-ghost-fg: var(--rc-color-fg-default);
@@ -253,7 +255,6 @@
   --rc-color-fg-on-accent: var(--rc-color-neutral-1000);
   --rc-color-fg-disabled: var(--rc-color-neutral-500);
   --rc-color-border-default: var(--rc-color-neutral-600);
-  --rc-color-border-strong: var(--rc-color-neutral-900);
   --rc-color-border-focus: var(--rc-color-neutral-1000);
   --rc-color-border-disabled: var(--rc-color-neutral-400);
   --rc-color-danger-default: var(--rc-color-red-800);
@@ -262,7 +263,6 @@
   --rc-button-focus-ring-color: var(--rc-color-border-focus);
   --rc-button-primary-fg: var(--rc-color-fg-on-accent);
   --rc-button-secondary-fg: var(--rc-color-fg-default);
-  --rc-button-secondary-border: var(--rc-color-border-strong);
   --rc-button-ghost-fg: var(--rc-color-fg-default);
   --rc-button-danger-bg-default: var(--rc-color-danger-default);
   --rc-button-danger-bg-hover: var(--rc-color-danger-hover);
@@ -345,6 +345,7 @@
     --rc-color-fg-danger: var(--rc-color-red-300);
     --rc-color-fg-disabled: var(--rc-color-neutral-600);
     --rc-color-border-default: var(--rc-color-neutral-700);
+    --rc-color-border-strong: var(--rc-color-neutral-100);
     --rc-color-border-focus: var(--rc-color-brand-400);
     --rc-color-border-disabled: var(--rc-color-neutral-700);
     --rc-color-accent-hover: var(--rc-color-brand-300);
@@ -359,6 +360,7 @@
     --rc-button-secondary-bg-hover: var(--rc-color-control-hover);
     --rc-button-secondary-bg-pressed: var(--rc-color-control-pressed);
     --rc-button-secondary-fg: var(--rc-color-fg-default);
+    --rc-button-secondary-border: var(--rc-color-border-strong);
     --rc-button-ghost-bg-hover: var(--rc-color-control-hover);
     --rc-button-ghost-bg-pressed: var(--rc-color-control-pressed);
     --rc-button-ghost-fg: var(--rc-color-fg-default);
@@ -379,7 +381,6 @@
     --rc-color-fg-on-accent: var(--rc-color-neutral-1000);
     --rc-color-fg-disabled: var(--rc-color-neutral-500);
     --rc-color-border-default: var(--rc-color-neutral-600);
-    --rc-color-border-strong: var(--rc-color-neutral-900);
     --rc-color-border-focus: var(--rc-color-neutral-1000);
     --rc-color-border-disabled: var(--rc-color-neutral-400);
     --rc-color-danger-default: var(--rc-color-red-800);
@@ -388,7 +389,6 @@
     --rc-button-focus-ring-color: var(--rc-color-border-focus);
     --rc-button-primary-fg: var(--rc-color-fg-on-accent);
     --rc-button-secondary-fg: var(--rc-color-fg-default);
-    --rc-button-secondary-border: var(--rc-color-border-strong);
     --rc-button-ghost-fg: var(--rc-color-fg-default);
     --rc-button-danger-bg-default: var(--rc-color-danger-default);
     --rc-button-danger-bg-hover: var(--rc-color-danger-hover);

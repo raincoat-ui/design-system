@@ -47,5 +47,4 @@ packages/claude-design/.stage/
 # documentation site: generated content and build state
 apps/docs/src/content/docs/*
 !apps/docs/src/content/docs/index.mdx
-apps/docs/src/styles/generated.css
 .astro/

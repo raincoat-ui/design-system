@@ -10,4 +10,12 @@
 #   icon   must be a "ship" license from allowlist.yml
 #   brand  must be LicenseRef-Brand-Proprietary and live under themes/<id>/assets/
 version: 1
-assets: []
+assets:
+  - path: apps/docs/src/fonts/be-vietnam-pro-*.woff2
+    kind: font
+    license: OFL-1.1
+    source: https://github.com/fontsource/font-files/tree/main/fonts/google/be-vietnam-pro
+  - path: apps/docs/src/fonts/jetbrains-mono-*.woff2
+    kind: font
+    license: OFL-1.1
+    source: https://github.com/fontsource/font-files/tree/main/fonts/google/jetbrains-mono

@@ -16,6 +16,7 @@
       "!licenses/allowlist.json",
       "!packages/web-themes/*/theme.css",
       "!CODE_OF_CONDUCT.md",
+      "!DESIGN.md",
       "!packages/web/.shadcn-upstream",
       "!.changeset/**/*.md"
     ]
@@ -36,5 +37,18 @@
     "rules": {
       "preset": "recommended"
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    }
+  ]
 }

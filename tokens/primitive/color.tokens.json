@@ -10,7 +10,7 @@
           "components": [1, 0, 0],
           "hex": "#ffffff"
         },
-        "$description": "Neutral slate, step 0 (lightness 1).",
+        "$description": "Neutral ink, step 0 (lightness 1).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -20,10 +20,10 @@
       "50": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.985, 0.003, 255],
-          "hex": "#f9fafc"
+          "components": [0.985, 0.001, 255],
+          "hex": "#fafafb"
         },
-        "$description": "Neutral slate, step 50 (lightness 0.985).",
+        "$description": "Neutral ink, step 50 (lightness 0.985).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -33,10 +33,10 @@
       "100": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.965, 0.005, 255],
-          "hex": "#f1f4f7"
+          "components": [0.965, 0.0017, 255],
+          "hex": "#f3f3f4"
         },
-        "$description": "Neutral slate, step 100 (lightness 0.965).",
+        "$description": "Neutral ink, step 100 (lightness 0.965).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -46,10 +46,10 @@
       "200": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.92, 0.008, 255],
-          "hex": "#e1e5ea"
+          "components": [0.92, 0.0028, 255],
+          "hex": "#e3e5e6"
         },
-        "$description": "Neutral slate, step 200 (lightness 0.92).",
+        "$description": "Neutral ink, step 200 (lightness 0.92).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -59,10 +59,10 @@
       "300": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.86, 0.012, 255],
-          "hex": "#ccd1d9"
+          "components": [0.86, 0.0042, 255],
+          "hex": "#cfd1d4"
         },
-        "$description": "Neutral slate, step 300 (lightness 0.86).",
+        "$description": "Neutral ink, step 300 (lightness 0.86).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -72,10 +72,10 @@
       "400": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.72, 0.016, 255],
-          "hex": "#9ea5af"
+          "components": [0.72, 0.0056, 255],
+          "hex": "#a2a5a8"
         },
-        "$description": "Neutral slate, step 400 (lightness 0.72).",
+        "$description": "Neutral ink, step 400 (lightness 0.72).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -85,10 +85,10 @@
       "500": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.58, 0.018, 255],
-          "hex": "#737b85"
+          "components": [0.58, 0.0063, 255],
+          "hex": "#787a7e"
         },
-        "$description": "Neutral slate, step 500 (lightness 0.58).",
+        "$description": "Neutral ink, step 500 (lightness 0.58).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -98,10 +98,10 @@
       "600": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.48, 0.018, 255],
-          "hex": "#575e68"
+          "components": [0.48, 0.0063, 255],
+          "hex": "#5b5e61"
         },
-        "$description": "Neutral slate, step 600 (lightness 0.48).",
+        "$description": "Neutral ink, step 600 (lightness 0.48).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -111,10 +111,10 @@
       "700": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.39, 0.018, 255],
-          "hex": "#3f464f"
+          "components": [0.39, 0.0063, 255],
+          "hex": "#434548"
         },
-        "$description": "Neutral slate, step 700 (lightness 0.39).",
+        "$description": "Neutral ink, step 700 (lightness 0.39).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -124,10 +124,10 @@
       "800": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.3, 0.016, 255],
-          "hex": "#282e36"
+          "components": [0.3, 0.0056, 255],
+          "hex": "#2c2e31"
         },
-        "$description": "Neutral slate, step 800 (lightness 0.3).",
+        "$description": "Neutral ink, step 800 (lightness 0.3).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -137,10 +137,10 @@
       "900": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.22, 0.014, 255],
-          "hex": "#161b21"
+          "components": [0.22, 0.0049, 255],
+          "hex": "#191b1d"
         },
-        "$description": "Neutral slate, step 900 (lightness 0.22).",
+        "$description": "Neutral ink, step 900 (lightness 0.22).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -150,10 +150,10 @@
       "950": {
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.16, 0.012, 255],
-          "hex": "#0a0e12"
+          "components": [0.16, 0.0042, 255],
+          "hex": "#0c0d0f"
         },
-        "$description": "Neutral slate, step 950 (lightness 0.16).",
+        "$description": "Neutral ink, step 950 (lightness 0.16).",
         "$extensions": {
           "raincoat": {
             "overridable": true
@@ -166,14 +166,14 @@
           "components": [0, 0, 0],
           "hex": "#000000"
         },
-        "$description": "Neutral slate, step 1000 (lightness 0).",
+        "$description": "Neutral ink, step 1000 (lightness 0).",
         "$extensions": {
           "raincoat": {
             "overridable": true
           }
         }
       },
-      "$description": "Slate neutrals from white (0) to black (1000). Higher numbers are darker."
+      "$description": "Near-neutral ink greys from white (0) to black (1000). Higher numbers are darker."
     },
     "brand": {
       "50": {

@@ -1,0 +1,30 @@
+---
+// The page title with its section number, as in a standards manual: "3.1 Button". The number
+// is the page's position in the sidebar, the same one the sidebar shows beside the link. Pages
+// one level deeper (the ADRs and RFCs) carry their own document numbers, so they get none.
+import type { StarlightRouteData } from "@astrojs/starlight/route-data";
+
+type Entry = StarlightRouteData["sidebar"][number];
+
+function numberOf(entries: Entry[], prefix: number[] = []): number[] | undefined {
+  for (const [index, entry] of entries.entries()) {
+    const path = [...prefix, index + 1];
+    if (entry.type === "link" && entry.isCurrent) return path;
+    if (entry.type === "group") {
+      const found = numberOf(entry.entries, path);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
+const { entry, sidebar } = Astro.locals.starlightRoute;
+const path = numberOf(sidebar);
+const number = path && path.length <= 2 ? path.join(".") : undefined;
+const long = entry.data.title.length > 32;
+---
+
+<div class:list={["rc-title", { "rc-title--long": long }]}>
+  {number && <span class="rc-title-number" aria-hidden="true">{number}</span>}
+  <h1 id="_top">{entry.data.title}</h1>
+</div>

@@ -163,7 +163,7 @@
         }
       },
       "strong": {
-        "$value": "{color.neutral.500}",
+        "$value": "{color.neutral.900}",
         "$description": "The outline of interactive controls.",
         "$extensions": {
           "raincoat": {

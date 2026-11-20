@@ -9,17 +9,17 @@
       "$extensions": { "raincoat": { "overridable": true } }
     },
     "sm": {
-      "$value": "{dimension.4}",
+      "$value": "{dimension.2}",
       "$description": "Small radius, for compact elements such as tags.",
       "$extensions": { "raincoat": { "overridable": true } }
     },
     "md": {
-      "$value": "{dimension.8}",
+      "$value": "{dimension.2}",
       "$description": "Medium radius, for buttons and inputs.",
       "$extensions": { "raincoat": { "overridable": true } }
     },
     "lg": {
-      "$value": "{dimension.12}",
+      "$value": "{dimension.2}",
       "$description": "Large radius, for cards and dialogs.",
       "$extensions": { "raincoat": { "overridable": true } }
     },
