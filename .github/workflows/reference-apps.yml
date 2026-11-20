@@ -87,7 +87,10 @@ jobs:
           xcrun simctl bootstatus "$udid" -b
           echo "udid=$udid" >> "$GITHUB_OUTPUT"
       # Each test has a time limit, and a test that fails is run once more: a second failure is
-      # a real one.
+      # a real one. The test run's first launch of the app is slow, once: here it has taken more
+      # than two minutes, and failed the first test although its own steps passed. So each test
+      # class launches the app once before its first test, outside every test's limit
+      # (ReferenceAppTestCase.swift in apps/reference-ios).
       - name: Run the UI tests on the simulator
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}

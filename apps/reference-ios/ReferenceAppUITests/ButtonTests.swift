@@ -4,7 +4,7 @@ import XCTest
 
 /// The Button on a simulator, checked against specs/components/button/spec.yaml: what
 /// assistive technology is told, the system's accessibility audit, touches, and text sizes.
-final class ButtonTests: XCTestCase {
+final class ButtonTests: ReferenceAppTestCase {
     private let tokens = RaincoatTheme.base.tokens(mode: .light, density: .comfortable).button
     private let longLabel = "Save all of these changes and send the updated version to every reviewer"
 
