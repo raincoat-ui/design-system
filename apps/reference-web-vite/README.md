@@ -31,21 +31,29 @@ pnpm install
 pnpm web:browsers
 ```
 
-Then build the React package, and build and test the app:
+Then build the React package, and build and test both web apps, this one and the
+[Next.js app](../reference-web-next/README.md):
 
 ```sh
 pnpm web:reference
 ```
 
+To build and test only this one, after `pnpm web:build`:
+
+```sh
+pnpm --filter @raincoat-ui/reference-web-vite typecheck
+pnpm --filter @raincoat-ui/reference-web-vite test
+```
+
 `pnpm --filter @raincoat-ui/reference-web-vite dev` serves the app for a look in a browser,
 after `pnpm web:build`.
 
-CI runs the same tests on every pull request, in the `reference app (web)` job.
+CI runs the same tests on every pull request, in the `reference app (web, vite)` job.
 
 ### Against a published release
 
 To install `@raincoat-ui/react` and `@raincoat-ui/theme-base` from npm instead of this
-workspace, then check the app's types and build and test it:
+workspace, in both web apps, then check this app's types and build and test it:
 
 ```sh
 node tools/release/use-published.mjs web 0.1.0-next.1
@@ -53,8 +61,9 @@ pnpm --filter @raincoat-ui/reference-web-vite typecheck
 pnpm --filter @raincoat-ui/reference-web-vite test
 ```
 
-Without a version, the script installs the one this checkout names. It changes the app's
-`package.json` and `pnpm-lock.yaml`; restore both with git and run `pnpm install` to go back.
+Without a version, the script installs the one this checkout names. It changes the apps'
+`package.json` files and `pnpm-lock.yaml`; restore them with git and run `pnpm install` to go
+back.
 The release workflow runs the app this way once it has published a version, and a maintainer
 can for any version: Actions, reference apps, Run workflow.
 

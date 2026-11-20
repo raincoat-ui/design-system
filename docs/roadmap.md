@@ -74,6 +74,12 @@ M1 is in progress. One token source now drives all three platforms at the token 
   keyboard, and touch, touch targets, the browser's font size, and axe in each system color and
   contrast setting.
 
+- The second web reference app (`apps/reference-web-next`), on Next.js, which renders the
+  components on a server with React Server Components and loads their styles through Tailwind
+  CSS. Its tests read the HTML the server sends, use the page with JavaScript turned off,
+  submit a form to a Server Action, check that React hydrates the page without an error, and
+  run axe in each system color and contrast setting.
+
 - The reference apps on a published release. Each can install Raincoat from where an app
   installs it, npm, the Maven repository, or the Swift mirror, instead of from this
   repository's tree (`tools/release/use-published.mjs`). The release workflow runs all three
@@ -86,7 +92,6 @@ M1 is in progress. One token source now drives all three platforms at the token 
 
 Still to come in M1:
 
-- **A web reference app on Next.js**, to show the components rendered on a server.
 - **npm without a token.** The first publish of the two npm packages used a one-time token.
   Trusted publishing is set up for each package before the next release, and the token is
   revoked. The runbook has the steps.

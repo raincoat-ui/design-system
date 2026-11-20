@@ -26,7 +26,7 @@
     "web:build": "pnpm --filter @raincoat-ui/react build",
     "web:test": "pnpm --filter @raincoat-ui/react test",
     "web:browsers": "pnpm --filter @raincoat-ui/react exec playwright install --only-shell chromium",
-    "web:reference": "pnpm web:build && pnpm --filter @raincoat-ui/reference-web-vite typecheck && pnpm --filter @raincoat-ui/reference-web-vite test",
+    "web:reference": "pnpm web:build && pnpm --filter \"./apps/reference-web-*\" --workspace-concurrency=1 typecheck && pnpm --filter \"./apps/reference-web-*\" --workspace-concurrency=1 test",
     "docs:build": "pnpm --filter @raincoat-ui/docs build",
     "docs:dev": "pnpm --filter @raincoat-ui/docs dev",
     "licenses:check": "node tools/license-gate/check.mjs",

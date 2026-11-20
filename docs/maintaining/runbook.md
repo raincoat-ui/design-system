@@ -111,8 +111,8 @@ versions are prereleases such as `0.1.0-next.0`, published to npm under the tag 
    release with the bill of materials, and installs the published release from each registry:
    first into a small project per platform, then into the reference apps, which run their tests
    on a simulator, an emulator, and in Chromium.
-4. **Check.** The `install the published release` job and the three
-   `reference apps on the published release` jobs must be green. To check a file yourself:
+4. **Check.** The `install the published release` job and every
+   `reference apps on the published release` job must be green. To check a file yourself:
    `gh attestation verify <file> --repo raincoat-ui/design-system`.
 
 The reference apps can be run against any published version later: Actions, reference apps,

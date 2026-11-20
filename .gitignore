@@ -44,6 +44,10 @@ Thumbs.db
 # staging output of the optional Claude Design package
 packages/claude-design/.stage/
 
+# Next.js: build output, and the type declarations it writes
+.next/
+next-env.d.ts
+
 # documentation site: generated content and build state
 apps/docs/src/content/docs/*
 !apps/docs/src/content/docs/index.mdx
