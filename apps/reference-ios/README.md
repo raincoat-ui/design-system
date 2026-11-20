@@ -26,17 +26,15 @@ xcodebuild test \
   -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
-CI runs the same tests on every pull request, in the `reference app (ios)` job, in four steps:
+CI runs the same tests on every pull request, in the `reference app (ios)` job. It starts the
+simulator and waits for it first, because a simulator that is still starting can refuse to
+launch the app. Each test may take two minutes, and a test that fails is run once more, so a
+second failure is a real one.
 
-1. Start an iPhone simulator, and wait until it has finished starting. A simulator that is still
-   starting can refuse to launch the app.
-2. Build the app and its tests with `xcodebuild build-for-testing`.
-3. Install the app on the simulator, start it once with `xcrun simctl launch`, and stop it. The
-   app's first start on a newly booted simulator is slow, once: on CI it has taken more than two
-   minutes, and every later start a few seconds. Started here, that cost is not counted in the
-   first test's time.
-4. Run the tests on what was built, with `xcodebuild test-without-building`. Each test may take
-   two minutes, and a test that fails is run once more, so a second failure is a real one.
+The test run's first launch of the app is slow, once: on CI it has taken more than two minutes,
+and every later launch a few seconds. So that no test's time limit counts it, every test class
+is a subclass of `ReferenceAppTestCase`, which launches the app once before the class's first
+test.
 
 ### Against a published release
 
@@ -55,8 +53,8 @@ version, and a maintainer can for any version: Actions, reference apps, Run work
 ## Adding a component
 
 Add a screen for it in `ReferenceApp/`, with one example for each state in its spec, and a test
-class in `ReferenceAppUITests/`. Both folders are synchronized with the project, so new files
-need no change to the project file.
+class in `ReferenceAppUITests/` that subclasses `ReferenceAppTestCase`. Both folders are
+synchronized with the project, so new files need no change to the project file.
 
 ## What the audit does not cover
 
