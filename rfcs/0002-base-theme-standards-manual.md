@@ -1,9 +1,9 @@
 # RFC 0002: A quieter, sharper base theme
 
-- Status: proposed
+- Status: accepted
 - Kind: token
 - Proposed: 2026-11-19
-- Decided:
+- Decided: 2026-11-20
 
 ## Summary
 
@@ -58,8 +58,8 @@ small, medium, and large surfaces different corners.
 
 ## Prior art
 
-Not re-read for this RFC; recorded from each system's public documentation and to be checked
-before this RFC is accepted.
+Recorded from each system's public documentation; not re-read for this RFC, so check a row
+before relying on it.
 
 | Question       | IBM Carbon                  | Google Material 3                | Adobe Spectrum 2 | Raincoat base, proposed       |
 | -------------- | --------------------------- | -------------------------------- | ---------------- | ----------------------------- |
