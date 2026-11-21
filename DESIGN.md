@@ -199,7 +199,7 @@ One evenly stepped ink ramp, one yellow, one red; everything else is paper.
 - **Yellow Ink** (`brand.800`, `color.fg.accent`): the accent as readable text on paper, where yellow itself would fail contrast. Dark mode uses `brand.300`.
 
 ### Neutral
-- **Ink** (`neutral.900`): default text (`color.fg.default`), the strong border (`color.border.strong`) and the light-mode focus ring. Every ink rule on the docs site (the header rule, section openers, table heads, caution notes) is `color.border.strong`, so it follows the token in each mode (`neutral.100` in dark). The logo shell is this ink.
+- **Ink** (`neutral.900`): default text (`color.fg.default`), the strong border (`color.border.strong`) and the light-mode focus ring. Every ink rule on the docs site (the header rule, section openers, table heads, caution notes) is `color.border.strong`, so it follows the token in each mode (`neutral.100` in dark). The logo's R is this ink.
 - **Ink Deep** (`neutral.950`): text on yellow (`color.fg.on-accent`) and the docs site's headings in light mode.
 - **Graphite** (`neutral.600`): muted text (`color.fg.muted`) and the sidebar's section numbers.
 - **Number Grey** (`neutral.500`): the section number before a page title, and the resting underline of links.
@@ -267,7 +267,7 @@ Every corner is **2px** (`radius.sm`, `radius.md`, `radius.lg` all resolve to 2p
 
 Borders come in three weights, all locked: 1px thin (controls, hairlines), 2px thick (section rules), 2px focus ring offset by 2px (`button.focus-ring.offset`, also used for the site-wide `:focus-visible` outline).
 
-The mark is the one curved form: a layered raindrop, an ink shell around a yellow core, built on a 64-unit grid (`brand/README.md`). Only the core may change color, and only to show theming.
+The mark is a capital R drawn as a hooded raincoat seen from the side, built on a 64-unit grid (`brand/README.md`); its hood is the one curved form. Only the yellow lining in the hood may change color, and only to show theming.
 
 ## Components
 
@@ -321,4 +321,4 @@ A component shown in a framed panel that sets its own `data-theme` and `data-den
 - **Don't** set headings, labels or buttons in JetBrains Mono.
 - **Don't** place eyebrow labels above titles; the section number leads the title on its line.
 - **Don't** change spacing, border widths, the 44px minimum target, focus ring rules or contrast minimums in a theme; they are locked.
-- **Don't** recolor the logo shell, outline the mark, or set the wordmark in another face.
+- **Don't** recolor the logo's R, outline the mark, or set the wordmark in another face.

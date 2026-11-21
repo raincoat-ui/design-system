@@ -1,8 +1,9 @@
 # Raincoat brand marks
 
-The mark is a layered raindrop. The ink shell is the layer Raincoat provides, and the yellow core
-is the app it protects. That is the README's line, "the layer that protects you when you are out
-in the rain", drawn as a shape.
+The mark is a capital R drawn as a raincoat seen from the side, hood up. The bowl is the hood, the
+stem is the coat's back and the leg is its front, falling to the hem. The ink R is the layer
+Raincoat provides, and the yellow lining showing in the hood is the app it protects. That is the
+README's line, "the layer that protects you when you are out in the rain", drawn as a letter.
 
 These files are Raincoat's own identity, licensed with the rest of the repository. They are not a
 theme asset: brand apps built on Raincoat never show them.
@@ -39,18 +40,31 @@ pnpm exec playwright screenshot --viewport-size "1200, 630" --wait-for-timeout 5
 
 ## Construction
 
-- The shell is a circle and its two tangents to an apex point. The hole and the core are the same
-  shape inset by 6 and 10.25 units on a 64-unit grid, so the shell and the gap keep an even width
-  all the way round, apex included.
+- The R is drawn on a 64-unit grid, from y = 4 to the baseline at y = 60. The hood is a circle of
+  radius 16 centered at (27.5, 20), so it takes the top 32 units, a little over half the height.
+  The stem drops from its left edge to the baseline, 9 units wide.
+- The hood's opening is a circle of radius 8.5, set 1.5 units forward of the hood's center, so
+  its back is tangent to the line of the stem's inner edge. The hood wall is 9 units at the back,
+  the stem's width, 7.5 at the top and bottom, and thins to 6 at the brim, the way a hood frames
+  a face.
+- The leg is the coat's front. Its edges leave the hood 42° and 78° below the hood's right-hand
+  side, measured from the hood's center, and run straight to a hem 11 units wide that ends at
+  x = 52. Measured across the stroke the leg is about as heavy as the stem, flaring very slightly
+  toward the hem, and the hood's round underside shows between the leg and the stem.
+- On light and dark backgrounds a yellow lining fills the opening. It is drawn under the R and a
+  unit larger than the opening, so no seam shows at its edge. In one color the opening is left
+  open.
 - The wordmark is "raincoat" set lowercase in Be Vietnam Pro SemiBold (OFL-1.1), the system's own
-  `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font.
-- Colors are primitive tokens: ink `color.neutral.900` (`#191b1d`) and yellow `color.brand.400`
-  (`#f7d22a`). On dark backgrounds the shell turns white and the core stays yellow.
+  `font.family.sans`, tracked at −0.015 em and converted to outlines. The SVGs embed no font. In
+  the lockup it starts 24 units after the leg's foot, on a canvas 291.4 by 64 units.
+- Colors are primitive tokens: ink `color.neutral.900` (`#191b1d`) for the R and the wordmark,
+  and yellow `color.brand.400` (`#f7d22a`) for the lining. On dark backgrounds the R and the
+  wordmark turn white and the lining stays yellow. The app icon is the white R on an ink tile.
 
 ## Rules
 
-- Keep clear space of at least the shell's width (6/64 of the mark's height) on every side.
+- Keep clear space of at least the brim's width (6/64 of the mark's height) on every side.
 - Use the mark at 16 px or larger, or the app icon below that. Use the full logo at 20 px tall or
   larger.
-- Do not recolor the shell, outline the mark, add effects, or set the wordmark in another
-  typeface. The core is the only part that may change color, and only to show what theming does.
+- Do not recolor the R, outline the mark, add effects, or set the wordmark in another typeface.
+  The lining is the only part that may change color, and only to show what theming does.
