@@ -1,0 +1,17 @@
+{
+  "$schema": "../../../../schemas/theme-tokens.schema.json",
+  "font": {
+    "family": {
+      "sans": {
+        "$value": ["Archivo", "system-ui", "sans-serif"],
+        "$description": "Archivo: a sharp grotesque under the SIL Open Font License that covers Vietnamese."
+      }
+    },
+    "weight": {
+      "semibold": {
+        "$value": 500,
+        "$description": "Ink sets labels at medium weight: white on black needs no more."
+      }
+    }
+  }
+}

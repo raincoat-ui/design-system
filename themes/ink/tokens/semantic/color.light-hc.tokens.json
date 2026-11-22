@@ -1,0 +1,66 @@
+{
+  "$schema": "../../../../schemas/theme-tokens.schema.json",
+  "color": {
+    "bg": {
+      "canvas": {
+        "$value": "{color.neutral.0}"
+      },
+      "surface": {
+        "$value": "{color.neutral.0}"
+      },
+      "subtle": {
+        "$value": "{color.neutral.100}"
+      },
+      "inverse": {
+        "$value": "{color.neutral.1000}"
+      }
+    },
+    "fg": {
+      "default": {
+        "$value": "{color.neutral.1000}"
+      },
+      "muted": {
+        "$value": "{color.neutral.700}"
+      },
+      "inverse": {
+        "$value": "{color.neutral.0}"
+      },
+      "accent": {
+        "$value": "{color.brand.950}"
+      },
+      "on-accent": {
+        "$value": "{color.neutral.0}"
+      }
+    },
+    "border": {
+      "strong": {
+        "$value": "{color.neutral.1000}"
+      },
+      "focus": {
+        "$value": "{color.neutral.1000}"
+      }
+    },
+    "accent": {
+      "default": {
+        "$value": "{color.brand.950}"
+      },
+      "hover": {
+        "$value": "{color.brand.800}"
+      },
+      "pressed": {
+        "$value": "{color.brand.700}"
+      }
+    },
+    "control": {
+      "default": {
+        "$value": "{color.neutral.0}"
+      },
+      "hover": {
+        "$value": "{color.neutral.200}"
+      },
+      "pressed": {
+        "$value": "{color.neutral.300}"
+      }
+    }
+  }
+}
