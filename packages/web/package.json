@@ -1,6 +1,6 @@
 {
   "name": "@raincoat-ui/react",
-  "version": "0.1.0-next.2",
+  "version": "0.1.0-next.3",
   "description": "Raincoat components for React: shadcn/ui components on Radix primitives, styled only with Raincoat design tokens.",
   "license": "Apache-2.0",
   "homepage": "https://raincoat-ui.github.io/design-system/",
