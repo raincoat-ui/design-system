@@ -1,6 +1,6 @@
 // Emits Kotlin for the Android modules: the structure of a token set, each theme's values, and
 // the expected values the Kotlin contract test compares against.
-import { compose, DENSITIES, loadSource, MODES } from "../load.js";
+import { compose, DENSITIES, MODES } from "../load.js";
 import {
   camel,
   expectedEntries,
@@ -19,7 +19,8 @@ import {
 } from "./shared.js";
 
 const TOKENS_PACKAGE = "io.github.raincoatui.tokens";
-const themePackage = (themeId) => `io.github.raincoatui.theme.${themeId.replaceAll("-", "")}`;
+export const themePackage = (themeId) =>
+  `io.github.raincoatui.theme.${themeId.replaceAll("-", "")}`;
 
 // The Kotlin type of each token type, and the TokenFormat function that writes it as text.
 const KOTLIN = {
@@ -111,8 +112,8 @@ function classBody(node) {
 }
 
 /** tokens/.../generated/TokenSet.kt: the structure of a token set. */
-export function tokenSetKotlin(root) {
-  const tokens = compose(loadSource(root), { mode: MODES[0], density: DENSITIES[0] }).tokens;
+export function tokenSetKotlin(files) {
+  const tokens = compose(files, { mode: MODES[0], density: DENSITIES[0] }).tokens;
   const top = tree(tokens);
   const nested = [...groupsOf(top)]
     .slice(1)
@@ -157,8 +158,7 @@ function setLiteral(node) {
 const constant = ({ mode, density }) => `${camel(MODE_ENTRY[mode])}${pascal(density)}`;
 
 /** theme-<id>/.../generated/<Id>Theme.kt: a theme's values in every mode and density. */
-export function themeKotlin(root, themeId) {
-  const files = loadSource(root);
+export function themeKotlin(files, themeId) {
   const name = pascal(themeId);
   // Each set is built lazily in its own function, which keeps every method well under the
   // JVM's size limit however many tokens there are.
@@ -203,8 +203,7 @@ ${indent(sets.join("\n\n"), 1)}
 }
 
 /** The expected value of every token in every mode and density, for the Kotlin contract test. */
-export function expectedKotlin(root, themeId) {
-  const files = loadSource(root);
+export function expectedKotlin(files, themeId) {
   const name = pascal(themeId);
   const quote = (text) => JSON.stringify(text).replaceAll("$", "\\$");
   const functions = permutations().map((permutation) => {
@@ -227,5 +226,82 @@ ${indent(entries.join("\n"), 1)}
 )
 
 ${functions.join("\n\n")}
+`;
+}
+
+/** The contract test of one theme: its compiled values against the token source. */
+export function themeTestKotlin(themeId) {
+  const name = pascal(themeId);
+  return `${HEADER}
+
+package ${themePackage(themeId)}
+
+import ${TOKENS_PACKAGE}.ColorMode
+import ${TOKENS_PACKAGE}.Density
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
+
+// The contract test for Android. The values compiled into the theme must equal what the token
+// source resolves to, for every token in every color mode and density. The expected values in
+// Expected${name}Tokens.kt are produced by a separate code path in the token build.
+class ${name}ThemeTest {
+    @Test
+    fun \`every token matches the token source in every mode and density\`() {
+        for (mode in ColorMode.entries) {
+            for (density in Density.entries) {
+                val key = "\${mode.id}/\${density.id}"
+                val expected = expected${name}Tokens.getValue(key)
+                val actual = ${name}Theme.tokens(mode, density).flattened()
+
+                assertEquals(expected.keys, actual.keys, "the token sets differ for $key")
+                for ((id, value) in expected) {
+                    assertEquals(value, actual[id], "$id in $key")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun \`the source covers every mode and density\`() {
+        assertEquals(ColorMode.entries.size * Density.entries.size, expected${name}Tokens.size)
+        assertTrue(expected${name}Tokens.getValue("light/comfortable").size > 80)
+    }
+
+    @Test
+    fun \`modes and densities actually differ\`() {
+        val light = ${name}Theme.tokens(ColorMode.Light, Density.Comfortable)
+        val dark = ${name}Theme.tokens(ColorMode.Dark, Density.Comfortable)
+        val compact = ${name}Theme.tokens(ColorMode.Light, Density.Compact)
+
+        assertNotEquals(light.color.bg.canvas, dark.color.bg.canvas)
+        assertTrue(light.size.control.md > compact.size.control.md)
+        assertEquals(light.color, compact.color)
+    }
+
+    @Test
+    fun \`the theme has its id\`() {
+        assertEquals("${themeId}", ${name}Theme.id)
+    }
+}
+`;
+}
+
+/** Every theme, for the component tests, which draw each component in each one. */
+export function themesKotlin(themeIds) {
+  const imports = themeIds.map((id) => `import ${themePackage(id)}.${pascal(id)}Theme`);
+  const members = themeIds.map((id) => `${pascal(id)}Theme,`);
+  return `${HEADER}
+
+package io.github.raincoatui.ui.generated
+
+import ${TOKENS_PACKAGE}.RaincoatTheme
+${imports.join("\n")}
+
+/** Every theme built from this token source. The component tests run in each of them. */
+internal val allThemes: List<RaincoatTheme> = listOf(
+${indent(members.join("\n"), 1)}
+)
 `;
 }

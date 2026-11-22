@@ -28,7 +28,6 @@ import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import io.github.raincoatui.theme.base.BaseTheme
 import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.Density
 import org.junit.Assert.assertEquals
@@ -47,7 +46,7 @@ class ButtonScreenTest {
     @get:Rule
     val compose = createAndroidComposeRule<MainActivity>()
 
-    private val button = BaseTheme.tokens(ColorMode.Light, Density.Comfortable).button
+    private val button = appTheme.tokens(ColorMode.Light, Density.Comfortable).button
 
     /** The platform's minimum touch target, which is larger than the token's. */
     private val target = 48

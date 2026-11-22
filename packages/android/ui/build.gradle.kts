@@ -89,4 +89,10 @@ dependencies {
     // Android versions no longer have.
     testImplementation(libs.androidx.test.espresso.core)
     debugImplementation(libs.compose.ui.test.manifest)
+
+    // The component tests draw every theme. Each theme is a module the token build generates,
+    // and settings.gradle.kts includes, so a new theme is tested without an edit here.
+    rootProject.subprojects
+        .filter { it.name.startsWith("theme-") }
+        .forEach { testImplementation(project(it.path)) }
 }

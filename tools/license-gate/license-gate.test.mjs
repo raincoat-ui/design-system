@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { BRAND_LICENSE, checkAssets, globToRegExp, needsEntry } from "./assets-lib.mjs";
+import {
+  BRAND_LICENSE,
+  checkAssets,
+  globToRegExp,
+  mergeManifests,
+  needsEntry,
+} from "./assets-lib.mjs";
 import { evaluate, flattenReport, resolveAllowlist } from "./lib.mjs";
 import { isAllowed, parse } from "./spdx.mjs";
 
@@ -171,4 +177,28 @@ test("assets: uncovered files, wrong licenses, and stale entries are reported", 
 
   const stale = checkAssets({ files: [font], manifest: good, ...sets });
   assert.match(stale[0], /matches no committed file/);
+});
+
+test("assets: a theme lists its own files, relative to its directory, and only its own", () => {
+  const sets = { shipLicenses: allowlist.ship, fontLicenses: allowlist.fonts };
+  const font = "themes/ink/fonts/archivo-latin-500-normal.woff2";
+  const own = {
+    assets: [{ path: "fonts/*.woff2", kind: "font", license: "OFL-1.1", source: "https://x" }],
+  };
+  const merged = mergeManifests({ assets: [] }, [{ id: "ink", manifest: own }]);
+  assert.deepEqual(merged.problems, []);
+  assert.equal(merged.manifest.assets[0].path, "themes/ink/fonts/*.woff2");
+  assert.deepEqual(checkAssets({ files: [font], manifest: merged.manifest, ...sets }), []);
+
+  // Another theme's file is not covered by this theme's entry.
+  const other = "themes/fern/fonts/archivo-latin-500-normal.woff2";
+  assert.match(
+    checkAssets({ files: [font, other], manifest: merged.manifest, ...sets })[0],
+    /themes\/fern\/fonts\/.+ has no entry in themes\/fern\/assets\.yml or licenses\/assets\.yml/,
+  );
+  // An entry cannot reach outside the theme's directory.
+  const escaping = mergeManifests({ assets: [] }, [
+    { id: "ink", manifest: { assets: [{ ...own.assets[0], path: "../fern/fonts/*.woff2" }] } },
+  ]);
+  assert.match(escaping.problems[0], /relative to the theme's directory/);
 });

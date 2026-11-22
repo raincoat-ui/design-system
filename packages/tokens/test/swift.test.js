@@ -7,11 +7,12 @@ import { canonical, expectedSwift, themeSwift, tokenSetSwift } from "../src/emit
 import { compose, loadSource } from "../src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
-const tokens = compose(loadSource(repoRoot), { mode: "light", density: "comfortable" }).tokens;
+const files = loadSource(repoRoot);
+const tokens = compose(files, { mode: "light", density: "comfortable" }).tokens;
 const exposed = [...tokens.values()].filter((token) => token.tier !== "primitive");
-const schema = tokenSetSwift(repoRoot);
-const theme = themeSwift(repoRoot, "base");
-const expected = expectedSwift(repoRoot, "base");
+const schema = tokenSetSwift(files);
+const theme = themeSwift(files, "base");
+const expected = expectedSwift(files, "base");
 
 const srgb = (hex, alpha) => ({
   colorSpace: "srgb",
@@ -85,6 +86,6 @@ test("the expected values cover every exposed token in each of the eight combina
 });
 
 test("output is deterministic", () => {
-  assert.equal(tokenSetSwift(repoRoot), schema);
-  assert.equal(themeSwift(repoRoot, "base"), theme);
+  assert.equal(tokenSetSwift(files), schema);
+  assert.equal(themeSwift(files, "base"), theme);
 });

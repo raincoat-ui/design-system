@@ -1,4 +1,6 @@
-# Every committed font file, and every file under themes/<id>/assets/, must match an entry here.
+# Every committed font file, and every file under themes/<id>/assets/, must match an entry here,
+# or, for a file inside a theme's directory, an entry in that theme's own themes/<id>/assets.yml,
+# in the same format with paths relative to the theme's directory.
 #
 #   - path: themes/alpha/fonts/BeVietnamPro-*.woff2   # a path or glob, relative to the repo root
 #     kind: font                                      # font, icon, or brand

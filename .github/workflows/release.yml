@@ -73,7 +73,7 @@ jobs:
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
           node tools/release/stage.mjs
-      - name: Install the npm packages as an app would
+      - name: Install the npm packages as an app would, and each theme on its own
         run: node tools/release/consumers/npm-check.mjs --tarballs build/release/npm
       - name: Build an Android app module against the staged Maven repository
         env:
@@ -83,6 +83,17 @@ jobs:
           ./gradlew -p tools/release/consumers/android compileDebugKotlin \
             "-PraincoatRepository=$PWD/build/release/maven" "-PraincoatVersion=$RELEASE_VERSION" \
             --no-daemon --console=plain
+      - name: Each Android theme module brings only the token types with it
+        env:
+          RELEASE_VERSION: ${{ needs.plan.outputs.version }}
+        run: node tools/release/consumers/themes-alone.mjs --maven build/release/maven "$RELEASE_VERSION"
+      # A theme kept outside this repository, built with the token build's command line from
+      # its tarball, then compiled against the staged Swift mirror and Maven repository.
+      - name: Build a theme pack with the command line
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          node tools/release/consumers/theme-pack.mjs --tarballs build/release/npm \
+            --swift build/release/design-system-swift --maven build/release/maven
       - name: Hand the release to the publishing jobs
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -117,6 +128,12 @@ jobs:
         run: |
           RAINCOAT_SWIFT_PATH="$PWD/build/release/design-system-swift" \
             swift build --package-path tools/release/consumers/swift
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Build each theme product on its own
+        run: node tools/release/consumers/themes-alone.mjs --swift build/release/design-system-swift
 
   # Provenance for every file of the release, signed by this workflow's identity. Anyone can
   # check a file with: gh attestation verify <file> --repo raincoat-ui/design-system
@@ -359,6 +376,13 @@ jobs:
       - name: npm, from the registry
         if: needs.publish-npm.outputs.pending == ''
         run: node tools/release/consumers/npm-check.mjs --version "$RELEASE_VERSION"
+      # A theme kept outside this repository, built with the published command line and
+      # compiled against the published Swift mirror and Maven repository.
+      - name: A theme pack, with the published command line
+        if: needs.publish-npm.outputs.pending == '' && needs.publish-swift.outputs.pending != 'true'
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          node tools/release/consumers/theme-pack.mjs --version "$RELEASE_VERSION" --swift --maven
 
   # The reference apps, each installing the release from where it was published, and their
   # tests on a simulator, an emulator, and in Chromium. Once every registry has the release: a

@@ -26,7 +26,13 @@ xcodebuild test \
   -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
-CI runs the same tests on every pull request, in the `reference app (ios)` job. It starts the
+The app links and applies the base theme. To run it in another theme, run
+`node tools/reference/ios-theme.mjs <id>` first: it switches the theme product the project links
+and the theme the app and its tests apply, as an app selects its theme. Restore the three files
+with git to go back.
+
+CI runs the same tests on every pull request, once for each theme, in the
+`reference app (ios, <theme>)` jobs. It starts the
 simulator and waits for it first, because a simulator that is still starting can refuse to
 launch the app. Each test may take two minutes, and a test that fails is run once more, so a
 second failure is a real one.

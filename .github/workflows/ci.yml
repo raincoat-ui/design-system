@@ -155,6 +155,9 @@ jobs:
           node tools/release/swift-mirror.mjs build/release/design-system-swift
           RAINCOAT_SWIFT_PATH="$PWD/build/release/design-system-swift" \
             swift build --package-path tools/release/consumers/swift
+      # Each theme is a product an app can link alone.
+      - name: Build each theme product on its own
+        run: node tools/release/consumers/themes-alone.mjs --swift build/release/design-system-swift
 
   kotlin:
     name: android modules
@@ -266,7 +269,7 @@ jobs:
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
           node tools/release/stage.mjs
-      - name: Install the npm packages as an app would
+      - name: Install the npm packages as an app would, and each theme on its own
         run: node tools/release/consumers/npm-check.mjs --tarballs build/release/npm
       - name: Build an Android app module against the staged Maven repository
         run: |
@@ -275,6 +278,17 @@ jobs:
           ./gradlew -p tools/release/consumers/android compileDebugKotlin \
             "-PraincoatRepository=$PWD/build/release/maven" "-PraincoatVersion=$version" \
             --no-daemon --console=plain
+      - name: Each Android theme module brings only the token types with it
+        run: |
+          version="$(node --print 'require("./build/release/release.json").version')"
+          node tools/release/consumers/themes-alone.mjs --maven build/release/maven "$version"
+      # A theme kept outside this repository, built with the token build's command line from
+      # its tarball, then compiled against the staged Swift mirror and Maven repository.
+      - name: Build a theme pack with the command line
+        run: |
+          export JAVA_HOME="$JAVA_HOME_21_X64"
+          node tools/release/consumers/theme-pack.mjs --tarballs build/release/npm \
+            --swift build/release/design-system-swift --maven build/release/maven
 
   # The only required status check. It passes when every job above passed, or was skipped by
   # a path rule, so path filters can never leave a required check waiting forever.

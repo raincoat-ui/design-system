@@ -32,7 +32,16 @@ dependencyResolutionManagement {
 rootProject.name = "raincoat"
 
 // The Android modules live beside the other platform packages.
-include(":tokens", ":theme-base", ":ui")
+include(":tokens", ":ui")
 project(":tokens").projectDir = file("packages/android/tokens")
-project(":theme-base").projectDir = file("packages/android/theme-base")
 project(":ui").projectDir = file("packages/android/ui")
+
+// One module per theme, theme-<id>. The token build generates each of them, build file
+// included, so a new theme joins the build without an edit here.
+file("packages/android")
+    .listFiles { dir -> dir.name.startsWith("theme-") && dir.resolve("build.gradle.kts").isFile }!!
+    .sortedBy { it.name }
+    .forEach { dir ->
+        include(":${dir.name}")
+        project(":${dir.name}").projectDir = dir
+    }

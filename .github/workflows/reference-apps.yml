@@ -43,14 +43,48 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Every theme in this checkout, as a JSON list: the base theme and each directory under
+  # themes/. The web job runs once per theme, so a new theme is tested without an edit here.
+  themes:
+    name: list the themes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: List the themes
+        id: list
+        run: |
+          list=$(node --input-type=module \
+            -e 'import { themeIds } from "./tools/release/lib.mjs"; console.log(JSON.stringify(themeIds()))')
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+          echo "Themes: $list"
+
   # The SwiftUI components in an app on a simulator: what assistive technology is told, touch
   # targets, text sizes, and the system's accessibility audit.
   ios:
-    name: reference app (ios)
+    name: reference app (ios, ${{ matrix.theme }})
+    needs: themes
     runs-on: macos-26
     timeout-minutes: 30
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        theme: ${{ fromJSON(needs.themes.outputs.list) }}
+    env:
+      RAINCOAT_THEME: ${{ matrix.theme }}
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -61,10 +95,13 @@ jobs:
       - name: Show the toolchain and the simulators
         run: xcodebuild -version && xcrun simctl list devices available
       - name: Set up Node.js
-        if: ${{ !inputs.tree }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
+      # The app links the base theme's product; for another theme it links that one instead,
+      # as an app selects its theme.
+      - name: Switch the app to the theme
+        run: node tools/reference/ios-theme.mjs "$RAINCOAT_THEME"
       # The app takes the Swift package from packages/ios unless told otherwise.
       - name: Install Raincoat from the Swift mirror
         if: ${{ !inputs.tree }}
@@ -110,18 +147,26 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: reference-ios-results
+          name: reference-ios-results-${{ matrix.theme }}
           path: build/reference-ios/results.xcresult
           retention-days: 7
 
   # The Compose components in an app on an emulator: what an accessibility service is given,
   # Google's accessibility checks, and touches.
   android:
-    name: reference app (android)
+    name: reference app (android, ${{ matrix.theme }})
+    needs: themes
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        theme: ${{ fromJSON(needs.themes.outputs.list) }}
+    # The app is built with this theme (-PraincoatTheme in apps/reference-android).
+    env:
+      RAINCOAT_THEME: ${{ matrix.theme }}
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -167,7 +212,7 @@ jobs:
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
           ./gradlew -p apps/reference-android assembleDebug assembleDebugAndroidTest \
-            --no-daemon --console=plain --stacktrace
+            "-PraincoatTheme=$RAINCOAT_THEME" --no-daemon --console=plain --stacktrace
       # An open-source Android image made for automated tests, with no Google services.
       - name: Run the tests on an emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
@@ -177,12 +222,12 @@ jobs:
           arch: x86_64
           # A phone-sized screen, so that the first sections of the app fit without scrolling.
           profile: pixel_6
-          script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest --no-daemon --console=plain --stacktrace
+          script: JAVA_HOME="$JAVA_HOME_21_X64" ./gradlew -p apps/reference-android connectedDebugAndroidTest "-PraincoatTheme=$RAINCOAT_THEME" --no-daemon --console=plain --stacktrace
       - name: Keep the test report when a test fails
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: reference-android-report
+          name: reference-android-report-${{ matrix.theme }}
           path: apps/reference-android/build/reports/androidTests
           retention-days: 7
 
@@ -191,11 +236,19 @@ jobs:
   # font size, and axe. A Next.js app rendered on a server: the HTML before any JavaScript runs,
   # hydration, forms that post to Server Actions with JavaScript on and off, and axe.
   web:
-    name: reference app (web)
+    name: reference app (web, ${{ matrix.theme }})
+    needs: themes
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        theme: ${{ fromJSON(needs.themes.outputs.list) }}
+    # Each app is built with this theme's stylesheet (tools/reference/web-theme.mjs).
+    env:
+      RAINCOAT_THEME: ${{ matrix.theme }}
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -233,7 +286,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: reference-web-results
+          name: reference-web-results-${{ matrix.theme }}
           path: |
             apps/reference-web-vite/test-results
             apps/reference-web-next/test-results

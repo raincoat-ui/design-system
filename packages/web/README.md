@@ -14,6 +14,11 @@ version has reached.
 pnpm add @raincoat-ui/react@next @raincoat-ui/theme-base@next
 ```
 
+`@raincoat-ui/theme-base` is the base theme. Every theme is a package of its own,
+`@raincoat-ui/theme-<id>`, and the
+[themes page](https://raincoat-ui.github.io/design-system/foundations/themes/) lists them; install
+the one your app uses, and import it where these examples import the base theme.
+
 Then load the styles in one of two ways.
 
 **With Tailwind CSS v4**, in the app's stylesheet:

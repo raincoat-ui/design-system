@@ -8,7 +8,7 @@
   "fixed": [
     [
       "@raincoat-ui/react",
-      "@raincoat-ui/theme-base",
+      "@raincoat-ui/theme-*",
       "@raincoat-ui/tokens",
       "@raincoat-ui/swift",
       "@raincoat-ui/android"

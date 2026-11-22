@@ -6,11 +6,11 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node ../../tools/reference/web-theme.mjs src/theme.css && vite",
+    "build": "node ../../tools/reference/web-theme.mjs src/theme.css && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "vite build && playwright test"
+    "test": "node ../../tools/reference/web-theme.mjs src/theme.css && vite build && playwright test"
   },
   "dependencies": {
     "@raincoat-ui/react": "workspace:*",

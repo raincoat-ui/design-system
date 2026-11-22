@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raincoat-ui.github.io/design-system/schemas/theme-tokens.schema.json",
+  "title": "Raincoat theme override file",
+  "description": "A file of token overrides in a theme, at themes/<id>/tokens/<tier>/<name>.tokens.json. It mirrors the base file of the same name and gives new values to tokens that file marks overridable. Types, descriptions, and contrast declarations come from the base; a theme cannot add or remove a token.",
+  "type": "object",
+  "allOf": [{ "$ref": "#/$defs/group" }],
+  "$defs": {
+    "node": {
+      "type": "object",
+      "if": { "required": ["$value"] },
+      "then": { "$ref": "#/$defs/token" },
+      "else": { "$ref": "#/$defs/group" }
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "$schema": { "type": "string" },
+        "$description": { "type": "string", "minLength": 1 }
+      },
+      "patternProperties": {
+        "^[a-z0-9]+(-[a-z0-9]+)*$": { "$ref": "#/$defs/node" }
+      },
+      "additionalProperties": false
+    },
+    "token": {
+      "type": "object",
+      "required": ["$value"],
+      "properties": {
+        "$value": true,
+        "$description": {
+          "type": "string",
+          "minLength": 8,
+          "description": "Optional: why the theme chose this value. The token's own description comes from the base."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

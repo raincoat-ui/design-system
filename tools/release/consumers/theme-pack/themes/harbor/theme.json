@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/@raincoat-ui/tokens/base/schemas/theme.schema.json",
+  "name": "Harbor",
+  "description": "A fictional brand for the theme pack check: deep harbor teal with white labels, rounded corners.",
+  "packages": {
+    "npm": "@harbor-example/theme-harbor",
+    "maven": "com.example.harbor"
+  }
+}

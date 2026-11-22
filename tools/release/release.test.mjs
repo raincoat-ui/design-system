@@ -35,6 +35,7 @@ import {
   projectWithMirror,
   WEB_APPS,
   webPackages,
+  webPackagesFor,
 } from "./use-published.mjs";
 
 const scratch = [];
@@ -342,6 +343,10 @@ test("release notes merge the changelogs and say how to install and verify", () 
     /npm install @raincoat-ui\/react@0\.1\.0-next\.0 @raincoat-ui\/theme-base@0\.1\.0-next\.0/,
   );
   assert.match(text, /Not on npm yet: @raincoat-ui\/react/);
+  assert.match(
+    notes({ version: "0.1.0", changes: [], themes: ["base", "ink"] }),
+    /\| ink \| `@raincoat-ui\/theme-ink` \| `io\.github\.raincoat-ui:theme-ink` \| `RaincoatThemeInk` \|/,
+  );
   assert.match(text, /implementation\("io\.github\.raincoat-ui:ui:0\.1\.0-next\.0"\)/);
   assert.match(text, /design-system-swift", exact: "0\.1\.0-next\.0"\)/);
   assert.match(
@@ -556,6 +561,14 @@ test("each web app trades exactly the Raincoat packages it takes from this works
       "@raincoat-ui/theme-base",
     ]);
   }
+  // A theme other than the base one is installed too, when RAINCOAT_THEME names it.
+  const app = readJson("apps/reference-web-vite/package.json");
+  assert.deepEqual(webPackagesFor(app, "ink"), [
+    "@raincoat-ui/react",
+    "@raincoat-ui/theme-base",
+    "@raincoat-ui/theme-ink",
+  ]);
+  assert.deepEqual(webPackagesFor(app, "base"), webPackages(app));
   assert.deepEqual(
     webPackages({
       dependencies: { "@raincoat-ui/react": "0.1.0", react: "19.3.1" },

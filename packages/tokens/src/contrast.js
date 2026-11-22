@@ -13,10 +13,11 @@ export const REQUIRED = {
 export const levelOf = (mode) => (mode.endsWith("-hc") ? "high-contrast" : "standard");
 
 /**
+ * @param source the root of a token source, or the files of a theme (see loadTheme)
  * @returns {{mode, token, on, kind, ratio, required, pass}[]} one row per pair and mode.
  */
-export function checkContrast(root) {
-  const files = loadSource(root);
+export function checkContrast(source) {
+  const files = typeof source === "string" ? loadSource(source) : source;
   const rows = [];
   for (const mode of MODES) {
     const { tokens } = compose(files, { mode, density: "comfortable" });

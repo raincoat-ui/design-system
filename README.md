@@ -13,9 +13,9 @@ on top.
 
 **Documentation: <https://raincoat-ui.github.io/design-system/>**
 
-> **Status: milestone 1 complete; milestone 2, a second theme, is next.** One token source
-> drives a Button on the web, iOS, and Android, published as prereleases to npm, the Maven
-> repository, and the Swift mirror. The
+> **Status: milestone 1 complete; milestone 2, a second theme, in progress.** One token source
+> drives a Button on the web, iOS, and Android, in every theme, published as prereleases to npm,
+> the Maven repository, and the Swift mirror. The
 > [releases page](https://github.com/raincoat-ui/design-system/releases) says which registries
 > each one has reached, and the [roadmap](docs/roadmap.md) what each milestone delivers.
 
@@ -39,6 +39,7 @@ The decisions behind this are recorded in [docs/adr](docs/adr/README.md).
 
 | Path                         | What it holds                                                      |
 | ---------------------------- | ------------------------------------------------------------------ |
+| `themes/`                    | The themes beside the base one, one directory each                 |
 | `docs/adr/`                  | Architecture decision records                                      |
 | `docs/roadmap.md`            | Milestones and their exit criteria                                 |
 | `docs/research/prior-art.md` | The reference systems every component proposal is compared against |
@@ -52,8 +53,9 @@ The token source lives in `tokens/`, checked by `schemas/tokens.schema.json` and
 contrast checker in `packages/tokens/`. To add a token, follow
 [docs/contributing/add-a-token.md](docs/contributing/add-a-token.md). `pnpm tokens:build` compiles them into
 the web theme stylesheet in `packages/web-themes/`, the Swift package in `packages/ios/`, and
-the Kotlin modules in `packages/android/`. Component specs live in `specs/`, and each
-platform's components in its package.
+the Kotlin modules in `packages/android/`. Each other theme is a directory under `themes/`; to
+add one, follow [docs/contributing/add-a-theme.md](docs/contributing/add-a-theme.md). Component
+specs live in `specs/`, and each platform's components in its package.
 
 ## Development
 

@@ -1,0 +1,20 @@
+{
+  "color": {
+    "accent": {
+      "default": {
+        "$value": "{color.brand.700}"
+      },
+      "hover": {
+        "$value": "{color.brand.800}"
+      },
+      "pressed": {
+        "$value": "{color.brand.900}"
+      }
+    },
+    "fg": {
+      "on-accent": {
+        "$value": "{color.neutral.0}"
+      }
+    }
+  }
+}
