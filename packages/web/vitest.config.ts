@@ -1,18 +1,21 @@
 // The component tests run in a real browser (Chromium, driven by Playwright), because what they
 // check is what the browser does: computed colors and sizes, focus, keyboard, and hit testing.
 //
-// They run once per theme, as one Vitest project each. The themes are read from the token
-// source, so a new theme is tested without an edit here: its project loads that theme's
-// stylesheet as "@raincoat-ui/theme-under-test/theme.css", and expected-tokens.js resolves
-// that theme's values.
+// They run once per theme, as one Vitest project each: one for every theme stylesheet the token
+// build generated in packages/web-themes, so a new theme is tested without an edit here. Each
+// project loads its theme's stylesheet as "@raincoat-ui/theme-under-test/theme.css", and
+// expected-tokens.js resolves that theme's values from the token source.
+import { existsSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { openProject } from "@raincoat-ui/tokens";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
-const themes = openProject(repoRoot).themes.map((theme) => theme.id);
+const themesDir = `${repoRoot}packages/web-themes`;
+const themes = readdirSync(themesDir)
+  .filter((theme) => existsSync(`${themesDir}/${theme}/theme.css`))
+  .sort();
 
 export default defineConfig({
   plugins: [tailwindcss()],
@@ -38,7 +41,7 @@ export default defineConfig({
       extends: true,
       resolve: {
         alias: {
-          "@raincoat-ui/theme-under-test/theme.css": `${repoRoot}packages/web-themes/${theme}/theme.css`,
+          "@raincoat-ui/theme-under-test/theme.css": `${themesDir}/${theme}/theme.css`,
         },
       },
       test: {
