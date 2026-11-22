@@ -4,8 +4,10 @@ package io.github.raincoatui.ui.generated
 
 import io.github.raincoatui.tokens.RaincoatTheme
 import io.github.raincoatui.theme.base.BaseTheme
+import io.github.raincoatui.theme.ink.InkTheme
 
 /** Every theme built from this token source. The component tests run in each of them. */
 internal val allThemes: List<RaincoatTheme> = listOf(
     BaseTheme,
+    InkTheme,
 )

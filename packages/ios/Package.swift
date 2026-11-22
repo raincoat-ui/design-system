@@ -15,10 +15,12 @@ let package = Package(
         .library(name: "Raincoat", targets: ["Raincoat"]),
         .library(name: "RaincoatTokens", targets: ["RaincoatTokens"]),
         .library(name: "RaincoatThemeBase", targets: ["RaincoatThemeBase"]),
+        .library(name: "RaincoatThemeInk", targets: ["RaincoatThemeInk"]),
     ],
     targets: [
         .target(name: "RaincoatTokens"),
         .target(name: "RaincoatThemeBase", dependencies: ["RaincoatTokens"]),
+        .target(name: "RaincoatThemeInk", dependencies: ["RaincoatTokens"]),
         // The base theme is what components draw with until an app applies its own.
         .target(
             name: "Raincoat",
@@ -27,7 +29,8 @@ let package = Package(
         ),
         .testTarget(name: "RaincoatTokensTests", dependencies: ["RaincoatTokens"]),
         .testTarget(name: "RaincoatThemeBaseTests", dependencies: ["RaincoatThemeBase"]),
+        .testTarget(name: "RaincoatThemeInkTests", dependencies: ["RaincoatThemeInk"]),
         // The component tests draw every component in every theme.
-        .testTarget(name: "RaincoatTests", dependencies: ["Raincoat", "RaincoatThemeBase"]),
+        .testTarget(name: "RaincoatTests", dependencies: ["Raincoat", "RaincoatThemeBase", "RaincoatThemeInk"]),
     ]
 )

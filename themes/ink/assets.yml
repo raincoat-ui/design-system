@@ -1,0 +1,8 @@
+# The licenses of the files this theme carries. Paths are relative to this directory; the format
+# is that of licenses/assets.yml, and `pnpm licenses:assets` checks both.
+version: 1
+assets:
+  - path: fonts/archivo-*.woff2
+    kind: font
+    license: OFL-1.1
+    source: https://github.com/fontsource/font-files/tree/main/fonts/google/archivo

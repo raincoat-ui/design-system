@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/theme.schema.json",
+  "name": "Ink",
+  "description": "Black and white only: black ink on white paper, white on black at night, red kept for danger, every corner square."
+}

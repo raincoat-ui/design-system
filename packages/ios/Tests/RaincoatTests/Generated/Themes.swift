@@ -2,11 +2,13 @@
 
 import RaincoatTokens
 import RaincoatThemeBase
+import RaincoatThemeInk
 import Testing
 
 /// Every theme built from this token source. The component tests run in each of them.
 let allThemes: [RaincoatTheme] = [
     .base,
+    .ink,
 ]
 
 extension RaincoatTheme: CustomTestStringConvertible {
