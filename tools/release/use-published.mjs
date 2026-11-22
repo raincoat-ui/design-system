@@ -7,6 +7,8 @@
 //   node tools/release/use-published.mjs ios [version]      from the Swift mirror
 //
 // Without a version, the one this checkout names. The app's tests then run as they always do.
+// For the web apps, RAINCOAT_THEME names a theme to install besides the base theme, which
+// tools/reference/web-theme.mjs then loads.
 //
 // It changes the checkout the way an app's own change would: the web apps' package.json files
 // and the lockfile, a gradle.properties for the Android app, the iOS app's Xcode project. CI runs
@@ -41,12 +43,21 @@ function useNpm(version) {
   for (const app of WEB_APPS) useNpmIn(app, version);
 }
 
+/** The web apps' Raincoat packages, plus the theme RAINCOAT_THEME names if it is another. */
+export function webPackagesFor(manifest, theme = "base") {
+  const packages = webPackages(manifest);
+  const themePackage = `@raincoat-ui/theme-${theme}`;
+  return packages.includes(themePackage) ? packages : [...packages, themePackage];
+}
+
 function useNpmIn(app, version) {
   const manifest = readJson(`${app}/package.json`);
-  const packages = webPackages(manifest);
-  if (packages.length === 0) {
+  if (webPackages(manifest).length === 0) {
     throw new Error(`${app} installs no Raincoat package from this workspace`);
   }
+  const theme = process.env.RAINCOAT_THEME || "base";
+  if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(theme)) throw new Error(`"${theme}" is not a theme id`);
+  const packages = webPackagesFor(manifest, theme);
   const added = spawnSync(
     "pnpm",
     [

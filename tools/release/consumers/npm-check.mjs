@@ -4,14 +4,16 @@
 //   node tools/release/consumers/npm-check.mjs --tarballs <dir>     the staged tarballs
 //   node tools/release/consumers/npm-check.mjs --version <version>  from the npm registry
 //
-// It uses npm, not pnpm, and no file of this repository, so it sees what a stranger sees.
+// It uses npm, not pnpm, and no file of this repository, so it sees what a stranger sees. Then
+// each theme is installed on its own, into a project of its own, to show that it needs nothing
+// else and brings no other theme with it.
 //
 // npm checks a newly published version before it serves it. npm says that typically takes
 // around five minutes and can take longer, and until then the registry answers as it does for a
 // version that does not exist. So from the registry, the install is tried again until it works
 // or NPM_CHECK_WAIT_MINUTES (30 unless set) have passed.
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -20,12 +22,30 @@ if (!["--tarballs", "--version"].includes(mode) || !value) {
   console.error("usage: npm-check.mjs --tarballs <dir> | --version <version>");
   process.exit(2);
 }
-const raincoat =
+const tarball = (name) => {
+  const found = readdirSync(resolve(value)).find(
+    (file) =>
+      file.startsWith(`${name.replace("@", "").replace("/", "-")}-`) && file.endsWith(".tgz"),
+  );
+  if (!found) throw new Error(`no tarball of ${name} in ${value}`);
+  return join(resolve(value), found);
+};
+const spec = (name) => (mode === "--tarballs" ? tarball(name) : `${name}@${value}`);
+const raincoat = [spec("@raincoat-ui/react"), spec("@raincoat-ui/theme-base")];
+
+// Every theme: the staged tarballs, or, from the registry, the themes this checkout names.
+const themes =
   mode === "--tarballs"
     ? readdirSync(resolve(value))
-        .filter((name) => name.endsWith(".tgz"))
-        .map((name) => join(resolve(value), name))
-    : [`@raincoat-ui/react@${value}`, `@raincoat-ui/theme-base@${value}`];
+        .map((file) => /^raincoat-ui-theme-(.+)-\d+\.\d+\.\d+.*\.tgz$/.exec(file)?.[1])
+        .filter(Boolean)
+        .sort()
+    : [
+        "base",
+        ...readdirSync(new URL("../../../themes/", import.meta.url))
+          .filter((id) => existsSync(new URL(`../../../themes/${id}/theme.json`, import.meta.url)))
+          .sort(),
+      ];
 
 const waitMinutes = Number(process.env.NPM_CHECK_WAIT_MINUTES ?? 30);
 
@@ -149,3 +169,31 @@ run("npx", ["tsc", "--project", "tsconfig.json"]);
 console.log("The type declarations resolve and check.");
 
 rmSync(project, { recursive: true, force: true });
+
+// Each theme installs alone: into an empty project, with nothing else of Raincoat's.
+for (const theme of themes) {
+  const name = `@raincoat-ui/theme-${theme}`;
+  const alone = mkdtempSync(join(tmpdir(), `raincoat-theme-${theme}-`));
+  writeFileSync(join(alone, "package.json"), JSON.stringify({ name: "consumer", private: true }));
+  const args = ["install", "--no-audit", "--no-fund", spec(name)];
+  const result = spawnSync("npm", mode === "--tarballs" ? args : [...args, "--prefer-online"], {
+    cwd: alone,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  if (result.status !== 0) fail("npm", args, result);
+  const installed = readdirSync(join(alone, "node_modules/@raincoat-ui"));
+  if (installed.join() !== `theme-${theme}`) {
+    console.error(`${name} brought other Raincoat packages with it: ${installed.join(", ")}`);
+    process.exit(1);
+  }
+  const css = readFileSync(join(alone, `node_modules/${name}/theme.css`), "utf8");
+  for (const expected of ["--rc-button-primary-bg-default:", '[data-theme="dark-hc"]']) {
+    if (!css.includes(expected)) {
+      console.error(`${name}/theme.css has no ${expected}`);
+      process.exit(1);
+    }
+  }
+  rmSync(alone, { recursive: true, force: true });
+  console.log(`${name} installs on its own, with every token in every mode.`);
+}

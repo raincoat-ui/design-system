@@ -1,25 +1,52 @@
 // Shared by the release scripts: where things are, and the one version every package has.
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
+/**
+ * Every theme: the base theme, which is the token source in tokens/, then each directory under
+ * themes/ that has a theme.json. The token build generates each one's packages, so every list
+ * below follows this one and a new theme needs no edit here.
+ */
+export function themeIds(root = repoRoot) {
+  const dir = join(root, "themes");
+  const overlays = existsSync(dir)
+    ? readdirSync(dir)
+        .filter((name) => existsSync(join(dir, name, "theme.json")))
+        .sort()
+    : [];
+  return ["base", ...overlays];
+}
+
 /** The packages whose version Changesets manages as one group, by directory. */
-export const VERSIONED = [
+export const versioned = (root = repoRoot) => [
   "packages/web",
-  "packages/web-themes/base",
+  ...themeIds(root).map((id) => `packages/web-themes/${id}`),
   "packages/tokens",
   "packages/ios",
   "packages/android",
 ];
 
-/** The npm packages that are published. The others are private. */
-export const NPM_PACKAGES = ["packages/web", "packages/web-themes/base"];
+/** The npm packages that are published, by directory. The others are private. */
+export const npmPackages = (root = repoRoot) => [
+  "packages/web",
+  ...themeIds(root).map((id) => `packages/web-themes/${id}`),
+  "packages/tokens",
+];
 
 /** The Gradle modules that are published, as Maven artifact ids. */
-export const MAVEN_ARTIFACTS = ["tokens", "theme-base", "ui"];
+export const mavenArtifacts = (root = repoRoot) => [
+  "tokens",
+  ...themeIds(root).map((id) => `theme-${id}`),
+  "ui",
+];
+
+export const VERSIONED = versioned();
+export const NPM_PACKAGES = npmPackages();
+export const MAVEN_ARTIFACTS = mavenArtifacts();
 export const MAVEN_GROUP = "io.github.raincoat-ui";
 
 export const readJson = (file, root = repoRoot) =>
@@ -31,7 +58,7 @@ export const readJson = (file, root = repoRoot) =>
  */
 export function releaseVersion(root = repoRoot) {
   const versions = new Map(
-    VERSIONED.map((dir) => [dir, readJson(`${dir}/package.json`, root).version]),
+    versioned(root).map((dir) => [dir, readJson(`${dir}/package.json`, root).version]),
   );
   const distinct = new Set(versions.values());
   if (distinct.size !== 1) {
@@ -86,8 +113,14 @@ export const SHIPPED = [
   "LICENSE",
   "NOTICE",
   "tokens",
+  "themes",
   "specs",
+  "schemas",
   // npm
+  "packages/tokens/src",
+  "packages/tokens/scripts",
+  "packages/tokens/package.json",
+  "packages/tokens/README.md",
   "packages/web/src",
   "packages/web/scripts",
   "packages/web/package.json",

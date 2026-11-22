@@ -59,7 +59,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.raincoatui.theme.base.BaseTheme
 import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.ColorMode
@@ -68,6 +67,7 @@ import io.github.raincoatui.tokens.RaincoatTokenSet
 import io.github.raincoatui.tokens.TokenColor
 import io.github.raincoatui.tokens.TokenFormat
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
 import kotlin.math.ceil
 import org.junit.Assert.assertEquals
@@ -77,7 +77,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
@@ -88,10 +88,19 @@ import org.robolectric.annotation.Config
  * the button with touch, mouse, and keys, and draw it and read the pixels back. The screen is
  * one pixel per dp, so a measurement in pixels is a measurement in dp.
  */
-@RunWith(RobolectricTestRunner::class)
+@RunWith(ParameterizedRobolectricTestRunner::class)
 @Config(qualifiers = "w480dp-h800dp-mdpi")
 @OptIn(ExperimentalTestApi::class)
-class RaincoatButtonTest {
+class RaincoatButtonTest(themeId: String) {
+    companion object {
+        /** Every test runs in every theme. The token build generates the list. */
+        @JvmStatic
+        @ParameterizedRobolectricTestRunner.Parameters(name = "{0}")
+        fun themes(): List<Array<Any>> = allThemes.map { arrayOf(it.id) }
+    }
+
+    private val theme = allThemes.first { it.id == themeId }
+
     @get:Rule
     val compose = createComposeRule()
 
@@ -100,7 +109,7 @@ class RaincoatButtonTest {
     private val longLabel = "Save all of these changes and send the updated version to every reviewer"
 
     private fun tokens(mode: ColorMode = ColorMode.Light, density: Density = Density.Comfortable): RaincoatTokenSet =
-        BaseTheme.tokens(mode, density)
+        theme.tokens(mode, density)
 
     // The test rule takes content once, so the content is a state that a test can replace.
     private var scene by mutableStateOf<(@Composable () -> Unit)?>(null)
@@ -122,7 +131,7 @@ class RaincoatButtonTest {
         scene = {
             key(number) {
                 RaincoatTheme(
-                    theme = BaseTheme,
+                    theme = this.theme,
                     darkTheme = mode == ColorMode.Dark || mode == ColorMode.DarkHighContrast,
                     increasedContrast = mode == ColorMode.LightHighContrast || mode == ColorMode.DarkHighContrast,
                     density = density,

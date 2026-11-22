@@ -1,13 +1,26 @@
 {
   "name": "@raincoat-ui/tokens",
   "version": "0.1.0-next.2",
-  "private": true,
-  "description": "Raincoat design tokens and component specs: loading, validation, contrast checks, and the build that generates each platform's code.",
+  "description": "The Raincoat token build: it checks a token source and its themes, checks their contrast, and generates each platform's code, for this repository and for themes kept outside it.",
   "license": "Apache-2.0",
+  "homepage": "https://raincoat-ui.github.io/design-system/",
+  "bugs": "https://github.com/raincoat-ui/design-system/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/raincoat-ui/design-system.git",
     "directory": "packages/tokens"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "dtcg",
+    "theme",
+    "swiftui",
+    "jetpack-compose",
+    "css"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "type": "module",
   "exports": {
@@ -15,6 +28,14 @@
   },
   "bin": {
     "raincoat-tokens": "./src/cli.js"
+  },
+  "files": [
+    "src",
+    "base",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "node scripts/bundle.mjs"
   },
   "dependencies": {
     "ajv": "8.20.0",

@@ -10,7 +10,7 @@ export const DENSITIES = ["comfortable", "compact"];
  * A file named `<family>.<variant>.tokens.json` belongs to one value of an axis:
  * `color.<mode>` to a color mode, `density.<density>` to a density. Any other file applies always.
  */
-function variantOf(stem) {
+export function variantOf(stem) {
   const parts = stem.split(".");
   if (parts.length === 1) return null;
   const [family, value] = parts;

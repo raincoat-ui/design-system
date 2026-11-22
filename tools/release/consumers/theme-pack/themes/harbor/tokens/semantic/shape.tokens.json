@@ -1,0 +1,13 @@
+{
+  "radius": {
+    "sm": {
+      "$value": "{dimension.4}"
+    },
+    "md": {
+      "$value": "{dimension.8}"
+    },
+    "lg": {
+      "$value": "{dimension.12}"
+    }
+  }
+}

@@ -1,4 +1,4 @@
 /* What an app that uses Tailwind CSS writes. Its own files are not scanned here. */
 @import "tailwindcss" source(none);
-@import "@raincoat-ui/theme-base/theme.css";
+@import "@raincoat-ui/theme-under-test/theme.css";
 @import "../../src/tailwind.css";

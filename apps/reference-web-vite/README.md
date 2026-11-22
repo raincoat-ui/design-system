@@ -41,7 +41,9 @@ pnpm web:reference
 `pnpm --filter @raincoat-ui/reference-web-vite dev` serves the app for a look in a browser,
 after `pnpm web:build`.
 
-CI runs the same tests on every pull request, in the `reference app (web)` job.
+CI runs the same tests on every pull request, once for each theme, in the
+`reference app (web, <theme>)` jobs. `RAINCOAT_THEME=<id>` before `pnpm test` builds the app with
+another theme than the base one (`tools/reference/web-theme.mjs`).
 
 ### Against a published release
 

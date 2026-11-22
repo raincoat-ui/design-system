@@ -29,8 +29,36 @@ export function globToRegExp(glob) {
 }
 
 /**
- * @param files     repo-relative paths of committed files
+ * The entries of licenses/assets.yml and of each theme's own themes/<id>/assets.yml, as one
+ * manifest. A theme lists the files it carries itself, with paths relative to its directory, so
+ * that adding a theme stays within that directory. Its entries may cover only its own files.
  * @param manifest  parsed licenses/assets.yml
+ * @param themes    [{id, manifest}] parsed themes/<id>/assets.yml files
+ * @returns {{manifest: object, problems: string[]}}
+ */
+export function mergeManifests(manifest, themes = []) {
+  const problems = [];
+  const assets = (manifest.assets ?? []).map((entry) => ({
+    ...entry,
+    origin: "licenses/assets.yml",
+  }));
+  for (const { id, manifest: own } of themes) {
+    const origin = `themes/${id}/assets.yml`;
+    for (const entry of own?.assets ?? []) {
+      const path = entry.path ?? "";
+      if (path.startsWith("/") || path.split("/").includes("..")) {
+        problems.push(`${origin} entry "${path}": paths are relative to the theme's directory`);
+        continue;
+      }
+      assets.push({ ...entry, path: `themes/${id}/${path}`, origin });
+    }
+  }
+  return { manifest: { ...manifest, assets }, problems };
+}
+
+/**
+ * @param files     repo-relative paths of committed files
+ * @param manifest  parsed licenses/assets.yml, or one merged by mergeManifests
  * @param shipLicenses  Set of licenses in the "ship" scope
  * @param fontLicenses  Set of licenses in the "fonts" scope
  * @returns {string[]} problems; empty when everything is covered
@@ -44,7 +72,7 @@ export function checkAssets({ files, manifest, shipLicenses, fontLicenses }) {
   }));
 
   for (const entry of entries) {
-    const label = `assets.yml entry "${entry.path}"`;
+    const label = `${entry.origin ?? "assets.yml"} entry "${entry.path}"`;
     for (const field of ["path", "kind", "license", "source"]) {
       if (!entry[field]) problems.push(`${label} lacks "${field}"`);
     }
@@ -69,7 +97,10 @@ export function checkAssets({ files, manifest, shipLicenses, fontLicenses }) {
   for (const file of files.filter(needsEntry)) {
     const entry = entries.find((candidate) => candidate.regexp.test(file));
     if (!entry) {
-      problems.push(`${file} has no entry in licenses/assets.yml`);
+      const theme = /^themes\/([^/]+)\//.exec(file)?.[1];
+      problems.push(
+        `${file} has no entry in ${theme ? `themes/${theme}/assets.yml or ` : ""}licenses/assets.yml`,
+      );
       continue;
     }
     entry.used = true;
@@ -79,7 +110,9 @@ export function checkAssets({ files, manifest, shipLicenses, fontLicenses }) {
   }
 
   for (const entry of entries.filter((candidate) => !candidate.used)) {
-    problems.push(`assets.yml entry "${entry.path}" matches no committed file; remove it`);
+    problems.push(
+      `${entry.origin ?? "assets.yml"} entry "${entry.path}" matches no committed file; remove it`,
+    );
   }
   return problems;
 }

@@ -81,10 +81,12 @@ Raincoat in awesome-design-systems.
 
 ## Capabilities and Constraints
 
-- **Today (0.1.0-next.2; milestone 1 complete, milestone 2 next):** the token source with its
-  linter and contrast checker; the generated web theme stylesheet, Swift package, and Kotlin
-  modules; and a Button on all three platforms, published to all three registries and tested in
-  the reference apps from each of them.
+- **Today (0.1.0-next.2; milestone 1 complete, milestone 2 in progress):** the token source
+  with its linter and contrast checker; the generated web theme stylesheet, Swift package, and
+  Kotlin modules; and a Button on all three platforms, published to all three registries and
+  tested in the reference apps from each of them. Themes beside the base are directories under
+  `themes/`, built and tested on every platform by the same pipeline (ADR 0018), and the token
+  build is ready to publish for theme packs kept outside the repository.
 - **v1 component set:** Button, Input, Card, Dialog/Sheet, Tabs, Toast, Typography. Select,
   Checkbox, Radio, Switch, Menu, Tooltip, date picker, table, and navigation bars follow in 1.x.
 - **Token model:** primitive, semantic, and component tiers. Every theme has four color modes

@@ -1,6 +1,6 @@
 // Emits Swift for the iOS package: the structure of a token set, each theme's values, and the
 // expected values the Swift contract test compares against.
-import { compose, DENSITIES, loadSource, MODES } from "../load.js";
+import { compose, DENSITIES, MODES } from "../load.js";
 import {
   camel,
   expectedEntries,
@@ -19,6 +19,12 @@ import {
 } from "./shared.js";
 
 export { canonical } from "./shared.js";
+
+/** The Swift names of a theme: its module, and its member on RaincoatTheme. */
+export const swiftTheme = (themeId) => ({
+  module: `RaincoatTheme${pascal(themeId)}`,
+  member: camel(themeId),
+});
 
 const SWIFT_TYPE = {
   color: "TokenColor",
@@ -122,8 +128,8 @@ function structBody(node) {
 }
 
 /** RaincoatTokens/Generated/TokenSet.swift: the structure of a token set. */
-export function tokenSetSwift(root) {
-  const tokens = compose(loadSource(root), { mode: MODES[0], density: DENSITIES[0] }).tokens;
+export function tokenSetSwift(files) {
+  const tokens = compose(files, { mode: MODES[0], density: DENSITIES[0] }).tokens;
   const top = tree(tokens);
   const nested = [...groupsOf(top)]
     .slice(1)
@@ -171,8 +177,7 @@ function setLiteral(node) {
 const constant = ({ mode, density }) => `${MODE_CASE[mode]}${pascal(density)}`;
 
 /** RaincoatTheme<Id>/Generated/<Id>Theme.swift: a theme's values in every mode and density. */
-export function themeSwift(root, themeId) {
-  const files = loadSource(root);
+export function themeSwift(files, themeId) {
   const name = pascal(themeId);
   const sets = permutations().map(
     (permutation) =>
@@ -189,7 +194,7 @@ import RaincoatTokens
 
 extension RaincoatTheme {
     /// The "${themeId}" theme.
-    public static let ${camel(themeId)} = RaincoatTheme(id: "${themeId}") { mode, density in
+    public static let ${declared(themeId)} = RaincoatTheme(id: "${themeId}") { mode, density in
         switch (mode, density) {
 ${indent(cases.join("\n"), 2)}
         }
@@ -203,8 +208,7 @@ ${indent(sets.join("\n\n"), 1)}
 }
 
 /** The expected value of every token in every mode and density, for the Swift contract test. */
-export function expectedSwift(root, themeId) {
-  const files = loadSource(root);
+export function expectedSwift(files, themeId) {
   const entries = permutations().map((permutation) => {
     const rows = expectedEntries(compose(files, permutation).tokens).map(
       ([id, value]) => `${JSON.stringify(id)}: ${JSON.stringify(value)},`,
@@ -218,5 +222,75 @@ export function expectedSwift(root, themeId) {
 let expected${pascal(themeId)}Tokens: [String: [String: String]] = [
 ${indent(entries.join("\n"), 1)}
 ]
+`;
+}
+
+/** The contract test of one theme: its compiled values against the token source. */
+export function themeTestsSwift(themeId) {
+  const { module, member: name } = swiftTheme(themeId);
+  const expected = `expected${pascal(themeId)}Tokens`;
+  return `${HEADER}
+
+import ${module}
+import RaincoatTokens
+import Testing
+
+// The contract test for iOS. The values compiled into the theme must equal what the token
+// source resolves to, for every token in every color mode and density. The expected values in
+// Expected${pascal(themeId)}Tokens.swift are produced by a separate code path in the token build.
+
+@Test(arguments: ColorMode.allCases, Density.allCases)
+func everyTokenMatchesTheTokenSource(mode: ColorMode, density: Density) throws {
+    let key = "\\(mode.rawValue)/\\(density.rawValue)"
+    let expected = try #require(${expected}[key], "no expected values for \\(key)")
+    let actual = RaincoatTheme.${name}.tokens(mode: mode, density: density).flattened()
+
+    #expect(Set(actual.keys) == Set(expected.keys), "the token sets differ for \\(key)")
+    for (id, value) in expected {
+        #expect(actual[id] == value, "\\(id) in \\(key)")
+    }
+}
+
+@Test func theSourceCoversEveryModeAndDensity() {
+    #expect(${expected}.count == ColorMode.allCases.count * Density.allCases.count)
+    #expect((${expected}["light/comfortable"]?.count ?? 0) > 80)
+}
+
+@Test func modesAndDensitiesActuallyDiffer() {
+    let theme = RaincoatTheme.${name}
+    let light = theme.tokens(mode: .light, density: .comfortable)
+    let dark = theme.tokens(mode: .dark, density: .comfortable)
+    let compact = theme.tokens(mode: .light, density: .compact)
+
+    #expect(light.color.bg.canvas != dark.color.bg.canvas)
+    #expect(light.size.control.md > compact.size.control.md)
+    #expect(light.color == compact.color)
+}
+
+@Test func theThemeHasItsId() {
+    #expect(RaincoatTheme.${name}.id == "${themeId}")
+}
+`;
+}
+
+/** Every theme, for the component tests, which draw each component in each one. */
+export function themesSwift(themeIds) {
+  const imports = themeIds.map((id) => `import ${swiftTheme(id).module}`);
+  const members = themeIds.map((id) => `.${swiftTheme(id).member},`);
+  return `${HEADER}
+
+import RaincoatTokens
+${imports.join("\n")}
+import Testing
+
+/// Every theme built from this token source. The component tests run in each of them.
+let allThemes: [RaincoatTheme] = [
+${indent(members.join("\n"), 1)}
+]
+
+extension RaincoatTheme: CustomTestStringConvertible {
+    /// A test that takes a theme is listed under the theme's id.
+    public var testDescription: String { id }
+}
 `;
 }

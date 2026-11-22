@@ -8,7 +8,14 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isPrerelease, MAVEN_GROUP, releaseVersion, repoRoot, VERSIONED } from "./lib.mjs";
+import {
+  isPrerelease,
+  MAVEN_GROUP,
+  releaseVersion,
+  repoRoot,
+  themeIds,
+  VERSIONED,
+} from "./lib.mjs";
 
 /** The entries of one version in a changelog written by Changesets, as paragraphs of text. */
 export function entries(changelog, version) {
@@ -27,7 +34,13 @@ export function entries(changelog, version) {
   );
 }
 
-export function notes({ version, changes, npmPending = [], swiftPending = false }) {
+export function notes({
+  version,
+  changes,
+  npmPending = [],
+  swiftPending = false,
+  themes = themeIds(),
+}) {
   const lines = [];
   if (isPrerelease(version)) {
     lines.push("> This is a prerelease. Anything in it may change before 1.0.", "");
@@ -46,6 +59,24 @@ export function notes({ version, changes, npmPending = [], swiftPending = false 
     "```sh",
     `npm install @raincoat-ui/react@${version} @raincoat-ui/theme-base@${version}`,
     "```",
+    "",
+  );
+  const pascal = (id) =>
+    id
+      .split("-")
+      .map((part) => part[0].toUpperCase() + part.slice(1))
+      .join("");
+  lines.push(
+    "**Themes**",
+    "",
+    "Each theme is a package of its own on every platform. An app installs the one it uses.",
+    "",
+    "| Theme | npm | Maven | Swift product |",
+    "| --- | --- | --- | --- |",
+    ...themes.map(
+      (id) =>
+        `| ${id} | \`@raincoat-ui/theme-${id}\` | \`${MAVEN_GROUP}:theme-${id}\` | \`RaincoatTheme${pascal(id)}\` |`,
+    ),
     "",
   );
   if (npmPending.length > 0) {

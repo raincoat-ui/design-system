@@ -297,7 +297,7 @@ Ruled, untinted boxes: 1px Hairline outline, 2px corner, transparent fill, 16px 
 Small text, tabular figures, no fills and no zebra striping: an ink rule (`color.border.strong`) under the head row, 1px hairlines between rows, 10px vertical cell padding, values in mono that do not wrap.
 
 ### Specimen plates
-A component shown in a framed panel that sets its own `data-theme` and `data-density`: canvas fill, 1px `color.border.default` frame, 2px corner, 32px / 24px padding, 12px between specimens. Every value comes from the theme's custom properties, so one plate per mode shows the component in all four.
+A component shown in a framed panel that sets its own `data-theme` and `data-density`: canvas fill, 1px `color.border.default` frame, 2px corner, 32px / 24px padding, 12px between specimens. Every value comes from the theme's custom properties, so one plate per mode shows the component in all four. On the Themes page each plate also sets `data-rc-theme` and is styled by that theme's own stylesheet, scoped to it (and the fonts the theme carries); its color mode is a 600-weight small caption in Gray 2 directly above it, 0.5rem from the plate and 1.25rem from the plate before.
 
 ### Token swatches and ramps
 20px swatches and 56px ramp chips with a 2px corner and a faint currentColor outline; scale bars in ink with the 2px corner. Inside token tables a swatch cell stays on one line: a 1rem swatch, the hex in mono at 0.75rem, and 0.75rem end padding, so the description column keeps its width.

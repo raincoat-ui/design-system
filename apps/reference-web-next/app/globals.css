@@ -1,6 +1,8 @@
-/* The styles load as the package's README describes for an app with Tailwind CSS v4. */
+/* The styles load as the package's README describes for an app with Tailwind CSS v4. theme.css
+   imports the theme the app is built with: @raincoat-ui/theme-base unless RAINCOAT_THEME names
+   another (tools/reference/web-theme.mjs writes it). */
 @import "tailwindcss";
-@import "@raincoat-ui/theme-base/theme.css";
+@import "./theme.css";
 @import "@raincoat-ui/react/tailwind.css";
 
 /* The app's own markup uses Tailwind utilities: the shadcn/ui color names, which the theme

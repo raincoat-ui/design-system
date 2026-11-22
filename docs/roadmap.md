@@ -122,4 +122,30 @@ What M1 built, one token source driving all three platforms:
   its form before React hydrates the page, and a Server Component can render a busy or disabled
   Button. npm published it through trusted publishing, with no token.
 
-M2, a second and deliberately different theme, is next.
+M2, a second and deliberately different theme, is in progress. What it built:
+
+- **Themes are directories** ([ADR 0018](adr/0018-theme-directories-and-theme-packs.md)). A
+  theme is `themes/<id>/`: a `theme.json`, a `brand.md`, and files that give new values to the
+  tokens the base marks overridable. The linter holds it to every rule of the base and to the
+  theme rules: only overridable tokens, none added or removed, every color mode changed together.
+  Contrast is checked for each theme, and the documentation shows every theme in every mode
+  (Foundations, Themes).
+- **Everything per theme is generated,** the files that list every theme included: its npm
+  package, its Swift target and contract test, the Swift package manifest, its Gradle module,
+  and the theme lists the component tests run over. Gradle, the release scripts, and the
+  Changesets group find themes by themselves.
+- **Every test a theme can change runs in each theme:** the contract tests on Swift and Kotlin,
+  the React, SwiftUI, and Compose component tests in every color mode and density, the reference
+  apps on a simulator, an emulator, and in Chromium, and the release rehearsal, which installs
+  each theme's npm package, Swift product, and Maven module on its own.
+- **The token build is ready to publish** as `@raincoat-ui/tokens`, with its base source inside. Run in
+  a repository of its own, it builds that repository's themes into a theme pack. The release
+  rehearsal builds a fictional pack (`tools/release/consumers/theme-pack`) with the packed
+  command line from outside the checkout, and tests the Swift package and the Gradle build it
+  produces against the staged Swift mirror and Maven repository.
+
+Still to show before M2 is complete: a second theme added by a pull request that touches only
+its directory, generated files, and its changeset, with CI green and every matrix extended to
+it; and a prerelease that publishes `@raincoat-ui/tokens` and the new theme, which as new npm
+names need the one-time token in the runbook, after which the release workflow builds the theme
+pack with the published command line.

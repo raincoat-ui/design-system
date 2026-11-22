@@ -31,14 +31,16 @@ dependencies {
 | Artifact                           | Contains                                                          |
 | ---------------------------------- | ----------------------------------------------------------------- |
 | `io.github.raincoat-ui:ui`         | The components and `RaincoatTheme`. Depends on Compose Foundation |
-| `io.github.raincoat-ui:theme-base` | The base theme                                                    |
+| `io.github.raincoat-ui:theme-<id>` | One per theme, such as `theme-base`                               |
 | `io.github.raincoat-ui:tokens`     | The token types. Plain Kotlin, with no Android dependency         |
 
 The components do not depend on Material, so an app can use Material beside them, or not.
 
 ## Use
 
-Apply a theme once, near the root of the app:
+Each theme is a module of its own, so an app depends only on its own. The
+[themes page](https://raincoat-ui.github.io/design-system/foundations/themes/) lists them. Apply
+the theme once, near the root of the app:
 
 ```kotlin
 import io.github.raincoatui.theme.base.BaseTheme

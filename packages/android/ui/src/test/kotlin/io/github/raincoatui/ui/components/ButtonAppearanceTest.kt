@@ -1,12 +1,12 @@
 package io.github.raincoatui.ui.components
 
-import io.github.raincoatui.theme.base.BaseTheme
 import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.Density
 import io.github.raincoatui.tokens.TokenColor
 import io.github.raincoatui.tokens.TokenFormat
+import io.github.raincoatui.ui.generated.allThemes
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -14,7 +14,7 @@ import org.junit.Test
 /**
  * The mapping from a button's variant, size, and state to its tokens. Expected values are looked
  * up by token id, built from the variant's and size's ids in the spec, so these tests do not
- * repeat the `when` expressions they check.
+ * repeat the `when` expressions they check. Each mapping is checked in every theme.
  */
 class ButtonAppearanceTest {
     private fun canonical(color: TokenColor?): String? = color?.let(TokenFormat::color)
@@ -33,11 +33,11 @@ class ButtonAppearanceTest {
 
     @Test
     fun `each variant takes its colors from its tokens`() {
-        for (mode in ColorMode.entries) {
-            val set = BaseTheme.tokens(mode, Density.Comfortable)
+        for (theme in allThemes) for (mode in ColorMode.entries) {
+            val set = theme.tokens(mode, Density.Comfortable)
             val source = set.flattened()
             for (variant in ButtonVariant.entries) {
-                val where = "$variant in ${mode.id}"
+                val where = "$variant in ${mode.id}, ${theme.id}"
                 val rest = ButtonColors.of(set.button, variant, ButtonInteraction.Rest)
                 val hover = ButtonColors.of(set.button, variant, ButtonInteraction.Hover)
                 val pressed = ButtonColors.of(set.button, variant, ButtonInteraction.Pressed)
@@ -62,8 +62,8 @@ class ButtonAppearanceTest {
 
     @Test
     fun `every variant looks the same when disabled`() {
-        for (mode in ColorMode.entries) {
-            val set = BaseTheme.tokens(mode, Density.Comfortable)
+        for (theme in allThemes) for (mode in ColorMode.entries) {
+            val set = theme.tokens(mode, Density.Comfortable)
             val source = set.flattened()
             for (variant in ButtonVariant.entries) {
                 val colors = ButtonColors.of(set.button, variant, ButtonInteraction.Disabled)
@@ -76,8 +76,8 @@ class ButtonAppearanceTest {
 
     @Test
     fun `each size takes its measurements from its tokens`() {
-        for (density in Density.entries) {
-            val set = BaseTheme.tokens(ColorMode.Light, density)
+        for (theme in allThemes) for (density in Density.entries) {
+            val set = theme.tokens(ColorMode.Light, density)
             val source = set.flattened()
             for (size in ButtonSize.entries) {
                 val measurements = ButtonMeasurements.of(set.button, size)

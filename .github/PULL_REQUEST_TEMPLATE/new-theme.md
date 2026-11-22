@@ -8,10 +8,11 @@
 ## Checklist
 
 - [ ] The brand is fictional, or the brand owner agreed in writing to it being public.
-- [ ] The change touches only `themes/<id>/` and generated files.
+- [ ] The change touches only `themes/<id>/`, generated files (`pnpm tokens:build`, then
+      `pnpm install` for the lockfile), and its changeset.
 - [ ] Only overridable tokens are set; no locked token is touched.
 - [ ] Values exist for all four color modes, and contrast checks pass in each.
-- [ ] Every font is OFL-1.1, covers Vietnamese, and is listed in `licenses/assets.yml`.
-- [ ] Every file under `themes/<id>/assets/` is listed in `licenses/assets.yml`.
+- [ ] Every font is OFL-1.1, covers Vietnamese, and is listed in `themes/<id>/assets.yml`.
+- [ ] Every file under `themes/<id>/assets/` is listed in `themes/<id>/assets.yml`.
 - [ ] `brand.md` describes voice and usage.
 - [ ] Every commit is signed off.

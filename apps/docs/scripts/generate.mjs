@@ -2,16 +2,26 @@
 // Generates the site's content from the repository: token reference pages from the token
 // source, and copies of the repository's own documents. Everything it writes is git-ignored;
 // the only hand-written page is src/content/docs/index.mdx.
-import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  buildThemeCss,
   checkContrast,
   compose,
   hexOf,
   loadSource,
   loadSpecs,
   MODES,
+  openProject,
   resolvedType,
   resolveToken,
 } from "@raincoat-ui/tokens";
@@ -319,6 +329,119 @@ ${table(["Token", "Curve", "Use"], easingRows)}
 );
 
 // ---------------------------------------------------------------------------------------------
+// Foundations: themes, each shown in every mode with its own stylesheet
+
+const pascalCase = (id) =>
+  id
+    .split("-")
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join("");
+const THEME_VARIANTS = ["primary", "secondary", "ghost", "danger", "disabled"];
+const THEME_LABELS = {
+  primary: "Lock until 11:30",
+  secondary: "Edit schedule",
+  ghost: "Not now",
+  danger: "End early",
+  disabled: "Unavailable",
+};
+const themeButtons = THEME_VARIANTS.map(
+  (variant) => `<span class="rc-button" data-variant="${variant}">${THEME_LABELS[variant]}</span>`,
+).join("");
+const themes = openProject(repoRoot).themes;
+// A theme may carry the web fonts it names, with their @font-face rules, in themes/<id>/fonts/.
+// They are copied into the site, and the rules point at the copies.
+const themeFontsDir = join(appRoot, "public/theme-fonts");
+rmSync(themeFontsDir, { recursive: true, force: true });
+const themeFonts = themes
+  .filter((theme) => !theme.base && existsSync(join(theme.dir, "fonts")))
+  .flatMap((theme) => {
+    const fonts = join(theme.dir, "fonts");
+    cpSync(fonts, join(themeFontsDir, theme.id), {
+      recursive: true,
+      filter: (source) => !source.endsWith(".css"),
+    });
+    return readdirSync(fonts)
+      .filter((name) => name.endsWith(".css"))
+      .map((name) =>
+        readFileSync(join(fonts, name), "utf8").replace(
+          /url\(["']?\.\/([^"')]+)["']?\)/g,
+          (_, file) => `url("/design-system/theme-fonts/${theme.id}/${file}")`,
+        ),
+      );
+  });
+// One scoped stylesheet per theme. The class makes it outrank the site's own (base) theme.
+const themeStyles = [
+  ...themeFonts,
+  ...themes.map((theme) =>
+    buildThemeCss(theme.files, { scope: `.rc-themed[data-rc-theme="${theme.id}"]` }),
+  ),
+].join("\n");
+const themeSections = themes.map((theme) => {
+  const overridden = theme.files.flatMap((entry) => entry.tokens).filter((t) => t.overridden);
+  const rows = checkContrast(theme.files);
+  const brand = theme.base
+    ? ""
+    : readFileSync(join(theme.dir, "brand.md"), "utf8")
+        .replace(/^# .+\n+/, "")
+        .replace(/^## /gm, "### ");
+  const plates = MODES.map(
+    (mode) =>
+      `<figure class="rc-plate"><figcaption>${MODE_LABEL[mode]}</figcaption><div class="rc-stage rc-themed" data-rc-theme="${theme.id}" data-theme="${mode}">${themeButtons}</div></figure>`,
+  ).join("\n");
+  return `## ${theme.meta.name}
+
+${theme.meta.description}
+
+${table(
+  ["Platform", "Package"],
+  [
+    ["npm", code(`@raincoat-ui/theme-${theme.id}`)],
+    ["Maven", code(`io.github.raincoat-ui:theme-${theme.id}`)],
+    [
+      "Swift",
+      `${code(`RaincoatTheme${pascalCase(theme.id)}`)}, applied with ${code(`.raincoatTheme(.${theme.id.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())})`)}`,
+    ],
+  ],
+)}
+
+${
+  theme.base
+    ? "The base theme is the token source itself: every other theme starts from it."
+    : `It overrides ${overridden.length} tokens, in ${code(`themes/${theme.id}/`)}.`
+} All ${rows.length} declared color pairs meet their contrast requirement in every mode.
+
+${plates}
+
+${brand}`;
+});
+
+page(
+  "foundations/themes.md",
+  {
+    title: "Themes",
+    description: "Every theme in this repository, in each color mode, with its packages.",
+    order: 6,
+  },
+  `
+A theme is a directory of overrides on top of the base token source. It may change the brand and
+neutral ramps, the color each role takes in each mode, font families and weights, and radii. It
+cannot change spacing, sizes, touch targets, focus rules, or contrast minimums, and it cannot add
+or remove a token. Each theme is a package of its own on every platform, so an app installs only
+its own. To add one, see [Add a theme](/design-system/contributing/add-a-theme/).
+
+The plates below use each theme's own stylesheet, and the fonts it carries in
+${code("themes/<id>/fonts/")}. The theme packages do not bundle fonts yet: an app that does not
+load a theme's font falls back to the system font.
+
+<style>
+${themeStyles}
+</style>
+
+${themeSections.join("\n\n")}
+`,
+);
+
+// ---------------------------------------------------------------------------------------------
 // Components: Button (static renditions from tokens)
 
 // The renditions carry no colors of their own. Each panel sets data-theme (or data-density),
@@ -475,8 +598,9 @@ importDocument("CONTRIBUTING.md", "contributing/overview.md", {
   title: "How to contribute",
 });
 importDocument("docs/contributing/add-a-token.md", "contributing/add-a-token.md", { order: 2 });
+importDocument("docs/contributing/add-a-theme.md", "contributing/add-a-theme.md", { order: 3 });
 importDocument("rfcs/README.md", "contributing/rfcs.md", {
-  order: 3,
+  order: 4,
   title: "Proposing a change (RFCs)",
 });
 importDocument("docs/roadmap.md", "project/roadmap.md", { order: 1 });

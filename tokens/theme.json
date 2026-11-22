@@ -1,0 +1,5 @@
+{
+  "$schema": "../schemas/theme.schema.json",
+  "name": "Base",
+  "description": "White paper, near-neutral ink, and raincoat yellow as the one signal; every corner 2px."
+}

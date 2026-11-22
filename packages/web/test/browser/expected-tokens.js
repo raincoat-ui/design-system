@@ -1,5 +1,6 @@
 // Gives the browser tests the value every Button token should have, in each color mode and
-// density, in the form the browser reports a computed style.
+// density, in the form the browser reports a computed style. Each Vitest project tests one
+// theme (vitest.config.ts) and gets that theme's values.
 //
 // The values are resolved here from the token source. They do not come from the generated
 // stylesheet, so a test that compares a rendered button with them checks the whole path:
@@ -9,8 +10,8 @@ import {
   compose,
   DENSITIES,
   hexOf,
-  loadSource,
   MODES,
+  openProject,
   resolvedType,
   resolveToken,
 } from "@raincoat-ui/tokens";
@@ -52,7 +53,10 @@ function entries(id, type, value) {
 }
 
 export default function setup(project) {
-  const source = loadSource(repoRoot);
+  const id = project.name;
+  const theme = openProject(repoRoot).themes.find((candidate) => candidate.id === id);
+  if (!theme) throw new Error(`no theme "${id}" in the token source`);
+  const source = theme.files;
   const expected = {};
   for (const mode of MODES) {
     for (const density of DENSITIES) {

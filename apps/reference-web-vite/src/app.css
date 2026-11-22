@@ -1,5 +1,7 @@
-/* The styles load as the package's README describes for an app without Tailwind. */
-@import "@raincoat-ui/theme-base/theme.css";
+/* The styles load as the package's README describes for an app without Tailwind. theme.css
+   imports the theme the app is built with: @raincoat-ui/theme-base unless RAINCOAT_THEME names
+   another (tools/reference/web-theme.mjs writes it). */
+@import "./theme.css";
 @import "@raincoat-ui/react/ui.css";
 
 /* The rest is the app's own layout, also from the theme's tokens. */

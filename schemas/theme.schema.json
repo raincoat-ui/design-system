@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raincoat-ui.github.io/design-system/schemas/theme.schema.json",
+  "title": "Raincoat theme",
+  "description": "theme.json, which names a theme. The base theme's is tokens/theme.json; every other theme's is themes/<id>/theme.json, and the directory name is the theme's id.",
+  "type": "object",
+  "required": ["name", "description"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "The theme's display name, as the documentation shows it."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 200,
+      "description": "One sentence on the theme's look. It goes into each platform's package description."
+    },
+    "packages": {
+      "type": "object",
+      "description": "Only for a theme kept outside the Raincoat repository: where its packages are published. Inside the repository the names follow ADR 0012.",
+      "properties": {
+        "npm": {
+          "type": "string",
+          "pattern": "^(@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$",
+          "description": "The npm package name of the theme stylesheet, such as @acme/theme-focus."
+        },
+        "maven": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+$",
+          "description": "The Maven group of the Android module, such as com.acme. The artifact is theme-<id>."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

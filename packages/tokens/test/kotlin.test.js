@@ -8,11 +8,12 @@ import { expectedKotlin, themeKotlin, tokenSetKotlin } from "../src/emit/kotlin.
 import { compose, loadSource } from "../src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
-const tokens = compose(loadSource(repoRoot), { mode: "light", density: "comfortable" }).tokens;
+const files = loadSource(repoRoot);
+const tokens = compose(files, { mode: "light", density: "comfortable" }).tokens;
 const exposed = [...tokens.values()].filter((token) => token.tier !== "primitive");
-const schema = tokenSetKotlin(repoRoot);
-const theme = themeKotlin(repoRoot, "base");
-const expected = expectedKotlin(repoRoot, "base");
+const schema = tokenSetKotlin(files);
+const theme = themeKotlin(files, "base");
+const expected = expectedKotlin(files, "base");
 
 test("every semantic and component token is exposed, and no primitive is", () => {
   const flattened = [...schema.matchAll(/^\s+"([a-z0-9.-]+)" to TokenFormat\.\w+\(/gm)].map(
@@ -81,6 +82,6 @@ test("the expected values cover every exposed token in each of the eight combina
 });
 
 test("output is deterministic", () => {
-  assert.equal(tokenSetKotlin(repoRoot), schema);
-  assert.equal(themeKotlin(repoRoot, "base"), theme);
+  assert.equal(tokenSetKotlin(files), schema);
+  assert.equal(themeKotlin(files, "base"), theme);
 });

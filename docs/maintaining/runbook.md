@@ -161,6 +161,11 @@ What the first publish leaves behind, seen with `@raincoat-ui/react` and
 - **The email address of the npm account is public**, in the registry's record of every package
   the account publishes. Use an address that may be public for an account that publishes.
 
+A new theme is a new package name on npm, `@raincoat-ui/theme-<id>`, and needs these steps the
+first time a release includes it. So did `@raincoat-ui/tokens`, the token build, when milestone 2
+made it public. The Maven repository and the Swift mirror need nothing: a new module or product
+is published with the rest.
+
 ### Rolling back
 
 A bad release is replaced, not removed.
