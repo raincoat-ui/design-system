@@ -37,7 +37,7 @@ export default defineConfig({
     ],
   },
   test: {
-    projects: themes.map((theme) => ({
+    projects: themes.map((theme, index) => ({
       extends: true,
       resolve: {
         alias: {
@@ -48,6 +48,9 @@ export default defineConfig({
         name: theme,
         provide: { theme },
         globalSetup: ["./test/browser/expected-tokens.js"],
+        // One theme at a time. Two themes' browsers side by side lose pointer hover in one of
+        // their pages, which fails every hover test of that page's file.
+        sequence: { groupOrder: index },
       },
     })),
     include: ["test/browser/**/*.test.tsx"],
