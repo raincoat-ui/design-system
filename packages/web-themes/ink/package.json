@@ -1,6 +1,6 @@
 {
   "name": "@raincoat-ui/theme-ink",
-  "version": "0.1.0-next.2",
+  "version": "0.1.0-next.3",
   "description": "The Raincoat ink theme: every token as CSS custom properties, for light, dark, and high-contrast modes.",
   "license": "Apache-2.0",
   "homepage": "https://raincoat-ui.github.io/design-system/",
