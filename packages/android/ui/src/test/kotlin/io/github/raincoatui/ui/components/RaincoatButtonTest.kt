@@ -172,11 +172,17 @@ class RaincoatButtonTest(themeId: String) {
     /** Whether nothing is drawn here: the stage's canvas color shows. */
     private fun PixelMap.isClear(x: Int, y: Int): Boolean = has(canvas, x, y)
 
-    /** The rows of a column that have any paint. */
-    private fun PixelMap.paintedRows(x: Int): List<Int> = (0 until height).filter { !isClear(x, it) }
+    /**
+     * The rows of a column from the first that has paint to the last, as the SwiftUI tests
+     * measure them. A theme may draw a button's label or icon in the canvas color, such as white
+     * on a black button on a white page, so the paint is measured from edge to edge, not counted.
+     */
+    private fun PixelMap.paintedRows(x: Int): IntRange = (0 until height).filter { !isClear(x, it) }.span()
 
-    /** The columns of a row that have any paint. */
-    private fun PixelMap.paintedColumns(y: Int): List<Int> = (0 until width).filter { !isClear(it, y) }
+    /** The columns of a row from the first that has paint to the last. */
+    private fun PixelMap.paintedColumns(y: Int): IntRange = (0 until width).filter { !isClear(it, y) }.span()
+
+    private fun List<Int>.span(): IntRange = if (isEmpty()) IntRange.EMPTY else first()..last()
 
     /** The columns in which a color fills at least [rows] pixels. */
     private fun PixelMap.columnsFilledWith(color: TokenColor, rows: Int): List<Int> =
@@ -366,7 +372,7 @@ class RaincoatButtonTest(themeId: String) {
                 // round corners.)
                 val pixels = node.pixels()
                 assertEquals(where, visible, pixels.height)
-                assertEquals(where, visible, pixels.paintedRows(pixels.width / 4).size)
+                assertEquals(where, 0 until visible, pixels.paintedRows(pixels.width / 4))
             }
         }
     }
@@ -390,8 +396,8 @@ class RaincoatButtonTest(themeId: String) {
                 val node = compose.onNodeWithContentDescription("Delete page")
                 node.assertWidthIsEqualTo(side.dp).assertHeightIsEqualTo(side.dp)
                 val pixels = node.pixels()
-                assertEquals(where, side, pixels.paintedRows(side / 2).size)
-                assertEquals(where, side, pixels.paintedColumns(side / 2).size)
+                assertEquals(where, 0 until side, pixels.paintedRows(side / 2))
+                assertEquals(where, 0 until side, pixels.paintedColumns(side / 2))
 
                 val iconSize = when (size) {
                     ButtonSize.Sm -> button.iconSize.sm
@@ -538,7 +544,7 @@ class RaincoatButtonTest(themeId: String) {
         // At least three lines: the font decides exactly how many.
         assertTrue("height ${pixels.height}", pixels.height >= 3 * lineHeight)
         // All of it is inside the fill. (The middle column is measured: the corners are round.)
-        assertEquals(pixels.height, pixels.paintedRows(pixels.width / 2).size)
+        assertEquals(0 until pixels.height, pixels.paintedRows(pixels.width / 2))
     }
 
     @Test
@@ -575,7 +581,7 @@ class RaincoatButtonTest(themeId: String) {
         }
         val pixels = compose.onNodeWithText("Save").pixels()
         assertEquals(300, pixels.width)
-        assertEquals(300, pixels.paintedColumns(pixels.height / 2).size)
+        assertEquals(0 until 300, pixels.paintedColumns(pixels.height / 2))
     }
 
     @Test
