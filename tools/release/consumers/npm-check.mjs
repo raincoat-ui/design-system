@@ -50,9 +50,9 @@ const themes =
 const waitMinutes = Number(process.env.NPM_CHECK_WAIT_MINUTES ?? 30);
 
 const project = mkdtempSync(join(tmpdir(), "raincoat-npm-consumer-"));
-function attempt(command, args) {
+function attempt(command, args, cwd = project) {
   return spawnSync(command, args, {
-    cwd: project,
+    cwd,
     encoding: "utf8",
     shell: process.platform === "win32",
   });
@@ -83,15 +83,22 @@ const install = [
   "@types/react-dom@19.3.0",
   "typescript@7.0.2",
 ];
-if (mode === "--tarballs") {
-  run("npm", install);
-} else {
-  // Never answer from npm's cache: the question is what the registry serves now.
-  const fromRegistry = [...install, "--prefer-online"];
+/**
+ * Runs an npm install in `cwd`. From the registry it never answers from npm's cache, since the
+ * question is what the registry serves now, and it tries again until npm serves a version it
+ * has only just accepted, which can take minutes for each new package.
+ */
+async function npmInstall(args, cwd = project) {
+  if (mode === "--tarballs") {
+    const result = attempt("npm", args, cwd);
+    if (result.status !== 0) fail("npm", args, result);
+    return;
+  }
+  const fromRegistry = [...args, "--prefer-online"];
   const deadline = Date.now() + waitMinutes * 60_000;
   for (;;) {
-    const result = attempt("npm", fromRegistry);
-    if (result.status === 0) break;
+    const result = attempt("npm", fromRegistry, cwd);
+    if (result.status === 0) return;
     const output = `${result.stdout}${result.stderr}`;
     // E404: npm does not serve the package. ETARGET: it serves the package without the version.
     const notServedYet = /\b(E404|ETARGET)\b/.test(output) && output.includes("@raincoat-ui");
@@ -104,6 +111,7 @@ if (mode === "--tarballs") {
     await new Promise((resolve) => setTimeout(resolve, 20_000));
   }
 }
+await npmInstall(install);
 
 writeFileSync(
   join(project, "run.mjs"),
@@ -175,13 +183,7 @@ for (const theme of themes) {
   const name = `@raincoat-ui/theme-${theme}`;
   const alone = mkdtempSync(join(tmpdir(), `raincoat-theme-${theme}-`));
   writeFileSync(join(alone, "package.json"), JSON.stringify({ name: "consumer", private: true }));
-  const args = ["install", "--no-audit", "--no-fund", spec(name)];
-  const result = spawnSync("npm", mode === "--tarballs" ? args : [...args, "--prefer-online"], {
-    cwd: alone,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
-  if (result.status !== 0) fail("npm", args, result);
+  await npmInstall(["install", "--no-audit", "--no-fund", spec(name)], alone);
   const installed = readdirSync(join(alone, "node_modules/@raincoat-ui"));
   if (installed.join() !== `theme-${theme}`) {
     console.error(`${name} brought other Raincoat packages with it: ${installed.join(", ")}`);
