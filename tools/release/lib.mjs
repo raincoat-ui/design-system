@@ -69,10 +69,32 @@ export function releaseVersion(root = repoRoot) {
 }
 
 /** The version in gradle.properties. */
-export function gradleVersion(root = repoRoot) {
-  const match = /^version=(.+)$/m.exec(readFileSync(join(root, "gradle.properties"), "utf8"));
-  if (!match) throw new Error("gradle.properties has no version line");
-  return match[1].trim();
+/**
+ * The places that name Raincoat's version but that Changesets does not write: Gradle's
+ * properties file, and the install commands in the READMEs. In each pattern, the second group
+ * is the version.
+ */
+export const VERSION_MENTIONS = [
+  { file: "gradle.properties", pattern: /^(version=)(.+)$/gm },
+  {
+    file: "packages/android/README.md",
+    pattern: /(the prerelease `|io\.github\.raincoat-ui:ui:)([^`"\s]+)/g,
+  },
+  { file: "packages/tokens/README.md", pattern: /(@raincoat-ui\/tokens@)([^`"\s]+)/g },
+];
+
+/**
+ * Each place that names the version, with the versions it names.
+ * @returns {{ file: string, pattern: RegExp, versions: string[] }[]}
+ */
+export function versionMentions(root = repoRoot) {
+  return VERSION_MENTIONS.map(({ file, pattern }) => ({
+    file,
+    pattern,
+    versions: [...readFileSync(join(root, file), "utf8").matchAll(pattern)].map((match) =>
+      match[2].trim(),
+    ),
+  }));
 }
 
 /**
