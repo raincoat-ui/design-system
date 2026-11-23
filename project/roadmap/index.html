@@ -239,7 +239,40 @@ its form before React hydrates the page, and a Server Component can render a bus
 Button. npm published it through trusted publishing, with no token.</p>
 </li>
 </ul>
-<p>M2, a second and deliberately different theme, is in progress. What it built:</p>
+<p>M2 was completed on 2026-11-23. Evidence for each exit criterion:</p>
+<ul>
+<li><strong>The change touches only the new theme directory and generated files.</strong>
+<a href="https://github.com/raincoat-ui/design-system/pull/41">Pull request 41</a> added Ink, a theme in
+black and white, with red kept for danger and every corner square. Of its 32 files, 15 are the
+theme’s directory, <code dir="auto">themes/ink/</code>, and 15 were written by <code dir="auto">pnpm tokens:build</code>: the npm package,
+the Swift target and its contract test, the Gradle module, the Swift package manifest, and the
+theme lists the component tests run over. The other two are its changeset and the lockfile’s
+entry for the new npm package. No code changed in the pipeline, the components, or the tests.
+Ink found two tests that held only for the base theme, and
+<a href="https://github.com/raincoat-ui/design-system/pull/42">pull request 42</a> fixed them before it
+merged.</li>
+<li><strong>Every test matrix extends automatically.</strong> On pull request 41, with no workflow edited,
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45056014560">CI</a> ran every test a
+theme can change in both themes: the React components in Chromium, the SwiftUI and Compose
+components and the Swift and Kotlin contract tests, a reference app job for each platform and
+theme (six), and the release rehearsal. Every job passed.</li>
+<li><strong>Each theme installs separately.</strong>
+<a href="https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.3">0.1.0-next.3</a> was
+published on 2026-11-22 with Ink in it: <code dir="auto">@raincoat-ui/theme-ink</code> on npm, <code dir="auto">theme-ink</code> in the
+Maven repository, and the product <code dir="auto">RaincoatThemeInk</code> in the Swift mirror.
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45141345159">Its last release run</a>
+installed each theme’s npm package from the registry into an empty project of its own, and
+found no other theme there. Before publishing, the release built each theme’s Swift product on
+its own from the mirror it published, and read each theme’s Maven POM, which brings no
+Raincoat module but the token types.</li>
+<li><strong>A theme kept outside this repository builds with the published CLI.</strong> The same run installed
+<code dir="auto">@raincoat-ui/tokens</code> 0.1.0-next.3 from npm into a theme pack outside the checkout, with a
+fictional theme, and ran its command line there: lint, contrast, and build. The Swift package
+it built passed its tests against the published Swift mirror, and its Gradle build against
+the published Maven repository. The reference apps then passed their tests in both themes
+with the release installed from npm, the Maven repository, and the Swift mirror.</li>
+</ul>
+<p>What M2 built, a second theme that needed no code:</p>
 <ul>
 <li><strong>Themes are directories</strong> (<a href="https://github.com/raincoat-ui/design-system/blob/main/docs/adr/0018-theme-directories-and-theme-packs.md">ADR 0018</a>). A
 theme is <code dir="auto">themes/&lt;id&gt;/</code>: a <code dir="auto">theme.json</code>, a <code dir="auto">brand.md</code>, and files that give new values to the
@@ -255,15 +288,10 @@ Changesets group find themes by themselves.</li>
 the React, SwiftUI, and Compose component tests in every color mode and density, the reference
 apps on a simulator, an emulator, and in Chromium, and the release rehearsal, which installs
 each theme’s npm package, Swift product, and Maven module on its own.</li>
-<li><strong>The token build is ready to publish</strong> as <code dir="auto">@raincoat-ui/tokens</code>, with its base source inside. Run in
-a repository of its own, it builds that repository’s themes into a theme pack. The release
+<li><strong>The token build is published</strong> as <code dir="auto">@raincoat-ui/tokens</code>, with its base source inside. Run
+in a repository of its own, it builds that repository’s themes into a theme pack. The release
 rehearsal builds a fictional pack (<code dir="auto">tools/release/consumers/theme-pack</code>) with the packed
 command line from outside the checkout, and tests the Swift package and the Gradle build it
 produces against the staged Swift mirror and Maven repository.</li>
 </ul>
-<p>Still to show before M2 is complete: a second theme added by a pull request that touches only
-its directory, generated files, and its changeset, with CI green and every matrix extended to
-it; and a prerelease that publishes <code dir="auto">@raincoat-ui/tokens</code> and the new theme, which as new npm
-names need the one-time token in the runbook, after which the release workflow builds the theme
-pack with the published command line.</p>
 </div><footer class="sl-flex astro-427jk743"><div class="meta sl-flex astro-427jk743"></div><div class="pagination-links print:hidden astro-stfaxj7g" dir="ltr"><a href="/design-system/" rel="prev" class="astro-stfaxj7g"><svg aria-hidden="true" class="astro-stfaxj7g astro-iplovrwm" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-stfaxj7g">Previous<br class="astro-stfaxj7g"><span class="link-title astro-stfaxj7g">Overview</span></span></a><a href="/design-system/foundations/color/" rel="next" class="astro-stfaxj7g"><svg aria-hidden="true" class="astro-stfaxj7g astro-iplovrwm" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-stfaxj7g">Next<br class="astro-stfaxj7g"><span class="link-title astro-stfaxj7g">Color</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

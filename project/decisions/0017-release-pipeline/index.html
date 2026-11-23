@@ -84,7 +84,8 @@ Building the pipeline for the first prerelease settled how.</p>
 Swift package and the Android modules each have a private <code dir="auto">package.json</code> that is never
 published (<code dir="auto">@raincoat-ui/swift</code>, <code dir="auto">@raincoat-ui/android</code>), so that their changes need changesets,
 get changelogs, and move with the same version. <code dir="auto">tools/release/sync-versions.mjs</code> copies the
-version into <code dir="auto">gradle.properties</code>; the Swift version is the mirror’s tag.</p>
+version into <code dir="auto">gradle.properties</code> and the install commands in the READMEs; the Swift version is
+the mirror’s tag.</p>
 <p><strong>What is published.</strong></p>
 <table>
 <thead>
