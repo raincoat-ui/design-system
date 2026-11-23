@@ -1,6 +1,6 @@
 {
   "name": "@raincoat-ui/tokens",
-  "version": "0.1.0-next.3",
+  "version": "0.1.0-next.4",
   "description": "The Raincoat token build: it checks a token source and its themes, checks their contrast, and generates each platform's code, for this repository and for themes kept outside it.",
   "license": "Apache-2.0",
   "homepage": "https://raincoat-ui.github.io/design-system/",
