@@ -81,12 +81,12 @@ Raincoat in awesome-design-systems.
 
 ## Capabilities and Constraints
 
-- **Today (0.1.0-next.2; milestone 1 complete, milestone 2 in progress):** the token source
-  with its linter and contrast checker; the generated web theme stylesheet, Swift package, and
-  Kotlin modules; and a Button on all three platforms, published to all three registries and
-  tested in the reference apps from each of them. Themes beside the base are directories under
-  `themes/`, built and tested on every platform by the same pipeline (ADR 0018), and the token
-  build is ready to publish for theme packs kept outside the repository.
+- **Today (0.1.0-next.3; milestone 2 complete):** the token source with its linter and contrast
+  checker; the generated web theme stylesheet, Swift package, and Kotlin modules; and a Button
+  on all three platforms, published to all three registries and tested in the reference apps
+  from each of them. Two themes, the base and Ink: a theme is a directory under `themes/`,
+  built, tested, and published on every platform by the same pipeline (ADR 0018). The token
+  build is published as `@raincoat-ui/tokens`, for theme packs kept outside the repository.
 - **v1 component set:** Button, Input, Card, Dialog/Sheet, Tabs, Toast, Typography. Select,
   Checkbox, Radio, Switch, Menu, Tooltip, date picker, table, and navigation bars follow in 1.x.
 - **Token model:** primitive, semantic, and component tiers. Every theme has four color modes
@@ -129,10 +129,15 @@ Raincoat in awesome-design-systems.
 
 ## Evidence on Hand
 
-- The prereleases 0.1.0-next.0, 0.1.0-next.1, and 0.1.0-next.2 on GitHub Releases, with
-  provenance attestations and a bill of materials. 0.1.0-next.1 and 0.1.0-next.2 are on npm, the
-  Maven repository, and the Swift mirror; 0.1.0-next.2 was published to npm through trusted
-  publishing, with no token, and its release run passed every reference app's tests.
+- The prereleases 0.1.0-next.0 to 0.1.0-next.3 on GitHub Releases, with provenance
+  attestations and a bill of materials. From 0.1.0-next.1 on, each is on npm, the Maven
+  repository, and the Swift mirror. 0.1.0-next.2 was published to npm through trusted
+  publishing, with no token; 0.1.0-next.3 brought two new npm packages, the Ink theme and the
+  token build, which needed a token for their first publish. The release runs of both passed
+  every reference app's tests, in every theme.
+- A second theme added with no code (pull request 41, Ink), and a theme pack kept outside the
+  repository, built with the published token build and tested against the published Swift
+  mirror and Maven repository: the evidence for milestone 2 in `docs/roadmap.md`.
 - The contrast table on the docs site (`foundations/contrast`): every declared color pair in
   every mode, all checks passing.
 - Platform test evidence: the reference apps' accessibility audits, the pixel tests of the

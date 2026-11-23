@@ -122,7 +122,40 @@ What M1 built, one token source driving all three platforms:
   its form before React hydrates the page, and a Server Component can render a busy or disabled
   Button. npm published it through trusted publishing, with no token.
 
-M2, a second and deliberately different theme, is in progress. What it built:
+M2 was completed on 2026-11-23. Evidence for each exit criterion:
+
+- **The change touches only the new theme directory and generated files.**
+  [Pull request 41](https://github.com/raincoat-ui/design-system/pull/41) added Ink, a theme in
+  black and white, with red kept for danger and every corner square. Of its 32 files, 15 are the
+  theme's directory, `themes/ink/`, and 15 were written by `pnpm tokens:build`: the npm package,
+  the Swift target and its contract test, the Gradle module, the Swift package manifest, and the
+  theme lists the component tests run over. The other two are its changeset and the lockfile's
+  entry for the new npm package. No code changed in the pipeline, the components, or the tests.
+  Ink found two tests that held only for the base theme, and
+  [pull request 42](https://github.com/raincoat-ui/design-system/pull/42) fixed them before it
+  merged.
+- **Every test matrix extends automatically.** On pull request 41, with no workflow edited,
+  [CI](https://github.com/raincoat-ui/design-system/actions/runs/45056014560) ran every test a
+  theme can change in both themes: the React components in Chromium, the SwiftUI and Compose
+  components and the Swift and Kotlin contract tests, a reference app job for each platform and
+  theme (six), and the release rehearsal. Every job passed.
+- **Each theme installs separately.**
+  [0.1.0-next.3](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.3) was
+  published on 2026-11-22 with Ink in it: `@raincoat-ui/theme-ink` on npm, `theme-ink` in the
+  Maven repository, and the product `RaincoatThemeInk` in the Swift mirror.
+  [Its last release run](https://github.com/raincoat-ui/design-system/actions/runs/45141345159)
+  installed each theme's npm package from the registry into an empty project of its own, and
+  found no other theme there. Before publishing, the release built each theme's Swift product on
+  its own from the mirror it published, and read each theme's Maven POM, which brings no
+  Raincoat module but the token types.
+- **A theme kept outside this repository builds with the published CLI.** The same run installed
+  `@raincoat-ui/tokens` 0.1.0-next.3 from npm into a theme pack outside the checkout, with a
+  fictional theme, and ran its command line there: lint, contrast, and build. The Swift package
+  it built passed its tests against the published Swift mirror, and its Gradle build against
+  the published Maven repository. The reference apps then passed their tests in both themes
+  with the release installed from npm, the Maven repository, and the Swift mirror.
+
+What M2 built, a second theme that needed no code:
 
 - **Themes are directories** ([ADR 0018](adr/0018-theme-directories-and-theme-packs.md)). A
   theme is `themes/<id>/`: a `theme.json`, a `brand.md`, and files that give new values to the
@@ -138,14 +171,8 @@ M2, a second and deliberately different theme, is in progress. What it built:
   the React, SwiftUI, and Compose component tests in every color mode and density, the reference
   apps on a simulator, an emulator, and in Chromium, and the release rehearsal, which installs
   each theme's npm package, Swift product, and Maven module on its own.
-- **The token build is ready to publish** as `@raincoat-ui/tokens`, with its base source inside. Run in
-  a repository of its own, it builds that repository's themes into a theme pack. The release
+- **The token build is published** as `@raincoat-ui/tokens`, with its base source inside. Run
+  in a repository of its own, it builds that repository's themes into a theme pack. The release
   rehearsal builds a fictional pack (`tools/release/consumers/theme-pack`) with the packed
   command line from outside the checkout, and tests the Swift package and the Gradle build it
   produces against the staged Swift mirror and Maven repository.
-
-Still to show before M2 is complete: a second theme added by a pull request that touches only
-its directory, generated files, and its changeset, with CI green and every matrix extended to
-it; and a prerelease that publishes `@raincoat-ui/tokens` and the new theme, which as new npm
-names need the one-time token in the runbook, after which the release workflow builds the theme
-pack with the published command line.

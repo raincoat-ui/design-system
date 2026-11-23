@@ -15,7 +15,6 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 import {
   compareVersions,
-  gradleVersion,
   isPrerelease,
   NPM_PACKAGES,
   readJson,
@@ -23,6 +22,7 @@ import {
   repoRoot,
   shippedChangesSince,
   VERSIONED,
+  versionMentions,
 } from "./lib.mjs";
 import { add, artifacts, metadata } from "./maven-repo.mjs";
 import { entries, notes } from "./notes.mjs";
@@ -102,9 +102,17 @@ test("every changeset, waiting or already in a prerelease, has its frontmatter",
   }
 });
 
-test("every package has the same version, and Gradle has it too", () => {
+test("every package has the same version, and every place that names it agrees", () => {
   // releaseVersion throws when the packages disagree.
-  assert.equal(gradleVersion(), releaseVersion(), "run: node tools/release/sync-versions.mjs");
+  const version = releaseVersion();
+  for (const { file, versions } of versionMentions()) {
+    assert.ok(versions.length > 0, `${file} no longer names the version`);
+    assert.deepEqual(
+      [...new Set(versions)],
+      [version],
+      `${file}: run node tools/release/sync-versions.mjs`,
+    );
+  }
 });
 
 test("exactly the packages meant for npm are publishable, each with the license text", () => {

@@ -13,8 +13,8 @@ on top.
 
 **Documentation: <https://raincoat-ui.github.io/design-system/>**
 
-> **Status: milestone 1 complete; milestone 2, a second theme, in progress.** One token source
-> drives a Button on the web, iOS, and Android, in every theme, published as prereleases to npm,
+> **Status: milestone 2 complete; milestone 3, the v1 components, next.** One token source
+> drives a Button on the web, iOS, and Android, in two themes, published as prereleases to npm,
 > the Maven repository, and the Swift mirror. The
 > [releases page](https://github.com/raincoat-ui/design-system/releases) says which registries
 > each one has reached, and the [roadmap](docs/roadmap.md) what each milestone delivers.
