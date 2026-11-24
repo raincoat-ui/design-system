@@ -164,12 +164,11 @@
         let withBody = try Drawing(
             RaincoatCard("Storage", level: 3) { Text("4.2 GB of 15 GB used").raincoatText() }, theme: theme
         )
+        // The padding is inside the outline.
+        let inset = set.card.border.width + set.card.padding
+        #expect(abs(Double(alone.height) - (2 * inset + title)) < 2, "a title alone: \(alone.height)")
         #expect(
-            abs(Double(alone.height) - (2 * set.card.padding + title)) < 2,
-            "a title alone: \(alone.height)"
-        )
-        #expect(
-            abs(Double(withBody.height) - (2 * set.card.padding + title + set.card.gap + body)) < 3,
+            abs(Double(withBody.height) - (2 * inset + title + set.card.gap + body)) < 3,
             "a title and a body: \(withBody.height)"
         )
     }
@@ -193,9 +192,9 @@
         let down = drawing.rows(with: magenta, inColumn: drawing.width / 2)
         #expect(down.first == border, "from the top outline: \(down.first ?? -1)")
         #expect(down.last == 39, "40 points tall: \(down.last ?? -1)")
-        // The title is the gap below it, and the padding below the title.
+        // The title is the gap below it, and the padding and the outline below the title.
         #expect(
-            abs(Double(drawing.height) - (40 + card.gap + title + card.padding)) < 2,
+            abs(Double(drawing.height) - (40 + card.gap + title + card.padding + card.border.width)) < 2,
             "the height: \(drawing.height)"
         )
         // The top corners follow the card's.

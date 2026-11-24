@@ -51,7 +51,8 @@
             let shape = RoundedRectangle(cornerRadius: card.radius, style: .continuous)
             let easing = card.transition.easing
 
-            let surface = CardStack(padding: card.padding, gap: card.gap) {
+            // The padding is inside the outline, as on the web.
+            let surface = CardStack(padding: card.border.width + card.padding, gap: card.gap) {
                 // The title comes first, so that VoiceOver reads it first; the media is drawn
                 // above it.
                 title
