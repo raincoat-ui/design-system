@@ -2,10 +2,10 @@
 // the server renders and React then hydrates. The forms below are rendered by this Server
 // Component alone: their Buttons reach the browser as HTML and are never hydrated, and the forms
 // post to Server Actions, so they work with JavaScript off.
-import { Button } from "@raincoat-ui/react";
+import { Button, Input } from "@raincoat-ui/react";
 import { saveDraft, sendInvitation } from "./actions";
 import { ButtonScreen } from "./ButtonScreen";
-import { Column, Field, Row, Section } from "./ui";
+import { Column, Row, Section } from "./ui";
 
 type Search = { saved?: string; invited?: string };
 
@@ -23,7 +23,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
       <Section title="In a form, from a Server Component">
         <form action={saveDraft}>
           <Column>
-            <Field label="Title" name="title" defaultValue="Spring launch" />
+            <Input label="Title" name="title" defaultValue="Spring launch" />
             <Row>
               <Button type="submit" variant="primary">
                 Save draft
@@ -43,7 +43,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
       <Section title="Busy, from a Server Component">
         <form action={sendInvitation}>
           <Column>
-            <Field label="Email" name="email" type="email" defaultValue="ana@example.com" />
+            <Input label="Email" name="email" type="email" defaultValue="ana@example.com" />
             <Button type="submit" variant="primary" loading>
               Send invitation
             </Button>
