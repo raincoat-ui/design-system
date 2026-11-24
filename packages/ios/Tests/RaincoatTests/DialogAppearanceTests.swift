@@ -43,11 +43,14 @@ import Testing
         #expect(look.description == TextAppearance(set, variant: .bodyMd, color: .default).style, "description")
     }
 
-    @Test func whenEverythingFitsNothingScrolls() {
+    @Test func whenEverythingFitsTheDialogIsOneScrollingAreaThatDoesNotMove() {
+        // Text that grows then goes into the scrolling area, not past the sheet's edge.
         let scrolling = DialogScrolling(
             available: 600, header: 100, body: 300, footer: 80, bodyLine: 24, bodySpace: 16
         )
-        #expect(scrolling == .body, "everything fits")
+        #expect(scrolling == .whole, "everything fits")
+        let bodiless = DialogScrolling(available: 600, header: 100, body: 0, footer: 80, bodyLine: 24, bodySpace: 0)
+        #expect(bodiless == .whole, "everything fits, with no body")
     }
 
     @Test func aLongBodyScrollsBetweenTheHeaderAndTheFooterWhileItHasRoomForThreeLines() {

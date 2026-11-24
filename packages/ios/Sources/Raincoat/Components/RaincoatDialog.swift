@@ -25,6 +25,8 @@
         /// It is the system sheet, as tall as its content, with the theme's fill, title, and
         /// spaces. The body scrolls between the header and the footer when it does not fit, and
         /// the whole dialog scrolls when the screen is too short for three lines of the body.
+        /// While everything fits, the dialog is one scrolling area that does not move, so that
+        /// text that grows is never cut off before the sheet grows with it.
         /// The footer's buttons sit at the trailing edge, the primary action last, and stack,
         /// the primary action first, when they do not fit in a row.
         ///
@@ -226,7 +228,7 @@
             let sections = DialogSections(heading: heading, close: close, content: content, actions: actions)
             let ideal = headerHeight + bodyHeight + footerHeight
             // As tall as the content, once it is measured; the system keeps a sheet within the
-            // screen, and the body scrolls in what is left.
+            // screen, and the dialog scrolls in what it has (DialogScrolling).
             let detent: PresentationDetent = ideal > 0 ? .height(ideal) : .large
             GeometryReader { proxy in
                 let scrolling = DialogScrolling(
@@ -239,8 +241,9 @@
                 )
                 let wholeScrolls = scrolling == .whole
                 // While the body scrolls, the header and the footer stay in place, with a hairline
-                // at an edge while content is beneath it. On a screen too short for three lines of
-                // the body, everything scrolls, and they move into the scrolling area.
+                // at an edge while content is beneath it. Otherwise they are in the one scrolling
+                // area with the body: while everything fits, nothing in it is held to a height, so
+                // text that grows before the sheet does goes into it instead of being cut off.
                 let dividers =
                     wholeScrolls
                     ? DialogDividers.none
@@ -277,6 +280,8 @@
                         }
                         .coordinateSpace(.named(dialogBodySpace))
                         .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { viewport = $0 }
+                        // Content that fits does not move under a drag, which moves the sheet.
+                        .scrollBounceBehavior(.basedOnSize)
                     }
                     if !wholeScrolls {
                         sections.footerSection(look, divider: dividers.overFooter)

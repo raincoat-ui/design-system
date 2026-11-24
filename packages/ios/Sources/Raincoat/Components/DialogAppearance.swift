@@ -42,11 +42,12 @@ struct DialogAppearance: Hashable, Sendable {
     var halfGap: Double { gap / 2 }
 }
 
-/// What scrolls in a dialog that does not fit.
+/// How a dialog's sections are arranged to scroll.
 enum DialogScrolling: Hashable, Sendable {
     /// The header and the footer stay in place, and the body scrolls between them.
     case body
-    /// The whole dialog scrolls as one, header and footer included.
+    /// The whole dialog is one scrolling area, header and footer included. While everything
+    /// fits, it does not move.
     case whole
 
     /// - Parameters:
@@ -57,12 +58,14 @@ enum DialogScrolling: Hashable, Sendable {
     ///   - bodyLine: The height of one line of the body's text.
     ///   - bodySpace: The body's own space above and below its content.
     ///
-    /// When everything fits, nothing scrolls, and the body is said to. Otherwise the body scrolls
-    /// while it has room for three lines of text; in a window too short for that, as at the
-    /// largest text sizes, the whole dialog does.
+    /// The body scrolls between the header and the footer only when it has more than fits, and
+    /// room for three lines of text. Otherwise the dialog is one scrolling area: when everything
+    /// fits, so that text that grows, as with a larger text size, is never cut off before the
+    /// sheet grows with it; and in a window too short for three lines of the body, as at the
+    /// largest text sizes, so that every part of the dialog can be reached.
     init(available: Double, header: Double, body: Double, footer: Double, bodyLine: Double, bodySpace: Double) {
         if header + body + footer <= available + 0.5 {
-            self = .body
+            self = .whole
         } else if body > 0, available - header - footer >= 3 * bodyLine + bodySpace - 0.5 {
             self = .body
         } else {
