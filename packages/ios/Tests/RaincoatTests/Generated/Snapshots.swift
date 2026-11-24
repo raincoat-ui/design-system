@@ -191,3 +191,57 @@ let buttonExamples: [SpecExample<ButtonExampleProperties>] = [
         ]
     ),
 ]
+
+/// The properties of one Toast in an example.
+struct ToastExampleProperties: Sendable {
+    let action: Bool
+}
+
+/// The examples of specs/components/toast/spec.yaml, with their text.
+let toastExamples: [SpecExample<ToastExampleProperties>] = [
+    SpecExample(
+        id: "message",
+        instances: [
+            ToastExampleProperties(action: false),
+        ],
+        text: [
+            "en": ["message": "Message archived"],
+            "vi": ["message": "Đã lưu trữ thư"],
+            "zh-Hans": ["message": "邮件已归档"],
+            "ja": ["message": "メッセージをアーカイブしました"],
+            "ko": ["message": "메시지를 보관했습니다"],
+            "ar": ["message": "تمت أرشفة الرسالة"],
+            "en-XA": ["message": "[Ṁéššåĝé åŕçĥîṽéð one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "with-action",
+        instances: [
+            ToastExampleProperties(action: true),
+        ],
+        text: [
+            "en": ["message": "Address deleted", "action-label": "Undo", "close-label": "Close"],
+            "vi": ["message": "Đã xóa địa chỉ", "action-label": "Hoàn tác", "close-label": "Đóng"],
+            "zh-Hans": ["message": "地址已删除", "action-label": "撤销", "close-label": "关闭"],
+            "ja": ["message": "住所を削除しました", "action-label": "元に戻す", "close-label": "閉じる"],
+            "ko": ["message": "주소를 삭제했습니다", "action-label": "실행 취소", "close-label": "닫기"],
+            "ar": ["message": "تم حذف العنوان", "action-label": "تراجع", "close-label": "إغلاق"],
+            "en-XA": ["message": "[Åððŕéšš ðéļéţéð one]", "action-label": "[Ûñðö]", "close-label": "[Çļöšé]"],
+        ]
+    ),
+    SpecExample(
+        id: "long-message",
+        instances: [
+            ToastExampleProperties(action: true),
+        ],
+        text: [
+            "en": ["message": "Messages older than one year were moved from Archive to the Deleted folder", "action-label": "Undo", "close-label": "Close"],
+            "vi": ["message": "Các thư cũ hơn một năm đã được chuyển từ Lưu trữ sang thư mục Đã xóa", "action-label": "Hoàn tác", "close-label": "Đóng"],
+            "zh-Hans": ["message": "超过一年的邮件已从归档移至“已删除”文件夹", "action-label": "撤销", "close-label": "关闭"],
+            "ja": ["message": "1年以上前のメッセージをアーカイブから削除済みフォルダに移動しました", "action-label": "元に戻す", "close-label": "閉じる"],
+            "ko": ["message": "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다", "action-label": "실행 취소", "close-label": "닫기"],
+            "ar": ["message": "نُقلت الرسائل التي مضى عليها أكثر من عام من الأرشيف إلى مجلد المحذوفات", "action-label": "تراجع", "close-label": "إغلاق"],
+            "en-XA": ["message": "[Ṁéššåĝéš öļðéŕ ţĥåñ öñé ýéåŕ ŵéŕé ɱöṽéð ƒŕöɱ Åŕçĥîṽé ţö ţĥé Ðéļéţéð ƒöļðéŕ one two three four five six]", "action-label": "[Ûñðö]", "close-label": "[Çļöšé]"],
+        ]
+    ),
+]
