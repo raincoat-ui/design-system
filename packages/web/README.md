@@ -190,7 +190,9 @@ Every other prop of the element is passed through, including `ref`.
   have. Text cut short is still read in full by assistive technology. Headings balance their
   lines where the browser can.
 - **Text from people.** Set `dir="auto"` on the Text that holds a name or a message, so that its
-  direction comes from its first strong character.
+  direction comes from its first strong character. Inside a sentence, put the name in a
+  `<Text as="span" dir="auto">`: that also isolates it, so the punctuation and numbers beside it
+  do not join it.
 - **Languages.** Text aligns to the start edge. Lines break strictly in Japanese and between
   whole words in Korean, read from the `lang` attribute of the text or of any element around it.
 - **Margins.** Neither has a margin: spacing between paragraphs and headings is your layout's.

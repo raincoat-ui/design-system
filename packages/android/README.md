@@ -165,7 +165,11 @@ RaincoatText(message.preview, maxLines = 2)
 - **Long text wraps.** A heading is never cut short. Text cut short by `maxLines` is still read
   in full by TalkBack.
 - **Direction.** Each paragraph takes its direction from its first strong character, and
-  aligns to its start.
+  aligns to its start. A name or a message inside a sentence must be isolated, or the
+  punctuation and numbers beside it join it: `"Message from ⁨$name⁩"`, or
+  `BidiFormatter.getInstance().unicodeWrap(name)` before it goes into `stringResource`.
+- **Line breaking.** Lines break by the strict rules, and Korean between whole words, in the
+  person's language. Korean needs Android 13 for that. Every component's text does the same.
 
 Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),

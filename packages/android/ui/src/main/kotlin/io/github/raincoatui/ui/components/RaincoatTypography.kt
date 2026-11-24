@@ -88,8 +88,9 @@ private fun TypographyText(text: String, appearance: TextAppearance, modifier: M
     BasicText(
         text = text,
         modifier = modifier,
-        // Every line is exactly the token's line height. Start is the right in right-to-left
-        // text; the direction of each paragraph comes from its first strong character.
+        // Every line is exactly the token's line height, and lines break by the rules of the
+        // person's language (toTextStyle). Start is the right in right-to-left text; the
+        // direction of each paragraph comes from its first strong character.
         style = appearance.style.toTextStyle().copy(
             color = appearance.color.toColor(),
             textAlign = TextAlign.Start,
