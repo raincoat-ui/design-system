@@ -262,6 +262,81 @@ Text and Heading follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the SwiftUI and Compose versions follow too.
 
+## Dialog, AlertDialog, and Sheet
+
+```tsx
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+  Button, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle, DialogTrigger,
+} from "@raincoat-ui/react";
+
+<Dialog>
+  <DialogTrigger asChild><Button>Rename</Button></DialogTrigger>
+  <DialogContent initialFocus={nameField}>
+    <DialogHeader>
+      <DialogTitle level={2}>Rename file</DialogTitle>
+      <DialogDescription>Everyone the file is shared with sees the new name.</DialogDescription>
+    </DialogHeader>
+    <DialogBody>{/* fields */}</DialogBody>
+    <DialogFooter>
+      <DialogClose asChild><Button>Cancel</Button></DialogClose>
+      <Button variant="primary" type="submit">Rename</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+<AlertDialog>
+  <AlertDialogTrigger asChild><Button variant="danger">Delete</Button></AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle level={2}>Delete this address?</AlertDialogTitle>
+      <AlertDialogDescription>It is removed from your account.</AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction destructive onClick={remove}>Delete address</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+`Sheet` has the same parts (`SheetTrigger`, `SheetContent`, `SheetHeader`, `SheetTitle`,
+`SheetDescription`, `SheetBody`, `SheetFooter`, `SheetClose`).
+
+| Prop                   | On                               | Type                         | Default    | Notes                                                                    |
+| ---------------------- | -------------------------------- | ---------------------------- | ---------- | ------------------------------------------------------------------------ |
+| `open`, `onOpenChange` | `Dialog`, `AlertDialog`, `Sheet` |                              |            | Control it, to keep it open while it holds unsaved changes               |
+| `size`                 | `DialogContent`                  | `"sm" \| "md" \| "lg"`       | `"md"`     | Its width. On a narrower window, it spans the window less a margin       |
+| `edge`                 | `SheetContent`                   | `"bottom" \| "end"`          | `"bottom"` | An end sheet comes from the bottom on a window less than twice its width |
+| `closeLabel`           | `DialogContent`, `SheetContent`  | `string`                     |            | Shows the close button, with this name. Give it when there is no Cancel  |
+| `initialFocus`         | `DialogContent`, `SheetContent`  | `RefObject<HTMLElement>`     | The title  | Where focus goes on open, such as the first field of a short form        |
+| `returnFocus`          | every content                    | `RefObject<HTMLElement>`     |            | Where focus goes on close when the control that opened it is gone        |
+| `container`            | every content                    | `HTMLElement`                | `body`     | Where it is rendered                                                     |
+| `level`                | every title                      | `1 \| 2 \| 3 \| 4 \| 5 \| 6` | Required   | The title's heading level. It looks the same at every level              |
+| `destructive`          | `AlertDialogAction`              | `boolean`                    | `false`    | A danger button, for an action that destroys something                   |
+
+- **Focus.** It moves to the title when the dialog opens, or to `initialFocus`, stays inside,
+  and returns to the control that opened the dialog. An alert dialog starts on Cancel.
+- **Closing.** Escape, a click on the scrim, the close button, and anything in a `DialogClose`
+  close a dialog or a sheet. An alert dialog closes on Escape and its buttons, never the scrim.
+  There is no swipe to close on the web.
+- **Scrolling.** The body scrolls between the header and the footer, with a hairline while
+  content is beneath them; a body that scrolls and holds no control takes focus, so that the
+  keyboard can scroll it. In a window too short for three lines of it, the whole dialog scrolls.
+- **The footer's buttons** sit at the end edge, Cancel first and the primary action last. They
+  stack, the primary action on top, when they do not fit in a row.
+- **Theme and direction.** A dialog is rendered at the end of the page's body, so it takes the
+  theme, density, and direction of the root element. Set `data-theme`, `data-density`, and
+  `dir` there, or pass `container`.
+- **Motion.** The scrim and a dialog fade; a sheet slides in from its edge. With reduced motion,
+  everything fades. A dialog stacks above the page as shadcn/ui's overlays do (`z-index: 50`).
+
+The Dialog, AlertDialog, and Sheet follow the
+[Dialog spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/dialog/spec.yaml),
+which the SwiftUI and Compose versions follow too.
+
 ## Tabs
 
 ```tsx
