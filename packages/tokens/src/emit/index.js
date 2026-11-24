@@ -21,7 +21,14 @@ import {
   webThemeReadme,
 } from "./scaffold.js";
 import { pascal } from "./shared.js";
-import { specsKotlin, specsSwift, specsTypeScript } from "./spec.js";
+import {
+  snapshotsKotlin,
+  snapshotsSwift,
+  snapshotsTypeScript,
+  specsKotlin,
+  specsSwift,
+  specsTypeScript,
+} from "./spec.js";
 import {
   expectedSwift,
   swiftTheme,
@@ -101,6 +108,19 @@ export function outputs(root) {
       content: specsKotlin(root),
     },
     { file: "packages/web/src/generated/specs.ts", content: specsTypeScript(root) },
+    // The snapshot matrix and the examples' text, for each platform's snapshot tests.
+    {
+      file: "packages/web/test/snapshots/generated/snapshots.ts",
+      content: snapshotsTypeScript(root),
+    },
+    {
+      file: "packages/ios/Tests/RaincoatTests/Generated/Snapshots.swift",
+      content: snapshotsSwift(root),
+    },
+    {
+      file: `packages/android/ui/${KOTLIN_TEST}/ui/generated/Snapshots.kt`,
+      content: snapshotsKotlin(root),
+    },
     { file: "packages/ios/Package.swift", content: packageSwift(ids) },
     { file: "packages/ios/Tests/RaincoatTests/Generated/Themes.swift", content: themesSwift(ids) },
     {
