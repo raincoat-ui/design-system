@@ -52,6 +52,38 @@ public enum SheetEdge: String, CaseIterable, Sendable {
     public static let standard: SheetEdge = .bottom
 }
 
+/// Input: The height and text size of the field, the same heights as the Button's.
+public enum InputSize: String, CaseIterable, Sendable {
+    /// For dense layouts such as toolbars and tables. Its text is 14px.
+    case sm
+    /// The default size.
+    case md
+    /// For prominent fields, such as the one field of a step.
+    case lg
+
+    /// The value used when none is given.
+    public static let standard: InputSize = .md
+}
+
+/// Input: What the field holds. It chooses the keyboard on touch screens and what autofill offers. A multi-line field holds text.
+public enum InputType: String, CaseIterable, Sendable {
+    /// Any text.
+    case text
+    /// An email address. It stays left-to-right in a right-to-left layout.
+    case email
+    /// A password. What is typed is not shown.
+    case password
+    /// A search query.
+    case search
+    /// A phone number. It stays left-to-right in a right-to-left layout.
+    case tel
+    /// A web address. It stays left-to-right in a right-to-left layout.
+    case url
+
+    /// The value used when none is given.
+    public static let standard: InputType = .text
+}
+
 /// Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control.
 public enum TabsActivationMode: String, CaseIterable, Sendable {
     /// The arrow keys select the tab they move to. The panel shows at once.

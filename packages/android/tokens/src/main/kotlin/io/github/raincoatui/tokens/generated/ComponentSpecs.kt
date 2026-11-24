@@ -66,6 +66,44 @@ public enum class SheetEdge(public val id: String) {
     }
 }
 
+/** Input: The height and text size of the field, the same heights as the Button's. */
+public enum class InputSize(public val id: String) {
+    /** For dense layouts such as toolbars and tables. Its text is 14px. */
+    Sm("sm"),
+    /** The default size. */
+    Md("md"),
+    /** For prominent fields, such as the one field of a step. */
+    Lg("lg"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: InputSize = Md
+    }
+}
+
+/** Input: What the field holds. It chooses the keyboard on touch screens and what autofill offers. A multi-line field holds text. */
+public enum class InputType(public val id: String) {
+    /** Any text. */
+    Text("text"),
+    /** An email address. It stays left-to-right in a right-to-left layout. */
+    Email("email"),
+    /** A password. What is typed is not shown. */
+    Password("password"),
+    /** A search query. */
+    Search("search"),
+    /** A phone number. It stays left-to-right in a right-to-left layout. */
+    Tel("tel"),
+    /** A web address. It stays left-to-right in a right-to-left layout. */
+    Url("url"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: InputType = Text
+    }
+}
+
 /** Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control. */
 public enum class TabsActivationMode(public val id: String) {
     /** The arrow keys select the tab they move to. The panel shows at once. */

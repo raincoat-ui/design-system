@@ -11,6 +11,8 @@ import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.DialogSize
 import io.github.raincoatui.tokens.HeadingColor
 import io.github.raincoatui.tokens.HeadingVariant
+import io.github.raincoatui.tokens.InputSize
+import io.github.raincoatui.tokens.InputType
 import io.github.raincoatui.tokens.SheetEdge
 import io.github.raincoatui.tokens.TabsActivationMode
 import io.github.raincoatui.tokens.TextColor
@@ -340,6 +342,128 @@ internal val dialogExamples: List<SpecExample<DialogPartExampleProperties>> = li
             "ko" to mapOf("title" to "필터", "body" to "지난 30일 동안 나와 공유된 파일을 표시합니다.", "close-label" to "닫기", "action-label" to "결과 보기"),
             "ar" to mapOf("title" to "عوامل التصفية", "body" to "عرض الملفات التي تمت مشاركتها معك خلال آخر 30 يومًا.", "close-label" to "إغلاق", "action-label" to "عرض النتائج"),
             "en-XA" to mapOf("title" to "[Ƒîļţéŕš one]", "body" to "[Šĥöŵ ƒîļéš šĥåŕéð ŵîţĥ ýöû îñ ţĥé ļåšţ 30 ðåýš. one two three four]", "close-label" to "[Çļöšé]", "action-label" to "[Šĥöŵ ŕéšûļţš one]"),
+        ),
+    ),
+)
+
+/** The properties of one Input in an example. */
+internal data class InputExampleProperties(
+    val size: InputSize,
+    val type: InputType,
+    val multiline: Boolean,
+    val required: Boolean,
+    val invalid: Boolean,
+    val disabled: Boolean,
+    val readOnly: Boolean,
+)
+
+/** The examples of specs/components/input/spec.yaml, with their text. */
+internal val inputExamples: List<SpecExample<InputExampleProperties>> = listOf(
+    SpecExample(
+        id = "sizes",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Sm, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+            InputExampleProperties(size = InputSize.Lg, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Full name", "value" to "Ana Lima"),
+            "vi" to mapOf("label" to "Họ và tên", "value" to "Nguyễn Thị Hương"),
+            "zh-Hans" to mapOf("label" to "姓名", "value" to "王小明"),
+            "ja" to mapOf("label" to "氏名", "value" to "山田 花子"),
+            "ko" to mapOf("label" to "이름", "value" to "김민준"),
+            "ar" to mapOf("label" to "الاسم الكامل", "value" to "ليلى حسن"),
+            "en-XA" to mapOf("label" to "[Ƒûļļ ñåɱé one]", "value" to "[Åñå Ļîɱå one]"),
+        ),
+    ),
+    SpecExample(
+        id = "description",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Delivery address", "description" to "Include the floor and the name of the building.", "value" to "12 Harbour Street"),
+            "vi" to mapOf("label" to "Địa chỉ giao hàng", "description" to "Ghi rõ số tầng và tên tòa nhà.", "value" to "12 Phố Hàng Bạc"),
+            "zh-Hans" to mapOf("label" to "收货地址", "description" to "请写明楼层和楼名。", "value" to "建国路 88 号"),
+            "ja" to mapOf("label" to "配送先住所", "description" to "階数と建物名も入力してください。", "value" to "丸の内 1-1"),
+            "ko" to mapOf("label" to "배송 주소", "description" to "층수와 건물 이름을 포함하세요.", "value" to "세종대로 110"),
+            "ar" to mapOf("label" to "عنوان التوصيل", "description" to "اذكر الطابق واسم المبنى.", "value" to "١٢ شارع الميناء"),
+            "en-XA" to mapOf("label" to "[Ðéļîṽéŕý åððŕéšš one two]", "description" to "[Îñçļûðé ţĥé ƒļööŕ åñð ţĥé ñåɱé öƒ ţĥé ƀûîļðîñĝ. one two three four]", "value" to "[12 Ĥåŕƀöûŕ Šţŕééţ one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "email",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Email, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Email address", "placeholder" to "name@example.com"),
+            "vi" to mapOf("label" to "Địa chỉ email", "placeholder" to "name@example.com"),
+            "zh-Hans" to mapOf("label" to "电子邮箱", "placeholder" to "name@example.com"),
+            "ja" to mapOf("label" to "メールアドレス", "placeholder" to "name@example.com"),
+            "ko" to mapOf("label" to "이메일 주소", "placeholder" to "name@example.com"),
+            "ar" to mapOf("label" to "البريد الإلكتروني", "placeholder" to "name@example.com"),
+            "en-XA" to mapOf("label" to "[Éɱåîļ åððŕéšš one]", "placeholder" to "[ñåɱé@éẋåɱþļé.çöɱ one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "invalid",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = true, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Username", "description" to "Letters, numbers, and dots, with no spaces.", "value" to "ana lima", "error" to "Remove the space, for example: ana.lima"),
+            "vi" to mapOf("label" to "Tên người dùng", "description" to "Chữ cái, chữ số và dấu chấm, không có khoảng trắng.", "value" to "ana lima", "error" to "Xóa khoảng trắng, ví dụ: ana.lima"),
+            "zh-Hans" to mapOf("label" to "用户名", "description" to "仅限字母、数字和句点，不能有空格。", "value" to "ana lima", "error" to "请删除空格，例如：ana.lima"),
+            "ja" to mapOf("label" to "ユーザー名", "description" to "英字、数字、ピリオドのみ。スペースは使えません。", "value" to "ana lima", "error" to "スペースを削除してください（例：ana.lima）"),
+            "ko" to mapOf("label" to "사용자 이름", "description" to "영문자, 숫자, 마침표만 쓰고 공백은 넣지 마세요.", "value" to "ana lima", "error" to "공백을 삭제하세요. 예: ana.lima"),
+            "ar" to mapOf("label" to "اسم المستخدم", "description" to "أحرف وأرقام ونقاط فقط، بدون مسافات.", "value" to "ana lima", "error" to "احذف المسافة، مثل: ana.lima"),
+            "en-XA" to mapOf("label" to "[Ûšéŕñåɱé one]", "description" to "[Ļéţţéŕš, ñûɱƀéŕš, åñð ðöţš, ŵîţĥ ñö šþåçéš. one two three four]", "value" to "[åñå ļîɱå one]", "error" to "[Ŕéɱöṽé ţĥé šþåçé, ƒöŕ éẋåɱþļé: åñå.ļîɱå one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "disabled",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = true, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Company", "value" to "Harbour Supplies"),
+            "vi" to mapOf("label" to "Công ty", "value" to "Công ty Bình Minh"),
+            "zh-Hans" to mapOf("label" to "公司", "value" to "晨光贸易"),
+            "ja" to mapOf("label" to "会社名", "value" to "朝日商事"),
+            "ko" to mapOf("label" to "회사", "value" to "한빛상사"),
+            "ar" to mapOf("label" to "الشركة", "value" to "شركة الفجر"),
+            "en-XA" to mapOf("label" to "[Çöɱþåñý one]", "value" to "[Ĥåŕƀöûŕ Šûþþļîéš one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "read-only",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Account number", "value" to "DE89 3704 0044 0532 0130 00"),
+            "vi" to mapOf("label" to "Số tài khoản", "value" to "DE89 3704 0044 0532 0130 00"),
+            "zh-Hans" to mapOf("label" to "账号", "value" to "DE89 3704 0044 0532 0130 00"),
+            "ja" to mapOf("label" to "口座番号", "value" to "DE89 3704 0044 0532 0130 00"),
+            "ko" to mapOf("label" to "계좌 번호", "value" to "DE89 3704 0044 0532 0130 00"),
+            "ar" to mapOf("label" to "رقم الحساب", "value" to "DE89 3704 0044 0532 0130 00"),
+            "en-XA" to mapOf("label" to "[Åççöûñţ ñûɱƀéŕ one]", "value" to "[ÐÉ89 3704 0044 0532 0130 00 one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "multiline",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = true, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Message", "value" to "Please leave the parcel with the neighbour at number 14 if nobody answers the door."),
+            "vi" to mapOf("label" to "Lời nhắn", "value" to "Nếu không có ai mở cửa, vui lòng gửi bưu kiện cho hàng xóm ở số nhà 14."),
+            "zh-Hans" to mapOf("label" to "留言", "value" to "如果没人开门，请把包裹交给 14 号的邻居。"),
+            "ja" to mapOf("label" to "メッセージ", "value" to "誰も出ない場合は、14 番地の隣人に荷物を預けてください。"),
+            "ko" to mapOf("label" to "메시지", "value" to "아무도 문을 열지 않으면 14번지 이웃에게 택배를 맡겨 주세요."),
+            "ar" to mapOf("label" to "الرسالة", "value" to "إذا لم يفتح أحد الباب، يرجى ترك الطرد عند الجار في المنزل رقم 14."),
+            "en-XA" to mapOf("label" to "[Ṁéššåĝé one]", "value" to "[Þļéåšé ļéåṽé ţĥé þåŕçéļ ŵîţĥ ţĥé ñéîĝĥƀöûŕ åţ ñûɱƀéŕ 14 îƒ ñöƀöðý åñšŵéŕš ţĥé ðööŕ. one two three four five six seven]"),
         ),
     ),
 )

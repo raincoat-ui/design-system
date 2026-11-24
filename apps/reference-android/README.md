@@ -41,4 +41,4 @@ class in `src/androidTest/`.
 `MainActivity` shows the Button. Another component's screen has an activity of its own, listed in
 `AndroidManifest.xml`, which its test opens: `TypographyActivity` shows Typography,
 `DialogActivity` the Dialog, the alert dialog, and the Sheet, `TabsActivity` the Tabs,
-`CardActivity` the Card, and `ToastActivity` the Toast.
+`CardActivity` the Card, `ToastActivity` the Toast, and `InputActivity` the Input.

@@ -203,6 +203,8 @@ const NEUTRAL = new Set([
   ...["auto", "column", "nowrap"],
   // Text: alignment, wrapping, line breaking by language, and the ellipsis after max-lines.
   ...["start", "balance", "strict", "keep-all", "hidden", "webkit-box", "vertical"],
+  // A column of parts, and a multi-line field that grows with its content.
+  ...["column", "content"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
@@ -221,8 +223,10 @@ const NEUTRAL = new Set([
   // A toast: fixed to the bottom of the window, its parts aligned to the top of their row.
   ...["fixed", "flex-start"],
 ]);
-// The spinner turns once a second. That speed is not a token yet.
-const EXEMPT = new Set([".animate-rc-spin"]);
+// The spinner turns once a second. That speed is not a token yet. Visually hidden text, such as
+// a hidden label, is drawn by a fixed rule. A placeholder is drawn opaque, which Firefox does not
+// do by default.
+const EXEMPT = new Set([".animate-rc-spin", ".sr-only", ".placeholder\\:opacity-100::placeholder"]);
 
 /** The parts of a declaration's value that are neither a Raincoat token nor neutral. */
 function literals(value) {
@@ -294,12 +298,12 @@ test("the precompiled stylesheet changes nothing but Raincoat components", () =>
       leadingClass(selector) && context.some((rule) => rule.startsWith("@layer")),
   );
   assert.deepEqual(layered, []);
-  // Around component rules, only media queries.
+  // Around component rules, only media and feature queries.
   const contexts = rules(stylesheet)
     .filter(({ selector }) => leadingClass(selector))
     .flatMap(({ context }) => context);
   assert.deepEqual(
-    [...new Set(contexts)].filter((rule) => !rule.startsWith("@media ")),
+    [...new Set(contexts)].filter((rule) => !/^@(media|supports) /.test(rule)),
     [],
   );
 });

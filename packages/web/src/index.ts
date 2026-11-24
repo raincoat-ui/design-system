@@ -57,6 +57,7 @@ export {
   DialogTrigger,
   type DialogTriggerProps,
 } from "./components/ui/dialog.js";
+export { Input, type InputProps } from "./components/ui/input.js";
 export {
   Sheet,
   SheetBody,
@@ -123,6 +124,12 @@ export {
   type HeadingColor,
   type HeadingLevel,
   type HeadingVariant,
+  INPUT_SIZE_DEFAULT,
+  INPUT_SIZES,
+  INPUT_TYPE_DEFAULT,
+  INPUT_TYPES,
+  type InputSize,
+  type InputType,
   SHEET_EDGE_DEFAULT,
   SHEET_EDGES,
   type SheetEdge,

@@ -326,8 +326,8 @@ private fun ButtonSpinner(size: Dp, color: () -> Color) {
     }
 }
 
-/** A ring around the container, with a gap, while the button has keyboard focus. */
-private fun Modifier.focusRing(visible: Boolean, color: Color, width: Dp, offset: Dp, radius: Dp): Modifier =
+/** A ring around the container, with a gap, while [visible]: for a button, while it has keyboard focus. */
+internal fun Modifier.focusRing(visible: Boolean, color: Color, width: Dp, offset: Dp, radius: Dp): Modifier =
     if (!visible) {
         this
     } else {

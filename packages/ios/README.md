@@ -287,6 +287,55 @@ The Tabs follow the
 [Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
 which the React and Compose Tabs follow too.
 
+## Input
+
+```swift
+RaincoatInput("Full name", text: $name)
+RaincoatInput("Email", text: $email, type: .email, description: Text("We send the receipt here."))
+RaincoatInput("Email", text: $email, type: .email, isInvalid: !isValid, error: Text("Enter an email address"))
+RaincoatInput("Search", text: $query, type: .search, isLabelHidden: true, leadingIcon: Image(systemName: "magnifyingglass"))
+RaincoatInput("Message", text: $message, isMultiline: true)
+RaincoatInput("Account number", text: $account, isReadOnly: true)
+```
+
+| Parameter       | Type        | Default | Notes                                                                   |
+| --------------- | ----------- | ------- | ----------------------------------------------------------------------- |
+| `type`          | `InputType` | `.text` | `.text`, `.email`, `.password`, `.search`, `.tel`, `.url`               |
+| `size`          | `InputSize` | `.md`   | `.sm`, `.md`, `.lg`: the heights of the Button's sizes                  |
+| `description`   | `Text?`     | `nil`   | Between the label and the field. VoiceOver reads it as the hint         |
+| `prompt`        | `Text?`     | `nil`   | An example of the format, shown while the field is empty                |
+| `isInvalid`     | `Bool`      | `false` | Shows the error below the field, and tells VoiceOver                    |
+| `error`         | `Text?`     | `nil`   | What to do to make the value acceptable. An invalid field must have one |
+| `isMultiline`   | `Bool`      | `false` | Starts `rows` lines tall (3) and grows with its content                 |
+| `isReadOnly`    | `Bool`      | `false` | The value can be selected and copied, not changed                       |
+| `isLabelHidden` | `Bool`      | `false` | Hides the label from view. It is still the field's name                 |
+| `leadingIcon`   | `Image?`    | `nil`   | Decoration; hidden from assistive technology                            |
+
+- The label is a `LocalizedStringKey`, a `String`, or a `Text`.
+- Disable a field with `disabled(_:)`, and move focus to it with `focused(_:equals:)`: on
+  submit, move focus to the first field in error.
+- iOS has no invalid state, so VoiceOver reads an invalid field's error after its label: "Email,
+  Enter an email address". It has no required state either: mark the fields that are optional
+  in their label, "Phone (optional)".
+- `type` sets the keyboard and the text content type that autofill uses. Email, phone, and web
+  address fields are not capitalized or corrected, and stay left-to-right in a right-to-left
+  layout, their icon included.
+- The label, the description, and the error wrap; they are never truncated. Everything grows
+  with the person's text size setting.
+- The field takes the room it shows. Where it is shorter than 44 points, the text field inside
+  reaches past its top and bottom, so touches there place the caret.
+- The system draws the focus indicator and the caret.
+
+To give any `TextField` or `SecureField` the look of the field alone, use the style:
+
+```swift
+TextField("Search", text: $query).textFieldStyle(.raincoat(size: .sm))
+```
+
+The Input follows the
+[Input spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/input/spec.yaml),
+which the React and Compose Inputs follow too.
+
 ## Working on this package
 
 ```sh

@@ -39,6 +39,27 @@
       "fetched": "2026-11-24",
       "local": "src/components/ui/sheet.tsx"
     },
+    "input": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/input.json",
+      "upstream": ".shadcn-upstream/input.tsx",
+      "sha256": "0c9457181f6ddc80969bcf854e92c362903a55b6e889fbef3fd85343ecc4af5b",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/input.tsx"
+    },
+    "textarea": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/textarea.json",
+      "upstream": ".shadcn-upstream/textarea.tsx",
+      "sha256": "5cafcfeeee29534f449387a16b585f5923d2faab1a0cdc50a874416b175f59ce",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/input.tsx"
+    },
+    "label": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/label.json",
+      "upstream": ".shadcn-upstream/label.tsx",
+      "sha256": "344bde38b8531615dbf8e14af3895517c24d8ef6ce56ddeda7e2e6fe4b5d0c00",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/input.tsx"
+    },
     "tabs": {
       "registry": "https://ui.shadcn.com/r/styles/new-york-v4/tabs.json",
       "upstream": ".shadcn-upstream/tabs.tsx",
