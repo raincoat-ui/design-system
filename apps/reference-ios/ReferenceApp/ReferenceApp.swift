@@ -19,6 +19,7 @@ struct ReferenceApp: App {
                 case "card": CardScreen()
                 case "tabs": TabsScreen()
                 case "input": InputScreen()
+                case "toast": ToastScreen()
                 default: ButtonScreen()
                 }
             }

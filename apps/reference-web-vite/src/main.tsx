@@ -5,6 +5,7 @@ import { ButtonScreen } from "./ButtonScreen";
 import { CardScreen } from "./CardScreen";
 import { InputScreen } from "./InputScreen";
 import { TabsScreen } from "./TabsScreen";
+import { ToastScreen } from "./ToastScreen";
 import { TypographyScreen } from "./TypographyScreen";
 
 const root = document.getElementById("root");
@@ -16,6 +17,7 @@ const SCREENS: Record<string, () => JSX.Element> = {
   "/card": CardScreen,
   "/tabs": TabsScreen,
   "/input": InputScreen,
+  "/toast": ToastScreen,
 };
 const Screen = SCREENS[location.pathname] ?? ButtonScreen;
 

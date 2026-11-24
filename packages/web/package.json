@@ -43,6 +43,10 @@
       "types": "./dist/components/ui/input.d.ts",
       "default": "./dist/components/ui/input.js"
     },
+    "./toast": {
+      "types": "./dist/components/ui/toast.d.ts",
+      "default": "./dist/components/ui/toast.js"
+    },
     "./typography": {
       "types": "./dist/components/ui/typography.d.ts",
       "default": "./dist/components/ui/typography.js"

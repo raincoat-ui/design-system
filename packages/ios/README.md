@@ -80,6 +80,41 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the React and Compose Buttons follow too.
 
+## Toast
+
+Put a toast host on a screen once, then show toasts from anywhere inside it:
+
+```swift
+InboxView().raincoatToastHost()
+
+@Environment(\.showRaincoatToast) private var showToast
+
+showToast(RaincoatToast("Message archived"))
+showToast(RaincoatToast("Message archived", action: .init("Undo") { undo() }, closeLabel: "Close"))
+```
+
+- The message, the action's label, and the close button's name are `String`s in your app's
+  language. A toast with an action must have a named close button.
+- One toast is shown at a time, at the bottom center of the host; others wait, in order.
+- A toast never takes focus. VoiceOver says its message after whatever it is saying.
+- Without an action, a toast closes after 6 seconds. The time stops while a pointer is over it,
+  while VoiceOver or the keyboard is on it, and while the app is in the background. A toast with
+  an action stays until the action is used or the toast is closed.
+- A swipe down closes a toast, and so does Escape while the keyboard is on one of its buttons.
+  VoiceOver's escape gesture closes it too.
+- A toast sits above the on-screen keyboard. Declare a bar of your own at the bottom of the
+  screen with `safeAreaInset(edge: .bottom)` outside the host, and the toast sits above it too:
+  `InboxView().raincoatToastHost().safeAreaInset(edge: .bottom) { ActionBar() }`. A bar declared
+  inside the host is hidden from it.
+- Outside a host, `showRaincoatToast` does nothing. A `RaincoatToast` drawn on its own stands
+  still, for previews and tests.
+
+`raincoatShadow(_:in:fill:)` fills a shape behind a view and draws a token shadow, such as
+`tokens.toast.shadow`, with it, as CSS draws a `box-shadow`. Use it in place of a background.
+
+The Toast follows the
+[Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
+
 ## Text and headings
 
 ```swift

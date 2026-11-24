@@ -213,6 +213,8 @@ const NEUTRAL = new Set([
   // actions that wrap at the end edge, below the rest; and a link or button that takes its
   // title's look.
   ...["9999", "block", "max(", "wrap", "flex-end", "inherit"],
+  // A toast: fixed to the bottom of the window, its parts aligned to the top of their row.
+  ...["fixed", "flex-start"],
 ]);
 // The spinner turns once a second. That speed is not a token yet. Visually hidden text, such as
 // a hidden label, is drawn by a fixed rule. A placeholder is drawn opaque, which Firefox does not
@@ -223,7 +225,10 @@ const EXEMPT = new Set([".animate-rc-spin", ".sr-only", ".placeholder\\:opacity-
 function literals(value) {
   const rest = value
     .replaceAll(/var\(--tw-[a-z-]+(?:, ?var\(--default-[a-z-]+\))?\)/g, " ")
-    .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ");
+    .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ")
+    // The name of an animation: keyframes of the package's own, named rc-*, as the check of
+    // everything else in the stylesheet requires.
+    .replaceAll(/(?<![\w-])rc-[a-z-]+/g, " ");
   const words = rest.match(
     /var\(--[\w-]+|#[0-9a-f]+|[a-z][a-z0-9-]*\(?|\d*\.?\d+[a-z%]*|"[^"]*"|'[^']*'/gi,
   );
@@ -244,6 +249,8 @@ test("a literal color, a literal size, and a custom property that is not a token
   );
   assert.deepEqual(literals("calc(var(--rc-size-icon-md)*1.5)"), ["1.5"]);
   assert.deepEqual(literals("var(--tw-ease,var(--default-transition-timing-function))"), []);
+  assert.deepEqual(literals("rc-toast-enter var(--rc-toast-enter-duration)"), []);
+  assert.deepEqual(literals("toast-enter 1s"), ["toast-enter", "1s"]);
   assert.deepEqual(literals("#f7d22a"), ["#f7d22a"]);
   assert.deepEqual(literals("red"), ["red"]);
   assert.deepEqual(literals("calc(var(--spacing)*4)"), ["var(--spacing", "4"]);

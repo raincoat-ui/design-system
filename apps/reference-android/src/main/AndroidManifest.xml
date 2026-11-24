@@ -27,6 +27,10 @@
         <activity
             android:name=".InputActivity"
             android:exported="false" />
+        <activity
+            android:name=".ToastActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
