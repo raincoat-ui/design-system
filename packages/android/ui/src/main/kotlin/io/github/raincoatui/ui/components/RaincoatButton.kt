@@ -46,7 +46,6 @@ import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
@@ -268,12 +267,12 @@ private fun ButtonLayout(
             if (text != null) {
                 BasicText(
                     text = text,
-                    // The label takes the room the icons leave and wraps inside it.
+                    // The label takes the room the icons leave and wraps inside it, by the rules
+                    // of the person's language (toTextStyle): strictly, so that no line of
+                    // Japanese starts with a small kana or a prolonged sound mark, and Korean
+                    // between whole words.
                     modifier = Modifier.weight(1f, fill = false),
-                    style = measurements.label.toTextStyle().copy(
-                        textAlign = TextAlign.Center,
-                        lineBreak = LabelLineBreak,
-                    ),
+                    style = measurements.label.toTextStyle().copy(textAlign = TextAlign.Center),
                     color = { foreground },
                 )
             }
@@ -283,16 +282,6 @@ private fun ButtonLayout(
         }
     }
 }
-
-/**
- * How the label breaks into lines: by the strict rules, so that no line of Japanese starts with
- * a small kana or a prolonged sound mark.
- */
-private val LabelLineBreak = LineBreak(
-    strategy = LineBreak.Strategy.Simple,
-    strictness = LineBreak.Strictness.Strict,
-    wordBreak = LineBreak.WordBreak.Default,
-)
 
 /**
  * This configuration with a touch target of at least [minimum] in each direction. The platform
@@ -337,8 +326,8 @@ private fun ButtonSpinner(size: Dp, color: () -> Color) {
     }
 }
 
-/** A ring around the container, with a gap, while the button has keyboard focus. */
-private fun Modifier.focusRing(visible: Boolean, color: Color, width: Dp, offset: Dp, radius: Dp): Modifier =
+/** A ring around the container, with a gap, while [visible]: for a button, while it has keyboard focus. */
+internal fun Modifier.focusRing(visible: Boolean, color: Color, width: Dp, offset: Dp, radius: Dp): Modifier =
     if (!visible) {
         this
     } else {

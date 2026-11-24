@@ -1,0 +1,174 @@
+# The platform-neutral contract of the Toast. The React, SwiftUI, and Compose implementations
+# all follow it.
+# Proposed and accepted in rfcs/0008-toast.md.
+id: toast
+name: Toast
+specVersion: 1.0.0
+rfc: 8
+group: Feedback
+summary: A short message near the bottom of the screen that says something has happened.
+
+# There is one look: no status variants. Whether the toast offers an action is the one choice,
+# and it decides how long the toast stays.
+properties:
+  action:
+    type: boolean
+    default: false
+    description: >-
+      Offers one action, such as Undo. A toast with an action also has a close button, and it
+      stays until one of them is used.
+
+content:
+  message:
+    description: >-
+      What happened, in one short sentence, such as "Address deleted". It wraps and is never
+      truncated.
+    required: true
+  action-label:
+    description: The label of the action, in one or two words, such as "Undo" or "View".
+    required: when the toast has an action
+  close-label:
+    description: >-
+      The name of the close button, read by assistive technology, such as "Close". The button
+      shows a cross drawn by the component.
+    required: when the toast has an action, or a close button without one
+
+anatomy:
+  container:
+    description: >-
+      A raised surface with an ink outline, so that it stands apart from whatever it covers.
+      It sits at the bottom center of the window, above the on-screen keyboard and any bottom
+      bar the app declares, and grows with its content up to the panel width.
+    tokens:
+      - toast.bg
+      - toast.border.*
+      - toast.radius
+      - toast.shadow
+      - toast.max-width
+      - toast.margin
+      - toast.padding-block
+      - toast.padding-inline
+      - toast.gap
+  focus-ring:
+    description: >-
+      On the web, drawn around the container when F8 brings keyboard focus to it: the same ring
+      as a Button's.
+    tokens:
+      - button.focus-ring.*
+  message:
+    description: >-
+      The text, at the start. Its first line is centered on the buttons beside it; further lines
+      follow below.
+    tokens:
+      - toast.message
+      - toast.fg
+      - button.height.sm
+  action:
+    description: >-
+      One Button, ghost and small. It sits after the message, and moves below it, at the end,
+      when the two do not fit on one line.
+    tokens:
+      - button.ghost.*
+      - button.height.sm
+  close-button:
+    description: >-
+      An icon-only ghost Button, small, at the end of the first line. Its cross is drawn by the
+      component at the Button's icon size, in the Button's color.
+    tokens:
+      - button.ghost.*
+      - button.icon-size.sm
+
+states:
+  entering:
+    description: >-
+      The toast slides up a short way while it fades in. With reduced motion it only fades.
+  shown:
+    description: >-
+      The toast is on the screen. Without an action, its timer runs; it closes when the timer
+      ends.
+  paused:
+    description: >-
+      The timer is stopped while a pointer is over the toast, while focus is in it, and while
+      the app is in the background. It goes on from where it stopped.
+  leaving:
+    description: The toast fades out. The next toast in the queue, if any, enters after it.
+
+accessibility:
+  role: >-
+    A status message. On the web, the toasts are in a region landmark that the app names, and
+    each message is announced through a status live region.
+  name: The message. The action is named by its label, and the close button by the name the app gives.
+  keyboard:
+    - keys: [F8]
+      action: Moves focus to the toasts on the web, and F8 again from there moves it back.
+    - keys: [Tab]
+      action: Moves between the toast, its action, and its close button once focus is in the toasts.
+    - keys: [Escape]
+      action: Closes the toast that has focus.
+    - keys: [Enter, Space]
+      action: Activates the action or the close button.
+  announcement: >-
+    The message is announced once, politely: after what the screen reader is saying, without
+    interrupting it. On the web through a status live region, on iOS as a VoiceOver
+    announcement with low priority, and on Android as a polite live region.
+  focus: >-
+    Never moved to the toast. Touch screen readers find it in the reading order, like any other
+    element.
+  timing: >-
+    Without an action, a toast closes after 6 seconds. The timer pauses while a pointer is over
+    the toast, while it has focus, and while the app is in the background. On Android, the
+    person's accessibility timeout ("Time to take action") replaces the 6 seconds when it is
+    longer. A toast with an action never closes by itself (WCAG 2.2.1).
+  closing: The close button, Escape while the toast has focus, or a swipe down on a touch screen.
+  contrast: >-
+    The message has 4.5:1 against the fill, and 7:1 in high-contrast modes. The outline has 3:1
+    against the fill and against the page.
+
+internationalization:
+  right-to-left: >-
+    The action and close button sit at the end edge, on the left. The toast is centered, so its
+    position does not change.
+  long-text: >-
+    The message wraps and the toast grows taller. When the message and the action do not fit on
+    one line, the action moves below the message, at the end. Nothing is truncated.
+  scripts: Line height 1.5 clears stacked Vietnamese diacritics. CJK text uses system fonts.
+  timing: >-
+    A translated message can take longer to read. The pause on hover and focus covers that; a
+    message that needs more than 6 seconds is too long for a toast.
+
+motion:
+  enter: >-
+    Slides up from the toast margin while it fades in, with toast.enter.duration and its easing.
+  exit: Fades out and slides back down, with toast.exit.duration and its easing.
+  reduced-motion: The toast fades in and out and does not move.
+
+# Named examples. Stories, tests, and documentation are built from these.
+examples:
+  - id: message
+    description: A toast that only says what happened. It closes by itself.
+    properties:
+      action: false
+  - id: with-action
+    description: A toast with an action and a close button. It stays until one is used.
+    properties:
+      action: true
+  - id: long-message
+    description: >-
+      A message too long for one line beside its action. The message wraps, and the action moves
+      below it.
+    properties:
+      action: true
+
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
+implementations:
+  web:
+    file: packages/web/src/components/ui/toast.tsx
+    name: [ToastProvider, useToast, Toast]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatToast.swift
+    name: [RaincoatToast, raincoatToastHost, showRaincoatToast]
+  android:
+    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatToastHost.kt
+    name: [RaincoatToastHost, RaincoatToastHostState, RaincoatToast]

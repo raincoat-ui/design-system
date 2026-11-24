@@ -91,6 +91,46 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the React and SwiftUI Buttons follow too.
 
+## Toast
+
+Put a toast host over the screen's content, at the bottom, and show toasts from a coroutine:
+
+```kotlin
+val toasts = remember { RaincoatToastHostState() }
+val scope = rememberCoroutineScope()
+
+Box(Modifier.fillMaxSize()) {
+    Inbox(onArchive = {
+        scope.launch {
+            val result = toasts.show("Message archived", actionLabel = "Undo", closeLabel = "Close")
+            if (result == RaincoatToastResult.ActionPerformed) undoArchive()
+        }
+    })
+    RaincoatToastHost(toasts, Modifier.align(Alignment.BottomCenter))
+}
+```
+
+- `show(message)` shows a toast without an action; `show(message, actionLabel, closeLabel)` one
+  with an action, which must have a named close button. Each suspends until its toast closes and
+  says how.
+- One toast is shown at a time; other calls wait, in order.
+- A toast never takes focus. Its message is a polite live region: TalkBack says it after whatever
+  it is saying, and offers to dismiss the toast.
+- Without an action, a toast closes after 6 seconds, or after the person's accessibility timeout
+  ("Time to take action") when that is longer. The time stops while a mouse pointer is over it,
+  while keyboard focus is in it, and while the app is in the background. A toast with an action
+  stays until the action is used or the toast is closed.
+- A swipe down closes a toast.
+- The host keeps its toasts above the on-screen keyboard and the system bars. To keep them above
+  a bar of your own, place the host above the bar.
+- `RaincoatToast(...)` draws a toast on its own, standing still, for previews and tests.
+
+`Modifier.raincoatShadow(shadow, shape, fill)` fills a shape and draws a token shadow, such as
+`toast.shadow`, with it, as CSS draws a `box-shadow`. Use it in place of `background`.
+
+The Toast follows the
+[Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
+
 ## Text and headings
 
 ```kotlin
@@ -125,11 +165,143 @@ RaincoatText(message.preview, maxLines = 2)
 - **Long text wraps.** A heading is never cut short. Text cut short by `maxLines` is still read
   in full by TalkBack.
 - **Direction.** Each paragraph takes its direction from its first strong character, and
-  aligns to its start.
+  aligns to its start. A name or a message inside a sentence must be isolated, or the
+  punctuation and numbers beside it join it: `"Message from ⁨$name⁩"`, or
+  `BidiFormatter.getInstance().unicodeWrap(name)` before it goes into `stringResource`.
+- **Line breaking.** Lines break by the strict rules, and Korean between whole words, in the
+  person's language. Korean needs Android 13 for that. Every component's text does the same.
 
 Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and SwiftUI versions follow too.
+
+## Card
+
+```kotlin
+// Static: a container, which can hold links and buttons.
+RaincoatCard(
+    title = "Storage",
+    level = 3,
+    footer = { RaincoatButton("Manage storage", onClick = ::manageStorage) },
+) {
+    RaincoatText("4.2 GB of 15 GB used", color = TextColor.Muted)
+}
+
+// Interactive: the whole card is one button.
+RaincoatCard(
+    title = "Order 1042",
+    level = 3,
+    onClick = { openOrder(1042) },
+    media = {
+        Image(
+            painterResource(R.drawable.parcel),
+            contentDescription = "A parcel at a front door",
+            modifier = Modifier.fillMaxWidth().height(120.dp),
+            contentScale = ContentScale.Crop,
+        )
+    },
+) {
+    RaincoatText("Delivered on Monday", color = TextColor.Muted)
+}
+```
+
+| Parameter           | Type                        | Default  | Notes                                                                            |
+| ------------------- | --------------------------- | -------- | -------------------------------------------------------------------------------- |
+| `title`             | `String`                    | Required | A heading in the `HeadingSm` look. It wraps and is never cut short               |
+| `level`             | `Int`                       | Required | 1 to 6, for the card's place in the outline of the screen                        |
+| `onClick`           | `(() -> Unit)?`             | `null`   | Makes the whole card one button. `null` is a static card                         |
+| `media`             | `(@Composable () -> Unit)?` | `null`   | An image at the top, edge to edge, with the card's top corners. Give it a height |
+| `footer`            | `(@Composable () -> Unit)?` | `null`   | Buttons at the end edge of a static card. They wrap when they do not fit         |
+| `interactionSource` | `MutableInteractionSource?` | `null`   | Observes or drives an interactive card's presses, hovers, and focus              |
+| `content`           | `(@Composable () -> Unit)?` | `null`   | The body                                                                         |
+
+- **One action per interactive card.** With `onClick`, the card is one button: a touch, a
+  click, Enter, or Space anywhere on it activates it, and its semantics merge its content, title
+  first. Put no other controls in it. Compose has no link role, so a card that opens another
+  screen is a button too.
+- **States.** An interactive card's outline steps to the strong border color under a mouse, and
+  its fill changes while it is pressed. Keyboard focus draws the focus ring around the whole
+  card, from the focus ring tokens.
+- **Media** is drawn at the top. TalkBack reads the title first.
+- **Width.** A card fills the width it is given and grows with its content. The list or grid
+  around it is the app's; give a list collection semantics, or use a lazy list, so that TalkBack
+  says how many cards there are.
+
+The Card follows the
+[Card spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/card/spec.yaml),
+which the React and SwiftUI Cards follow too.
+
+## Tabs
+
+```kotlin
+RaincoatTabs(
+    tabs = listOf(
+        RaincoatTab(Section.Details, "Details"),
+        RaincoatTab(Section.Photos, "Photos", icon = painterResource(R.drawable.photo)),
+        RaincoatTab(Section.List, painterResource(R.drawable.list), contentDescription = "List"),
+    ),
+    selected = section,
+    onSelect = { section = it },
+) { selected -> SectionContent(selected) }
+
+RaincoatTabs(tabs) { selected -> SectionContent(selected) } // keeps its own selection
+```
+
+- The row runs across the full width over a hairline. When the tabs do not fit, it scrolls
+  sideways, and the selected tab is brought into view. Labels stay on one line.
+- Only the selected tab's panel is shown. There are no disabled tabs: leave out a tab that leads
+  nowhere.
+- The row is a selectable group, and each tab is selectable with the tab role, which TalkBack
+  reads with its selected state. A tab with only an icon needs a content description.
+- A keyboard moves focus between the tabs as for any control, and Enter or Space selects. The
+  focused tab shows the theme's focus ring inside its edge.
+- Each tab's touch area is at least 48dp tall; a mouse has to be on the tab itself.
+
+The Tabs follow the
+[Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
+which the React and SwiftUI Tabs follow too.
+
+## Input
+
+```kotlin
+var email by rememberSaveable { mutableStateOf("") }
+RaincoatInput(email, { email = it }, label = "Email", type = InputType.Email)
+RaincoatInput(email, { email = it }, label = "Email", invalid = !valid, error = "Enter an email address")
+RaincoatInput(query, { query = it }, label = "Search", type = InputType.Search, labelHidden = true)
+RaincoatInput(message, { message = it }, label = "Message", multiline = true)
+```
+
+| Parameter           | Type                        | Default          | Notes                                                                   |
+| ------------------- | --------------------------- | ---------------- | ----------------------------------------------------------------------- |
+| `type`              | `InputType`                 | `InputType.Text` | `Text`, `Email`, `Password`, `Search`, `Tel`, `Url`: the keyboard       |
+| `size`              | `InputSize`                 | `InputSize.Md`   | `Sm`, `Md`, `Lg`: the heights of the Button's sizes                     |
+| `description`       | `String?`                   | `null`           | Between the label and the field, and read after its name                |
+| `placeholder`       | `String?`                   | `null`           | An example of the format, shown while the field is empty                |
+| `invalid`           | `Boolean`                   | `false`          | Shows the error below the field, and sets the field's error semantics   |
+| `error`             | `String?`                   | `null`           | What to do to make the value acceptable. An invalid field must have one |
+| `multiline`         | `Boolean`                   | `false`          | Starts `rows` lines tall (3) and grows with its content                 |
+| `enabled`           | `Boolean`                   | `true`           | A disabled field cannot be focused or changed                           |
+| `readOnly`          | `Boolean`                   | `false`          | The value can be focused and selected, not changed                      |
+| `labelHidden`       | `Boolean`                   | `false`          | Hides the label from view. It is still the field's name                 |
+| `leadingIcon`       | `Painter?`                  | `null`           | Decoration; it has no description and takes the value's color           |
+| `keyboardActions`   | `KeyboardActions`           | default          | What the keyboard's action key does                                     |
+| `interactionSource` | `MutableInteractionSource?` | `null`           | Observes focus and presses                                              |
+
+- The field is built on Compose Foundation's `BasicTextField`. The label, the description, and
+  the error are part of it, so that a touch on them focuses it and assistive technology is given
+  them with it: the label as its name, then the description. An invalid field carries Compose's
+  error semantics with its message.
+- Android has no required state: mark the fields that are optional in their label.
+- To move focus to the first field in error on submit, pass `Modifier.focusRequester(...)`.
+- The focus ring is drawn whenever the field has focus.
+- The field takes the room it shows. The area that takes touches is at least 48dp tall, so
+  around a small field it reaches past the edges.
+- Email, phone, and web address fields stay left-to-right in a right-to-left layout, their icon
+  included.
+
+The Input follows the
+[Input spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/input/spec.yaml),
+which the React and SwiftUI Inputs follow too.
 
 ## Working on these modules
 

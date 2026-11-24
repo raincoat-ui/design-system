@@ -1,0 +1,135 @@
+# The text the Input's examples show, in every locale of the snapshot matrix
+# (specs/snapshots.yaml): by example id, as in spec.yaml, then by the content the text fills.
+# Every field of an example shows the same text. The expanded pseudo-locale is derived from the
+# English by the token build; it is never written here.
+#
+# Labels, descriptions, and errors are written as an app would ship them, in the sentence case
+# and the words each language uses. Values are what a person there would type. Everything is in
+# Unicode's composed form (NFC).
+examples:
+  sizes:
+    label:
+      en: Full name
+      vi: Họ và tên
+      zh-Hans: 姓名
+      ja: 氏名
+      ko: 이름
+      ar: الاسم الكامل
+    value:
+      en: Ana Lima
+      vi: Nguyễn Thị Hương
+      zh-Hans: 王小明
+      ja: 山田 花子
+      ko: 김민준
+      ar: ليلى حسن
+  description:
+    label:
+      en: Delivery address
+      vi: Địa chỉ giao hàng
+      zh-Hans: 收货地址
+      ja: 配送先住所
+      ko: 배송 주소
+      ar: عنوان التوصيل
+    description:
+      en: Include the floor and the name of the building.
+      vi: Ghi rõ số tầng và tên tòa nhà.
+      zh-Hans: 请写明楼层和楼名。
+      ja: 階数と建物名も入力してください。
+      ko: 층수와 건물 이름을 포함하세요.
+      ar: اذكر الطابق واسم المبنى.
+    value:
+      en: 12 Harbour Street
+      vi: 12 Phố Hàng Bạc
+      zh-Hans: 建国路 88 号
+      ja: 丸の内 1-1
+      ko: 세종대로 110
+      ar: ١٢ شارع الميناء
+  email:
+    label:
+      en: Email address
+      vi: Địa chỉ email
+      zh-Hans: 电子邮箱
+      ja: メールアドレス
+      ko: 이메일 주소
+      ar: البريد الإلكتروني
+    placeholder:
+      en: name@example.com
+      vi: name@example.com
+      zh-Hans: name@example.com
+      ja: name@example.com
+      ko: name@example.com
+      ar: name@example.com
+  invalid:
+    label:
+      en: Username
+      vi: Tên người dùng
+      zh-Hans: 用户名
+      ja: ユーザー名
+      ko: 사용자 이름
+      ar: اسم المستخدم
+    description:
+      en: Letters, numbers, and dots, with no spaces.
+      vi: Chữ cái, chữ số và dấu chấm, không có khoảng trắng.
+      zh-Hans: 仅限字母、数字和句点，不能有空格。
+      ja: 英字、数字、ピリオドのみ。スペースは使えません。
+      ko: 영문자, 숫자, 마침표만 쓰고 공백은 넣지 마세요.
+      ar: أحرف وأرقام ونقاط فقط، بدون مسافات.
+    value:
+      en: ana lima
+      vi: ana lima
+      zh-Hans: ana lima
+      ja: ana lima
+      ko: ana lima
+      ar: ana lima
+    error:
+      en: "Remove the space, for example: ana.lima"
+      vi: "Xóa khoảng trắng, ví dụ: ana.lima"
+      zh-Hans: 请删除空格，例如：ana.lima
+      ja: スペースを削除してください（例：ana.lima）
+      ko: "공백을 삭제하세요. 예: ana.lima"
+      ar: "احذف المسافة، مثل: ana.lima"
+  disabled:
+    label:
+      en: Company
+      vi: Công ty
+      zh-Hans: 公司
+      ja: 会社名
+      ko: 회사
+      ar: الشركة
+    value:
+      en: Harbour Supplies
+      vi: Công ty Bình Minh
+      zh-Hans: 晨光贸易
+      ja: 朝日商事
+      ko: 한빛상사
+      ar: شركة الفجر
+  read-only:
+    label:
+      en: Account number
+      vi: Số tài khoản
+      zh-Hans: 账号
+      ja: 口座番号
+      ko: 계좌 번호
+      ar: رقم الحساب
+    value:
+      en: DE89 3704 0044 0532 0130 00
+      vi: DE89 3704 0044 0532 0130 00
+      zh-Hans: DE89 3704 0044 0532 0130 00
+      ja: DE89 3704 0044 0532 0130 00
+      ko: DE89 3704 0044 0532 0130 00
+      ar: DE89 3704 0044 0532 0130 00
+  multiline:
+    label:
+      en: Message
+      vi: Lời nhắn
+      zh-Hans: 留言
+      ja: メッセージ
+      ko: 메시지
+      ar: الرسالة
+    value:
+      en: Please leave the parcel with the neighbour at number 14 if nobody answers the door.
+      vi: Nếu không có ai mở cửa, vui lòng gửi bưu kiện cho hàng xóm ở số nhà 14.
+      zh-Hans: 如果没人开门，请把包裹交给 14 号的邻居。
+      ja: 誰も出ない場合は、14 番地の隣人に荷物を預けてください。
+      ko: 아무도 문을 열지 않으면 14번지 이웃에게 택배를 맡겨 주세요.
+      ar: إذا لم يفتح أحد الباب، يرجى ترك الطرد عند الجار في المنزل رقم 14.

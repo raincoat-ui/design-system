@@ -39,4 +39,6 @@ Add a screen for it in `src/main/`, with one example for each state in its spec,
 class in `src/androidTest/`.
 
 `MainActivity` shows the Button. Another component's screen has an activity of its own, listed in
-`AndroidManifest.xml`, which its test opens: `TypographyActivity` shows Typography.
+`AndroidManifest.xml`, which its test opens: `TypographyActivity` shows Typography,
+`TabsActivity` the Tabs, `CardActivity` the Card, `ToastActivity` the Toast, and `InputActivity`
+the Input.

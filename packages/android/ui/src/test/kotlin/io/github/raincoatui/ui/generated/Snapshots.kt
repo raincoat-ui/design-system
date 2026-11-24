@@ -10,6 +10,9 @@ import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.HeadingColor
 import io.github.raincoatui.tokens.HeadingVariant
+import io.github.raincoatui.tokens.InputSize
+import io.github.raincoatui.tokens.InputType
+import io.github.raincoatui.tokens.TabsActivationMode
 import io.github.raincoatui.tokens.TextColor
 import io.github.raincoatui.tokens.TextVariant
 
@@ -170,6 +173,321 @@ internal val buttonExamples: List<SpecExample<ButtonExampleProperties>> = listOf
             "ko" to mapOf("label" to "변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기"),
             "ar" to mapOf("label" to "حفظ كل هذه التغييرات وإرسال النسخة المحدثة إلى جميع المراجعين"),
             "en-XA" to mapOf("label" to "[Šåṽé åļļ öƒ ţĥéšé çĥåñĝéš åñð šéñð ţĥé ûþðåţéð ṽéŕšîöñ ţö éṽéŕý ŕéṽîéŵéŕ one two three four five six]"),
+        ),
+    ),
+)
+
+/** The properties of one Card in an example. */
+internal data class CardExampleProperties(
+    val interactive: Boolean,
+)
+
+/** The examples of specs/components/card/spec.yaml, with their text. */
+internal val cardExamples: List<SpecExample<CardExampleProperties>> = listOf(
+    SpecExample(
+        id = "static",
+        instances = listOf(
+            CardExampleProperties(interactive = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Storage", "body" to "4.2 GB of 15 GB used"),
+            "vi" to mapOf("title" to "Dung lượng lưu trữ", "body" to "Đã dùng 4,2 GB trong tổng số 15 GB"),
+            "zh-Hans" to mapOf("title" to "存储空间", "body" to "已使用 4.2 GB，共 15 GB"),
+            "ja" to mapOf("title" to "ストレージ", "body" to "15 GB 中 4.2 GB を使用中"),
+            "ko" to mapOf("title" to "저장 공간", "body" to "15GB 중 4.2GB 사용 중"),
+            "ar" to mapOf("title" to "مساحة التخزين", "body" to "تم استخدام 4.2 غيغابايت من 15 غيغابايت"),
+            "en-XA" to mapOf("title" to "[Šţöŕåĝé one]", "body" to "[4.2 ĜƁ öƒ 15 ĜƁ ûšéð one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "interactive",
+        instances = listOf(
+            CardExampleProperties(interactive = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Order 1042", "body" to "Delivered on Monday"),
+            "vi" to mapOf("title" to "Đơn hàng 1042", "body" to "Đã giao vào thứ Hai"),
+            "zh-Hans" to mapOf("title" to "订单 1042", "body" to "已于周一送达"),
+            "ja" to mapOf("title" to "注文 1042", "body" to "月曜日に配達済み"),
+            "ko" to mapOf("title" to "주문 1042", "body" to "월요일에 배송됨"),
+            "ar" to mapOf("title" to "الطلب 1042", "body" to "تم التوصيل يوم الاثنين"),
+            "en-XA" to mapOf("title" to "[Öŕðéŕ 1042 one]", "body" to "[Ðéļîṽéŕéð öñ Ṁöñðåý one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "media-and-footer",
+        instances = listOf(
+            CardExampleProperties(interactive = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Summer trip", "body" to "48 photos, shared with 3 people", "media" to "A lake between hills covered in pine trees", "footer" to "Open album"),
+            "vi" to mapOf("title" to "Chuyến đi mùa hè", "body" to "48 ảnh, được chia sẻ với 3 người", "media" to "Một hồ nước giữa những ngọn đồi phủ đầy rừng thông", "footer" to "Mở album"),
+            "zh-Hans" to mapOf("title" to "夏日旅行", "body" to "48 张照片，已与 3 人共享", "media" to "群山环抱的湖泊，山上长满松树", "footer" to "打开相册"),
+            "ja" to mapOf("title" to "夏の旅行", "body" to "写真 48 枚、3 人と共有中", "media" to "松林に覆われた丘に囲まれた湖", "footer" to "アルバムを開く"),
+            "ko" to mapOf("title" to "여름 여행", "body" to "사진 48장, 3명과 공유됨", "media" to "소나무 숲으로 덮인 언덕 사이의 호수", "footer" to "앨범 열기"),
+            "ar" to mapOf("title" to "رحلة الصيف", "body" to "48 صورة، تمت مشاركتها مع 3 أشخاص", "media" to "بحيرة بين تلال مغطاة بأشجار الصنوبر", "footer" to "فتح الألبوم"),
+            "en-XA" to mapOf("title" to "[Šûɱɱéŕ ţŕîþ one]", "body" to "[48 þĥöţöš, šĥåŕéð ŵîţĥ 3 þéöþļé one two three]", "media" to "[Å ļåķé ƀéţŵééñ ĥîļļš çöṽéŕéð îñ þîñé ţŕééš one two three four]", "footer" to "[Öþéñ åļƀûɱ one]"),
+        ),
+    ),
+    SpecExample(
+        id = "long-title",
+        instances = listOf(
+            CardExampleProperties(interactive = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Your order of three linen shirts and a wool scarf is on its way", "body" to "Arrives on Thursday"),
+            "vi" to mapOf("title" to "Đơn hàng gồm ba áo sơ mi vải lanh và một chiếc khăn len của bạn đang được giao", "body" to "Dự kiến đến vào thứ Năm"),
+            "zh-Hans" to mapOf("title" to "你订购的三件亚麻衬衫和一条羊毛围巾已经发货，正在送往你的地址", "body" to "预计周四送达"),
+            "ja" to mapOf("title" to "ご注文のリネンシャツ 3 枚とウールのマフラー 1 本は、現在お届けに向かっています", "body" to "木曜日にお届け予定"),
+            "ko" to mapOf("title" to "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다", "body" to "목요일 도착 예정"),
+            "ar" to mapOf("title" to "طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك", "body" to "يصل يوم الخميس"),
+            "en-XA" to mapOf("title" to "[Ýöûŕ öŕðéŕ öƒ ţĥŕéé ļîñéñ šĥîŕţš åñð å ŵööļ šçåŕƒ îš öñ îţš ŵåý one two three four five]", "body" to "[Åŕŕîṽéš öñ Ţĥûŕšðåý one two]"),
+        ),
+    ),
+)
+
+/** The properties of one Input in an example. */
+internal data class InputExampleProperties(
+    val size: InputSize,
+    val type: InputType,
+    val multiline: Boolean,
+    val required: Boolean,
+    val invalid: Boolean,
+    val disabled: Boolean,
+    val readOnly: Boolean,
+)
+
+/** The examples of specs/components/input/spec.yaml, with their text. */
+internal val inputExamples: List<SpecExample<InputExampleProperties>> = listOf(
+    SpecExample(
+        id = "sizes",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Sm, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+            InputExampleProperties(size = InputSize.Lg, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Full name", "value" to "Ana Lima"),
+            "vi" to mapOf("label" to "Họ và tên", "value" to "Nguyễn Thị Hương"),
+            "zh-Hans" to mapOf("label" to "姓名", "value" to "王小明"),
+            "ja" to mapOf("label" to "氏名", "value" to "山田 花子"),
+            "ko" to mapOf("label" to "이름", "value" to "김민준"),
+            "ar" to mapOf("label" to "الاسم الكامل", "value" to "ليلى حسن"),
+            "en-XA" to mapOf("label" to "[Ƒûļļ ñåɱé one]", "value" to "[Åñå Ļîɱå one]"),
+        ),
+    ),
+    SpecExample(
+        id = "description",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Delivery address", "description" to "Include the floor and the name of the building.", "value" to "12 Harbour Street"),
+            "vi" to mapOf("label" to "Địa chỉ giao hàng", "description" to "Ghi rõ số tầng và tên tòa nhà.", "value" to "12 Phố Hàng Bạc"),
+            "zh-Hans" to mapOf("label" to "收货地址", "description" to "请写明楼层和楼名。", "value" to "建国路 88 号"),
+            "ja" to mapOf("label" to "配送先住所", "description" to "階数と建物名も入力してください。", "value" to "丸の内 1-1"),
+            "ko" to mapOf("label" to "배송 주소", "description" to "층수와 건물 이름을 포함하세요.", "value" to "세종대로 110"),
+            "ar" to mapOf("label" to "عنوان التوصيل", "description" to "اذكر الطابق واسم المبنى.", "value" to "١٢ شارع الميناء"),
+            "en-XA" to mapOf("label" to "[Ðéļîṽéŕý åððŕéšš one two]", "description" to "[Îñçļûðé ţĥé ƒļööŕ åñð ţĥé ñåɱé öƒ ţĥé ƀûîļðîñĝ. one two three four]", "value" to "[12 Ĥåŕƀöûŕ Šţŕééţ one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "email",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Email, multiline = false, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Email address", "placeholder" to "name@example.com"),
+            "vi" to mapOf("label" to "Địa chỉ email", "placeholder" to "name@example.com"),
+            "zh-Hans" to mapOf("label" to "电子邮箱", "placeholder" to "name@example.com"),
+            "ja" to mapOf("label" to "メールアドレス", "placeholder" to "name@example.com"),
+            "ko" to mapOf("label" to "이메일 주소", "placeholder" to "name@example.com"),
+            "ar" to mapOf("label" to "البريد الإلكتروني", "placeholder" to "name@example.com"),
+            "en-XA" to mapOf("label" to "[Éɱåîļ åððŕéšš one]", "placeholder" to "[ñåɱé@éẋåɱþļé.çöɱ one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "invalid",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = true, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Username", "description" to "Letters, numbers, and dots, with no spaces.", "value" to "ana lima", "error" to "Remove the space, for example: ana.lima"),
+            "vi" to mapOf("label" to "Tên người dùng", "description" to "Chữ cái, chữ số và dấu chấm, không có khoảng trắng.", "value" to "ana lima", "error" to "Xóa khoảng trắng, ví dụ: ana.lima"),
+            "zh-Hans" to mapOf("label" to "用户名", "description" to "仅限字母、数字和句点，不能有空格。", "value" to "ana lima", "error" to "请删除空格，例如：ana.lima"),
+            "ja" to mapOf("label" to "ユーザー名", "description" to "英字、数字、ピリオドのみ。スペースは使えません。", "value" to "ana lima", "error" to "スペースを削除してください（例：ana.lima）"),
+            "ko" to mapOf("label" to "사용자 이름", "description" to "영문자, 숫자, 마침표만 쓰고 공백은 넣지 마세요.", "value" to "ana lima", "error" to "공백을 삭제하세요. 예: ana.lima"),
+            "ar" to mapOf("label" to "اسم المستخدم", "description" to "أحرف وأرقام ونقاط فقط، بدون مسافات.", "value" to "ana lima", "error" to "احذف المسافة، مثل: ana.lima"),
+            "en-XA" to mapOf("label" to "[Ûšéŕñåɱé one]", "description" to "[Ļéţţéŕš, ñûɱƀéŕš, åñð ðöţš, ŵîţĥ ñö šþåçéš. one two three four]", "value" to "[åñå ļîɱå one]", "error" to "[Ŕéɱöṽé ţĥé šþåçé, ƒöŕ éẋåɱþļé: åñå.ļîɱå one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "disabled",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = true, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Company", "value" to "Harbour Supplies"),
+            "vi" to mapOf("label" to "Công ty", "value" to "Công ty Bình Minh"),
+            "zh-Hans" to mapOf("label" to "公司", "value" to "晨光贸易"),
+            "ja" to mapOf("label" to "会社名", "value" to "朝日商事"),
+            "ko" to mapOf("label" to "회사", "value" to "한빛상사"),
+            "ar" to mapOf("label" to "الشركة", "value" to "شركة الفجر"),
+            "en-XA" to mapOf("label" to "[Çöɱþåñý one]", "value" to "[Ĥåŕƀöûŕ Šûþþļîéš one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "read-only",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = false, required = false, invalid = false, disabled = false, readOnly = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Account number", "value" to "DE89 3704 0044 0532 0130 00"),
+            "vi" to mapOf("label" to "Số tài khoản", "value" to "DE89 3704 0044 0532 0130 00"),
+            "zh-Hans" to mapOf("label" to "账号", "value" to "DE89 3704 0044 0532 0130 00"),
+            "ja" to mapOf("label" to "口座番号", "value" to "DE89 3704 0044 0532 0130 00"),
+            "ko" to mapOf("label" to "계좌 번호", "value" to "DE89 3704 0044 0532 0130 00"),
+            "ar" to mapOf("label" to "رقم الحساب", "value" to "DE89 3704 0044 0532 0130 00"),
+            "en-XA" to mapOf("label" to "[Åççöûñţ ñûɱƀéŕ one]", "value" to "[ÐÉ89 3704 0044 0532 0130 00 one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "multiline",
+        instances = listOf(
+            InputExampleProperties(size = InputSize.Md, type = InputType.Text, multiline = true, required = false, invalid = false, disabled = false, readOnly = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Message", "value" to "Please leave the parcel with the neighbour at number 14 if nobody answers the door."),
+            "vi" to mapOf("label" to "Lời nhắn", "value" to "Nếu không có ai mở cửa, vui lòng gửi bưu kiện cho hàng xóm ở số nhà 14."),
+            "zh-Hans" to mapOf("label" to "留言", "value" to "如果没人开门，请把包裹交给 14 号的邻居。"),
+            "ja" to mapOf("label" to "メッセージ", "value" to "誰も出ない場合は、14 番地の隣人に荷物を預けてください。"),
+            "ko" to mapOf("label" to "메시지", "value" to "아무도 문을 열지 않으면 14번지 이웃에게 택배를 맡겨 주세요."),
+            "ar" to mapOf("label" to "الرسالة", "value" to "إذا لم يفتح أحد الباب، يرجى ترك الطرد عند الجار في المنزل رقم 14."),
+            "en-XA" to mapOf("label" to "[Ṁéššåĝé one]", "value" to "[Þļéåšé ļéåṽé ţĥé þåŕçéļ ŵîţĥ ţĥé ñéîĝĥƀöûŕ åţ ñûɱƀéŕ 14 îƒ ñöƀöðý åñšŵéŕš ţĥé ðööŕ. one two three four five six seven]"),
+        ),
+    ),
+)
+
+/** The properties of one Tabs in an example. */
+internal data class TabsExampleProperties(
+    val activationMode: TabsActivationMode,
+    val keepMounted: Boolean,
+)
+
+/** The examples of specs/components/tabs/spec.yaml, with their text. */
+internal val tabsExamples: List<SpecExample<TabsExampleProperties>> = listOf(
+    SpecExample(
+        id = "labels",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Details\nReviews\nShipping", "panel" to "Made of waxed cotton, with taped seams."),
+            "vi" to mapOf("label" to "Chi tiết\nĐánh giá\nVận chuyển", "panel" to "Làm từ vải cotton phủ sáp, các đường may được dán kín."),
+            "zh-Hans" to mapOf("label" to "详情\n评价\n配送", "panel" to "采用上蜡棉布制成，接缝处经过压胶处理。"),
+            "ja" to mapOf("label" to "詳細\nレビュー\n配送", "panel" to "ワックスコットン製で、縫い目はテープで防水加工されています。"),
+            "ko" to mapOf("label" to "상세 정보\n리뷰\n배송", "panel" to "왁스 코튼으로 만들었으며 솔기는 테이프로 마감했습니다."),
+            "ar" to mapOf("label" to "التفاصيل\nالمراجعات\nالشحن", "panel" to "مصنوع من القطن المشمّع، مع درزات ملصوقة."),
+            "en-XA" to mapOf("label" to "[Ðéţåîļš\nŔéṽîéŵš\nŠĥîþþîñĝ one two]", "panel" to "[Ṁåðé öƒ ŵåẋéð çöţţöñ, ŵîţĥ ţåþéð šéåɱš. one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "icons",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Photos\nVideos\nFiles"),
+            "vi" to mapOf("label" to "Ảnh\nVideo\nTệp"),
+            "zh-Hans" to mapOf("label" to "照片\n视频\n文件"),
+            "ja" to mapOf("label" to "写真\n動画\nファイル"),
+            "ko" to mapOf("label" to "사진\n동영상\n파일"),
+            "ar" to mapOf("label" to "الصور\nالفيديوهات\nالملفات"),
+            "en-XA" to mapOf("label" to "[Þĥöţöš\nṼîðéöš\nƑîļéš one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "icon-only",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("accessible-name" to "List\nGrid"),
+            "vi" to mapOf("accessible-name" to "Danh sách\nLưới"),
+            "zh-Hans" to mapOf("accessible-name" to "列表\n网格"),
+            "ja" to mapOf("accessible-name" to "リスト\nグリッド"),
+            "ko" to mapOf("accessible-name" to "목록\n그리드"),
+            "ar" to mapOf("accessible-name" to "قائمة\nشبكة"),
+            "en-XA" to mapOf("accessible-name" to "[Ļîšţ\nĜŕîð one]"),
+        ),
+    ),
+    SpecExample(
+        id = "overflow",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Overview\nSpecifications\nReviews\nQuestions\nShipping\nReturns"),
+            "vi" to mapOf("label" to "Tổng quan\nThông số\nĐánh giá\nCâu hỏi\nVận chuyển\nĐổi trả"),
+            "zh-Hans" to mapOf("label" to "概览\n规格\n评价\n问答\n配送\n退货"),
+            "ja" to mapOf("label" to "概要\n仕様\nレビュー\n質問\n配送\n返品"),
+            "ko" to mapOf("label" to "개요\n사양\n리뷰\n질문\n배송\n반품"),
+            "ar" to mapOf("label" to "نظرة عامة\nالمواصفات\nالمراجعات\nالأسئلة\nالشحن\nالإرجاع"),
+            "en-XA" to mapOf("label" to "[Öṽéŕṽîéŵ\nŠþéçîƒîçåţîöñš\nŔéṽîéŵš\nǪûéšţîöñš\nŠĥîþþîñĝ\nŔéţûŕñš one two three four five]"),
+        ),
+    ),
+)
+
+/** The properties of one Toast in an example. */
+internal data class ToastExampleProperties(
+    val action: Boolean,
+)
+
+/** The examples of specs/components/toast/spec.yaml, with their text. */
+internal val toastExamples: List<SpecExample<ToastExampleProperties>> = listOf(
+    SpecExample(
+        id = "message",
+        instances = listOf(
+            ToastExampleProperties(action = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("message" to "Message archived"),
+            "vi" to mapOf("message" to "Đã lưu trữ thư"),
+            "zh-Hans" to mapOf("message" to "邮件已归档"),
+            "ja" to mapOf("message" to "メッセージをアーカイブしました"),
+            "ko" to mapOf("message" to "메시지를 보관했습니다"),
+            "ar" to mapOf("message" to "تمت أرشفة الرسالة"),
+            "en-XA" to mapOf("message" to "[Ṁéššåĝé åŕçĥîṽéð one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "with-action",
+        instances = listOf(
+            ToastExampleProperties(action = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("message" to "Address deleted", "action-label" to "Undo", "close-label" to "Close"),
+            "vi" to mapOf("message" to "Đã xóa địa chỉ", "action-label" to "Hoàn tác", "close-label" to "Đóng"),
+            "zh-Hans" to mapOf("message" to "地址已删除", "action-label" to "撤销", "close-label" to "关闭"),
+            "ja" to mapOf("message" to "住所を削除しました", "action-label" to "元に戻す", "close-label" to "閉じる"),
+            "ko" to mapOf("message" to "주소를 삭제했습니다", "action-label" to "실행 취소", "close-label" to "닫기"),
+            "ar" to mapOf("message" to "تم حذف العنوان", "action-label" to "تراجع", "close-label" to "إغلاق"),
+            "en-XA" to mapOf("message" to "[Åððŕéšš ðéļéţéð one]", "action-label" to "[Ûñðö]", "close-label" to "[Çļöšé]"),
+        ),
+    ),
+    SpecExample(
+        id = "long-message",
+        instances = listOf(
+            ToastExampleProperties(action = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("message" to "Messages older than one year were moved from Archive to the Deleted folder", "action-label" to "Undo", "close-label" to "Close"),
+            "vi" to mapOf("message" to "Các thư cũ hơn một năm đã được chuyển từ Lưu trữ sang thư mục Đã xóa", "action-label" to "Hoàn tác", "close-label" to "Đóng"),
+            "zh-Hans" to mapOf("message" to "超过一年的邮件已从归档移至“已删除”文件夹", "action-label" to "撤销", "close-label" to "关闭"),
+            "ja" to mapOf("message" to "1年以上前のメッセージをアーカイブから削除済みフォルダに移動しました", "action-label" to "元に戻す", "close-label" to "閉じる"),
+            "ko" to mapOf("message" to "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다", "action-label" to "실행 취소", "close-label" to "닫기"),
+            "ar" to mapOf("message" to "نُقلت الرسائل التي مضى عليها أكثر من عام من الأرشيف إلى مجلد المحذوفات", "action-label" to "تراجع", "close-label" to "إغلاق"),
+            "en-XA" to mapOf("message" to "[Ṁéššåĝéš öļðéŕ ţĥåñ öñé ýéåŕ ŵéŕé ɱöṽéð ƒŕöɱ Åŕçĥîṽé ţö ţĥé Ðéļéţéð ƒöļðéŕ one two three four five six]", "action-label" to "[Ûñðö]", "close-label" to "[Çļöšé]"),
         ),
     ),
 )

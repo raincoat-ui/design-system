@@ -1,0 +1,192 @@
+# The platform-neutral contract of Tabs. The React, SwiftUI, and Compose implementations all
+# follow it; the activation mode type they use is generated from this file.
+# Proposed and accepted in rfcs/0007-tabs.md.
+id: tabs
+name: Tabs
+specVersion: 1.0.0
+rfc: 7
+group: Layout
+summary: Switches between panels of related content in one view.
+
+properties:
+  activation-mode:
+    description: >-
+      On the web, whether the arrow keys select the tab they move to. On iOS and Android a
+      keyboard moves focus the platform's way, and Enter or Space selects, as for any control.
+    default: automatic
+    values:
+      automatic: The arrow keys select the tab they move to. The panel shows at once.
+      manual: The arrow keys only move focus, and Enter or Space selects. For panels that are slow to show.
+  keep-mounted:
+    type: boolean
+    default: false
+    description: >-
+      On the web, keeps a panel that is not selected in the page, hidden, so that it keeps its
+      state. Otherwise only the selected tab's panel is rendered.
+
+content:
+  label:
+    description: The text of a tab. One or two words, in sentence case. It stays on one line.
+    required: unless an icon is the only content
+  leading-icon:
+    description: An icon before the label. Decorative when there is a label.
+    required: false
+  accessible-name:
+    description: The name read by assistive technology.
+    required: when there is no label
+  panel:
+    description: The content shown while the tab is selected.
+    required: true
+
+anatomy:
+  tab-list:
+    description: >-
+      A row of tabs over a hairline across the full width. It scrolls sideways when the tabs do
+      not fit.
+    tokens:
+      - tabs.divider.color
+      - tabs.divider.width
+  tab:
+    description: >-
+      A label with an optional leading icon, as wide as its content. Every tab has the same
+      weight, selected or not, so selecting a tab does not change its width.
+    tokens:
+      - tabs.height
+      - tabs.padding-inline
+      - tabs.gap
+      - tabs.fg.*
+      - tabs.bg.*
+      - tabs.target-minimum
+  label:
+    description: The tab's text. It stays on one line and is never truncated.
+    tokens:
+      - tabs.label
+  icon:
+    description: An optional leading icon.
+    tokens:
+      - tabs.icon-size
+  indicator:
+    description: A bar under the selected tab, on top of the hairline.
+    tokens:
+      - tabs.indicator.color
+      - tabs.indicator.width
+  focus-ring:
+    description: >-
+      Drawn inside the tab's edge when the tab has keyboard focus, so the scrolling list does not
+      clip it. On the web it is also drawn inside a panel that takes focus.
+    tokens:
+      - tabs.focus-ring.width
+      - tabs.focus-ring.color
+  scroll-buttons:
+    description: >-
+      On the web, when the tabs do not fit and the pointer cannot scroll sideways: a previous and
+      a next button at the ends of the list. They are hidden from assistive technology and are
+      not in the Tab order, because the arrow keys already reach every tab.
+    tokens:
+      - tabs.icon-size
+      - tabs.gap
+      - tabs.fg.*
+      - tabs.bg.*
+  panel:
+    description: The content of the selected tab. Only the selected tab's panel is shown.
+
+states:
+  rest:
+    description: A tab that is not selected. Its label is muted.
+  hover:
+    description: A pointer is over the tab. The label darkens and the tab is filled. Exists only where there is a pointer.
+  focus-visible:
+    description: The tab has keyboard focus. The focus ring is shown inside its edge.
+  pressed:
+    description: The tab is being pressed. It is filled more strongly than on hover.
+  selected:
+    description: The tab whose panel is shown. Its label is in the default color, over the indicator.
+
+accessibility:
+  role: >-
+    tablist. Each tab is a tab, with its selected state and its position, such as "2 of 4", and
+    the panel is a tabpanel named by its tab. On iOS the row is a tab bar and the selected tab
+    carries the selected trait; on Android the row is a selectable group of tabs.
+  name: >-
+    Each tab is named by its label. A tab with only an icon must be given an accessible name.
+    Name the tab list too when a screen has more than one.
+  keyboard:
+    - keys: [ArrowLeft, ArrowRight]
+      action: >-
+        On the web, moves to the previous or next tab, wrapping at the ends, and selects it unless
+        the activation mode is manual. In right-to-left layouts the keys swap: Left moves to the
+        next tab.
+    - keys: [Home, End]
+      action: On the web, moves to the first or last tab, and selects it unless the activation mode is manual.
+    - keys: [Enter, Space]
+      action: >-
+        Selects the focused tab. On the web this is needed only in manual mode; on iOS and
+        Android it is how a keyboard selects.
+    - keys: [Tab]
+      action: >-
+        Moves focus into the list, to the selected tab, and from there to the panel: to its first
+        control, or to the panel itself when it has nothing focusable. On iOS and Android focus
+        moves between tabs as the platform moves it.
+  panel-focus: >-
+    On the web, a panel with nothing focusable can take focus itself, so its content can be
+    reached. A panel with focusable content is not itself a Tab stop.
+  selection: >-
+    Controlled by the app, or left to the component. On the web a click selects a tab when it is
+    pressed.
+  focus: >-
+    A ring at least 2px wide with 3:1 contrast against the surface, drawn inside the tab's edge
+    for keyboard focus. Moving focus to a tab scrolls it into view. On the web and on Android the
+    tab draws it from the focus ring tokens. On iOS the system draws its own focus indicator,
+    which follows the person's Full Keyboard Access settings.
+  target-size: >-
+    The area that takes touches is at least 44pt on iOS, 48dp on Android, and 44px on a touch
+    screen on the web, whatever the visible height. A tab's layout size is its visible size.
+  contrast: >-
+    Labels have 4.5:1 against the surface in every state, and 7:1 in high-contrast modes. The
+    indicator and the focus ring have 3:1. The selected tab does not depend on color alone: the
+    indicator is a shape.
+
+internationalization:
+  right-to-left: >-
+    The first tab is on the right, the list scrolls from the right, the leading icon sits on the
+    right of the label, and on the web Left and Right swap.
+  long-text: >-
+    Labels stay on one line and are never truncated. When the tabs do not fit, the list scrolls
+    sideways.
+  scripts: >-
+    The tab height leaves room for stacked Vietnamese diacritics at line height 1.4. CJK labels
+    use system fonts.
+
+motion:
+  transitions: >-
+    Fill and label color changes, and the indicator appearing under a newly selected tab, use
+    tabs.transition.duration and its easing.
+  reduced-motion: Color changes are immediate.
+
+# Named examples. Stories, tests, and documentation are built from these. An example shows a row
+# of tabs: its text (strings.yaml) gives one line per tab.
+examples:
+  - id: labels
+    description: Three tabs with labels, and the first one's panel. The first is selected.
+  - id: icons
+    description: Tabs with a leading icon beside each label.
+  - id: icon-only
+    description: Tabs that show only an icon. Each is given an accessible name.
+  - id: overflow
+    description: >-
+      More tabs than fit the width, the last one selected: the list scrolls sideways to show it.
+      In a long translation on a narrow screen, the row is scrolled to its last tab.
+
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
+implementations:
+  web:
+    file: packages/web/src/components/ui/tabs.tsx
+    name: [Tabs, TabsList, TabsTrigger, TabsContent]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatTabs.swift
+    name: [RaincoatTabs, RaincoatTab]
+  android:
+    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatTabs.kt
+    name: [RaincoatTabs, RaincoatTab]

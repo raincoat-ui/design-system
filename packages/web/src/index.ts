@@ -1,5 +1,41 @@
 export { Button, type ButtonProps, buttonVariants } from "./components/ui/button.js";
 export {
+  Card,
+  CardBody,
+  type CardBodyProps,
+  CardButton,
+  type CardButtonProps,
+  CardFooter,
+  type CardFooterProps,
+  CardLink,
+  type CardLinkProps,
+  CardMedia,
+  type CardMediaProps,
+  type CardProps,
+  CardTitle,
+  type CardTitleProps,
+} from "./components/ui/card.js";
+export { Input, type InputProps } from "./components/ui/input.js";
+export {
+  Tabs,
+  TabsContent,
+  type TabsContentProps,
+  TabsList,
+  type TabsListProps,
+  type TabsProps,
+  TabsTrigger,
+  type TabsTriggerProps,
+} from "./components/ui/tabs.js";
+export {
+  Toast,
+  type ToastAction,
+  type ToastOptions,
+  type ToastProps,
+  ToastProvider,
+  type ToastProviderProps,
+  useToast,
+} from "./components/ui/toast.js";
+export {
   Heading,
   type HeadingProps,
   headingVariants,
@@ -23,6 +59,15 @@ export {
   type HeadingColor,
   type HeadingLevel,
   type HeadingVariant,
+  INPUT_SIZE_DEFAULT,
+  INPUT_SIZES,
+  INPUT_TYPE_DEFAULT,
+  INPUT_TYPES,
+  type InputSize,
+  type InputType,
+  TABS_ACTIVATION_MODE_DEFAULT,
+  TABS_ACTIVATION_MODES,
+  type TabsActivationMode,
   TEXT_COLOR_DEFAULT,
   TEXT_COLORS,
   TEXT_VARIANT_DEFAULT,
