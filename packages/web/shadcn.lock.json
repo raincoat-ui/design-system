@@ -11,6 +11,27 @@
       "fetched": "2026-11-16",
       "local": "src/components/ui/button.tsx"
     },
+    "dialog": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/dialog.json",
+      "upstream": ".shadcn-upstream/dialog.tsx",
+      "sha256": "2ade6074e5fad0a4eb171ead44c43d3301a3c83d186d7236fb1fdbea80ee556b",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/dialog.tsx"
+    },
+    "alert-dialog": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/alert-dialog.json",
+      "upstream": ".shadcn-upstream/alert-dialog.tsx",
+      "sha256": "b3dfb83e54ed8c82071df5289e5149628bf573458fc2da2d62f93f8380041b28",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/alert-dialog.tsx"
+    },
+    "sheet": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/sheet.json",
+      "upstream": ".shadcn-upstream/sheet.tsx",
+      "sha256": "ea473d38a26a9b0b879e5a13139899ad45e9782e896b3fa205c7763a6c506876",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/sheet.tsx"
+    },
     "typography": {
       "registry": "https://ui.shadcn.com/r/styles/new-york-v4/typography.json",
       "upstream": null,
