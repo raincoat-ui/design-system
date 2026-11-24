@@ -206,3 +206,6 @@ implementations:
   web:
     file: packages/web/src/components/ui/typography.tsx
     name: [Text, Heading]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatTypography.swift
+    name: [".raincoatText(_:)", ".raincoatHeading(level:)"]
