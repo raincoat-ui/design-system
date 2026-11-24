@@ -74,6 +74,30 @@ enum DialogScrolling: Hashable, Sendable {
     }
 }
 
+/// How much of a dialog the software keyboard covers: from the keyboard's top down to the
+/// dialog's bottom, while the keyboard is docked at the bottom of the screen over it. A sheet
+/// that cannot rise above the keyboard has its bottom covered; the dialog keeps to what shows,
+/// so that its scrolling area ends above the keyboard. A keyboard elsewhere, as one floating
+/// on an iPad, or none, covers nothing.
+struct KeyboardCover: Hashable, Sendable {
+    let height: Double
+
+    /// - Parameters:
+    ///   - dialogTop: The top of the dialog on the screen.
+    ///   - dialogBottom: The bottom of the dialog on the screen.
+    ///   - keyboardTop: The top of the keyboard on the screen, or nil while it is hidden.
+    ///   - keyboardBottom: The bottom of the keyboard on the screen, or nil while it is hidden.
+    init(dialogTop: Double, dialogBottom: Double, keyboardTop: Double?, keyboardBottom: Double?) {
+        guard let keyboardTop, let keyboardBottom, keyboardTop < dialogBottom,
+            keyboardBottom >= dialogBottom - 0.5
+        else {
+            height = 0
+            return
+        }
+        height = dialogBottom - max(keyboardTop, dialogTop)
+    }
+}
+
 /// Whether the hairlines under the header and over the footer show: while the body has content
 /// scrolled beneath them.
 struct DialogDividers: Hashable, Sendable {

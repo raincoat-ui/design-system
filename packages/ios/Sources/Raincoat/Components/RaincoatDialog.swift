@@ -2,6 +2,10 @@
     import RaincoatTokens
     import SwiftUI
 
+    #if canImport(UIKit)
+        import UIKit
+    #endif
+
     // The Raincoat Dialog, alert dialog, and Sheet. They follow the Raincoat Dialog spec.
     //
     // On iOS a dialog and a sheet are both the system sheet, which is how iOS presents a modal
@@ -222,6 +226,16 @@
         // How far the body is scrolled, and the height of its visible area.
         @State private var offset: CGFloat = 0
         @State private var viewport: CGFloat = 0
+        // Where the software keyboard is on the screen, while it shows.
+        @State private var keyboard: CGRect?
+        #if canImport(UIKit)
+            private static var keyboardChanges: NotificationCenter.Publisher {
+                NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)
+            }
+            private static var keyboardHides: NotificationCenter.Publisher {
+                NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+            }
+        #endif
 
         var body: some View {
             let look = DialogAppearance(tokens)
@@ -231,8 +245,20 @@
             // screen, and the dialog scrolls in what it has (DialogScrolling).
             let detent: PresentationDetent = ideal > 0 ? .height(ideal) : .large
             GeometryReader { proxy in
+                // A sheet that cannot rise above the keyboard has its bottom covered by it. The
+                // dialog keeps to what shows, so that its scrolling area ends above the keyboard,
+                // and what is scrolled into view, as the field being edited, stays in view.
+                let placed = proxy.frame(in: .global)
+                let covered = CGFloat(
+                    KeyboardCover(
+                        dialogTop: Double(placed.minY), dialogBottom: Double(placed.maxY),
+                        keyboardTop: keyboard.map { Double($0.minY) },
+                        keyboardBottom: keyboard.map { Double($0.maxY) }
+                    ).height
+                )
+                let shown = max(0, proxy.size.height - covered)
                 let scrolling = DialogScrolling(
-                    available: Double(proxy.size.height),
+                    available: Double(shown),
                     header: Double(headerHeight),
                     body: Double(bodyHeight),
                     footer: Double(footerHeight),
@@ -288,14 +314,73 @@
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
                     }
                 }
+                .frame(width: proxy.size.width, height: shown, alignment: .top)
+                #if canImport(UIKit)
+                    .background { EditedFieldReveal(cover: covered) }
+                #endif
                 .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
             }
             .presentationDetents([detent])
             .presentationDragIndicator(kind == .sheet ? .visible : .hidden)
             .presentationBackground(Color(look.background))
             .interactiveDismissDisabled(isDismissDisabled)
+            #if canImport(UIKit)
+                .onReceive(Self.keyboardChanges) { note in
+                    keyboard = (note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+                }
+                .onReceive(Self.keyboardHides) { _ in keyboard = nil }
+            #endif
         }
     }
+
+    #if canImport(UIKit)
+        /// Brings the field being edited into view in the scrolling area that holds it, each time
+        /// the keyboard comes to cover a different part of the dialog. Only then, so that it never
+        /// scrolls back from where the person has scrolled to.
+        private struct EditedFieldReveal: UIViewRepresentable {
+            let cover: CGFloat
+
+            final class Coordinator {
+                var cover: CGFloat = 0
+            }
+
+            func makeCoordinator() -> Coordinator { Coordinator() }
+
+            func makeUIView(context _: Context) -> UIView {
+                let view = UIView()
+                view.isUserInteractionEnabled = false
+                view.isAccessibilityElement = false
+                return view
+            }
+
+            func updateUIView(_ view: UIView, context: Context) {
+                guard cover != context.coordinator.cover else { return }
+                context.coordinator.cover = cover
+                guard cover > 0 else { return }
+                // Once the dialog has been laid out in what the keyboard leaves.
+                Task { @MainActor [weak view] in
+                    guard let field = view?.window?.firstResponderInside else { return }
+                    var ancestor = field.superview
+                    while let current = ancestor, !(current is UIScrollView) {
+                        ancestor = current.superview
+                    }
+                    guard let scrollView = ancestor as? UIScrollView else { return }
+                    scrollView.scrollRectToVisible(field.convert(field.bounds, to: scrollView), animated: true)
+                }
+            }
+        }
+
+        extension UIView {
+            /// This view or the one in it that is the first responder, as a field being edited is.
+            fileprivate var firstResponderInside: UIView? {
+                if isFirstResponder { return self }
+                for subview in subviews {
+                    if let found = subview.firstResponderInside { return found }
+                }
+                return nil
+            }
+        }
+    #endif
 
     /// The header, the body, and the footer of a dialog, in its colors and spaces. Each section
     /// keeps the padding at the dialog's edges, and half the gap on its side of the line between
