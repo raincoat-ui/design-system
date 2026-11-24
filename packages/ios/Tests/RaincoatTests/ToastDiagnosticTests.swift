@@ -5,13 +5,14 @@
     import RaincoatTokens
     import SwiftUI
     import Testing
+    #if os(macOS)
+        import AppKit
+    #endif
 
-    // TEMPORARY. A diagnostic for the toast's size on macOS, recorded as an issue so that it shows
-    // in the log. Delete before the pull request is ready.
-    //
-    // ToastProbe is a copy of RaincoatToast's body, built in steps: step 1 is the message, and
-    // each later step adds the next piece in the order the body adds it. The test draws the probe
-    // up to each step, then all of it but one step, then RaincoatToast itself.
+    // TEMPORARY. A diagnostic for the toast on macOS: does a real AppKit host measure a view that
+    // follows VoiceOver's focus, which ImageRenderer measures as 10 by 10 points? It prints what it
+    // finds, so that it shows in the log, and it never fails. Delete before the pull request is
+    // ready.
 
     @MainActor
     private func measured(_ view: some View, width: CGFloat?) -> String {
@@ -22,254 +23,178 @@
         return "\(image.width)x\(image.height)"
     }
 
-    /// What the probe's body last saw.
-    @MainActor private var probeSaw = "nothing"
-
-    extension View {
-        /// The view with `change` applied when `enabled`, and as it is otherwise.
-        @MainActor @ViewBuilder
-        fileprivate func probeStep<Changed: View>(_ enabled: Bool, _ change: (Self) -> Changed) -> some View {
-            if enabled {
-                change(self)
-            } else {
-                self
-            }
-        }
+    private func described(_ size: CGSize) -> String {
+        "\(Int(size.width.rounded()))x\(Int(size.height.rounded()))"
     }
 
-    /// RaincoatToast's body up to step `last`, without step `skip`, for a toast without an
-    /// action or a close button. Steps:
-    ///  1. the message, at scale 1, without `accessibilityFocused`
-    ///  2. MessageAndAction
-    ///  3. HStack
-    ///  4. the two paddings
-    ///  5. foregroundStyle
-    ///  6. raincoatShadow
-    ///  7. overlay with strokeBorder
-    ///  8. contentShape
-    ///  9. onHover
-    /// 10. onChange
-    /// 11. offset
-    /// 12. simultaneousGesture
-    /// 13. accessibilityElement
-    /// 14. accessibilityAction
-    /// 15. fixedSize
-    /// 16. frame(maxWidth:)
-    /// 17. the message at the scale of `@ScaledMetric`
-    /// 18. the message's `accessibilityFocused`
-    private struct ToastProbe: View {
-        let last: Int
-        let skip: Int?
-        let message = "Message archived"
-        let action: RaincoatToast.Action? = nil
-        let closeLabel: String? = nil
+    /// The size of an image, where it has ink, and how many of its pixels differ from the first
+    /// opaque one, which is the toast's fill: the text and the outline.
+    private func inked(_ image: CGImage?) -> String {
+        guard let image else { return "no image" }
+        let width = image.width
+        let height = image.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        let drawn = pixels.withUnsafeMutableBytes { raw -> Bool in
+            guard let space = CGColorSpace(name: CGColorSpace.sRGB),
+                let context = CGContext(
+                    data: raw.baseAddress, width: width, height: height, bitsPerComponent: 8,
+                    bytesPerRow: width * 4, space: space,
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                )
+            else { return false }
+            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return true
+        }
+        guard drawn else { return "\(width)x\(height), unreadable" }
+        var xs: [Int] = []
+        var ys: [Int] = []
+        var fill: [UInt8]?
+        var marks = 0
+        for y in 0..<height {
+            for x in 0..<width {
+                let start = (y * width + x) * 4
+                guard pixels[start + 3] > 0 else { continue }
+                xs.append(x)
+                ys.append(y)
+                let color = Array(pixels[start..<start + 3])
+                if let fill {
+                    if zip(color, fill).contains(where: { pair in abs(Int(pair.0) - Int(pair.1)) > 8 }) {
+                        marks += 1
+                    }
+                } else {
+                    fill = color
+                }
+            }
+        }
+        guard let minX = xs.min(), let maxX = xs.max(), let minY = ys.min(), let maxY = ys.max() else {
+            return "\(width)x\(height), no ink"
+        }
+        return "\(width)x\(height), ink in x \(minX)-\(maxX) y \(minY)-\(maxY), \(marks) marks"
+    }
+
+    /// A test's own name for the one part that VoiceOver can be on.
+    private enum ProbePart: Hashable {
+        case message
+    }
+
+    /// The toast's message, padded and filled as a toast is, following VoiceOver's focus as the
+    /// toast's message does on iOS, or not, and handling Escape as the toast once did, or not.
+    private struct MessageProbe: View {
+        let followsVoiceOver: Bool
+        let handlesEscape: Bool
 
         @Tokens private var tokens
-        @Environment(\.raincoatToastControl) private var control
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
-        @AccessibilityFocusState private var voiceOverFocus: ToastPart?
-        @FocusState private var keyboardFocus: ToastPart?
-        @State private var swipe: CGFloat = 0
+        @AccessibilityFocusState private var focus: ProbePart?
 
-        init(last: Int, skip: Int? = nil) {
-            self.last = last
-            self.skip = skip
+        init(followsVoiceOver: Bool, handlesEscape: Bool = false) {
+            self.followsVoiceOver = followsVoiceOver
+            self.handlesEscape = handlesEscape
         }
-
-        private func on(_ step: Int) -> Bool { step <= last && step != skip }
 
         var body: some View {
             let toast = tokens.toast
-            let _ = (probeSaw =
-                "textScale \(textScale), message size \(toast.message.size), gap \(toast.gap), "
-                + "paddingInline \(toast.paddingInline), paddingBlock \(toast.paddingBlock), "
-                + "border \(toast.border.width), maxWidth \(toast.maxWidth)")
-            outer(toast)
-        }
-
-        private func outer(_ toast: RaincoatTokenSet.ToastTokens) -> some View {
-            interactive(toast)
-                .probeStep(on(13)) { $0.accessibilityElement(children: .contain) }
-                .probeStep(on(14)) { $0.accessibilityAction(.escape) { control?.close() } }
-                .probeStep(on(15)) { $0.fixedSize(horizontal: false, vertical: true) }
-                .probeStep(on(16)) { $0.frame(maxWidth: toast.maxWidth) }
-        }
-
-        private func interactive(_ toast: RaincoatTokenSet.ToastTokens) -> some View {
-            lifted(toast)
-                .probeStep(on(9)) { $0.onHover { hovering in control?.setPaused(.hover, hovering) } }
-                .probeStep(on(10)) {
-                    $0.onChange(of: voiceOverFocus != nil || keyboardFocus != nil) { _, focused in
-                        control?.setPaused(.focus, focused)
-                    }
-                }
-                .probeStep(on(11)) { $0.offset(y: swipe) }
-                .probeStep(on(12)) { $0.simultaneousGesture(swipeDown) }
-        }
-
-        private func lifted(_ toast: RaincoatTokenSet.ToastTokens) -> some View {
-            let shape = RoundedRectangle(cornerRadius: toast.radius, style: .continuous)
-            return core(toast)
-                .probeStep(on(4)) {
-                    $0.padding(.horizontal, toast.paddingInline + toast.border.width)
-                        .padding(.vertical, toast.paddingBlock + toast.border.width)
-                }
-                .probeStep(on(5)) { $0.foregroundStyle(Color(toast.fg)) }
-                .probeStep(on(6)) { $0.raincoatShadow(toast.shadow, in: shape, fill: Color(toast.bg)) }
-                .probeStep(on(7)) {
-                    $0.overlay { shape.strokeBorder(Color(toast.border.color), lineWidth: toast.border.width) }
-                }
-                .probeStep(on(8)) { $0.contentShape(shape) }
-        }
-
-        @ViewBuilder private func core(_ toast: RaincoatTokenSet.ToastTokens) -> some View {
-            if on(3) {
-                HStack(alignment: .top, spacing: toast.gap) {
-                    messageAndAction(toast)
-                    closeButton
-                }
+            let padded = message
+                .padding(.horizontal, toast.paddingInline + toast.border.width)
+                .padding(.vertical, toast.paddingBlock + toast.border.width)
+                .background(Color(toast.bg))
+            if handlesEscape {
+                padded.onKeyPress(.escape) { .ignored }
             } else {
-                messageAndAction(toast)
+                padded
             }
         }
 
-        @ViewBuilder private func messageAndAction(_ toast: RaincoatTokenSet.ToastTokens) -> some View {
-            if on(2) {
-                MessageAndAction(spacing: toast.gap) {
-                    messageText
-                    actionButton
-                }
-            } else {
-                messageText
-            }
-        }
-
-        @ViewBuilder private var messageText: some View {
-            let text = RaincoatToast.message(message, tokens: tokens, scale: on(17) ? textScale : 1)
-            if on(18) {
-                text.accessibilityFocused($voiceOverFocus, equals: .message)
+        @ViewBuilder private var message: some View {
+            let text = RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
+            if followsVoiceOver {
+                text.accessibilityFocused($focus, equals: .message)
             } else {
                 text
             }
         }
+    }
 
-        @ViewBuilder private var actionButton: some View {
-            if let action {
-                RaincoatButton(Text(verbatim: action.label), variant: .ghost, size: .sm) {
-                    action.perform()
-                    control?.close()
-                }
-                .focused($keyboardFocus, equals: .action)
-                .accessibilityFocused($voiceOverFocus, equals: .action)
-            }
+    #if os(macOS)
+        /// Sizes from AppKit: what a hosting controller says fits, with no width and in 360 points,
+        /// and a hosting view's fitting size, on its own and held to 360 points wide.
+        @MainActor
+        private func hostedSizes(_ view: some View) -> String {
+            let root = view.raincoatTheme(.base)
+            let unlimited = CGFloat.greatestFiniteMagnitude
+            let controller = NSHostingController(rootView: root)
+            let ideal = controller.sizeThatFits(in: CGSize(width: unlimited, height: unlimited))
+            let narrow = controller.sizeThatFits(in: CGSize(width: 360, height: unlimited))
+            let free = NSHostingView(rootView: root)
+            let held = NSHostingView(rootView: root)
+            held.translatesAutoresizingMaskIntoConstraints = false
+            held.widthAnchor.constraint(equalToConstant: 360).isActive = true
+            return "controller \(described(ideal)), in 360 \(described(narrow)); "
+                + "view fittingSize \(described(free.fittingSize)), held to 360 \(described(held.fittingSize))"
         }
 
-        @ViewBuilder private var closeButton: some View {
-            if let closeLabel {
-                Button {
-                    control?.close()
-                } label: {
-                    ToastCross(size: tokens.button.iconSize.sm * textScale)
-                }
-                .buttonStyle(
-                    RaincoatButtonStyle(
-                        variant: .ghost, size: .sm, isFullWidth: false, isLoading: false, isIconOnly: true
-                    )
+        /// Draws the view in a hosting view, in a borderless window, at its fitting size: through
+        /// AppKit's display cache, and by rendering its layers.
+        @MainActor
+        private func hostedDrawing(_ view: some View) -> String {
+            _ = NSApplication.shared
+            let host = NSHostingView(rootView: view.raincoatTheme(.base))
+            let size = host.fittingSize
+            let window = NSWindow(
+                contentRect: CGRect(origin: .zero, size: size), styleMask: .borderless, backing: .buffered,
+                defer: false
+            )
+            window.isReleasedWhenClosed = false
+            window.contentView = host
+            host.frame = CGRect(origin: .zero, size: size)
+            host.layoutSubtreeIfNeeded()
+            host.display()
+            var found = ["fitting \(described(size)), backing scale \(window.backingScaleFactor)"]
+            if let bitmap = host.bitmapImageRepForCachingDisplay(in: host.bounds) {
+                host.cacheDisplay(in: host.bounds, to: bitmap)
+                found.append("cacheDisplay \(inked(bitmap.cgImage))")
+            } else {
+                found.append("cacheDisplay: no bitmap")
+            }
+            if let layer = host.layer, let space = CGColorSpace(name: CGColorSpace.sRGB),
+                let context = CGContext(
+                    data: nil, width: Int(size.width.rounded(.up)), height: Int(size.height.rounded(.up)),
+                    bitsPerComponent: 8, bytesPerRow: 0, space: space,
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
                 )
-                .accessibilityLabel(Text(verbatim: closeLabel))
-                .focused($keyboardFocus, equals: .close)
-                .accessibilityFocused($voiceOverFocus, equals: .close)
+            {
+                layer.render(in: context)
+                found.append("layer.render \(inked(context.makeImage()))")
+            } else {
+                found.append("layer.render: no layer")
             }
+            return found.joined(separator: "; ")
         }
-
-        private var swipeDown: some Gesture {
-            DragGesture()
-                .onChanged { drag in swipe = max(0, drag.translation.height) }
-                .onEnded { drag in
-                    if drag.translation.height >= tokens.button.targetMinimum, let control {
-                        control.close()
-                    } else {
-                        swipe = 0
-                    }
-                }
-        }
-    }
-
-    /// The message in a view of its own that reads the tokens, as step 1 of the probe draws it.
-    private struct MessageWithTokens: View {
-        @Tokens private var tokens
-
-        var body: some View {
-            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
-        }
-    }
-
-    /// The message in a view that also declares the toast's VoiceOver focus, and uses it.
-    private struct MessageWithVoiceOverFocus: View {
-        @Tokens private var tokens
-        @AccessibilityFocusState private var voiceOverFocus: ToastPart?
-
-        var body: some View {
-            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
-                .accessibilityFocused($voiceOverFocus, equals: .message)
-        }
-    }
-
-    /// The message in a view that also declares the toast's keyboard focus.
-    private struct MessageWithKeyboardFocus: View {
-        @Tokens private var tokens
-        @FocusState private var keyboardFocus: ToastPart?
-
-        var body: some View {
-            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
-                .onChange(of: keyboardFocus != nil) { _, _ in }
-        }
-    }
-
-    /// The message in a view that also reads the toast's control from the environment.
-    private struct MessageWithControl: View {
-        @Tokens private var tokens
-        @Environment(\.raincoatToastControl) private var control
-
-        var body: some View {
-            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
-                .onHover { hovering in control?.setPaused(.hover, hovering) }
-        }
-    }
+    #endif
 
     @MainActor
-    @Test func diagnoseTheToastsSize() {
-        var lines = ["TOAST DIAGNOSTIC 2"]
-        for width in [nil, 360] as [CGFloat?] {
-            let offered = width.map { "\($0)" } ?? "nil"
-            lines += [
-                "width \(offered) message view, tokens: \(measured(MessageWithTokens(), width: width))",
-                "width \(offered) message view, VoiceOver focus: "
-                    + measured(MessageWithVoiceOverFocus(), width: width),
-                "width \(offered) message view, keyboard focus: \(measured(MessageWithKeyboardFocus(), width: width))",
-                "width \(offered) message view, control: \(measured(MessageWithControl(), width: width))",
-            ]
-            for step in 1...18 {
-                lines.append("width \(offered) up to step \(step): \(measured(ToastProbe(last: step), width: width))")
-            }
-            for step in 2...18 {
-                lines.append(
-                    "width \(offered) all but step \(step): "
-                        + measured(ToastProbe(last: 18, skip: step), width: width)
-                )
-            }
-            let undo = RaincoatToast.Action("Undo") {}
-            lines += [
-                "width \(offered) RaincoatToast: \(measured(RaincoatToast("Message archived"), width: width))",
-                "width \(offered) RaincoatToast, control nil: "
-                    + measured(
-                        RaincoatToast("Message archived").environment(\.raincoatToastControl, nil), width: width
-                    ),
-                "width \(offered) RaincoatToast, Undo and Close: "
-                    + measured(RaincoatToast("Message archived", action: undo, closeLabel: "Close"), width: width),
-            ]
+    @Test func diagnoseTheToastInAnAppKitHost() {
+        var lines = ["TOAST DIAGNOSTIC 3"]
+        let undo = RaincoatToast.Action("Undo") {}
+        let views: [(String, AnyView)] = [
+            ("message following VoiceOver", AnyView(MessageProbe(followsVoiceOver: true))),
+            ("message not following VoiceOver", AnyView(MessageProbe(followsVoiceOver: false))),
+            (
+                "message handling Escape with onKeyPress",
+                AnyView(MessageProbe(followsVoiceOver: false, handlesEscape: true))
+            ),
+            ("RaincoatToast", AnyView(RaincoatToast("Message archived"))),
+            (
+                "RaincoatToast, Undo and Close",
+                AnyView(RaincoatToast("Message archived", action: undo, closeLabel: "Close"))
+            ),
+        ]
+        for (name, view) in views {
+            lines.append("\(name): ImageRenderer \(measured(view, width: nil)), at 360 \(measured(view, width: 360))")
+            #if os(macOS)
+                lines.append("\(name): \(hostedSizes(view))")
+                lines.append("\(name): drawn in a window: \(hostedDrawing(view))")
+            #endif
         }
-        lines.append("probe body saw: \(probeSaw)")
-        Issue.record(Comment(rawValue: lines.joined(separator: "\n")))
+        print(lines.joined(separator: "\n"))
     }
 #endif

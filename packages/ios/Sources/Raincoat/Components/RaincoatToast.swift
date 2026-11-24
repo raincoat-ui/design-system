@@ -18,7 +18,8 @@
     /// The host shows one toast at a time, in order. A toast never takes focus; VoiceOver says
     /// its message after whatever it is saying. Without an action, a toast closes after 6
     /// seconds, and the time stops while a pointer is over it, while VoiceOver or the keyboard
-    /// is on it, and while the app is in the background. A toast with an action stays until the
+    /// is on it, and while the app is in the background. On macOS, the time stops for the
+    /// pointer and the keyboard, but not for VoiceOver. A toast with an action stays until the
     /// action is used or the toast is closed, so it always has a close button. A swipe down
     /// closes a toast too.
     ///
@@ -114,7 +115,7 @@
         /// The message, with its first line centered on the small buttons beside it.
         private var messageText: some View {
             Self.message(message, tokens: tokens, scale: textScale)
-                .accessibilityFocused($voiceOverFocus, equals: .message)
+                .toastVoiceOverFocus($voiceOverFocus, equals: .message)
         }
 
         /// The text of a message, as a toast draws it: its first line centered on a small Button.
@@ -140,7 +141,7 @@
                     control?.close()
                 }
                 .focused($keyboardFocus, equals: .action)
-                .accessibilityFocused($voiceOverFocus, equals: .action)
+                .toastVoiceOverFocus($voiceOverFocus, equals: .action)
             }
         }
 
@@ -160,7 +161,7 @@
                 )
                 .accessibilityLabel(Text(verbatim: closeLabel))
                 .focused($keyboardFocus, equals: .close)
-                .accessibilityFocused($voiceOverFocus, equals: .close)
+                .toastVoiceOverFocus($voiceOverFocus, equals: .close)
             }
         }
 
@@ -181,7 +182,7 @@
 
     /// The message, and the action after it while the two fit on one line. When they do not, the
     /// message takes the whole width and wraps, and the action moves below it, at the end.
-    struct MessageAndAction: Layout {
+    private struct MessageAndAction: Layout {
         let spacing: CGFloat
 
         func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache _: inout ()) -> CGSize {
@@ -237,15 +238,33 @@
         }
     }
 
+    extension View {
+        /// Follows VoiceOver's focus on this part of a toast, so that the toast's time stops
+        /// while VoiceOver is on it. On iOS only: on macOS, SwiftUI measures a view that follows
+        /// VoiceOver's focus as if it had no content of its own, 10 by 10 points when it is offered
+        /// no size, at least when it draws the view into an image, so the toast would be cut
+        /// short. There, the time stops for the pointer and the keyboard alone.
+        @ViewBuilder
+        fileprivate func toastVoiceOverFocus(
+            _ focus: AccessibilityFocusState<ToastPart?>.Binding, equals part: ToastPart
+        ) -> some View {
+            #if os(iOS)
+                accessibilityFocused(focus, equals: part)
+            #else
+                self
+            #endif
+        }
+    }
+
     /// The parts of a toast that VoiceOver or the keyboard can be on.
-    enum ToastPart: Hashable {
+    private enum ToastPart: Hashable {
         case message
         case action
         case close
     }
 
     /// The cross of the close button, in the button's color, with the stroke of its spinner.
-    struct ToastCross: View {
+    private struct ToastCross: View {
         let size: CGFloat
 
         var body: some View {

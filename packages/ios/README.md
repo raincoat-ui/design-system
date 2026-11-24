@@ -98,8 +98,9 @@ showToast(RaincoatToast("Message archived", action: .init("Undo") { undo() }, cl
 - One toast is shown at a time, at the bottom center of the host; others wait, in order.
 - A toast never takes focus. VoiceOver says its message after whatever it is saying.
 - Without an action, a toast closes after 6 seconds. The time stops while a pointer is over it,
-  while VoiceOver or the keyboard is on it, and while the app is in the background. A toast with
-  an action stays until the action is used or the toast is closed.
+  while VoiceOver or the keyboard is on it, and while the app is in the background. On macOS,
+  VoiceOver does not stop it; the pointer and the keyboard do. A toast with an action stays until
+  the action is used or the toast is closed.
 - A swipe down closes a toast.
 - A toast sits above the on-screen keyboard. Declare a bar of your own at the bottom of the
   screen with `safeAreaInset(edge: .bottom)` outside the host, and the toast sits above it too:
