@@ -139,13 +139,32 @@ final class DialogTests: ReferenceAppTestCase {
         // The field takes focus, and the keyboard leaves the dialog less of the screen.
         expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: field)
         waitForExpectations(timeout: 10)
+        let keyboard = app.keyboards.firstMatch
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 10))
+        // The dialog brings the field being edited into view, above the keyboard.
+        settle(field)
+        assertAboveTheKeyboard(field, keyboard, "once the keyboard is up")
         // The whole dialog scrolls when the screen is too short for it, so the footer can be
         // reached. Scrolled to the field, it may show neither the title nor the description.
         let cancel = app.buttons["Cancel"]
         for _ in 0..<4 where !cancel.isHittable {
             ([title, description].first { $0.isHittable } ?? field).swipeUp()
         }
+        // And it stays where it was scrolled to: Cancel is in the same place on two looks half
+        // a second apart, and can still be touched.
+        var last = cancel.frame
+        var still = false
+        for _ in 0..<10 where !still {
+            Thread.sleep(forTimeInterval: 0.5)
+            let next = cancel.frame
+            still = next == last
+            last = next
+        }
+        XCTAssertTrue(still, "Cancel stops moving: \(last)")
         XCTAssertTrue(cancel.isHittable)
+        // The field is still being edited, and still wholly above the keyboard.
+        XCTAssertEqual(field.value(forKey: "hasKeyboardFocus") as? Bool, true)
+        assertAboveTheKeyboard(field, keyboard, "scrolled to Cancel")
         try audit(app, "Rename file at the largest text size", sheet: "Rename file")
         cancel.tap()
         XCTAssertTrue(title.waitForNonExistence(timeout: 10))
@@ -343,6 +362,19 @@ final class DialogTests: ReferenceAppTestCase {
     private func isInSheet(_ element: XCUIElement, titled title: String, _ app: XCUIApplication) -> Bool {
         guard let top = sheetTop(titled: title, in: app) else { return false }
         return element.frame.minY >= top
+    }
+
+    /// Checks that an element lies wholly above the top of the keyboard.
+    @MainActor
+    private func assertAboveTheKeyboard(
+        _ element: XCUIElement, _ keyboard: XCUIElement, _ when: String,
+        file: StaticString = #filePath, line: UInt = #line
+    ) {
+        XCTAssertLessThanOrEqual(
+            element.frame.maxY, keyboard.frame.minY + 0.5,
+            "\(when): \(element.label) at \(element.frame), the keyboard at \(keyboard.frame)",
+            file: file, line: line
+        )
     }
 
     /// Waits until an element stops moving, as a sheet does once it reaches its height.
