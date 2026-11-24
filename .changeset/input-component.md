@@ -11,8 +11,10 @@ line or several. It follows `specs/components/input/spec.yaml`.
   with `multiline`. The field is described by its description and then its error, and sets
   `aria-invalid` and `required`. While a Vietnamese or CJK input method composes, the field
   keeps the error state it had, and Enter that commits the composition does not submit the
-  form. Email, phone, and web address fields stay left-to-right in a right-to-left layout. The
-  Input is a Client Component that a Server Component can render.
+  form. Email, phone, and web address fields stay left-to-right in a right-to-left layout.
+  Japanese breaks into lines by the strict rules, and Korean between whole words, in the field
+  and in its label, description, and error. The Input is a Client Component that a Server
+  Component can render.
 - **SwiftUI.** `RaincoatInput("Email", text: $email, type: .email)`, on `TextField` and
   `SecureField`. VoiceOver reads the description as the hint and, since iOS has no invalid
   state, an invalid field's error after its label. `.textFieldStyle(.raincoat())` gives any text

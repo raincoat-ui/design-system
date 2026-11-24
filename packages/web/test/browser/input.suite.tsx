@@ -38,12 +38,14 @@ function Stage({
   mode = "light",
   density,
   dir,
+  lang,
   width = 400,
   children,
 }: {
   mode?: Mode;
   density?: Density;
   dir?: "ltr" | "rtl";
+  lang?: string;
   width?: number;
   children: ReactNode;
 }) {
@@ -53,6 +55,7 @@ function Stage({
       data-theme={mode}
       data-density={density}
       dir={dir}
+      lang={lang}
       style={{
         background: "var(--rc-color-bg-canvas)",
         boxSizing: "border-box",
@@ -122,6 +125,84 @@ async function withTextSize(scale: number, run: () => Promise<void>) {
     await run();
   } finally {
     document.documentElement.style.fontSize = "";
+  }
+}
+
+// Text from specs/components/input/strings.yaml: the multi-line value and the description, in
+// Korean and Japanese.
+const VALUE_KO = "아무도 문을 열지 않으면 14번지 이웃에게 택배를 맡겨 주세요.";
+const DESCRIPTION_KO = "영문자, 숫자, 마침표만 쓰고 공백은 넣지 마세요.";
+const VALUE_JA = "誰も出ない場合は、14 番地の隣人に荷物を預けてください。";
+const DESCRIPTION_JA = "英字、数字、ピリオドのみ。スペースは使えません。";
+// What may not start a line of Japanese: small kana and the prolonged sound mark, which strict
+// line breaking keeps on the line before, and the closing comma and full stop.
+const NO_LINE_START_JA = /[ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿー、。]/u;
+
+/**
+ * The lines the browser broke an element's text into, read from where each character is drawn.
+ * A space stays at the end of the line it ends.
+ */
+function lines(element: Element) {
+  const lineHeight = pixels(computed(element).lineHeight);
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  const found: string[] = [];
+  let top = Number.NEGATIVE_INFINITY;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const text = node as Text;
+    for (let index = 0; index < text.length; index++) {
+      const character = text.data.charAt(index);
+      range.setStart(text, index);
+      range.setEnd(text, index + 1);
+      const rect = range.getBoundingClientRect();
+      if (found.length === 0 || (character.trim() !== "" && rect.top > top + lineHeight / 2)) {
+        found.push("");
+        top = rect.top;
+      }
+      found[found.length - 1] += character;
+    }
+  }
+  return found;
+}
+
+/**
+ * The lines of a text area's value. A text area's text cannot be read character by character, so
+ * the value is laid out again in an element with the text area's text styles and the width of
+ * its text, and the number of lines is checked against the text area's own height.
+ */
+function textAreaLines(area: HTMLTextAreaElement) {
+  const style = computed(area);
+  // Measured before the copy is added to the page, so that nothing it does can move the field.
+  const lineHeight = pixels(style.lineHeight);
+  const height = area.scrollHeight - pixels(style.paddingTop) - pixels(style.paddingBottom);
+  const width = area.clientWidth - pixels(style.paddingLeft) - pixels(style.paddingRight);
+  const mirror = document.createElement("div");
+  for (const property of [
+    "fontFamily",
+    "fontSize",
+    "fontWeight",
+    "letterSpacing",
+    "lineHeight",
+    "wordBreak",
+    "lineBreak",
+    "overflowWrap",
+  ] as const) {
+    mirror.style[property] = style[property];
+  }
+  mirror.style.whiteSpace = "pre-wrap";
+  mirror.style.width = `${width}px`;
+  mirror.style.position = "absolute";
+  mirror.lang = area.closest("[lang]")?.getAttribute("lang") ?? "";
+  mirror.textContent = area.value;
+  document.body.append(mirror);
+  try {
+    const found = lines(mirror);
+    expect(Math.round(height / lineHeight), `the text area's lines: ${found.join(" | ")}`).toBe(
+      found.length,
+    );
+    return found;
+  } finally {
+    mirror.remove();
   }
 }
 
@@ -886,6 +967,55 @@ export function describeInput(environment: string) {
           const firstLine = box.top + number("input.border-width") + padding + lineHeight;
           expect(icon.top + icon.height / 2).toBeCloseTo(firstLine, 1);
         });
+      });
+    });
+
+    describe("line breaking", () => {
+      /** The field's value and description at every width from 200 to 480px, 8px apart. */
+      async function linesAtEveryWidth(lang: string, value: string, description: string) {
+        const screen = await render(
+          <Stage lang={lang}>
+            <Input
+              label="Message"
+              description={description}
+              multiline
+              rows={1}
+              defaultValue={value}
+            />
+          </Stage>,
+        );
+        const stage = screen.getByTestId("stage").element() as HTMLElement;
+        const area = screen.getByRole("textbox").element() as HTMLTextAreaElement;
+        const help = parts(area).description;
+        const found: string[][] = [];
+        for (let width = 200; width <= 480; width += 8) {
+          stage.style.width = `${width}px`;
+          found.push(textAreaLines(area), lines(help));
+        }
+        return found;
+      }
+
+      test("Korean breaks only between words, in the field and in the text around it", async () => {
+        const all = await linesAtEveryWidth("ko", VALUE_KO, DESCRIPTION_KO);
+        expect(all.some((found) => found.length > 1)).toBe(true);
+        for (const found of all) {
+          // Every line but the last ends at a space.
+          expect(
+            found.slice(0, -1).filter((line) => !line.endsWith(" ")),
+            found.join(" | "),
+          ).toEqual([]);
+        }
+      });
+
+      test("Japanese breaks by the strict rules, in the field and in the text around it", async () => {
+        const all = await linesAtEveryWidth("ja", VALUE_JA, DESCRIPTION_JA);
+        expect(all.some((found) => found.length > 1)).toBe(true);
+        for (const found of all) {
+          expect(
+            found.filter((line) => NO_LINE_START_JA.test(line.charAt(0))),
+            found.join(" | "),
+          ).toEqual([]);
+        }
       });
     });
 

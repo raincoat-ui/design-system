@@ -115,15 +115,25 @@ const linesHeight = (size: InputSize, rows: number) =>
 // included, in a right-to-left layout.
 const LEFT_TO_RIGHT: ReadonlySet<InputType> = new Set(["email", "tel", "url"]);
 
+// Lines break as RFC 0003 says text does: by the strict rules in Japanese, so that no line
+// starts with a small kana or a prolonged sound mark, and between whole words in Korean, which
+// puts spaces between them. Set on every element that holds text: the label, the description,
+// the error, and the field.
+const LINE_BREAKING = "[&:lang(ja)]:[line-break:strict] [&:lang(ko)]:break-keep";
+
 const classes = {
   root: "flex min-w-0 flex-col gap-(--rc-input-gap)",
-  label: "text-(--rc-input-label-fg) wrap-break-word",
+  label: ["text-(--rc-input-label-fg) wrap-break-word", LINE_BREAKING],
   // The rule for visually hidden text. Its values are fixed, not a design choice.
   hidden: "sr-only",
-  description:
+  description: [
     "m-0 font-(family-name:--rc-input-description-type-font-family) text-(length:--rc-input-description-type-font-size) leading-(--rc-input-description-type-line-height) font-(--rc-input-description-type-font-weight) tracking-(--rc-input-description-type-letter-spacing) text-(--rc-input-description-fg) wrap-break-word",
-  error:
+    LINE_BREAKING,
+  ],
+  error: [
     "m-0 font-(family-name:--rc-input-error-type-font-family) text-(length:--rc-input-error-type-font-size) leading-(--rc-input-error-type-line-height) font-(--rc-input-error-type-font-weight) tracking-(--rc-input-error-type-letter-spacing) text-(--rc-input-error-fg) wrap-break-word",
+    LINE_BREAKING,
+  ],
   field: [
     // The box. Its states are exclusive, so no rule has to win over another: disabled (by the
     // prop or a disabled fieldset) wins over invalid, and invalid over read-only for the outline.
@@ -143,6 +153,7 @@ const classes = {
     // Firefox draws a placeholder at half opacity unless told otherwise, below its contrast.
     "text-(--rc-input-fg-default) placeholder:text-(--rc-input-placeholder) placeholder:opacity-100",
     "disabled:cursor-not-allowed disabled:text-(--rc-input-fg-disabled) disabled:placeholder:text-(--rc-input-fg-disabled)",
+    LINE_BREAKING,
   ],
   // A one-line field does not reach past its outline while the browser has autofilled it, so
   // that the autofill fill stays inside the field.
@@ -338,7 +349,7 @@ function Input(props: InputProps) {
         {label}
       </Label.Root>
       {description != null && description !== false && (
-        <p id={descriptionId} data-slot="input-description" className={classes.description}>
+        <p id={descriptionId} data-slot="input-description" className={cn(classes.description)}>
           {description}
         </p>
       )}
@@ -360,7 +371,7 @@ function Input(props: InputProps) {
         )}
       </div>
       {showsError && (
-        <p id={errorId} data-slot="input-error" className={classes.error}>
+        <p id={errorId} data-slot="input-error" className={cn(classes.error)}>
           {shown.error}
         </p>
       )}
