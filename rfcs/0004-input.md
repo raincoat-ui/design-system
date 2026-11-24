@@ -1,9 +1,9 @@
 # RFC 0004: Input
 
-- Status: proposed
+- Status: accepted
 - Kind: component
 - Proposed: 2026-11-24
-- Decided:
+- Decided: 2026-11-24
 
 ## Summary
 
