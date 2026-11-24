@@ -216,8 +216,8 @@
                 .tracking(text.tracking)
                 .lineSpacing(text.lineSpacing)
                 .foregroundStyle(Color(colors.foreground))
-                .padding(.horizontal, style.isIconOnly ? 0 : measurements.paddingInline)
-                .padding(.vertical, style.isIconOnly ? 0 : measurements.paddingBlock)
+                .padding(.horizontal, style.isIconOnly ? measurements.paddingAroundIcon : measurements.paddingInline)
+                .padding(.vertical, style.isIconOnly ? measurements.paddingAroundIcon : measurements.paddingBlock)
                 .frame(
                     minWidth: measurements.height,
                     maxWidth: style.isFullWidth ? .infinity : nil,

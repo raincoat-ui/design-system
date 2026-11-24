@@ -119,11 +119,12 @@ test("the stylesheet reader finds rules inside at-rules", () => {
 });
 
 // What a component rule may contain besides Raincoat tokens. Nothing here is a design
-// decision: keywords, zero, a full percentage, one line of text, and halving.
+// decision: keywords, zero, a full percentage, one line of text, halving, and dividing one
+// length by another, which tan(atan2(a, b)) does.
 const NEUTRAL = new Set([
-  ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", '""', "''"],
+  ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", "tan(", "atan2(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
-  ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  ...["normal", "break-word", "strict", "keep-all", "pointer", "default", "not-allowed"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
@@ -138,7 +139,7 @@ function literals(value) {
     .replaceAll(/var\(--tw-[a-z-]+(?:, ?var\(--default-[a-z-]+\))?\)/g, " ")
     .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ");
   const words = rest.match(
-    /var\(--[\w-]+|#[0-9a-f]+|[a-z][a-z-]*\(?|\d*\.?\d+[a-z%]*|"[^"]*"|'[^']*'/gi,
+    /var\(--[\w-]+|#[0-9a-f]+|[a-z][a-z0-9-]*\(?|\d*\.?\d+[a-z%]*|"[^"]*"|'[^']*'/gi,
   );
   return (words ?? []).filter((word) => !NEUTRAL.has(word.toLowerCase()));
 }
@@ -149,6 +150,13 @@ test("a literal color, a literal size, and a custom property that is not a token
     literals("calc((var(--rc-button-height-md) - 1lh)/2 - var(--rc-button-border-width))"),
     [],
   );
+  assert.deepEqual(
+    literals(
+      "calc(var(--rc-size-icon-md)*tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))",
+    ),
+    [],
+  );
+  assert.deepEqual(literals("calc(var(--rc-size-icon-md)*1.5)"), ["1.5"]);
   assert.deepEqual(literals("var(--tw-ease,var(--default-transition-timing-function))"), []);
   assert.deepEqual(literals("#f7d22a"), ["#f7d22a"]);
   assert.deepEqual(literals("red"), ["red"]);
