@@ -1,4 +1,20 @@
 export { Button, type ButtonProps, buttonVariants } from "./components/ui/button.js";
+export {
+  Card,
+  CardBody,
+  type CardBodyProps,
+  CardButton,
+  type CardButtonProps,
+  CardFooter,
+  type CardFooterProps,
+  CardLink,
+  type CardLinkProps,
+  CardMedia,
+  type CardMediaProps,
+  type CardProps,
+  CardTitle,
+  type CardTitleProps,
+} from "./components/ui/card.js";
 export { Input, type InputProps } from "./components/ui/input.js";
 export {
   Tabs,

@@ -192,6 +192,75 @@ let buttonExamples: [SpecExample<ButtonExampleProperties>] = [
     ),
 ]
 
+/// The properties of one Card in an example.
+struct CardExampleProperties: Sendable {
+    let interactive: Bool
+}
+
+/// The examples of specs/components/card/spec.yaml, with their text.
+let cardExamples: [SpecExample<CardExampleProperties>] = [
+    SpecExample(
+        id: "static",
+        instances: [
+            CardExampleProperties(interactive: false),
+        ],
+        text: [
+            "en": ["title": "Storage", "body": "4.2 GB of 15 GB used"],
+            "vi": ["title": "Dung lượng lưu trữ", "body": "Đã dùng 4,2 GB trong tổng số 15 GB"],
+            "zh-Hans": ["title": "存储空间", "body": "已使用 4.2 GB，共 15 GB"],
+            "ja": ["title": "ストレージ", "body": "15 GB 中 4.2 GB を使用中"],
+            "ko": ["title": "저장 공간", "body": "15GB 중 4.2GB 사용 중"],
+            "ar": ["title": "مساحة التخزين", "body": "تم استخدام 4.2 غيغابايت من 15 غيغابايت"],
+            "en-XA": ["title": "[Šţöŕåĝé one]", "body": "[4.2 ĜƁ öƒ 15 ĜƁ ûšéð one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "interactive",
+        instances: [
+            CardExampleProperties(interactive: true),
+        ],
+        text: [
+            "en": ["title": "Order 1042", "body": "Delivered on Monday"],
+            "vi": ["title": "Đơn hàng 1042", "body": "Đã giao vào thứ Hai"],
+            "zh-Hans": ["title": "订单 1042", "body": "已于周一送达"],
+            "ja": ["title": "注文 1042", "body": "月曜日に配達済み"],
+            "ko": ["title": "주문 1042", "body": "월요일에 배송됨"],
+            "ar": ["title": "الطلب 1042", "body": "تم التوصيل يوم الاثنين"],
+            "en-XA": ["title": "[Öŕðéŕ 1042 one]", "body": "[Ðéļîṽéŕéð öñ Ṁöñðåý one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "media-and-footer",
+        instances: [
+            CardExampleProperties(interactive: false),
+        ],
+        text: [
+            "en": ["title": "Summer trip", "body": "48 photos, shared with 3 people", "media": "A lake between hills covered in pine trees", "footer": "Open album"],
+            "vi": ["title": "Chuyến đi mùa hè", "body": "48 ảnh, được chia sẻ với 3 người", "media": "Một hồ nước giữa những ngọn đồi phủ đầy rừng thông", "footer": "Mở album"],
+            "zh-Hans": ["title": "夏日旅行", "body": "48 张照片，已与 3 人共享", "media": "群山环抱的湖泊，山上长满松树", "footer": "打开相册"],
+            "ja": ["title": "夏の旅行", "body": "写真 48 枚、3 人と共有中", "media": "松林に覆われた丘に囲まれた湖", "footer": "アルバムを開く"],
+            "ko": ["title": "여름 여행", "body": "사진 48장, 3명과 공유됨", "media": "소나무 숲으로 덮인 언덕 사이의 호수", "footer": "앨범 열기"],
+            "ar": ["title": "رحلة الصيف", "body": "48 صورة، تمت مشاركتها مع 3 أشخاص", "media": "بحيرة بين تلال مغطاة بأشجار الصنوبر", "footer": "فتح الألبوم"],
+            "en-XA": ["title": "[Šûɱɱéŕ ţŕîþ one]", "body": "[48 þĥöţöš, šĥåŕéð ŵîţĥ 3 þéöþļé one two three]", "media": "[Å ļåķé ƀéţŵééñ ĥîļļš çöṽéŕéð îñ þîñé ţŕééš one two three four]", "footer": "[Öþéñ åļƀûɱ one]"],
+        ]
+    ),
+    SpecExample(
+        id: "long-title",
+        instances: [
+            CardExampleProperties(interactive: true),
+        ],
+        text: [
+            "en": ["title": "Your order of three linen shirts and a wool scarf is on its way", "body": "Arrives on Thursday"],
+            "vi": ["title": "Đơn hàng gồm ba áo sơ mi vải lanh và một chiếc khăn len của bạn đang được giao", "body": "Dự kiến đến vào thứ Năm"],
+            "zh-Hans": ["title": "你订购的三件亚麻衬衫和一条羊毛围巾已经发货，正在送往你的地址", "body": "预计周四送达"],
+            "ja": ["title": "ご注文のリネンシャツ 3 枚とウールのマフラー 1 本は、現在お届けに向かっています", "body": "木曜日にお届け予定"],
+            "ko": ["title": "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다", "body": "목요일 도착 예정"],
+            "ar": ["title": "طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك", "body": "يصل يوم الخميس"],
+            "en-XA": ["title": "[Ýöûŕ öŕðéŕ öƒ ţĥŕéé ļîñéñ šĥîŕţš åñð å ŵööļ šçåŕƒ îš öñ îţš ŵåý one two three four five]", "body": "[Åŕŕîṽéš öñ Ţĥûŕšðåý one two]"],
+        ]
+    ),
+]
+
 /// The properties of one Input in an example.
 struct InputExampleProperties: Sendable {
     let size: InputSize

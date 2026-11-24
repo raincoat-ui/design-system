@@ -84,6 +84,46 @@ test("Text and Heading render where React has no client hooks, as in a Server Co
   ]);
 });
 
+test("a static card and a link card render where React has no client hooks, as in a Server Component", () => {
+  // Their parts hold no state and use no hook, and give their elements no function.
+  const script = `
+    const React = await import("react");
+    const card = await import("./dist/components/ui/card.js");
+    const elements = [
+      card.Card({ children: "Order 1042" }),
+      card.CardMedia({ children: "picture" }),
+      card.CardTitle({ level: 3, children: "Order 1042" }),
+      card.CardLink({ href: "/orders/1042", children: "Order 1042" }),
+      card.CardBody({ children: "Delivered on Monday" }),
+      card.CardFooter({ children: "Track" }),
+    ];
+    console.log(JSON.stringify([
+      typeof React.useState,
+      elements.map(({ type, props }) => ({
+        type: typeof type === "string" ? type : type.name,
+        slot: props["data-slot"],
+        functions: Object.keys(props).filter((name) => typeof props[name] === "function"),
+      })),
+    ]));
+  `;
+  const output = execFileSync(
+    process.execPath,
+    ["--conditions=react-server", "--input-type=module", "--eval", script],
+    { cwd: root, encoding: "utf8" },
+  );
+  assert.deepEqual(JSON.parse(output), [
+    "undefined",
+    [
+      { type: "div", slot: "card", functions: [] },
+      { type: "div", slot: "card-media", functions: [] },
+      { type: "Heading", slot: "card-title", functions: [] },
+      { type: "a", slot: "card-target", functions: [] },
+      { type: "div", slot: "card-body", functions: [] },
+      { type: "div", slot: "card-footer", functions: [] },
+    ],
+  ]);
+});
+
 test("until hydrated, a busy or disabled Button gives its element no function", () => {
   // A Server Component may not pass a function to an element: React refuses to render it. Such
   // a Button is never hydrated, and until a Button is, the browser refuses activation for it,
@@ -169,6 +209,10 @@ const NEUTRAL = new Set([
   "#0000",
   // The properties that transition.
   ...["background-color", "border-color", "color"],
+  // A card: its media first in the flex order, as a block, with corners no less than square;
+  // actions that wrap at the end edge, below the rest; and a link or button that takes its
+  // title's look.
+  ...["9999", "block", "max(", "wrap", "flex-end", "inherit"],
 ]);
 // The spinner turns once a second. That speed is not a token yet. Visually hidden text, such as
 // a hidden label, is drawn by a fixed rule. A placeholder is drawn opaque, which Firefox does not

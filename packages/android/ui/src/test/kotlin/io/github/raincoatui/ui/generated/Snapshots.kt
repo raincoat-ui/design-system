@@ -177,6 +177,75 @@ internal val buttonExamples: List<SpecExample<ButtonExampleProperties>> = listOf
     ),
 )
 
+/** The properties of one Card in an example. */
+internal data class CardExampleProperties(
+    val interactive: Boolean,
+)
+
+/** The examples of specs/components/card/spec.yaml, with their text. */
+internal val cardExamples: List<SpecExample<CardExampleProperties>> = listOf(
+    SpecExample(
+        id = "static",
+        instances = listOf(
+            CardExampleProperties(interactive = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Storage", "body" to "4.2 GB of 15 GB used"),
+            "vi" to mapOf("title" to "Dung lượng lưu trữ", "body" to "Đã dùng 4,2 GB trong tổng số 15 GB"),
+            "zh-Hans" to mapOf("title" to "存储空间", "body" to "已使用 4.2 GB，共 15 GB"),
+            "ja" to mapOf("title" to "ストレージ", "body" to "15 GB 中 4.2 GB を使用中"),
+            "ko" to mapOf("title" to "저장 공간", "body" to "15GB 중 4.2GB 사용 중"),
+            "ar" to mapOf("title" to "مساحة التخزين", "body" to "تم استخدام 4.2 غيغابايت من 15 غيغابايت"),
+            "en-XA" to mapOf("title" to "[Šţöŕåĝé one]", "body" to "[4.2 ĜƁ öƒ 15 ĜƁ ûšéð one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "interactive",
+        instances = listOf(
+            CardExampleProperties(interactive = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Order 1042", "body" to "Delivered on Monday"),
+            "vi" to mapOf("title" to "Đơn hàng 1042", "body" to "Đã giao vào thứ Hai"),
+            "zh-Hans" to mapOf("title" to "订单 1042", "body" to "已于周一送达"),
+            "ja" to mapOf("title" to "注文 1042", "body" to "月曜日に配達済み"),
+            "ko" to mapOf("title" to "주문 1042", "body" to "월요일에 배송됨"),
+            "ar" to mapOf("title" to "الطلب 1042", "body" to "تم التوصيل يوم الاثنين"),
+            "en-XA" to mapOf("title" to "[Öŕðéŕ 1042 one]", "body" to "[Ðéļîṽéŕéð öñ Ṁöñðåý one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "media-and-footer",
+        instances = listOf(
+            CardExampleProperties(interactive = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Summer trip", "body" to "48 photos, shared with 3 people", "media" to "A lake between hills covered in pine trees", "footer" to "Open album"),
+            "vi" to mapOf("title" to "Chuyến đi mùa hè", "body" to "48 ảnh, được chia sẻ với 3 người", "media" to "Một hồ nước giữa những ngọn đồi phủ đầy rừng thông", "footer" to "Mở album"),
+            "zh-Hans" to mapOf("title" to "夏日旅行", "body" to "48 张照片，已与 3 人共享", "media" to "群山环抱的湖泊，山上长满松树", "footer" to "打开相册"),
+            "ja" to mapOf("title" to "夏の旅行", "body" to "写真 48 枚、3 人と共有中", "media" to "松林に覆われた丘に囲まれた湖", "footer" to "アルバムを開く"),
+            "ko" to mapOf("title" to "여름 여행", "body" to "사진 48장, 3명과 공유됨", "media" to "소나무 숲으로 덮인 언덕 사이의 호수", "footer" to "앨범 열기"),
+            "ar" to mapOf("title" to "رحلة الصيف", "body" to "48 صورة، تمت مشاركتها مع 3 أشخاص", "media" to "بحيرة بين تلال مغطاة بأشجار الصنوبر", "footer" to "فتح الألبوم"),
+            "en-XA" to mapOf("title" to "[Šûɱɱéŕ ţŕîþ one]", "body" to "[48 þĥöţöš, šĥåŕéð ŵîţĥ 3 þéöþļé one two three]", "media" to "[Å ļåķé ƀéţŵééñ ĥîļļš çöṽéŕéð îñ þîñé ţŕééš one two three four]", "footer" to "[Öþéñ åļƀûɱ one]"),
+        ),
+    ),
+    SpecExample(
+        id = "long-title",
+        instances = listOf(
+            CardExampleProperties(interactive = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Your order of three linen shirts and a wool scarf is on its way", "body" to "Arrives on Thursday"),
+            "vi" to mapOf("title" to "Đơn hàng gồm ba áo sơ mi vải lanh và một chiếc khăn len của bạn đang được giao", "body" to "Dự kiến đến vào thứ Năm"),
+            "zh-Hans" to mapOf("title" to "你订购的三件亚麻衬衫和一条羊毛围巾已经发货，正在送往你的地址", "body" to "预计周四送达"),
+            "ja" to mapOf("title" to "ご注文のリネンシャツ 3 枚とウールのマフラー 1 本は、現在お届けに向かっています", "body" to "木曜日にお届け予定"),
+            "ko" to mapOf("title" to "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다", "body" to "목요일 도착 예정"),
+            "ar" to mapOf("title" to "طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك", "body" to "يصل يوم الخميس"),
+            "en-XA" to mapOf("title" to "[Ýöûŕ öŕðéŕ öƒ ţĥŕéé ļîñéñ šĥîŕţš åñð å ŵööļ šçåŕƒ îš öñ îţš ŵåý one two three four five]", "body" to "[Åŕŕîṽéš öñ Ţĥûŕšðåý one two]"),
+        ),
+    ),
+)
+
 /** The properties of one Input in an example. */
 internal data class InputExampleProperties(
     val size: InputSize,

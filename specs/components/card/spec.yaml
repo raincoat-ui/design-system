@@ -1,0 +1,185 @@
+# The platform-neutral contract of the Card. The React, SwiftUI, and Compose implementations all
+# follow it. The title is a Heading of Typography (specs/components/typography/spec.yaml).
+# Proposed and accepted in rfcs/0005-card.md.
+id: card
+name: Card
+specVersion: 1.0.0
+rfc: 5
+group: Layout
+summary: A surface that groups content about one subject, and can lead somewhere as a whole.
+
+# There is one look, set by the theme: no variants and no sizes. Whether the whole card leads
+# somewhere is the one choice. An interactive card is a link when it has a destination and a
+# button when it has an action.
+properties:
+  interactive:
+    type: boolean
+    default: false
+    description: >-
+      Makes the whole card lead to one place or do one thing, whichever part of it is
+      activated: a link when it has a destination, and a button when it has an action. An
+      interactive card holds no other controls. A static card, the default, is a container that
+      can hold links and buttons.
+
+content:
+  title:
+    description: >-
+      What the card is about, such as an order or a person. It is a heading in heading-sm, at
+      the level the app gives, from 1 to 6, for the card's place in the outline of the screen.
+      It wraps and is never cut short.
+    required: true
+  media:
+    description: >-
+      An image at the top of the card. Its text alternative comes from the app, and is empty
+      when the image only decorates.
+    required: false
+  body:
+    description: Any content, such as text, a list of facts, or a status.
+    required: false
+  footer:
+    description: Actions, as Buttons, at the end of a static card.
+    required: false
+  destination:
+    description: Where an interactive card leads, which makes it a link.
+    required: for a card that is a link
+  action:
+    description: What an interactive card does, which makes it a button.
+    required: for a card that is a button
+
+anatomy:
+  container:
+    description: >-
+      The surface. Its outline, fill, and shadow come from the theme. It fills the width it is
+      given and grows with its content.
+    tokens:
+      - card.radius
+      - card.padding
+      - card.gap
+      - card.bg.*
+      - card.border.*
+      - card.shadow
+  media:
+    description: >-
+      An optional image at the top, edge to edge, inside the outline. Its top corners follow
+      the card's.
+    tokens:
+      - card.radius
+  title:
+    description: A Heading, heading-sm unless the app chooses another look.
+    tokens:
+      - type.heading.sm
+      - color.fg.default
+  body:
+    description: Optional content under the title. It aligns to the start edge.
+  footer:
+    description: Optional actions under the body, at the end edge. They wrap when they do not fit.
+    tokens:
+      - card.gap
+  focus-ring:
+    description: >-
+      Drawn around the whole card, with a gap, when an interactive card has keyboard focus.
+    tokens:
+      - card.focus-ring.width
+      - card.focus-ring.offset
+      - card.focus-ring.color
+
+states:
+  rest:
+    description: The default appearance. An interactive card at rest looks like a static one.
+  hover:
+    description: >-
+      A pointer is over an interactive card. The outline steps to the strong border color.
+      Exists only where there is a pointer.
+  focus-visible:
+    description: An interactive card has keyboard focus. The focus ring is shown around the whole card.
+  pressed:
+    description: >-
+      An interactive card is being pressed. The fill steps to the control hover color, and the
+      outline to the strong border color.
+
+accessibility:
+  role: >-
+    A static card has no role of its own: it is a group of content whose title is a heading. An
+    interactive card is a link when it has a destination and a button when it has an action.
+    Android has no link role, so there a card that leads somewhere is a button, as a row that
+    opens a screen is.
+  name: >-
+    The title. An interactive card is named by its title alone, and the rest of the card is read
+    after it.
+  keyboard:
+    - keys: [Tab]
+      action: >-
+        Moves focus to and from an interactive card, which is one stop. A static card takes no
+        focus itself: Tab moves to the links and buttons inside it.
+    - keys: [Enter]
+      action: Activates an interactive card.
+    - keys: [Space]
+      action: Activates an interactive card that is a button.
+  heading: The title is a heading at the level the app gives, on every platform, so people can move from card to card by heading.
+  focus: >-
+    A ring at least 2px wide with 3:1 contrast against the surface behind the card, around the
+    whole card and 2px from its edge, shown for keyboard focus. On the web and on Android the
+    card draws it from the focus ring tokens. On iOS the system draws its own focus indicator,
+    which follows the person's Full Keyboard Access settings.
+  collections: >-
+    A card has no role that counts it. Put a collection of cards in a list, so that a screen
+    reader says how many there are.
+  target-size: An interactive card takes touches across its whole surface.
+  contrast: >-
+    Text keeps 4.5:1 on the fill at rest and pressed, and 7:1 in high-contrast modes. The strong
+    outline of hover and press has 3:1 against the surfaces a card sits on. The outline at rest
+    is decorative: the content of a card identifies it.
+
+internationalization:
+  right-to-left: >-
+    Every part aligns to the start edge, which is the right, and footer actions sit at the end,
+    on the left. Media does not flip: it is a picture, not a direction.
+  long-text: >-
+    The title and body wrap and the card grows taller. Nothing is truncated. In a row of cards,
+    a card with longer text grows rather than clips.
+  scripts: >-
+    The title is a Heading, whose line height clears stacked Vietnamese diacritics. Chinese,
+    Japanese, and Korean use system fonts.
+
+motion:
+  transitions: >-
+    Outline and fill changes of an interactive card use card.transition.duration and its
+    easing.
+  reduced-motion: Outline and fill changes are immediate.
+
+# Named examples. Stories, tests, and documentation are built from these.
+examples:
+  - id: static
+    description: A static card with a title and a body.
+    properties:
+      interactive: false
+  - id: interactive
+    description: >-
+      An interactive card that leads to an order. At rest it looks like a static card.
+    properties:
+      interactive: true
+  - id: media-and-footer
+    description: >-
+      A static card with an image at the top, edge to edge, and an action in its footer, at the
+      end.
+    properties:
+      interactive: false
+  - id: long-title
+    description: >-
+      A title too long for one line. It wraps onto a second line and the card grows taller.
+    properties:
+      interactive: true
+
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
+implementations:
+  web:
+    file: packages/web/src/components/ui/card.tsx
+    name: [Card, CardMedia, CardTitle, CardLink, CardButton, CardBody, CardFooter]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatCard.swift
+    name: [RaincoatCard, RaincoatCardStyle]
+  android:
+    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatCard.kt
+    name: RaincoatCard

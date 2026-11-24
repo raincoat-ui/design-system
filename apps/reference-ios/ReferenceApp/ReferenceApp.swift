@@ -16,6 +16,7 @@ struct ReferenceApp: App {
             Group {
                 switch screen {
                 case "typography": TypographyScreen()
+                case "card": CardScreen()
                 case "tabs": TabsScreen()
                 case "input": InputScreen()
                 default: ButtonScreen()

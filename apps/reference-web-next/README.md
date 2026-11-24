@@ -87,6 +87,8 @@ it from the Server Component too, wherever it can be used there. Add a test file
 A component that holds no state, such as Typography, can have a page of its own that is a Server
 Component alone: `app/typography/page.tsx`, at `/typography`. The Tabs, Client Components, have
 a page that a Server Component renders: `app/tabs/page.tsx`, at `/tabs`.
+The Card's page, `app/card/page.tsx` at `/card`, is a Server Component with one Client
+Component inside it: the card that is a button, whose click handler is a function.
 
 ## Licenses
 

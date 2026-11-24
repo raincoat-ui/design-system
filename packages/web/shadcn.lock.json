@@ -11,6 +11,13 @@
       "fetched": "2026-11-16",
       "local": "src/components/ui/button.tsx"
     },
+    "card": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/card.json",
+      "upstream": ".shadcn-upstream/card.tsx",
+      "sha256": "ef8305b12c3112dab42a4708b41b1ebcc042fa5ab4c20f039da8d45b09ed5059",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/card.tsx"
+    },
     "input": {
       "registry": "https://ui.shadcn.com/r/styles/new-york-v4/input.json",
       "upstream": ".shadcn-upstream/input.tsx",
