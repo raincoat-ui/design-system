@@ -116,8 +116,8 @@ Text(message.preview).raincoatText(maxLines: 2)
   the system's own do.
 - **Long text wraps**, and the view grows taller. A heading is never cut short, even inside a
   `lineLimit`. Text cut short by `maxLines` is still read in full by VoiceOver.
-- **Direction.** Text aligns to the leading edge. A name or a message takes its direction from
-  its first strong character, as SwiftUI does by default.
+- **Direction.** Text aligns to the leading edge: the right in right-to-left layouts. The
+  direction of a name or a message inside it is left to SwiftUI's default.
 
 Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
