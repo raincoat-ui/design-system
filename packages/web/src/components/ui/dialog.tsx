@@ -53,6 +53,9 @@ const containerClasses = cn(
   "bg-(--rc-dialog-bg) [box-shadow:var(--rc-dialog-shadow)]",
   "font-(family-name:--rc-dialog-description-font-family) text-(length:--rc-dialog-description-font-size) leading-(--rc-dialog-description-line-height) font-(--rc-dialog-description-font-weight) tracking-(--rc-dialog-description-letter-spacing)",
   "text-start wrap-break-word text-(--rc-dialog-fg)",
+  // Lines break by the rules of the text's language, as in Text: strictly for Japanese, and
+  // between whole words for Korean. Both inherit, so the description and the body follow.
+  "[&:lang(ja)]:[line-break:strict] [&:lang(ko)]:break-keep",
 );
 
 /**
