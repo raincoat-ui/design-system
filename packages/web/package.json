@@ -35,6 +35,10 @@
       "types": "./dist/components/ui/button.d.ts",
       "default": "./dist/components/ui/button.js"
     },
+    "./input": {
+      "types": "./dist/components/ui/input.d.ts",
+      "default": "./dist/components/ui/input.js"
+    },
     "./tailwind.css": "./dist/tailwind.css",
     "./ui.css": "./dist/ui.css"
   },

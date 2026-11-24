@@ -124,13 +124,16 @@ const NEUTRAL = new Set([
   ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
   ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  // A column of parts, and a multi-line field that grows with its content or is resized.
+  ...["column", "content", "vertical"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
   ...["background-color", "border-color", "color"],
 ]);
-// The spinner turns once a second. That speed is not a token yet.
-const EXEMPT = new Set([".animate-rc-spin"]);
+// The spinner turns once a second. That speed is not a token yet. Visually hidden text, such as
+// a hidden label, is drawn by a fixed rule.
+const EXEMPT = new Set([".animate-rc-spin", ".sr-only"]);
 
 /** The parts of a declaration's value that are neither a Raincoat token nor neutral. */
 function literals(value) {
@@ -190,12 +193,12 @@ test("the precompiled stylesheet changes nothing but Raincoat components", () =>
       leadingClass(selector) && context.some((rule) => rule.startsWith("@layer")),
   );
   assert.deepEqual(layered, []);
-  // Around component rules, only media queries.
+  // Around component rules, only media and feature queries.
   const contexts = rules(stylesheet)
     .filter(({ selector }) => leadingClass(selector))
     .flatMap(({ context }) => context);
   assert.deepEqual(
-    [...new Set(contexts)].filter((rule) => !rule.startsWith("@media ")),
+    [...new Set(contexts)].filter((rule) => !/^@(media|supports) /.test(rule)),
     [],
   );
 });
