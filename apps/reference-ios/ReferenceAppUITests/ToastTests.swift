@@ -70,13 +70,22 @@ final class ToastTests: ReferenceAppTestCase {
         XCTAssertTrue(app.staticTexts["First link copied"].waitForNonExistence(timeout: 5))
     }
 
+    /// A swipe down at least as long as a touch target closes the toast; a shorter one lets it go
+    /// back. The drags are given in points, because `swipeDown()` moves by a share of the
+    /// element's own height, which on a line of text is shorter than a touch target.
     @MainActor
     func testASwipeDownClosesTheToast() {
         let app = launch()
         app.buttons["Delete address"].tap()
         let message = app.staticTexts["Address deleted"]
         XCTAssertTrue(message.waitForExistence(timeout: 5))
-        message.swipeDown()
+        let start = message.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+
+        start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: target / 2)))
+        wait(seconds: 1)
+        XCTAssertTrue(message.exists)
+
+        start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: target * 2)))
         XCTAssertTrue(message.waitForNonExistence(timeout: 5))
     }
 

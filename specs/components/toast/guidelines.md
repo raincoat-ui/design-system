@@ -50,7 +50,8 @@ A toast sits at the bottom center of the window, above the on-screen keyboard. T
 host about any bar the app keeps at the bottom of the screen, so the toast sits above it:
 
 - On the web, give `ToastProvider` the bar's height as `bottomInset`.
-- On iOS, declare the bar with `safeAreaInset(edge: .bottom)`, or put the host inside the tab.
+- On iOS, declare the bar with `safeAreaInset(edge: .bottom)` outside the host, or put the host
+  inside the tab.
 - On Android, place `RaincoatToastHost` above the bar, as you would a snackbar host.
 
 ## Do and don't

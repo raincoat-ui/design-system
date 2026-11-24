@@ -102,7 +102,9 @@ showToast(RaincoatToast("Message archived", action: .init("Undo") { undo() }, cl
   an action stays until the action is used or the toast is closed.
 - A swipe down closes a toast.
 - A toast sits above the on-screen keyboard. Declare a bar of your own at the bottom of the
-  screen with `safeAreaInset(edge: .bottom)` and the toast sits above it too.
+  screen with `safeAreaInset(edge: .bottom)` outside the host, and the toast sits above it too:
+  `InboxView().raincoatToastHost().safeAreaInset(edge: .bottom) { ActionBar() }`. A bar declared
+  inside the host is hidden from it.
 - Outside a host, `showRaincoatToast` does nothing. A `RaincoatToast` drawn on its own stands
   still, for previews and tests.
 

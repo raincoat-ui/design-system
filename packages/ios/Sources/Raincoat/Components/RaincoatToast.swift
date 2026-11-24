@@ -308,7 +308,12 @@
         ///
         /// A toast sits above the on-screen keyboard and the safe area. To keep it above a bar of
         /// your own at the bottom of the screen, declare the bar with
-        /// `safeAreaInset(edge: .bottom)`, or put the host inside the tab of a `TabView`.
+        /// `safeAreaInset(edge: .bottom)` outside the host, or put the host inside the tab of a
+        /// `TabView`. The host cannot see a bar declared inside it:
+        ///
+        ///     InboxView()
+        ///         .raincoatToastHost()
+        ///         .safeAreaInset(edge: .bottom) { ActionBar() }
         public func raincoatToastHost() -> some View {
             modifier(RaincoatToastHost())
         }

@@ -2,15 +2,17 @@ import Raincoat
 import SwiftUI
 
 /// The Toast in the states of its spec, shown the way an app shows them: from buttons, inside a
-/// toast host. The screen keeps a bar of its own at the bottom, declared as a safe area inset, so
-/// the toasts sit above it, and a search field, to bring up the keyboard. An action writes its
-/// name in the line at the top, which is how the UI tests see that it ran.
+/// toast host. The screen keeps a bar of its own at the bottom, declared as a safe area inset
+/// outside the host, so the toasts sit above it, and a search field, to bring up the keyboard. An
+/// action writes its name in the line at the top, which is how the UI tests see that it ran.
 struct ToastScreen: View {
     @State private var lastAction = "Nothing yet"
 
     var body: some View {
         ToastScreenContent(lastAction: $lastAction)
             .raincoatToastHost()
+            // Outside the host, so that the host sees the bar and keeps its toasts above it.
+            .safeAreaInset(edge: .bottom, spacing: 0) { BottomBar() }
     }
 }
 
@@ -59,16 +61,23 @@ private struct ToastScreenContent: View {
         }
         .foregroundStyle(Color(tokens.color.fg.default))
         .background(Color(tokens.color.bg.canvas))
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            HStack(spacing: tokens.space._6) {
-                Text("Button")
-                Text("Toast").bold()
-            }
-            .padding(tokens.space._4)
-            .frame(maxWidth: .infinity)
-            .background(Color(tokens.color.bg.surface))
-            .accessibilityElement(children: .combine)
-            .accessibilityIdentifier("bottom-bar")
+    }
+}
+
+/// The app's own bar at the bottom of the screen.
+private struct BottomBar: View {
+    @Tokens private var tokens
+
+    var body: some View {
+        HStack(spacing: tokens.space._6) {
+            Text("Button")
+            Text("Toast").bold()
         }
+        .foregroundStyle(Color(tokens.color.fg.default))
+        .padding(tokens.space._4)
+        .frame(maxWidth: .infinity)
+        .background(Color(tokens.color.bg.surface))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("bottom-bar")
     }
 }
