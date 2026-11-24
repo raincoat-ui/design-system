@@ -136,6 +136,10 @@
             let input = tokens.input
             let measurements = InputMeasurements(input, size: size)
             let shownError = isInvalid ? error : nil
+            // A one-line field draws its placeholder itself, beside the text field, so that the
+            // placeholder wraps at large text sizes rather than being cut off by the text field's
+            // one line. VoiceOver is given it after the description.
+            let example = isMultiline || isReadOnly || !text.isEmpty ? nil : prompt
 
             // The field carries the label, the description, and the error for VoiceOver, so the
             // texts around it are hidden from it.
@@ -148,13 +152,14 @@
                 }
                 InputBox(
                     size: size, isInvalid: isInvalid, isReadOnly: isReadOnly, isMultiline: isMultiline,
-                    isLeftToRight: InputKeyboard(type).isLeftToRight, leadingIcon: leadingIcon
+                    isLeftToRight: InputKeyboard(type).isLeftToRight, leadingIcon: leadingIcon,
+                    placeholder: example
                 ) {
                     editor(placeholder: InputColors(
                         input, isEnabled: isEnabled, isInvalid: isInvalid, isReadOnly: isReadOnly
                     ).placeholder)
                     .accessibilityLabel(shownError.map { label + Text(verbatim: ", ") + $0 } ?? label)
-                    .accessibilityHint(description ?? Text(verbatim: ""))
+                    .accessibilityHint(hint(example: example))
                 }
                 if let shownError {
                     InputText(shownError, style: input.error.type, color: input.error.fg)
@@ -163,12 +168,23 @@
             .frame(maxWidth: .infinity, alignment: .leading)
         }
 
+        /// The description, then the placeholder that a one-line field draws itself, while it shows.
+        private func hint(example: Text?) -> Text {
+            switch (description, example) {
+            case let (description?, example?): description + Text(verbatim: ", ") + example
+            case let (description?, nil): description
+            case let (nil, example?): example
+            case (nil, nil): Text(verbatim: "")
+            }
+        }
+
         /// The control that takes the text: a text field, a secure field, or, when read-only, the
-        /// value as selectable text.
+        /// value as selectable text. Only a multi-line text field shows the placeholder itself.
         @ViewBuilder
         private func editor(placeholder: TokenColor) -> some View {
             let keyboard = InputKeyboard(type)
             let prompt = (self.prompt ?? Text(verbatim: "")).foregroundStyle(Color(placeholder))
+            let none = Text(verbatim: "")
             if isReadOnly {
                 let shown = keyboard.isSecure ? String(repeating: "\u{2022}", count: text.count) : text
                 Text(verbatim: shown)
@@ -179,7 +195,7 @@
                     .accessibilityValue(Text(verbatim: shown))
                     .accessibilityAddTraits(.isStaticText)
             } else if keyboard.isSecure {
-                SecureField(text: $text, prompt: prompt) { label }
+                SecureField(text: $text, prompt: none) { label }
                     .textFieldStyle(.plain)
                     .keyboard(keyboard)
             } else if isMultiline {
@@ -188,7 +204,7 @@
                     .textFieldStyle(.plain)
                     .keyboard(keyboard)
             } else {
-                TextField(text: $text, prompt: prompt) { label }
+                TextField(text: $text, prompt: none) { label }
                     .textFieldStyle(.plain)
                     .keyboard(keyboard)
             }
@@ -233,9 +249,9 @@
 
     /// The field: fill, outline, padding, the leading icon, and the text style of the value.
     ///
-    /// The field takes the room it shows. On iOS, a one-line text field is as tall as the field,
-    /// and at least the minimum touch target, so a touch anywhere on it, or just outside a small
-    /// field, is a touch on the text field. Assistive technology is given the same area.
+    /// The field takes the room it shows. A touch anywhere on it, or just outside a field
+    /// smaller than the minimum touch target, puts the caret in the text field, and assistive
+    /// technology is given the same area.
     struct InputBox<Content: View>: View {
         let size: InputSize
         let isInvalid: Bool
@@ -244,6 +260,8 @@
         /// Whether the field stays left-to-right in a right-to-left layout, its icon included.
         let isLeftToRight: Bool
         let leadingIcon: Image?
+        /// The placeholder of a one-line field while it is empty, drawn behind the text field.
+        var placeholder: Text? = nil
         @ViewBuilder let content: Content
 
         @Tokens private var tokens
@@ -251,18 +269,6 @@
         @Environment(\.layoutDirection) private var layoutDirection
         @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
         @FocusState private var isFocused: Bool
-
-        /// Whether an editable one-line text field is made as tall as the touch target. On iOS a
-        /// touch is a text field's only inside the text field's own bounds, which UIKit tests, and
-        /// a frame or a content shape around it does not change them. A pointer needs no larger
-        /// target, so on macOS the text field keeps its own height.
-        private static var textFieldReachesTheTarget: Bool {
-            #if os(iOS)
-                return true
-            #else
-                return false
-            #endif
-        }
 
         var body: some View {
             let input = tokens.input
@@ -289,12 +295,6 @@
                 minimum: target,
                 isRightToLeft: direction == .rightToLeft
             )
-            // An editable one-line text field is as tall as the field and at least the minimum
-            // target, centered on the field, and the room it takes past the field is given back.
-            // The text field places the caret for a touch anywhere in it, as any text field does.
-            let textFieldHeight: CGFloat? =
-                Self.textFieldReachesTheTarget && !isMultiline && !isReadOnly ? max(line, target) : nil
-            let overhang = textFieldHeight.map { ($0 - line) / 2 } ?? 0
 
             // The stack follows the layout direction, so in right-to-left layouts the leading icon
             // is on the right.
@@ -307,33 +307,60 @@
                         // Beside the first line of a multi-line field.
                         .frame(height: isMultiline ? value.lineHeight : nil)
                         .padding(.vertical, isMultiline ? paddingBlock : 0)
+                        // A touch on it is the field's.
+                        .allowsHitTesting(false)
                         .accessibilityHidden(true)
                 }
-                content
-                    .focused($isFocused)
-                    // Assistive technology is given the whole field, and at least the minimum
-                    // target, rather than the text field's own frame, which is one line tall.
-                    .contentShape(.accessibility, area)
-                    .font(value.font)
-                    .tracking(value.tracking)
-                    // Space between lines brings them to the token's line height. A one-line field
-                    // has one line, and its height comes from the field.
-                    .lineSpacing(isMultiline ? value.lineSpacing : 0)
-                    .foregroundStyle(Color(colors.foreground))
-                    .frame(height: textFieldHeight)
-                    .padding(.vertical, -overhang)
-                    .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : line, alignment: .leading)
-                    .padding(.vertical, isMultiline ? paddingBlock : 0)
+                ZStack(alignment: .topLeading) {
+                    if let placeholder {
+                        // Its first line is centered where the text field's line is, and it
+                        // wraps, so that the field grows rather than cutting it off.
+                        placeholder
+                            .font(value.font)
+                            .tracking(value.tracking)
+                            .lineSpacing(value.lineSpacing)
+                            .foregroundStyle(Color(colors.placeholder))
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.vertical, (line - value.lineHeight) / 2 + value.halfLeading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .allowsHitTesting(false)
+                            .accessibilityHidden(true)
+                    }
+                    content
+                        .focused($isFocused)
+                        // Assistive technology is given the whole field, and at least the minimum
+                        // target, rather than the text field's own frame, which is one line tall.
+                        .contentShape(.accessibility, area)
+                        .font(value.font)
+                        .tracking(value.tracking)
+                        // Space between lines brings them to the token's line height. A one-line
+                        // field has one line, and its height comes from the field.
+                        .lineSpacing(isMultiline ? value.lineSpacing : 0)
+                        .foregroundStyle(Color(colors.foreground))
+                        // The text field keeps its own height, centered in the field's line, so
+                        // that it grows with its text.
+                        .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : line, alignment: .leading)
+                        .padding(.vertical, isMultiline ? paddingBlock : 0)
+                }
             }
             .padding(.horizontal, paddingInline)
             .frame(minHeight: measurements.height)
             .foregroundStyle(Color(colors.foreground))
+            // Behind the text field and in front of the fill, an area that takes the touches
+            // the text field does not: the rest of the field, and where the field is smaller
+            // than the minimum target, the space around it out to that size, centered on it. It
+            // holds no text, and as a background it takes no room. A touch there puts the caret
+            // in the text field.
             .background {
-                shape.fill(Color(colors.fill))
-                    // Behind the text field: a touch on the rest of the field, its icon or the space
-                    // beside the text, puts the caret in the text field too.
+                // Transparent: the fill is drawn behind it, at the field's size.
+                Color(colors.fill).opacity(0)
+                    .frame(minWidth: target, minHeight: target)
+                    .contentShape(Rectangle())
                     .onTapGesture { isFocused = true }
+                    .accessibilityHidden(true)
             }
+            .background { shape.fill(Color(colors.fill)) }
             .overlay { shape.strokeBorder(Color(colors.border), lineWidth: input.borderWidth) }
             .environment(\.layoutDirection, direction)
         }

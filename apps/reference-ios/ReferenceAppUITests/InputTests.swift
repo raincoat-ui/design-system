@@ -114,12 +114,52 @@ final class InputTests: ReferenceAppTestCase {
         }
     }
 
+    /// Scrolls the screen up until the element is on it. XCTest taps a coordinate where it is,
+    /// without scrolling, so a tap at a point below the screen reaches nothing.
+    @MainActor
+    private func scrollOntoTheScreen(_ element: XCUIElement, in app: XCUIApplication) {
+        let screen = app.windows.firstMatch.frame
+        var swipes = 0
+        while !screen.contains(element.frame), swipes < 6 {
+            app.swipeUp()
+            swipes += 1
+        }
+        XCTAssertTrue(screen.contains(element.frame), "\(element.frame) is not inside \(screen)")
+    }
+
+    /// Takes keyboard focus away from the field: Return ends editing, and otherwise the caret goes
+    /// to another field.
+    @MainActor
+    private func leave(_ field: XCUIElement, in app: XCUIApplication) {
+        guard hasKeyboardFocus(field) else { return }
+        field.typeText("\n")
+        if hasKeyboardFocus(field) {
+            app.textFields["Large"].tap()
+        }
+    }
+
+    /// Taps a point a distance below the top of the visible small field, with the field on the
+    /// screen and without focus, and says whether the field has keyboard focus after it.
+    @MainActor
+    private func smallFieldIsFocusedByATap(_ distance: CGFloat, fromTop: Bool, in app: XCUIApplication) -> Bool {
+        let field = app.textFields["Search the docs"]
+        leave(field, in: app)
+        scrollOntoTheScreen(field, in: app)
+        let top = app.staticTexts["small-above"].frame.maxY
+        let bottom = app.staticTexts["small-below"].frame.minY
+        let y = fromTop ? top + distance : (top + bottom) / 2
+        app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: field.frame.midX, dy: y)).tap()
+        return hasKeyboardFocus(field)
+    }
+
     @MainActor
     func testASmallFieldTakesTheRoomItShowsAndTouchesJustOutsideItCount() {
         let app = launch()
+        let field = app.textFields["Search the docs"]
+        // The field is below the first screen.
+        scrollOntoTheScreen(field, in: app)
         let above = app.staticTexts["small-above"].frame
         let below = app.staticTexts["small-below"].frame
-        let field = app.textFields["Search the docs"]
 
         // The lines directly above and below are closer together than the touch target is tall:
         // the field takes the room it shows.
@@ -130,6 +170,19 @@ final class InputTests: ReferenceAppTestCase {
         // The touch target is larger, and centered on the field.
         XCTAssertEqual(field.frame.height, minimumTarget, accuracy: 0.5)
         XCTAssertEqual(field.frame.midY, (above.maxY + below.minY) / 2, accuracy: 0.5)
+
+        // Which taps reach the field, recorded in the log until this test passes.
+        let diagnostics = [
+            ("1 pt above the visible field", smallFieldIsFocusedByATap(-1, fromTop: true, in: app)),
+            ("1 pt inside the visible field's top", smallFieldIsFocusedByATap(1, fromTop: true, in: app)),
+            ("the visible field's centre", smallFieldIsFocusedByATap(0, fromTop: false, in: app)),
+        ]
+        for (place, focused) in diagnostics {
+            XCTContext.runActivity(named: "Diagnostic: a tap at \(place) focuses the field: \(focused)") { _ in }
+        }
+        leave(field, in: app)
+        scrollOntoTheScreen(field, in: app)
+        XCTAssertFalse(hasKeyboardFocus(field), "The field kept focus, so the last tap shows nothing")
 
         // A touch inside the target but above the visible field, on the line of text there.
         field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0)).withOffset(CGVector(dx: 0, dy: 1)).tap()
