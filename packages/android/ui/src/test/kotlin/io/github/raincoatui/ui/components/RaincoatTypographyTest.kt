@@ -166,7 +166,7 @@ class RaincoatTypographyTest(themeId: String) {
         }
         show { RaincoatHeading("Recent files", level = 1, variant = HeadingVariant.HeadingSm) }
         val node = compose.onNodeWithText("Recent files").assert(isHeading)
-        assertEquals(line(heading.sm), node.height().toDouble(), 1.0)
+        assertEquals("level 1 in heading-sm", line(heading.sm), node.height().toDouble(), 1.0)
     }
 
     // Text styles and colors
@@ -219,8 +219,9 @@ class RaincoatTypographyTest(themeId: String) {
                 RaincoatText(paragraph, Modifier.testTag("whole"))
             }
         }
-        assertEquals(2 * line(md), compose.onNodeWithTag("two").height().toDouble(), 2.0)
-        assertTrue(compose.onNodeWithTag("whole").height() > 3 * line(md))
+        assertEquals("two lines", 2 * line(md), compose.onNodeWithTag("two").height().toDouble(), 2.0)
+        val whole = compose.onNodeWithTag("whole").height()
+        assertTrue("the whole text is $whole high", whole > 3 * line(md))
         // Assistive technology is given the whole text.
         compose.onNodeWithTag("two").assertTextEquals(paragraph)
     }
@@ -231,7 +232,8 @@ class RaincoatTypographyTest(themeId: String) {
         show { Box(Modifier.width(240.dp)) { RaincoatHeading(longHeading, level = 1) } }
         val node = compose.onNodeWithText(longHeading).assert(isHeading)
         assertTrue("height ${node.height()}", node.height() > 2.5 * xl.lineHeight * xl.size)
-        assertTrue(node.fetchSemanticsNode().size.width <= 240)
+        val width = node.fetchSemanticsNode().size.width
+        assertTrue("the heading is $width wide", width <= 240)
     }
 
     @Test
@@ -244,23 +246,32 @@ class RaincoatTypographyTest(themeId: String) {
                 RaincoatText("Synced 2 minutes ago", variant = TextVariant.Caption)
             }
         }
-        // Android enlarges big text by less than the setting says, so ask it for the sizes. The
-        // line height stays a multiple of the font size.
+        // Android's font scaling is not linear: at 2.0 it doubles small text and enlarges large
+        // text by less, as the spec says (a 32sp heading becomes about 40dp). So ask it for the
+        // sizes. The line height stays a multiple of the font size.
         val (scaledHeading, scaledCaption) = with(compose.density) {
             type.heading.xl.lineHeight * type.heading.xl.size.sp.toPx() to
                 type.caption.lineHeight * type.caption.size.sp.toPx()
         }
-        assertTrue(scaledHeading > 1.5 * line(type.heading.xl))
-        assertTrue(scaledCaption > 1.5 * line(type.caption))
+        val headingGrowth = scaledHeading / line(type.heading.xl)
+        val captionGrowth = scaledCaption / line(type.caption)
+        assertTrue("the heading's line grows by $headingGrowth", headingGrowth > 1.1)
+        assertTrue("the caption's line grows by $captionGrowth", captionGrowth > 1.5)
+        assertTrue(
+            "a large heading grows less than a caption: $headingGrowth and $captionGrowth",
+            headingGrowth < captionGrowth,
+        )
 
+        // One line of the caption, at its scaled line height.
         val caption = compose.onNodeWithText("Synced 2 minutes ago")
-        assertEquals(ceil(scaledCaption), caption.height().toDouble(), 1.0)
+        assertEquals("caption height", ceil(scaledCaption), caption.height().toDouble(), 1.0)
+        // The heading wraps: whole lines, more than two of them, inside the width.
         val heading = compose.onNodeWithText(longHeading)
-        // Whole lines, more than two of them, inside the width.
         val lines = heading.height() / scaledHeading
-        assertTrue("lines $lines", lines > 2.5)
-        assertEquals(Math.round(lines).toDouble(), lines, 0.05)
-        assertTrue(heading.fetchSemanticsNode().size.width <= 300)
+        assertTrue("the heading has $lines lines", lines > 2.5)
+        assertEquals("the heading has $lines lines", Math.round(lines).toDouble(), lines, 0.05)
+        val width = heading.fetchSemanticsNode().size.width
+        assertTrue("the heading is $width wide", width <= 300)
     }
 
     /** How the text of a node was laid out, as assistive technology can ask for it. */
@@ -282,13 +293,13 @@ class RaincoatTypographyTest(themeId: String) {
             }
             val layout = layoutOf(words)
             if (direction == LayoutDirection.Ltr) {
-                assertEquals(ResolvedTextDirection.Ltr, layout.getParagraphDirection(0))
-                assertEquals(0f, layout.getLineLeft(0), 1f)
-                assertTrue(layout.getLineRight(0) < 150f)
+                assertEquals("$words", ResolvedTextDirection.Ltr, layout.getParagraphDirection(0))
+                assertEquals("$words starts at", 0f, layout.getLineLeft(0), 1f)
+                assertTrue("$words ends at ${layout.getLineRight(0)}", layout.getLineRight(0) < 150f)
             } else {
-                assertEquals(ResolvedTextDirection.Rtl, layout.getParagraphDirection(0))
-                assertEquals(300f, layout.getLineRight(0), 1f)
-                assertTrue(layout.getLineLeft(0) > 150f)
+                assertEquals("$words", ResolvedTextDirection.Rtl, layout.getParagraphDirection(0))
+                assertEquals("$words starts at", 300f, layout.getLineRight(0), 1f)
+                assertTrue("$words ends at ${layout.getLineLeft(0)}", layout.getLineLeft(0) > 150f)
             }
         }
     }
@@ -304,7 +315,11 @@ class RaincoatTypographyTest(themeId: String) {
         }
         // In a left-to-right layout, a name in Arabic is a right-to-left paragraph, and a
         // sentence in English with the name in it stays left to right.
-        assertEquals(ResolvedTextDirection.Rtl, layoutOf(name).getParagraphDirection(0))
-        assertEquals(ResolvedTextDirection.Ltr, layoutOf("Message from $name").getParagraphDirection(0))
+        assertEquals("the name", ResolvedTextDirection.Rtl, layoutOf(name).getParagraphDirection(0))
+        assertEquals(
+            "the sentence",
+            ResolvedTextDirection.Ltr,
+            layoutOf("Message from $name").getParagraphDirection(0),
+        )
     }
 }
