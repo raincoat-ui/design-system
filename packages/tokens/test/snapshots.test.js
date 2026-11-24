@@ -391,3 +391,37 @@ test("a spec with parts has an instance type for each part, and an instance leav
     /TextExampleProperties\(variant = TextVariant\.BodyMd, color = TextColor\.Default, maxLines = 2\)/,
   );
 });
+
+test("when a part has its component's name, the type of any part is named for parts", () => {
+  // The Dialog's dialog part is called Dialog, as the component is, so the type of one Dialog
+  // and the type of any of its parts cannot both be DialogExampleProperties.
+  const typescript = snapshotsTypeScript(repoRoot);
+  assert.match(
+    typescript,
+    /export type DialogPartExampleProperties = DialogExampleProperties \| AlertDialogExampleProperties \| SheetExampleProperties;/,
+  );
+  assert.match(
+    typescript,
+    /export interface DialogExampleProperties \{\n {2}readonly part: "dialog";/,
+  );
+  assert.match(
+    typescript,
+    /export const DIALOG_EXAMPLES: readonly SpecExample<DialogPartExampleProperties>\[\]/,
+  );
+  // Typography's parts have names of their own, so its type keeps the component's name.
+  assert.match(typescript, /SpecExample<TypographyExampleProperties>/);
+
+  const swift = snapshotsSwift(repoRoot);
+  assert.match(
+    swift,
+    /enum DialogPartExampleProperties: Sendable \{\n {4}case dialog\(DialogExampleProperties\)\n {4}case alertDialog\(AlertDialogExampleProperties\)/,
+  );
+  assert.match(swift, /struct DialogExampleProperties: Sendable \{\n {4}let size: DialogSize\n\}/);
+
+  const kotlin = snapshotsKotlin(repoRoot);
+  assert.match(kotlin, /internal sealed interface DialogPartExampleProperties\n/);
+  assert.match(
+    kotlin,
+    /internal data class SheetExampleProperties\(\n {4}val edge: SheetEdge,\n\) : DialogPartExampleProperties/,
+  );
+});

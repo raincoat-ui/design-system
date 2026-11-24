@@ -1,0 +1,285 @@
+# The platform-neutral contract of the Dialog, the alert dialog, and the Sheet: the modal
+# surfaces. They share one anatomy, one focus model, and one set of tokens. The React, SwiftUI,
+# and Compose implementations all follow it; the size and edge types they use are generated from
+# this file.
+# Proposed and accepted in rfcs/0006-dialog-and-sheet.md.
+id: dialog
+name: Dialog
+specVersion: 1.0.0
+rfc: 6
+group: Overlays
+summary: Interrupts a task to ask for something or to confirm it, in a panel above the screen.
+
+# Three parts that an app uses on their own. Their types are named after them: DialogSize and
+# SheetEdge.
+parts:
+  dialog:
+    name: Dialog
+    summary: >-
+      A panel centered over the screen, for a short task that must be finished or abandoned
+      before going on: rename, choose, fill in a few fields.
+    properties:
+      size:
+        description: >-
+          The width of the dialog. On a window narrower than that, it spans the width of the
+          window less a margin.
+        default: md
+        values:
+          sm: A dialog with a sentence or two and a few buttons.
+          md: The default width, for a short form.
+          lg: A dialog with wide content, such as a table or a preview.
+  alert-dialog:
+    name: AlertDialog
+    summary: >-
+      A small centered dialog that asks people to confirm something consequential or
+      irreversible. On iOS it is the system alert.
+    properties:
+      destructive:
+        type: boolean
+        default: false
+        description: >-
+          The confirming action destroys something, such as deleting. Its button is a danger
+          button on the web and on Android, and has the destructive role in the iOS alert.
+  sheet:
+    name: Sheet
+    summary: >-
+      A panel that rises from the bottom edge or slides in from the end edge, for a longer task
+      or one that keeps the screen behind in view.
+    properties:
+      edge:
+        description: >-
+          The edge of the window the sheet comes from. On iOS every sheet is the system sheet,
+          from the bottom on iPhone and centered on iPad.
+        default: bottom
+        values:
+          bottom: >-
+            Rises from the bottom edge. It is as wide as the window, up to the medium panel
+            width, and centered on wider windows.
+          end: >-
+            Slides in from the end edge: the right in left-to-right layouts, the left in
+            right-to-left ones. On a window less than twice its width, it comes from the
+            bottom instead.
+
+content:
+  title:
+    description: >-
+      Names the dialog, and is what assistive technology reads first. In an alert dialog it says
+      what will happen, as a question: "Delete this address?". It wraps and is never cut short.
+    required: true
+  description:
+    description: >-
+      One sentence under the title that the dialog is described by: what the task is for, or
+      what confirming does.
+    required: false
+  body:
+    description: >-
+      Any content: text, fields, a list. It scrolls between the header and the footer when it
+      does not fit.
+    required: false
+  action-label:
+    description: >-
+      The label of the primary action, the last button of the footer. In an alert dialog it
+      repeats the verb of the title: "Delete address".
+    required: in an alert dialog
+  cancel-label:
+    description: >-
+      The label of the button that closes the dialog without doing anything, such as "Cancel".
+      It is the alert dialog's least destructive action, and where focus starts there.
+    required: in an alert dialog, and in a dialog or sheet without a close button
+  close-label:
+    description: >-
+      The name of the close button, read by assistive technology, such as "Close". The button
+      shows a cross drawn by the component.
+    required: in a dialog or sheet whose footer has no Cancel
+
+anatomy:
+  scrim:
+    description: >-
+      Covers the screen behind and makes it inert: nothing behind takes a pointer, focus, or
+      the attention of assistive technology. It fades in and out with the dialog.
+    tokens:
+      - dialog.scrim
+  container:
+    description: >-
+      A raised surface with a hairline outline, which holds the header, the body, and the
+      footer. A dialog is centered, at least the margin away from every edge of the window. A
+      bottom sheet touches the bottom edge and rounds its top corners; an end sheet is as tall
+      as the window and rounds the corners that face the screen.
+    tokens:
+      - dialog.bg
+      - dialog.border.width
+      - dialog.border.color
+      - dialog.radius
+      - dialog.shadow
+      - dialog.width.*
+      - dialog.margin
+      - dialog.padding
+      - dialog.gap
+      - sheet.width.end
+      - sheet.max-width.bottom
+  title:
+    description: >-
+      A heading at the start of the header, at the level the app gives it, set in heading-md.
+      It wraps, and is never truncated.
+    tokens:
+      - dialog.title
+      - dialog.fg
+  description:
+    description: An optional sentence under the title.
+    tokens:
+      - dialog.description
+      - dialog.fg
+  body:
+    description: >-
+      Any content, between the header and the footer. When it does not fit, it scrolls and the
+      header and footer stay in place.
+    tokens:
+      - dialog.padding
+  divider:
+    description: >-
+      A hairline under the header, and another above the footer, shown only while the body has
+      content scrolled beneath them.
+    tokens:
+      - dialog.divider
+      - dialog.border.width
+  footer:
+    description: >-
+      The buttons, at the end edge, the primary action last. When they do not fit in a row they
+      stack, the primary action first, each as wide as the container.
+    tokens:
+      - dialog.footer.gap
+  close-button:
+    description: >-
+      An icon-only ghost Button at the end of the header, named by the app. It is shown only
+      when the footer has no Cancel, so that there is one visible way out, not two that mean
+      the same.
+  drag-handle:
+    description: >-
+      A short bar at the top of a bottom sheet on iOS and Android, where it can be dragged. It
+      is a visual cue only: dragging is never the only way to close. The web has no drag
+      gesture, and so no handle.
+    tokens:
+      - sheet.handle.color
+
+states:
+  open:
+    description: >-
+      The dialog is shown and holds focus. The screen behind is under the scrim and inert.
+  scrolled:
+    description: >-
+      The body has content scrolled beneath the header or above the footer. A hairline shows at
+      that edge.
+  short-window:
+    description: >-
+      The window is too short to show the header, the footer, and three lines of the body, as
+      at 400% zoom. The whole container scrolls as one, and the header and footer scroll with
+      it.
+  stacked:
+    description: >-
+      The footer's buttons do not fit in a row, as with long translated labels. They stack, the
+      primary action first.
+  dragging:
+    description: >-
+      A bottom sheet on iOS or Android follows a finger that drags it down. Let go far enough or
+      fast enough, it closes; otherwise it settles back.
+
+accessibility:
+  role: >-
+    A modal dialog, or an alert dialog for an alert dialog, named by its title and described by
+    its description. On iOS an alert dialog is the system alert.
+  name: The title. The close button is named by the app.
+  keyboard:
+    - keys: [Tab, Shift+Tab]
+      action: >-
+        Move focus among the dialog's controls. Focus stays inside the dialog while it is open,
+        and wraps from the last control to the first.
+    - keys: [Escape]
+      action: >-
+        Closes a dialog or a sheet, and cancels an alert dialog. The app can refuse, as while
+        there are unsaved changes.
+    - keys: [Enter, Space]
+      action: Activate the focused button, as they do anywhere.
+  focus: >-
+    On open, focus moves into the dialog: to the title by default, so that a screen reader
+    starts at the top and nothing is activated by accident. The app can name another target,
+    such as the first field of a form. In an alert dialog focus starts on the least destructive
+    action, the Cancel button. On close, focus returns to the control that opened the dialog;
+    if that control is gone, to a target the app names. The title takes focus but shows no ring:
+    it is not a control.
+  hidden: >-
+    While a dialog is open, everything behind it is hidden from assistive technology and
+    cannot be reached with the keyboard or a pointer.
+  dismissal: >-
+    A dialog and a sheet close on Escape, a click or tap on the scrim, the close button or
+    Cancel, and the system's back gesture on Android; a bottom sheet also closes when it is
+    dragged down on iOS and Android. An alert dialog closes only on Escape, Cancel, the back
+    gesture, and its own actions: Escape and back mean Cancel, and the scrim does nothing, so
+    that a stray tap never counts as an answer. Every way out but dragging works without a
+    pointer, and dragging is never the only one.
+  text-size: >-
+    The title, description, body, and buttons grow with the person's text size setting. At 400%
+    zoom on the web, the largest accessibility text size on iOS, and a font scale of 2 on
+    Android, the dialog can still be read and used to the end.
+  contrast: >-
+    The title and description have 4.5:1 against the container, and 7:1 in the high-contrast
+    modes. The drag handle has 3:1. The scrim is not a background for contrast, because what is
+    under it is unknown.
+
+internationalization:
+  right-to-left: >-
+    The footer's buttons and the close button sit at the end edge, which is the left; the end
+    sheet comes from the left. Nothing is placed by left or right.
+  long-text: >-
+    Titles and descriptions wrap. The footer's buttons stack when their labels do not fit in a
+    row, as translations up to three times as long as English can.
+  scripts: >-
+    The title and description use the heading-md and body-md styles, whose line heights clear
+    stacked Vietnamese diacritics. Chinese, Japanese, and Korean use system fonts.
+
+motion:
+  enter: >-
+    The scrim and a dialog fade in, with dialog.enter.duration and its easing. A sheet slides
+    in from its edge while the scrim fades in.
+  exit: >-
+    The scrim and a dialog fade out, with dialog.exit.duration and its easing. A sheet slides
+    back to its edge.
+  reduced-motion: Everything fades and nothing moves.
+
+# Named examples. Stories, tests, and documentation are built from these.
+examples:
+  - id: dialog
+    part: dialog
+    description: >-
+      A dialog at the default width, with a description and a footer of Cancel and a primary
+      action.
+  - id: close-button
+    part: dialog
+    description: >-
+      A dialog that only shows information: a body, and a close button in place of a footer.
+  - id: long-title
+    part: dialog
+    description: >-
+      A title too long for one line, which wraps and is never cut short, at the small width. In
+      the expanded pseudo-locale the footer's buttons no longer fit in a row, and stack.
+    properties:
+      size: sm
+  - id: alert-dialog
+    part: alert-dialog
+    description: >-
+      An alert dialog that confirms a deletion: its title asks, and its danger button repeats
+      the verb.
+    properties:
+      destructive: true
+  - id: sheet-edges
+    part: sheet
+    description: A sheet from each edge, with a close button and one action in its footer.
+    matrix:
+      edge: [bottom, end]
+
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
+implementations:
+  web:
+    file: packages/web/src/components/ui/dialog.tsx
+    name: [Dialog, AlertDialog, Sheet]

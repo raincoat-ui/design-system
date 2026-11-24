@@ -28,6 +28,30 @@ public enum ButtonSize: String, CaseIterable, Sendable {
     public static let standard: ButtonSize = .md
 }
 
+/// Dialog: The width of the dialog. On a window narrower than that, it spans the width of the window less a margin.
+public enum DialogSize: String, CaseIterable, Sendable {
+    /// A dialog with a sentence or two and a few buttons.
+    case sm
+    /// The default width, for a short form.
+    case md
+    /// A dialog with wide content, such as a table or a preview.
+    case lg
+
+    /// The value used when none is given.
+    public static let standard: DialogSize = .md
+}
+
+/// Sheet: The edge of the window the sheet comes from. On iOS every sheet is the system sheet, from the bottom on iPhone and centered on iPad.
+public enum SheetEdge: String, CaseIterable, Sendable {
+    /// Rises from the bottom edge. It is as wide as the window, up to the medium panel width, and centered on wider windows.
+    case bottom
+    /// Slides in from the end edge: the right in left-to-right layouts, the left in right-to-left ones. On a window less than twice its width, it comes from the bottom instead.
+    case end
+
+    /// The value used when none is given.
+    public static let standard: SheetEdge = .bottom
+}
+
 /// Text: The text style.
 public enum TextVariant: String, CaseIterable, Sendable {
     /// An introductory paragraph.
