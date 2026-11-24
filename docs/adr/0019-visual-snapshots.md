@@ -93,10 +93,11 @@ what was left open.
 - iOS draws a specimen through a window, not with `ImageRenderer`. `ImageRenderer` draws only
   the views SwiftUI draws itself, and leaves out those UIKit provides, such as the text field of
   an Input and the scroll view of the Tabs. The specimen is shown by a `UIHostingController` in a
-  window of its own, 480 points wide, whose traits are the snapshot's: light or dark, the
-  contrast, the text size, and the layout direction. The window is drawn with
-  `drawHierarchy(in:afterScreenUpdates:)`. Nothing in it animates, so a spinner is drawn where it
-  starts.
+  window of its own, 480 points wide, in the test runner's scene, and the window's traits are the
+  snapshot's: light or dark, the contrast, the text size, and the layout direction. The window is
+  drawn with `drawHierarchy(in:afterScreenUpdates:)`, which draws nothing for a window that is
+  not shown in a scene; a snapshot it cannot draw fails. Nothing in the window animates, so a
+  spinner is drawn where it starts.
 - An alert dialog is left out of the iOS snapshots. On iOS it is the system alert, which the
   platform draws, not Raincoat.
 - iOS draws at a scale of 2, the smaller of an iPhone's two, so a specimen 480 points wide is 960

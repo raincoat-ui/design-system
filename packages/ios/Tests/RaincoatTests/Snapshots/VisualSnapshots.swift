@@ -262,7 +262,13 @@
             red: canvas.red, green: canvas.green, blue: canvas.blue, alpha: canvas.alpha
         )
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: specimenWidth, height: specimenWidth))
+        // A window draws its views only when it is shown in a scene: the test runner's.
+        let scene = try #require(
+            UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first,
+            "the test runner has no window scene to show the specimen in"
+        )
+        let window = UIWindow(windowScene: scene)
+        window.frame = CGRect(x: 0, y: 0, width: specimenWidth, height: specimenWidth)
         window.rootViewController = controller
         window.isHidden = false
         defer {
@@ -287,11 +293,14 @@
         let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { context in
             drewHierarchy = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
             if !drewHierarchy {
+                // Drawn only to be looked at: drawing the layers can leave out UIKit's views.
                 window.layer.render(in: context.cgContext)
             }
         }
         if !drewHierarchy {
-            print("\(theme.id)/\(snapshot.id): drawHierarchy drew nothing; the layer tree was drawn instead.")
+            Issue.record(
+                "\(theme.id)/\(snapshot.id): the window could not be drawn as the system draws it (drawHierarchy drew nothing)"
+            )
         }
         return try #require(image.cgImage, "the specimen could not be drawn")
     }
