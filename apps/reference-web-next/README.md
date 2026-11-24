@@ -88,7 +88,8 @@ that renders the `ToastProvider` around the page, as an app's layout does.
 
 A component that holds no state, such as Typography, can have a page of its own that is a Server
 Component alone: `app/typography/page.tsx`, at `/typography`. The Tabs, Client Components, have
-a page that a Server Component renders: `app/tabs/page.tsx`, at `/tabs`.
+a page that a Server Component renders: `app/tabs/page.tsx`, at `/tabs`. So does the Dialog,
+which opens on the person's action: `app/dialog/page.tsx`, at `/dialog`.
 The Card's page, `app/card/page.tsx` at `/card`, is a Server Component with one Client
 Component inside it: the card that is a button, whose click handler is a function.
 

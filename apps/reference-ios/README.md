@@ -64,9 +64,10 @@ synchronized with the project, so new files need no change to the project file.
 
 The app shows one screen: the Button's, unless the launch argument `-screen <name>` names another
 (`ReferenceApp.swift` lists them). A test class opens its component's screen with it, as
-`TypographyTests` does with `-screen typography`, `TabsTests` with `-screen tabs`, `ToastTests`
-with `-screen toast`, and `InputTests` with `-screen input`. A test class other than
-`ButtonTests` imports no theme module, because the theme switch links only the theme under test.
+`TypographyTests` does with `-screen typography`, `DialogTests` with `-screen dialog`,
+`TabsTests` with `-screen tabs`, `ToastTests` with `-screen toast`, and `InputTests` with
+`-screen input`. A test class other than `ButtonTests` imports no theme module, because the theme
+switch links only the theme under test.
 
 ## What the audit does not cover
 
@@ -76,3 +77,15 @@ Two kinds of audit finding are ignored, each for a stated reason in `ButtonTests
 - Dynamic Type. The audit reports any font that was not made from a system text style, and
   Raincoat scales its token sizes itself. `testButtonsGrowWithTheTextSize` checks the growth
   directly.
+
+`DialogTests.swift` also ignores two findings:
+
+- About an element of the system keyboard, or of the typing predictions over it, which a dialog
+  with a field in focus shows. They are the system's, and the app cannot describe them.
+- Text clipped, for an element inside the open dialog's sheet only. The audit reports every text
+  in a sheet shorter than the screen as one that may be clipped at larger text sizes, the
+  system's own text and buttons included, in any layout; it reports none in a full-screen
+  cover. `testEachDialogGrowsWithItsTextAndShowsEveryTextWhole` checks the dialogs' text
+  directly instead: at the default and the largest text size, each sheet grows with its text,
+  and every title, description, body, and button lies wholly inside it, where it can be touched.
+  Text clipped anywhere else still fails.

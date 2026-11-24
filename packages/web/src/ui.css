@@ -13,5 +13,7 @@
 @import "tailwindcss/utilities.css" source(none);
 @import "./tailwind.css";
 
-/* Words in the components' JavaScript that Tailwind would take for class names: an event name. */
+/* Words in the components' JavaScript that Tailwind would take for class names: a prop name
+   and an event name. */
+@source not inline("container");
 @source not inline("resize");

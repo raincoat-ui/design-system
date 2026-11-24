@@ -19,6 +19,9 @@
             android:name=".TypographyActivity"
             android:exported="false" />
         <activity
+            android:name=".DialogActivity"
+            android:exported="false" />
+        <activity
             android:name=".CardActivity"
             android:exported="false" />
         <activity

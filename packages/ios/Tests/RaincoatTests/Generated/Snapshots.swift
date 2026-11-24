@@ -261,6 +261,108 @@ let cardExamples: [SpecExample<CardExampleProperties>] = [
     ),
 ]
 
+/// The properties of one Dialog in an example.
+struct DialogExampleProperties: Sendable {
+    let size: DialogSize
+}
+
+/// The properties of one AlertDialog in an example.
+struct AlertDialogExampleProperties: Sendable {
+    let destructive: Bool
+}
+
+/// The properties of one Sheet in an example.
+struct SheetExampleProperties: Sendable {
+    let edge: SheetEdge
+}
+
+/// The properties of one part of Dialog in an example.
+enum DialogPartExampleProperties: Sendable {
+    case dialog(DialogExampleProperties)
+    case alertDialog(AlertDialogExampleProperties)
+    case sheet(SheetExampleProperties)
+}
+
+/// The examples of specs/components/dialog/spec.yaml, with their text.
+let dialogExamples: [SpecExample<DialogPartExampleProperties>] = [
+    SpecExample(
+        id: "dialog",
+        instances: [
+            .dialog(DialogExampleProperties(size: .md)),
+        ],
+        text: [
+            "en": ["title": "Rename file", "description": "Everyone the file is shared with sees the new name.", "cancel-label": "Cancel", "action-label": "Rename"],
+            "vi": ["title": "Đổi tên tệp", "description": "Mọi người được chia sẻ tệp đều thấy tên mới.", "cancel-label": "Hủy", "action-label": "Đổi tên"],
+            "zh-Hans": ["title": "重命名文件", "description": "此文件的所有共享对象都会看到新名称。", "cancel-label": "取消", "action-label": "重命名"],
+            "ja": ["title": "ファイル名を変更", "description": "このファイルを共有しているすべてのユーザーに新しい名前が表示されます。", "cancel-label": "キャンセル", "action-label": "名前を変更"],
+            "ko": ["title": "파일 이름 바꾸기", "description": "이 파일을 공유받은 모든 사람에게 새 이름이 표시됩니다.", "cancel-label": "취소", "action-label": "이름 바꾸기"],
+            "ar": ["title": "إعادة تسمية الملف", "description": "سيرى كل من تمت مشاركة الملف معه الاسم الجديد.", "cancel-label": "إلغاء", "action-label": "إعادة تسمية"],
+            "en-XA": ["title": "[Ŕéñåɱé ƒîļé one]", "description": "[Éṽéŕýöñé ţĥé ƒîļé îš šĥåŕéð ŵîţĥ šééš ţĥé ñéŵ ñåɱé. one two three four]", "cancel-label": "[Çåñçéļ one]", "action-label": "[Ŕéñåɱé one]"],
+        ]
+    ),
+    SpecExample(
+        id: "close-button",
+        instances: [
+            .dialog(DialogExampleProperties(size: .md)),
+        ],
+        text: [
+            "en": ["title": "Keyboard shortcuts", "body": "Press N to start a new file, and S to share it.", "close-label": "Close"],
+            "vi": ["title": "Phím tắt", "body": "Nhấn N để tạo tệp mới và S để chia sẻ tệp.", "close-label": "Đóng"],
+            "zh-Hans": ["title": "键盘快捷键", "body": "按 N 新建文件，按 S 共享文件。", "close-label": "关闭"],
+            "ja": ["title": "キーボードショートカット", "body": "N キーで新しいファイルを作成し、S キーで共有します。", "close-label": "閉じる"],
+            "ko": ["title": "단축키", "body": "N 키를 눌러 새 파일을 만들고 S 키를 눌러 공유합니다.", "close-label": "닫기"],
+            "ar": ["title": "اختصارات لوحة المفاتيح", "body": "اضغط N لإنشاء ملف جديد، وS لمشاركته.", "close-label": "إغلاق"],
+            "en-XA": ["title": "[Ķéýƀöåŕð šĥöŕţçûţš one two]", "body": "[Þŕéšš Ñ ţö šţåŕţ å ñéŵ ƒîļé, åñð Š ţö šĥåŕé îţ. one two three four]", "close-label": "[Çļöšé]"],
+        ]
+    ),
+    SpecExample(
+        id: "long-title",
+        instances: [
+            .dialog(DialogExampleProperties(size: .sm)),
+        ],
+        text: [
+            "en": ["title": "Share the third-quarter sales report with everyone on your team", "cancel-label": "Cancel", "action-label": "Share with your team"],
+            "vi": ["title": "Chia sẻ báo cáo doanh số quý ba với mọi người trong nhóm của bạn", "cancel-label": "Hủy", "action-label": "Chia sẻ với nhóm"],
+            "zh-Hans": ["title": "将第三季度销售报告共享给你团队中的每一位成员", "cancel-label": "取消", "action-label": "与团队共享"],
+            "ja": ["title": "第 3 四半期の売上レポートをチームの全員と共有", "cancel-label": "キャンセル", "action-label": "チームと共有"],
+            "ko": ["title": "3분기 판매 보고서를 팀의 모든 구성원과 공유", "cancel-label": "취소", "action-label": "팀과 공유"],
+            "ar": ["title": "مشاركة تقرير مبيعات الربع الثالث مع جميع أعضاء فريقك", "cancel-label": "إلغاء", "action-label": "مشاركة مع فريقك"],
+            "en-XA": ["title": "[Šĥåŕé ţĥé ţĥîŕð-ǫûåŕţéŕ šåļéš ŕéþöŕţ ŵîţĥ éṽéŕýöñé öñ ýöûŕ ţéåɱ one two three four five]", "cancel-label": "[Çåñçéļ one]", "action-label": "[Šĥåŕé ŵîţĥ ýöûŕ ţéåɱ one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "alert-dialog",
+        instances: [
+            .alertDialog(AlertDialogExampleProperties(destructive: true)),
+        ],
+        text: [
+            "en": ["title": "Delete this address?", "description": "It is removed from your account. This cannot be undone.", "cancel-label": "Cancel", "action-label": "Delete address"],
+            "vi": ["title": "Xóa địa chỉ này?", "description": "Địa chỉ sẽ bị xóa khỏi tài khoản của bạn. Không thể hoàn tác thao tác này.", "cancel-label": "Hủy", "action-label": "Xóa địa chỉ"],
+            "zh-Hans": ["title": "删除此地址？", "description": "此地址将从你的账户中移除。此操作无法撤消。", "cancel-label": "取消", "action-label": "删除地址"],
+            "ja": ["title": "この住所を削除しますか？", "description": "この住所はアカウントから削除されます。この操作は元に戻せません。", "cancel-label": "キャンセル", "action-label": "住所を削除"],
+            "ko": ["title": "이 주소를 삭제할까요?", "description": "이 주소가 계정에서 삭제됩니다. 이 작업은 되돌릴 수 없습니다.", "cancel-label": "취소", "action-label": "주소 삭제"],
+            "ar": ["title": "حذف هذا العنوان؟", "description": "ستتم إزالته من حسابك. لا يمكن التراجع عن ذلك.", "cancel-label": "إلغاء", "action-label": "حذف العنوان"],
+            "en-XA": ["title": "[Ðéļéţé ţĥîš åððŕéšš? one two]", "description": "[Îţ îš ŕéɱöṽéð ƒŕöɱ ýöûŕ åççöûñţ. Ţĥîš çåññöţ ƀé ûñðöñé. one two three four five]", "cancel-label": "[Çåñçéļ one]", "action-label": "[Ðéļéţé åððŕéšš one]"],
+        ]
+    ),
+    SpecExample(
+        id: "sheet-edges",
+        instances: [
+            .sheet(SheetExampleProperties(edge: .bottom)),
+            .sheet(SheetExampleProperties(edge: .end)),
+        ],
+        text: [
+            "en": ["title": "Filters", "body": "Show files shared with you in the last 30 days.", "close-label": "Close", "action-label": "Show results"],
+            "vi": ["title": "Bộ lọc", "body": "Hiển thị các tệp được chia sẻ với bạn trong 30 ngày qua.", "close-label": "Đóng", "action-label": "Hiển thị kết quả"],
+            "zh-Hans": ["title": "筛选", "body": "显示过去 30 天内与你共享的文件。", "close-label": "关闭", "action-label": "显示结果"],
+            "ja": ["title": "フィルター", "body": "過去 30 日間に共有されたファイルを表示します。", "close-label": "閉じる", "action-label": "結果を表示"],
+            "ko": ["title": "필터", "body": "지난 30일 동안 나와 공유된 파일을 표시합니다.", "close-label": "닫기", "action-label": "결과 보기"],
+            "ar": ["title": "عوامل التصفية", "body": "عرض الملفات التي تمت مشاركتها معك خلال آخر 30 يومًا.", "close-label": "إغلاق", "action-label": "عرض النتائج"],
+            "en-XA": ["title": "[Ƒîļţéŕš one]", "body": "[Šĥöŵ ƒîļéš šĥåŕéð ŵîţĥ ýöû îñ ţĥé ļåšţ 30 ðåýš. one two three four]", "close-label": "[Çļöšé]", "action-label": "[Šĥöŵ ŕéšûļţš one]"],
+        ]
+    ),
+]
+
 /// The properties of one Input in an example.
 struct InputExampleProperties: Sendable {
     let size: InputSize
