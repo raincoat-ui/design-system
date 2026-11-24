@@ -119,6 +119,17 @@
       "type": "object",
       "additionalProperties": { "$ref": "#/$defs/prose" }
     },
+    "implementations": {
+      "description": "Each platform's component: its source file, from the repository root, and what it is called there. A platform with no entry has no implementation yet. The spec linter checks that each file exists and mentions the name, and the documentation's parity matrix is built from this list.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "web": { "$ref": "#/$defs/implementation" },
+        "ios": { "$ref": "#/$defs/implementation" },
+        "android": { "$ref": "#/$defs/implementation" }
+      }
+    },
     "examples": {
       "type": "array",
       "minItems": 1,
@@ -141,6 +152,21 @@
     }
   },
   "$defs": {
+    "implementation": {
+      "type": "object",
+      "required": ["file", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "name": {
+          "description": "What the component is called on the platform, as code would name it. Several names when the component is more than one type, view, or function there.",
+          "type": ["string", "array"],
+          "minLength": 1,
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
     "kebab": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
     "prose": { "type": "string", "minLength": 8 }
   }

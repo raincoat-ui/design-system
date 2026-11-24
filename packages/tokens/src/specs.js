@@ -1,10 +1,17 @@
 // Component specs: the platform-neutral contract of each component, in
 // specs/components/<id>/spec.yaml. This module loads them and checks what a schema cannot.
-import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { parse as parseYaml } from "yaml";
 import { compose, DENSITIES, loadSource, MODES } from "./load.js";
+
+/** The language of each platform's components, which an implementation's file must be in. */
+const SOURCE_LANGUAGES = {
+  web: { language: "TypeScript", extensions: [".tsx", ".ts"] },
+  ios: { language: "Swift", extensions: [".swift"] },
+  android: { language: "Kotlin", extensions: [".kt"] },
+};
 
 /**
  * Loads every component spec.
@@ -144,6 +151,33 @@ export function lintSpecs(
       for (const [name, value] of Object.entries(example.properties ?? {})) check(name, value);
       for (const [name, values] of Object.entries(example.matrix ?? {})) {
         for (const value of values) check(name, value);
+      }
+    }
+
+    // Each implementation is a file in the repository, in its platform's language, that
+    // mentions every name the spec gives the component there.
+    for (const [platform, { file: source, name }] of Object.entries(spec.implementations ?? {})) {
+      const where = `implementations.${platform}`;
+      const path = resolve(root, source);
+      const inside = relative(root, path);
+      if (isAbsolute(source) || inside === ".." || inside.startsWith(`..${sep}`)) {
+        add(`${where}: ${source} is not a path inside the repository`);
+        continue;
+      }
+      const { language, extensions } = SOURCE_LANGUAGES[platform];
+      if (!extensions.some((extension) => source.endsWith(extension))) {
+        add(`${where}: ${source} is not a ${language} file`);
+      }
+      if (!existsSync(path) || !statSync(path).isFile()) {
+        add(`${where}: ${source} does not exist`);
+        continue;
+      }
+      const text = readFileSync(path, "utf8");
+      const identifiers = [name].flat().flatMap((each) => each.match(/[A-Za-z]\w*/g) ?? []);
+      for (const identifier of identifiers) {
+        if (!new RegExp(`\\b${identifier}\\b`).test(text)) {
+          add(`${where}: ${source} does not mention "${identifier}"`);
+        }
       }
     }
   }
