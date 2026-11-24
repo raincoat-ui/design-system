@@ -132,8 +132,9 @@ const NEUTRAL = new Set([
   ...["background-color", "border-color", "color"],
 ]);
 // The spinner turns once a second. That speed is not a token yet. Visually hidden text, such as
-// a hidden label, is drawn by a fixed rule.
-const EXEMPT = new Set([".animate-rc-spin", ".sr-only"]);
+// a hidden label, is drawn by a fixed rule. A placeholder is drawn opaque, which Firefox does not
+// do by default.
+const EXEMPT = new Set([".animate-rc-spin", ".sr-only", ".placeholder\\:opacity-100::placeholder"]);
 
 /** The parts of a declaration's value that are neither a Raincoat token nor neutral. */
 function literals(value) {

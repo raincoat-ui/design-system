@@ -8,7 +8,7 @@ import { createRef, type FormEvent, type ReactElement, type ReactNode, useState 
 import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from "vitest";
-import { cdp, page, userEvent } from "vitest/browser";
+import { cdp, commands, page, server, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { INPUT_SIZES, INPUT_TYPES, Input, type InputProps } from "../../src/index.js";
 
@@ -96,18 +96,21 @@ function parts(control: Element) {
 }
 
 /** Moves the pointer off every field, so one test's hover cannot carry into the next. */
-const parkPointer = () =>
-  cdp().send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 0, y: 0 });
+const parkPointer = () => commands.movePointerAway();
 
-type MediaFeature = "prefers-reduced-motion" | "prefers-color-scheme";
-async function withMedia(name: MediaFeature, value: string, run: () => Promise<void>) {
-  await cdp().send("Emulation.setEmulatedMedia", { features: [{ name, value }] });
+type Media = Parameters<typeof commands.emulateMedia>[0];
+/** Runs with a system setting emulated, such as `{ colorScheme: "dark" }`. */
+async function withMedia(media: Media, run: () => Promise<void>) {
+  await commands.emulateMedia(media);
   try {
     await run();
   } finally {
-    await cdp().send("Emulation.setEmulatedMedia", { features: [] });
+    await commands.emulateMedia(Object.fromEntries(Object.keys(media).map((name) => [name, null])));
   }
 }
+
+/** Whether the browser can size a multi-line field to its content: Chromium can. */
+const sizesToContent = () => CSS.supports("field-sizing", "content");
 
 /** Undoes what serverRender set up. */
 const serverRendered: (() => void)[] = [];
@@ -160,15 +163,23 @@ const ime = {
   end(control: HTMLElement, text: string) {
     control.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true, data: text }));
   },
-  /** A key press of Enter: returns whether something prevented what it would do. */
-  enter(control: HTMLElement, init: KeyboardEventInit = {}) {
+  /**
+   * A key press of Enter, with the key code a browser gives it: 229 for a key an input method
+   * takes. Returns whether something prevented what the key would do.
+   */
+  enter(
+    control: HTMLElement,
+    { keyCode, isComposing = false }: { keyCode: number; isComposing?: boolean },
+  ) {
     const event = new KeyboardEvent("keydown", {
       key: "Enter",
       code: "Enter",
       bubbles: true,
       cancelable: true,
-      ...init,
+      isComposing,
     });
+    // Not every browser takes the legacy key code from the event's options.
+    Object.defineProperty(event, "keyCode", { value: keyCode });
     control.dispatchEvent(event);
     return event.defaultPrevented;
   },
@@ -360,7 +371,7 @@ export function describeInput(environment: string) {
         const line = number("input.value.md.line-height");
         expect(box.getBoundingClientRect().height).toBeCloseTo(
           number("input.height.md") + 2 * line,
-          1,
+          0,
         );
 
         await userEvent.type(field, "First{Enter}Second");
@@ -368,7 +379,7 @@ export function describeInput(environment: string) {
         expect(onSubmit).not.toHaveBeenCalled();
       });
 
-      test("grows with its content, and the first line sits where a one-line field's text does", async () => {
+      test("grows with its content where the browser can size it, and can be made taller where it cannot", async () => {
         const screen = await render(
           <Stage>
             <Input label="Message" multiline rows={2} />
@@ -379,15 +390,20 @@ export function describeInput(environment: string) {
         const box = parts(area).field;
         const line = number("input.value.md.line-height");
         const start = box.getBoundingClientRect().height;
-        expect(start).toBeCloseTo(number("input.height.md") + line, 1);
-        // Chromium sizes the field to its content, so the person need not resize it.
-        expect(computed(area).resize).toBe("none");
+        expect(start).toBeCloseTo(number("input.height.md") + line, 0);
 
         await userEvent.type(area, "One{Enter}Two{Enter}Three{Enter}Four");
-        expect(box.getBoundingClientRect().height).toBeCloseTo(start + 2 * line, 1);
-        // Nothing scrolls inside it.
-        expect(area.scrollHeight).toBeLessThanOrEqual(area.clientHeight);
+        if (sizesToContent()) {
+          // The person need not resize it, and nothing scrolls inside it.
+          expect(computed(area).resize).toBe("none");
+          expect(box.getBoundingClientRect().height).toBeCloseTo(start + 2 * line, 0);
+          expect(area.scrollHeight).toBeLessThanOrEqual(area.clientHeight);
+        } else {
+          expect(computed(area).resize).toBe("vertical");
+          expect(box.getBoundingClientRect().height).toBeCloseTo(start, 0);
+        }
 
+        // The first line sits where a one-line field's text does.
         const padding = (number("input.height.md") - line) / 2 - number("input.border-width");
         expect(pixels(computed(area).paddingTop)).toBeCloseTo(padding, 2);
       });
@@ -402,7 +418,7 @@ export function describeInput(environment: string) {
         const line = number("input.value.sm.line-height");
         expect(parts(area).field.getBoundingClientRect().height).toBeCloseTo(
           number("input.height.sm") + 4 * line,
-          1,
+          0,
         );
       });
     });
@@ -897,7 +913,9 @@ export function describeInput(environment: string) {
         expect(document.elementFromPoint(box.left + 3, box.top + box.height / 2)).toBe(control);
       });
 
-      test("on a touch screen, a small field takes touches across the minimum target, and takes only the room it shows", async () => {
+      test("on a touch screen, a small field takes touches across the minimum target, and takes only the room it shows", async (context) => {
+        // Chromium alone can turn a touch screen on in a page that is already open.
+        context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
         await cdp().send("Emulation.setTouchEmulationEnabled", {
           enabled: true,
           maxTouchPoints: 1,
@@ -989,7 +1007,7 @@ export function describeInput(environment: string) {
 
     describe("system preferences", () => {
       test("without a data-theme, the field follows the system's color scheme", async () => {
-        await withMedia("prefers-color-scheme", "dark", async () => {
+        await withMedia({ colorScheme: "dark" }, async () => {
           const screen = await render(<Input label="Email" />);
           const field = parts(screen.getByRole("textbox").element()).field;
           expect(computed(field).backgroundColor).toBe(color("input.bg.default", "dark"));

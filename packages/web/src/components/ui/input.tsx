@@ -116,7 +116,8 @@ const classes = {
     // Everything a browser styles on a field by default is set here, so the field looks the
     // same with or without a CSS reset. The box is the wrapper's.
     "relative m-0 box-border w-full min-w-0 appearance-none rounded-(--rc-input-radius) border-0 bg-transparent outline-none",
-    "text-(--rc-input-fg-default) placeholder:text-(--rc-input-placeholder)",
+    // Firefox draws a placeholder at half opacity unless told otherwise, below its contrast.
+    "text-(--rc-input-fg-default) placeholder:text-(--rc-input-placeholder) placeholder:opacity-100",
     "disabled:cursor-not-allowed disabled:text-(--rc-input-fg-disabled) disabled:placeholder:text-(--rc-input-fg-disabled)",
   ],
   // A one-line field. A browser centers its line of text.
