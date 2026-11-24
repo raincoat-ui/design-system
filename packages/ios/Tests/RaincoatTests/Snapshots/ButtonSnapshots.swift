@@ -1,4 +1,4 @@
-#if canImport(SwiftUI) && canImport(ImageIO)
+#if os(iOS)
     import Raincoat
     import SwiftUI
     import Testing

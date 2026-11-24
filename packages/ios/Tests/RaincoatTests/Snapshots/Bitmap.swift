@@ -1,4 +1,4 @@
-#if canImport(CoreGraphics) && canImport(ImageIO)
+#if os(iOS)
     import CoreGraphics
     import Foundation
     import ImageIO

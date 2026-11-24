@@ -130,10 +130,17 @@ You can also draw the snapshots on your machine, to look at them. That compares 
 writes no baseline; do not copy what it draws over the baselines.
 
 - Web: `pnpm web:snapshots` draws them into `packages/web/test-results/snapshots/local/`.
-- iOS, on a Mac:
-  `RAINCOAT_SNAPSHOTS=1 swift test --package-path packages/ios --filter VisualSnapshots` draws
-  them into `packages/ios/test-results/snapshots/local/`. Without `RAINCOAT_SNAPSHOTS`,
-  `swift test` leaves the snapshots out.
+- iOS, on a Mac with Xcode, in an iOS simulator, from `packages/ios`:
+
+  ```sh
+  TEST_RUNNER_RAINCOAT_SNAPSHOTS=1 xcodebuild test -scheme Raincoat-Package \
+    -destination 'platform=iOS Simulator,name=iPhone 17' \
+    -only-testing:RaincoatTests/VisualSnapshots
+  ```
+
+  It draws them into `packages/ios/test-results/snapshots/local/`. Without that variable the
+  snapshots are left out, and `swift test` on macOS never draws them: SwiftUI there does not
+  enlarge text for a larger Dynamic Type size.
 
 To give a new component its snapshots, write its `strings.yaml` (`pnpm tokens:lint` says what is
 missing), run `pnpm tokens:build`, and add a test on each platform that draws one instance of its

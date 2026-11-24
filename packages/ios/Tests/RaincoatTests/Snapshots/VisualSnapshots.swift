@@ -1,4 +1,4 @@
-#if canImport(SwiftUI) && canImport(ImageIO)
+#if os(iOS)
     import CoreGraphics
     import Foundation
     import Raincoat
@@ -15,16 +15,22 @@
     // this suite that passes the generated examples to expectSnapshot, with a function that draws
     // one instance of them. ButtonSnapshots.swift is the model.
     //
-    // The snapshots run only when RAINCOAT_SNAPSHOTS is set:
+    // The snapshots are drawn by iOS, in a simulator: SwiftUI on macOS does not enlarge text for
+    // a larger Dynamic Type size. They run only when RAINCOAT_SNAPSHOTS is set, which xcodebuild
+    // passes to the tests from TEST_RUNNER_RAINCOAT_SNAPSHOTS. From packages/ios:
     //
-    //     RAINCOAT_SNAPSHOTS=1 swift test --package-path packages/ios --filter VisualSnapshots
+    //     TEST_RUNNER_RAINCOAT_SNAPSHOTS=1 xcodebuild test -scheme Raincoat-Package \
+    //       -destination 'platform=iOS Simulator,name=iPhone 17' \
+    //       -only-testing:RaincoatTests/VisualSnapshots
     //
-    // In CI each drawing is compared with its baseline, packages/ios/__screenshots__/<theme>/
-    // <component>/<snapshot>.png. A missing or different baseline fails the test, and what was
-    // drawn is written to packages/ios/test-results/snapshots/actual/, with the difference in
-    // .../diff/; CI uploads both. Anywhere else nothing is compared and no baseline is ever
-    // written: the images go to test-results/snapshots/local/, to look at. Baselines are recorded
-    // in CI only; CONTRIBUTING.md says how to accept them.
+    // A simulator reads and writes the Mac's files, so the tests find the baselines and write
+    // what they drew in this checkout, by the path of this file. In CI (CI set, through
+    // TEST_RUNNER_CI) each drawing is compared with its baseline, packages/ios/__screenshots__/
+    // <theme>/<component>/<snapshot>.png. A missing or different baseline fails the test, and
+    // what was drawn is written to packages/ios/test-results/snapshots/actual/, with the
+    // difference in .../diff/; CI uploads both. Anywhere else nothing is compared and no baseline
+    // is ever written: the images go to test-results/snapshots/local/, to look at. Baselines are
+    // recorded in CI only; CONTRIBUTING.md says how to accept them.
 
     @Suite(.enabled(if: SnapshotRun.current != nil, "RAINCOAT_SNAPSHOTS=1 draws the snapshots"))
     struct VisualSnapshots {}

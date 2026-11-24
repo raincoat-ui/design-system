@@ -3,8 +3,8 @@
 - Status: accepted
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
-- Amended: 2026-11-24, iOS draws its snapshots at a scale of 2, in a job of its own, with its
-  baselines in `packages/ios/__screenshots__`
+- Amended: 2026-11-24, iOS draws its snapshots in a simulator, at a scale of 2, in a job of its
+  own, with its baselines in `packages/ios/__screenshots__`
 
 ## Context
 
@@ -82,14 +82,19 @@ generated `allSnapshots` and `<component>Examples`:
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.
 
-**Amended 2026-11-24: iOS.** Building the iOS snapshots changed three things above and settled
+**Amended 2026-11-24: iOS.** Building the iOS snapshots changed four things above and settled
 what was left open.
 
+- iOS draws the snapshots in an iPhone simulator, with `xcodebuild test`, not on macOS. On
+  macOS the components' scaled metrics ignore the Dynamic Type size: there, `accessibility5`
+  drew text at its default size, and the check below failed. The simulator draws with iOS and
+  its fonts, as an iPhone does. The tests are compiled for iOS only.
 - iOS draws at a scale of 2, the smaller of an iPhone's two, so a specimen 480 points wide is 960
   pixels wide and its text can be read as a person sees it.
 - The snapshots run in an `ios snapshots` job of their own, as the web's do, which uploads the
-  `ios-snapshots` artifact. `swift test` runs them only when `RAINCOAT_SNAPSHOTS` is set, so the
-  `swift package (macos)` job and the test of the Swift mirror leave them out.
+  `ios-snapshots` artifact. They run only when `RAINCOAT_SNAPSHOTS` is set, which xcodebuild
+  passes to the tests from `TEST_RUNNER_RAINCOAT_SNAPSHOTS`. The simulator reads the baselines
+  from the checkout and writes what it drew there, where the job collects it.
 - The baselines are in `packages/ios/__screenshots__/<theme>/<component>/<snapshot>.png`, outside
   the package's targets. SwiftPM warns about every file in a target that is not source, and the
   Swift mirror, which every app that uses the package clones, copies `Tests/`.

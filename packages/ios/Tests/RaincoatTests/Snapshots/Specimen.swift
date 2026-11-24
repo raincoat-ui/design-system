@@ -1,4 +1,4 @@
-#if canImport(SwiftUI)
+#if os(iOS)
     import Raincoat
     import SwiftUI
     import Testing
