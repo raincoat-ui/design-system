@@ -82,12 +82,15 @@ function Tabs({
   );
 }
 
-/** Scrolls the list just enough to show the whole tab, and nothing else on the page. */
+/**
+ * Scrolls the list just enough to show the whole tab, and nothing else on the page. The
+ * distance is rounded away from zero: some browsers scroll in whole pixels only.
+ */
 function reveal(list: HTMLElement, tab: Element) {
   const outer = list.getBoundingClientRect();
   const inner = tab.getBoundingClientRect();
-  if (inner.left < outer.left) list.scrollBy({ left: inner.left - outer.left });
-  else if (inner.right > outer.right) list.scrollBy({ left: inner.right - outer.right });
+  if (inner.left < outer.left) list.scrollBy({ left: Math.floor(inner.left - outer.left) });
+  else if (inner.right > outer.right) list.scrollBy({ left: Math.ceil(inner.right - outer.right) });
 }
 
 /**
@@ -185,17 +188,24 @@ function ScrollButton({
 
 type TabsListProps = Omit<React.ComponentProps<typeof TabsPrimitive.List>, "loop" | "asChild">;
 
+/** Whether a key was pressed in the tab list since a pointer last was. See TabsList. */
+const KeyboardInList = React.createContext(false);
+
 /**
  * The row of tabs, over a hairline across the full width. When the tabs do not fit, it scrolls
  * sideways, and a mouse gets previous and next buttons at its ends.
  *
  * Name it with `aria-label` when a screen has more than one set of tabs.
  */
-function TabsList({ className, ref, ...props }: TabsListProps) {
+function TabsList({ className, ref, onKeyDown, onPointerDown, ...props }: TabsListProps) {
   const frame = React.useRef<HTMLDivElement>(null);
   const list = React.useRef<HTMLDivElement>(null);
   const listRef = useBothRefs(ref, list);
   const [overflow, setOverflow] = React.useState<Overflow | null>(null);
+  // Whether a key was pressed in the list since a pointer last was. The arrow keys move focus
+  // by script, and after a click Firefox does not count that as keyboard focus, so the tabs
+  // show their focus ring for it themselves.
+  const [keyboard, setKeyboard] = React.useState(false);
 
   React.useEffect(() => {
     const outer = frame.current;
@@ -272,23 +282,33 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
       )}
     >
       {overflow && <ScrollButton toward="start" overflow={overflow} onPage={onPage} />}
-      <TabsPrimitive.List
-        ref={listRef}
-        data-slot="tabs-list"
-        className={cn(
-          "relative flex min-w-0 flex-auto overflow-x-auto overflow-y-hidden",
-          // The list scrolls without showing a scroll bar: a swipe, the arrow keys, or the
-          // scroll buttons move it.
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-          // On a touch screen, room above and below tabs shorter than the minimum target, for
-          // their touch targets to reach into. The margins take that room back, so the list is
-          // as tall as its tabs.
-          "pointer-coarse:py-[calc((var(--rc-tabs-target-minimum)_-_min(var(--rc-tabs-target-minimum),var(--rc-tabs-height)))/2)]",
-          "pointer-coarse:my-[calc((min(var(--rc-tabs-target-minimum),var(--rc-tabs-height))_-_var(--rc-tabs-target-minimum))/2)]",
-          className,
-        )}
-        {...props}
-      />
+      <KeyboardInList value={keyboard}>
+        <TabsPrimitive.List
+          ref={listRef}
+          data-slot="tabs-list"
+          onKeyDown={(event) => {
+            setKeyboard(true);
+            onKeyDown?.(event);
+          }}
+          onPointerDown={(event) => {
+            setKeyboard(false);
+            onPointerDown?.(event);
+          }}
+          className={cn(
+            "relative flex min-w-0 flex-auto overflow-x-auto overflow-y-hidden",
+            // The list scrolls without showing a scroll bar: a swipe, the arrow keys, or the
+            // scroll buttons move it.
+            "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+            // On a touch screen, room above and below tabs shorter than the minimum target, for
+            // their touch targets to reach into. The margins take that room back, so the list is
+            // as tall as its tabs.
+            "pointer-coarse:py-[calc((var(--rc-tabs-target-minimum)_-_min(var(--rc-tabs-target-minimum),var(--rc-tabs-height)))/2)]",
+            "pointer-coarse:my-[calc((min(var(--rc-tabs-target-minimum),var(--rc-tabs-height))_-_var(--rc-tabs-target-minimum))/2)]",
+            className,
+          )}
+          {...props}
+        />
+      </KeyboardInList>
       {overflow && <ScrollButton toward="end" overflow={overflow} onPage={onPage} />}
     </div>
   );
@@ -315,9 +335,11 @@ type TabsTriggerProps = Omit<
  * nowhere.
  */
 function TabsTrigger({ className, leadingIcon, children, ...props }: TabsTriggerProps) {
+  const keyboard = React.useContext(KeyboardInList);
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
+      data-keyboard={keyboard ? "" : undefined}
       className={cn(
         // Everything a browser styles on a button by default is set here, so the tab looks the
         // same with or without a CSS reset.
@@ -335,8 +357,10 @@ function TabsTrigger({ className, leadingIcon, children, ...props }: TabsTrigger
         "after:transition-[background-color] after:duration-(--rc-tabs-transition-duration) after:ease-(--rc-tabs-transition-easing) motion-reduce:after:transition-none",
         "data-[state=active]:after:bg-(--rc-tabs-indicator-color)",
         // The focus ring, for keyboard focus only, inside the tab's edge, where the scrolling
-        // list cannot clip it.
+        // list cannot clip it. Focus that the arrow keys move counts as keyboard focus in every
+        // browser.
         "focus-visible:outline-(length:--rc-tabs-focus-ring-width) focus-visible:outline-offset-[calc(0px_-_var(--rc-tabs-focus-ring-width))] focus-visible:outline-(--rc-tabs-focus-ring-color) focus-visible:outline-solid",
+        "data-keyboard:focus:outline-(length:--rc-tabs-focus-ring-width) data-keyboard:focus:outline-offset-[calc(0px_-_var(--rc-tabs-focus-ring-width))] data-keyboard:focus:outline-(--rc-tabs-focus-ring-color) data-keyboard:focus:outline-solid",
         // On touch screens the target is at least the minimum size, whatever the visible height.
         "pointer-coarse:before:absolute pointer-coarse:before:inset-x-0 pointer-coarse:before:inset-y-[min(0px,calc((100%_-_var(--rc-tabs-target-minimum))/2))] pointer-coarse:before:content-['']",
         className,
