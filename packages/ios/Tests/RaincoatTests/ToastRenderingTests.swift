@@ -6,6 +6,9 @@
     import RaincoatTokens
     import SwiftUI
     import Testing
+    #if os(macOS)
+        import AppKit
+    #endif
 
     // These tests draw real toasts into a bitmap and read the pixels back, so they check what
     // SwiftUI actually lays out and paints: fills, outlines, heights, and wrapping. They also draw
@@ -13,6 +16,10 @@
     // clock of their own. The queue and the timer are tested on their own in ToastQueueTests.
 
     /// A drawn view: its size in points and its pixels, at one pixel per point.
+    ///
+    /// On macOS the view is drawn in a hosting view in a window, as an app shows it, not with
+    /// ImageRenderer: ImageRenderer measures a view that uses `accessibilityFocused`, as the toast
+    /// does, as if it had no content (docs/adr/0019-visual-snapshots.md).
     @MainActor
     private struct Drawing {
         let width: Int
@@ -35,23 +42,65 @@
             let fixed = RaincoatTheme(id: "\(theme.id)-\(mode.rawValue)") { _, density in
                 theme.tokens(mode: mode, density: density)
             }
-            let renderer = ImageRenderer(content: view.raincoatTheme(fixed).raincoatDensity(density))
-            renderer.scale = 1
-            renderer.proposedSize = ProposedViewSize(width: width, height: height)
-            let image = try #require(renderer.cgImage)
-            self.width = image.width
-            self.height = image.height
-            var buffer = [UInt8](repeating: 0, count: image.width * image.height * 4)
-            let context = try #require(
-                CGContext(
-                    data: &buffer, width: image.width, height: image.height, bitsPerComponent: 8,
-                    bytesPerRow: image.width * 4, space: CGColorSpace(name: CGColorSpace.sRGB)!,
-                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-                )
-            )
-            context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+            let themed = view.raincoatTheme(fixed).raincoatDensity(density)
+            let offered = ProposedViewSize(width: width, height: height)
+            #if os(macOS)
+                let image = try Self.hosted(themed, offered: offered)
+            #else
+                let renderer = ImageRenderer(content: themed)
+                renderer.scale = 1
+                renderer.proposedSize = offered
+                let rendered = try #require(renderer.cgImage)
+                let image = (cgImage: rendered, size: CGSize(width: rendered.width, height: rendered.height))
+            #endif
+            // One pixel per point, whatever the scale it was drawn at.
+            self.width = Int(image.size.width)
+            self.height = Int(image.size.height)
+            let (columns, rows) = (self.width, self.height)
+            var buffer = [UInt8](repeating: 0, count: columns * rows * 4)
+            let drawn = buffer.withUnsafeMutableBytes { raw -> Bool in
+                guard let space = CGColorSpace(name: CGColorSpace.sRGB),
+                    let context = CGContext(
+                        data: raw.baseAddress, width: columns, height: rows, bitsPerComponent: 8,
+                        bytesPerRow: columns * 4, space: space,
+                        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                    )
+                else { return false }
+                context.interpolationQuality = .none
+                context.draw(image.cgImage, in: CGRect(x: 0, y: 0, width: columns, height: rows))
+                return true
+            }
+            try #require(drawn)
             pixels = buffer
         }
+
+        #if os(macOS)
+            /// Draws a view in a hosting view in a borderless window, through AppKit's display
+            /// cache, at the size the view takes when it is offered `offered`.
+            private static func hosted(_ view: some View, offered: ProposedViewSize) throws -> (
+                cgImage: CGImage, size: CGSize
+            ) {
+                _ = NSApplication.shared
+                let host = NSHostingView(rootView: Offering(offered: offered) { view })
+                let fitting = host.fittingSize
+                let size = CGSize(width: fitting.width.rounded(.up), height: fitting.height.rounded(.up))
+                let window = NSWindow(
+                    contentRect: CGRect(origin: .zero, size: size), styleMask: .borderless,
+                    backing: .buffered, defer: false
+                )
+                window.isReleasedWhenClosed = false
+                window.colorSpace = .sRGB
+                window.contentView = host
+                host.frame = CGRect(origin: .zero, size: size)
+                host.layoutSubtreeIfNeeded()
+                host.display()
+                defer { window.close() }
+                let bitmap = try #require(host.bitmapImageRepForCachingDisplay(in: host.bounds))
+                host.cacheDisplay(in: host.bounds, to: bitmap)
+                let image = try #require(bitmap.cgImage)
+                return (cgImage: image, size: size)
+            }
+        #endif
 
         /// The pixel at a point, with the origin at the top left: red, green, blue, alpha.
         func pixel(_ x: Int, _ y: Int) -> [Int] {
@@ -70,6 +119,20 @@
         /// The columns where this color appears anywhere.
         func columns(with color: TokenColor) -> [Int] {
             (0..<width).filter { x in (0..<height).contains { y in has(color, at: x, y) } }
+        }
+    }
+
+    /// Offers its one view a given size, nil for the view's ideal, whatever it is offered itself,
+    /// and is the size the view takes: as ImageRenderer's `proposedSize` does.
+    private struct Offering: Layout {
+        let offered: ProposedViewSize
+
+        func sizeThatFits(proposal _: ProposedViewSize, subviews: Subviews, cache _: inout ()) -> CGSize {
+            subviews.first?.sizeThatFits(offered) ?? .zero
+        }
+
+        func placeSubviews(in bounds: CGRect, proposal _: ProposedViewSize, subviews: Subviews, cache _: inout ()) {
+            subviews.first?.place(at: bounds.origin, anchor: .topLeading, proposal: offered)
         }
     }
 
