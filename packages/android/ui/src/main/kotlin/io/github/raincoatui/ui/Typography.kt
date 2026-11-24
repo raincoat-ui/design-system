@@ -40,10 +40,10 @@ internal fun TokenTextStyle.toTextStyle(): TextStyle = TextStyle(
 
 /**
  * How text breaks into lines in a language, as the Typography spec says, for every component.
- * Lines break by the strict rules, as the Button's label does, so that no line of Japanese starts
- * with a small kana or a prolonged sound mark. Korean, which puts spaces between words, breaks
- * only between whole words: Android otherwise breaks it between any two syllables. Breaking by
- * phrase needs Android 13; earlier versions break Korean between syllables.
+ * Lines break by the strict rules, so that no line of Japanese starts with a small kana or a
+ * prolonged sound mark. Korean, which puts spaces between words, breaks only between whole words:
+ * Android otherwise breaks it between any two syllables. Breaking by phrase needs Android 13;
+ * earlier versions break Korean between syllables.
  *
  * @param language The ISO 639 code of the language, such as "ko".
  */
