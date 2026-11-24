@@ -1,0 +1,132 @@
+# The text the Tabs' examples show, in every locale of the snapshot matrix
+# (specs/snapshots.yaml): by example id, as in spec.yaml, then by the content the text fills.
+# An example is a row of tabs, so its labels, or its accessible names, are one line per tab, in
+# order. The expanded pseudo-locale is derived from the English by the token build; it is never
+# written here.
+#
+# The labels are written as an app would ship them: in the sentence case and the words each
+# language uses for these sections, in Unicode's composed form (NFC).
+examples:
+  labels:
+    label:
+      en: |-
+        Details
+        Reviews
+        Shipping
+      vi: |-
+        Chi tiết
+        Đánh giá
+        Vận chuyển
+      zh-Hans: |-
+        详情
+        评价
+        配送
+      ja: |-
+        詳細
+        レビュー
+        配送
+      ko: |-
+        상세 정보
+        리뷰
+        배송
+      ar: |-
+        التفاصيل
+        المراجعات
+        الشحن
+    panel:
+      en: Made of waxed cotton, with taped seams.
+      vi: Làm từ vải cotton phủ sáp, các đường may được dán kín.
+      zh-Hans: 采用上蜡棉布制成，接缝处经过压胶处理。
+      ja: ワックスコットン製で、縫い目はテープで防水加工されています。
+      ko: 왁스 코튼으로 만들었으며 솔기는 테이프로 마감했습니다.
+      ar: مصنوع من القطن المشمّع، مع درزات ملصوقة.
+  icons:
+    label:
+      en: |-
+        Photos
+        Videos
+        Files
+      vi: |-
+        Ảnh
+        Video
+        Tệp
+      zh-Hans: |-
+        照片
+        视频
+        文件
+      ja: |-
+        写真
+        動画
+        ファイル
+      ko: |-
+        사진
+        동영상
+        파일
+      ar: |-
+        الصور
+        الفيديوهات
+        الملفات
+  icon-only:
+    accessible-name:
+      en: |-
+        List
+        Grid
+      vi: |-
+        Danh sách
+        Lưới
+      zh-Hans: |-
+        列表
+        网格
+      ja: |-
+        リスト
+        グリッド
+      ko: |-
+        목록
+        그리드
+      ar: |-
+        قائمة
+        شبكة
+  overflow:
+    label:
+      en: |-
+        Overview
+        Specifications
+        Reviews
+        Questions
+        Shipping
+        Returns
+      vi: |-
+        Tổng quan
+        Thông số
+        Đánh giá
+        Câu hỏi
+        Vận chuyển
+        Đổi trả
+      zh-Hans: |-
+        概览
+        规格
+        评价
+        问答
+        配送
+        退货
+      ja: |-
+        概要
+        仕様
+        レビュー
+        質問
+        配送
+        返品
+      ko: |-
+        개요
+        사양
+        리뷰
+        질문
+        배송
+        반품
+      ar: |-
+        نظرة عامة
+        المواصفات
+        المراجعات
+        الأسئلة
+        الشحن
+        الإرجاع
