@@ -193,14 +193,48 @@ accessibility audit.</p>
 every theme: all the examples of its spec together, in the four color modes, right to left, at
 the largest text size, and in Vietnamese, Chinese, Japanese, Korean, and expanded English. The
 text the examples show is in the component’s <code dir="auto">strings.yaml</code>, beside its spec. CI compares each
-drawing with its baseline, and fails when a baseline is missing or differs.</p>
-<p>Baselines are recorded in CI, never on your machine, because your fonts and browser are not the
-runner’s. When a change alters how a component looks, or adds one:</p>
+drawing with its baseline, and fails when a baseline is missing or differs. Each platform has a
+job of its own:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Job</th>
+<th>Artifact</th>
+<th>Baselines</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web</td>
+<td><code dir="auto">web snapshots</code></td>
+<td><code dir="auto">web-snapshots</code></td>
+<td><code dir="auto">packages/web/test/snapshots/__screenshots__</code></td>
+</tr>
+<tr>
+<td>iOS</td>
+<td><code dir="auto">ios snapshots</code></td>
+<td><code dir="auto">ios-snapshots</code></td>
+<td><code dir="auto">packages/ios/__screenshots__</code></td>
+</tr>
+<tr>
+<td>Android</td>
+<td><code dir="auto">android modules</code></td>
+<td><code dir="auto">android-snapshots</code></td>
+<td><code dir="auto">packages/android/ui/src/test/__screenshots__</code></td>
+</tr>
+</tbody>
+</table>
+<p>A drawing differs from its baseline when a single pixel does: on the web, by more than
+pixelmatch’s default color threshold; on iOS, when one of the pixel’s channels differs by more
+than 8 of 255.</p>
+<p>Baselines are recorded in CI, never on your machine, because your fonts, browser, and system are
+not the runner’s. When a change alters how a component looks, or adds one:</p>
 <ol>
 <li>
-<p>Push it. The <code dir="auto">web snapshots</code> job fails and uploads what it drew as the run’s
-<code dir="auto">web-snapshots</code> artifact: <code dir="auto">actual/</code> holds the new images, laid out as the baselines are, and
-<code dir="auto">diff/</code> marks in red where each differs from its baseline.</p>
+<p>Push it. The platform’s job fails and uploads what it drew as the run’s artifact: <code dir="auto">actual/</code>
+holds the new images, laid out as the baselines are, and <code dir="auto">diff/</code> marks in red where each
+differs from its baseline.</p>
 </li>
 <li>
 <p>Download the artifact, from the run’s summary page or with the GitHub command line:</p>
@@ -212,11 +246,23 @@ runner’s. When a change alters how a component looks, or adds one:</p>
 <li>
 <p>Copy them over the baselines, commit, and push. The job then passes.</p>
 <div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">cp</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-R</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">/tmp/web-snapshots/actual/.</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">packages/web/test/snapshots/__screenshots__/</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">add</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">packages/web/test/snapshots/__screenshots__</span></div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3B61B0">git</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">commit</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-s</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-m</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">test(web): accept the new snapshots of the button</span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="cp -R /tmp/web-snapshots/actual/. packages/web/test/snapshots/__screenshots__/git add packages/web/test/snapshots/__screenshots__git commit -s -m &quot;test(web): accept the new snapshots of the button&quot;"><div></div></button></div></figure></div>
+<p>For iOS, download <code dir="auto">ios-snapshots</code> and copy its <code dir="auto">actual/</code> over <code dir="auto">packages/ios/__screenshots__/</code>.</p>
 </li>
 </ol>
-<p><code dir="auto">pnpm web:snapshots</code> draws the snapshots on your machine, into
-<code dir="auto">packages/web/test-results/snapshots/local/</code>, for you to look at. It compares nothing and writes
-no baseline; do not copy what it draws into <code dir="auto">__screenshots__</code>.</p>
+<p>You can also draw the snapshots on your machine, to look at them. That compares nothing and
+writes no baseline; do not copy what it draws over the baselines.</p>
+<ul>
+<li>
+<p>Web: <code dir="auto">pnpm web:snapshots</code> draws them into <code dir="auto">packages/web/test-results/snapshots/local/</code>.</p>
+</li>
+<li>
+<p>iOS, on a Mac with Xcode, in an iOS simulator, from <code dir="auto">packages/ios</code>:</p>
+<div class="expressive-code"><figure class="frame is-terminal not-content"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="sh"><code><div class="ec-line"><div class="code"><span style="--0:#C5E478;--1:#3B61B0">TEST_RUNNER_RAINCOAT_SNAPSHOTS</span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#ECC48D;--1:#3B61B0">1</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">xcodebuild</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">test</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3B61B0">-scheme</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#ECC48D;--1:#3B61B0">Raincoat-Package</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">-destination</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">platform=iOS Simulator,name=iPhone 17</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#F78C6C;--1:#AA0982">\</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#82AAFF;--1:#3B61B0">-only-testing:RaincoatTests/VisualSnapshots</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="TEST_RUNNER_RAINCOAT_SNAPSHOTS=1 xcodebuild test -scheme Raincoat-Package \  -destination &#x27;platform=iOS Simulator,name=iPhone 17&#x27; \  -only-testing:RaincoatTests/VisualSnapshots"><div></div></button></div></figure></div>
+<p>It draws them into <code dir="auto">packages/ios/test-results/snapshots/local/</code>. Without that variable the
+snapshots are left out, and <code dir="auto">swift test</code> on macOS never draws them: SwiftUI there does not
+enlarge text for a larger Dynamic Type size.</p>
+</li>
+</ul>
 <p><strong>Android.</strong> The Compose components’ snapshots are drawn with Robolectric, in the
 <code dir="auto">android modules</code> job, and compared with <code dir="auto">packages/android/ui/src/test/__screenshots__</code>. The job
 uploads what it drew as the <code dir="auto">android-snapshots</code> artifact, with <code dir="auto">actual/</code> and <code dir="auto">diff/</code> as on the
@@ -228,8 +274,16 @@ implementation needs <code dir="auto">&lt;Component&gt;SnapshotTest.kt</code> in
 <code dir="auto">packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/snapshots/</code>, which draws one instance
 of its generated examples, as <code dir="auto">ButtonSnapshotTest.kt</code> does; the tests fail until it has one.</p>
 <p>To give a new component its snapshots, write its <code dir="auto">strings.yaml</code> (<code dir="auto">pnpm tokens:lint</code> says what is
-missing), run <code dir="auto">pnpm tokens:build</code>, and add <code dir="auto">packages/web/test/snapshots/&lt;id&gt;.snapshots.test.tsx</code>,
-which draws one instance of its examples. <a href="https://github.com/raincoat-ui/design-system/blob/main/docs/adr/0019-visual-snapshots.md">Record 0019</a>
+missing), run <code dir="auto">pnpm tokens:build</code>, and add a test on each platform that draws one instance of its
+examples:</p>
+<ul>
+<li>Web: <code dir="auto">packages/web/test/snapshots/&lt;id&gt;.snapshots.test.tsx</code>.</li>
+<li>iOS: <code dir="auto">packages/ios/Tests/RaincoatTests/Snapshots/&lt;Component&gt;Snapshots.swift</code>, a test in the
+<code dir="auto">VisualSnapshots</code> suite that passes <code dir="auto">&lt;component&gt;Examples</code> to <code dir="auto">expectSnapshot</code>, as
+<code dir="auto">ButtonSnapshots.swift</code> does.</li>
+</ul>
+<p>The web snapshots fail when a component spec has no snapshot test, and the iOS snapshots when a
+spec that names a SwiftUI implementation has none. <a href="https://github.com/raincoat-ui/design-system/blob/main/docs/adr/0019-visual-snapshots.md">Record 0019</a>
 describes the matrix, and how iOS and Android draw it.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="dependencies">Dependencies</h2><a class="sl-anchor-link" href="#dependencies"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Dependencies”</span></a></div>
 <p>Every dependency, font, and icon must be free or open source under an OSI-approved license on
