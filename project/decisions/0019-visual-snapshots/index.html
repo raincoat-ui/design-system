@@ -60,6 +60,8 @@
 <li>Status: accepted</li>
 <li>Date: 2026-11-24</li>
 <li>Amends: <a href="https://github.com/raincoat-ui/design-system/blob/main/docs/adr/0015-web-components.md">0015</a>, <a href="https://github.com/raincoat-ui/design-system/blob/main/docs/adr/0016-native-components.md">0016</a></li>
+<li>Amended: 2026-11-24, Android sets a snapshot’s font scale as the system does, not with a
+<code dir="auto">Density</code></li>
 </ul>
 <div class="sl-heading-wrapper level-h2"><h2 id="context">Context</h2><a class="sl-anchor-link" href="#context"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Context”</span></a></div>
 <p>Milestone 3 ends when Vietnamese, CJK, right-to-left, and text-expansion snapshots are in place.
@@ -122,10 +124,29 @@ directory of the same layout. The <code dir="auto">swift package (macos)</code> 
 Linux has no SwiftUI and skips it. A component that uses <code dir="auto">accessibilityFocused</code>, such as the
 Toast, is drawn in an <code dir="auto">NSHostingView</code> in a window instead, through AppKit’s display cache:
 <code dir="auto">ImageRenderer</code> on macOS measures such a view as if it had no content.</li>
-<li>Android draws with Robolectric and <code dir="auto">captureToImage</code> at one pixel per dp, as
-<code dir="auto">RaincoatButtonTest</code> does: the same examples with <code dir="auto">LocalLayoutDirection</code>, a <code dir="auto">Density</code> whose
-<code dir="auto">fontScale</code> is the snapshot’s, and the snapshot’s locale. The <code dir="auto">android modules</code> job runs it and
-uploads what it drew.</li>
+<li>Android draws with Robolectric’s native graphics and <code dir="auto">captureToImage</code> at one pixel per dp, as
+<code dir="auto">RaincoatButtonTest</code> does: the same examples on a stage 480dp wide, with <code dir="auto">LocalLayoutDirection</code>,
+and the snapshot’s locale and font scale set in the system’s configuration, before anything is
+drawn (<code dir="auto">RuntimeEnvironment.setQualifiers</code> and <code dir="auto">setFontScale</code>). A <code dir="auto">Density</code> whose <code dir="auto">fontScale</code> is
+the snapshot’s would enlarge all text by the same factor; Android enlarges large text by less,
+and the snapshot shows what a person who chose that scale sees. Text is set in the fonts
+Robolectric’s native runtime ships with Android’s font configuration, the same files on every
+machine: Roboto, which covers Vietnamese, then Noto Naskh Arabic and Noto Sans CJK, chosen by
+the locale. Each component has a <code dir="auto">&lt;Component&gt;SnapshotTest</code> in
+<code dir="auto">packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/snapshots/</code>, and its baselines are
+in <code dir="auto">packages/android/ui/src/test/__screenshots__/</code>, laid out as on the web. A pixel differs when
+its color is further from the baseline’s than 0.1 by pixelmatch’s measure, the web’s threshold,
+and no pixel may differ. Unlike pixelmatch, the comparison does not excuse antialiased pixels:
+Robolectric draws in software, and draws the same pixels on every run. A check fails when a
+spec with an Android implementation has no snapshot test. The <code dir="auto">android modules</code> job runs them
+and uploads what it drew as the <code dir="auto">android-snapshots</code> artifact. A component that opens a window
+of its own, the dialog, the alert dialog, and the sheet, is shown one instance at a time, in a
+window as wide as the specimen’s content, 432dp. Each window is captured and cut to the panel
+with the dialog margin of scrim above and below it, or, for a sheet, down to the bottom of the
+window; the cuts are stacked on the canvas color, which shows through the scrim, as the web
+draws each dialog inside the specimen. Every capture is taken from a frame drawn at the time
+of the capture: Robolectric can skip the first frame after the content is set, and a capture
+would then show only the window’s background.</li>
 </ul>
 <p>Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.</p>
@@ -145,7 +166,8 @@ before the snapshots run. The Definition of Done asks for both.</li>
 pull request, where reviewers see the images.</li>
 <li>A new runner image, new fonts in Ubuntu, or a Playwright update that brings a new Chromium can
 change many baselines at once. Each is accepted the same way, in the pull request that brings
-the change; a dependency update of Playwright cannot merge without it.</li>
+the change; a dependency update of Playwright cannot merge without it. On Android, a Robolectric
+update brings its own graphics and fonts, and the same holds.</li>
 <li>The baselines add about 30 KB per image: about 700 KB for the Button’s 22 on the web.</li>
 <li>Until themes ship their fonts, the snapshots show the system’s fonts, not each theme’s.</li>
 <li>Firefox gives a button <code dir="auto">:active</code>, which a pressed fill selects, only while a pointer presses
