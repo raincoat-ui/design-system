@@ -288,6 +288,11 @@
     /// The header, the body, and the footer of a dialog, in its colors and spaces. Each section
     /// keeps the padding at the dialog's edges, and half the gap on its side of the line between
     /// it and the next.
+    ///
+    /// The header and the footer are always as tall as their content. Offered less, a text in them
+    /// would keep only a line's height and be drawn over its neighbours, and the dialog would size
+    /// its sheet from that height. When they do not fit with room for the body, the whole dialog
+    /// scrolls instead (see DialogScrolling).
     struct DialogSections<Content: View, Actions: View> {
         let heading: DialogHeading
         let close: () -> Void
@@ -305,6 +310,7 @@
         @MainActor
         func headerSection(_ look: DialogAppearance, divider: Bool) -> some View {
             DialogHeader(heading: heading, look: look, isLast: !hasBody && !hasFooter, close: close)
+                .fixedSize(horizontal: false, vertical: true)
                 .overlay(alignment: .bottom) { DialogDivider(look: look, isShown: divider) }
         }
 
@@ -321,6 +327,7 @@
         func footerSection(_ look: DialogAppearance, divider: Bool) -> some View {
             if hasFooter {
                 DialogFooter(look: look, actions: actions)
+                    .fixedSize(horizontal: false, vertical: true)
                     .overlay(alignment: .top) { DialogDivider(look: look, isShown: divider) }
             }
         }
@@ -373,7 +380,9 @@
         }
     }
 
-    /// The body: the app's content, with text set like the description unless it says otherwise.
+    /// The body: the app's content, with text set like the description unless it says otherwise,
+    /// at the description's line height: a line of it is as tall as a line of Text, as on the web
+    /// and Android.
     private struct DialogBody<Content: View>: View {
         let look: DialogAppearance
         let isLast: Bool
@@ -389,7 +398,10 @@
                 .lineSpacing(text.lineSpacing)
                 .foregroundStyle(Color(look.foreground))
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                // Line spacing sets the distance between lines; this puts the rest of the line
+                // height above the first line and below the last, as Text does.
+                .padding(.vertical, text.halfLeading)
+                .frame(maxWidth: .infinity, minHeight: text.lineHeight, alignment: .leading)
                 .padding(.horizontal, look.padding)
                 .padding(.top, look.halfGap)
                 .padding(.bottom, isLast ? look.padding : look.halfGap)

@@ -168,30 +168,43 @@
             #expect(drawing.rows(of: primary, inColumn: (first + last) / 2).count < Int(set.button.height.md) + 2)
         }
 
-        @Test func theFootersButtonsStackThePrimaryFirstWhenTheyDoNotFit() throws {
+        @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
+        func theFootersButtonsStackThePrimaryFirstWhenTheyDoNotFit(direction: LayoutDirection) throws {
             let set = RaincoatTheme.base.tokens(mode: .light, density: .comfortable)
             let look = DialogAppearance(set)
             let width: CGFloat = 280
+            let title = heading("Delete this address?")
             let drawing = try Drawing(
                 DialogPanel(
-                    heading: heading("Delete this address?"),
+                    heading: title,
                     content: EmptyView(),
                     actions: Group {
                         RaincoatButton("Keep the address") {}
                         RaincoatButton("Delete the address", variant: .danger) {}
                     }
                 ),
+                direction: direction,
                 width: width
             )
+            // The title is drawn in the secondary button's border color, so only the rows below
+            // the header count: the header alone is the padding, the title, and the padding, and
+            // above a footer it keeps half the gap below the title instead.
+            let header = try Drawing(
+                DialogPanel(heading: title, content: EmptyView(), actions: EmptyView()),
+                direction: direction,
+                width: width
+            )
+            let footerTop = header.height - Int(look.padding) + Int(look.halfGap)
             let danger = set.button.danger.bg.default
             let border = set.button.secondary.border
             let center = drawing.width / 2
             let dangerRows = drawing.rows(of: danger, inColumn: center)
-            let borderRows = drawing.rows(of: border, inColumn: center)
+            let borderRows = drawing.rows(of: border, inColumn: center).filter { $0 >= footerTop }
             let dangerTop = try #require(dangerRows.first, "the danger button is drawn")
-            let cancelBottom = try #require(borderRows.last, "the secondary button is drawn")
-            #expect(dangerTop < cancelBottom, "the primary action is first")
-            #expect(dangerRows.last! < borderRows.first!, "and the other is below it")
+            let dangerBottom = try #require(dangerRows.last, "the danger button is drawn")
+            let cancelTop = try #require(borderRows.first, "the secondary button is drawn")
+            #expect(dangerTop >= footerTop, "the danger button is in the footer: \(dangerTop), \(footerTop)")
+            #expect(dangerBottom < cancelTop, "the primary action is first, and the other is below it")
             // Each is as wide as the footer.
             let fill = drawing.columns(of: danger, inRow: dangerTop + 4)
             let padding = Int(look.padding)
