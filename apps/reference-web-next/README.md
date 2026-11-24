@@ -83,7 +83,8 @@ A component can have a page of its own: the Toast's is `app/toast/page.tsx`, a S
 that renders the `ToastProvider` around the page, as an app's layout does.
 
 A component that holds no state, such as Typography, can have a page of its own that is a Server
-Component alone: `app/typography/page.tsx`, at `/typography`.
+Component alone: `app/typography/page.tsx`, at `/typography`. The Tabs, Client Components, have
+a page that a Server Component renders: `app/tabs/page.tsx`, at `/tabs`.
 
 ## Licenses
 
