@@ -131,6 +131,68 @@ Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and SwiftUI versions follow too.
 
+## Dialogs, alert dialogs, and sheets
+
+```kotlin
+RaincoatDialog(
+    open = renaming,
+    onDismissRequest = { renaming = false },
+    title = "Rename file",
+    titleLevel = 2,
+    description = "Everyone the file is shared with sees the new name.",
+    initialFocus = nameField,
+    actions = {
+        RaincoatButton("Cancel", onClick = { renaming = false })
+        RaincoatButton("Rename", onClick = ::rename, variant = ButtonVariant.Primary)
+    },
+) {
+    BasicTextField(name, onValueChange = { name = it }, modifier = Modifier.focusRequester(nameField))
+}
+
+RaincoatAlertDialog(
+    open = confirming,
+    onCancel = { confirming = false },
+    onConfirm = { delete(); confirming = false },
+    title = "Delete this address?",
+    titleLevel = 2,
+    confirmLabel = "Delete address",
+    cancelLabel = "Cancel",
+    destructive = true,
+)
+
+RaincoatSheet(open = filtering, onDismissRequest = { filtering = false }, title = "Filters", titleLevel = 2,
+    edge = SheetEdge.End, closeLabel = "Close") { FilterList() }
+```
+
+| Parameter          | On            | Type              | Default            | Notes                                                                    |
+| ------------------ | ------------- | ----------------- | ------------------ | ------------------------------------------------------------------------ |
+| `open`             | all           | `Boolean`         | Required           | Whether it is shown. It fades or slides in and out                       |
+| `onDismissRequest` | dialog, sheet | `() -> Unit`      | Required           | Back, Escape, the scrim, the close button, and a drag ask through this   |
+| `titleLevel`       | all           | `Int`             | Required           | 1 to 6. The title is set in `HeadingMd`                                  |
+| `size`             | dialog        | `DialogSize`      | `DialogSize.Md`    | Its width. On a narrower window, it spans the window less a margin       |
+| `edge`             | sheet         | `SheetEdge`       | `SheetEdge.Bottom` | An end sheet comes from the bottom on a window less than twice its width |
+| `closeLabel`       | dialog, sheet | `String?`         | `null`             | Shows the close button, with this name. Give it when there is no Cancel  |
+| `initialFocus`     | dialog, sheet | `FocusRequester?` | `null`             | Where keyboard focus goes on open                                        |
+| `destructive`      | alert dialog  | `Boolean`         | `false`            | The confirming button is a danger button                                 |
+
+- **A window of its own.** Each is a dialog window over a scrim in the theme's color. The screen
+  behind cannot be used, and TalkBack is given only the dialog, as a pane named by its title.
+- **Closing.** Back, predictive back, Escape, a tap on the scrim, and the close button call
+  `onDismissRequest`; set `open` to false there, or keep it open while it holds unsaved changes
+  and ask first. A bottom sheet also asks when it is dragged down, and settles back if it stays
+  open. An alert dialog calls `onCancel` for back and Escape, and ignores the scrim.
+- **Focus.** With a keyboard, focus goes to `initialFocus`, or Cancel in an alert dialog.
+- **Scrolling.** The body scrolls between the header and the footer, with a hairline while
+  content is beneath them; in a window too short for three lines of it, the whole dialog scrolls.
+- **The footer's buttons** sit at the end edge and stack, the primary action on top, when they
+  do not fit in a row.
+- **Shadow.** The panel is drawn with `Modifier.raincoatShadow`, which draws the theme's overlay
+  shadow; the base theme has none.
+
+They follow the
+[Dialog spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/dialog/spec.yaml),
+which the React and SwiftUI versions follow too.
+
 ## Working on these modules
 
 ```sh

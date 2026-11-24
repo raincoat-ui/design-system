@@ -291,3 +291,6 @@ implementations:
         ".raincoatAlertDialog(_:isPresented:)",
         ".raincoatSheet(isPresented:)",
       ]
+  android:
+    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatDialog.kt
+    name: [RaincoatDialog, RaincoatAlertDialog, RaincoatSheet]
