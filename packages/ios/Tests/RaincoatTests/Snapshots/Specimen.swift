@@ -104,10 +104,13 @@
         @MainActor
         final class Reading {
             var scale: CGFloat?
+            /// The Dynamic Type size SwiftUI gives the views.
+            var dynamicTypeSize: DynamicTypeSize?
         }
 
         let reading: Reading
         @ScaledMetric(relativeTo: .body) private var scale: CGFloat = 1
+        @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
         init(reading: Reading) {
             self.reading = reading
@@ -115,6 +118,7 @@
 
         var body: some View {
             reading.scale = scale
+            reading.dynamicTypeSize = dynamicTypeSize
             return Color.clear.frame(width: 0, height: 0)
         }
     }

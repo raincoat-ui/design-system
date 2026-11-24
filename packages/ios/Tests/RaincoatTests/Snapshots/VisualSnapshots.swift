@@ -139,11 +139,12 @@
         draw: @escaping (_ instance: Properties, _ text: SnapshotText) -> Instance
     ) throws {
         let reading = TextScaleProbe.Reading()
+        var windowCategory = UIContentSizeCategory.unspecified
         let drawing = try Bitmap(
             drawSpecimen(
                 Specimen(examples: examples, locale: snapshot.locale, draw: draw),
                 theme: theme, snapshot: snapshot, reading: reading
-            )
+            ) { windowCategory = $0 }
         )
 
         // The window was drawn: its top left corner is the specimen's canvas.
@@ -155,13 +156,24 @@
         )
 
         // The snapshot's text size is in effect: only a size larger than the default enlarges text.
+        // Body text grows as much as the system grows it at that size, within 0.05: 3.12 times
+        // at the largest size, where body text is 53 points instead of 17.
         let scale = try #require(reading.scale, "the text size was not read")
-        if snapshot.textSize.dynamicTypeSize > .large {
-            print("\(theme.id)/\(component)/\(snapshot.id): body text is drawn \(scale) times as large")
-            #expect(scale > 1, "Dynamic Type's \(snapshot.textSize.dynamicTypeSize) does not enlarge text here")
-        } else {
-            #expect(scale == 1)
+        let category = contentSizeCategory(snapshot.textSize.dynamicTypeSize)
+        let expected = bodyTextScale(at: category)
+        if snapshot.textSize.dynamicTypeSize != .large {
+            print(
+                """
+                \(theme.id)/\(component)/\(snapshot.id): body text is drawn \(scale) times as large; \
+                the system draws it \(expected) times as large at \(category.rawValue). SwiftUI's size is \
+                \(reading.dynamicTypeSize.map { "\($0)" } ?? "unknown"), the window's \(windowCategory.rawValue).
+                """
+            )
         }
+        #expect(
+            abs(scale - expected) <= 0.05,
+            "body text is drawn \(scale) times as large, not \(expected) as at \(category.rawValue)"
+        )
 
         let name = "\(theme.id)/\(component)/\(snapshot.id).png"
         switch SnapshotRun.current {
@@ -216,8 +228,11 @@
     /// Draws a specimen as the snapshot asks, in a theme: shown in a window of its own, with the
     /// snapshot's appearance set as the system sets it, UIKit's views included.
     @MainActor
+    ///
+    /// - Parameter shown: Given the text size of the window's traits, while it is shown.
     private func drawSpecimen(
-        _ specimen: some View, theme: RaincoatTheme, snapshot: VisualSnapshot, reading: TextScaleProbe.Reading
+        _ specimen: some View, theme: RaincoatTheme, snapshot: VisualSnapshot, reading: TextScaleProbe.Reading,
+        shown: (UIContentSizeCategory) -> Void
     ) throws -> CGImage {
         // SwiftUI lets a test set the color scheme but not the contrast setting, so a theme that
         // answers every request with the tokens of the snapshot's color mode draws it, as in
@@ -259,7 +274,7 @@
         controller.view.backgroundColor = UIColor(
             red: canvas.red, green: canvas.green, blue: canvas.blue, alpha: canvas.alpha
         )
-        return try drawInWindow(controller)
+        return try drawInWindow(controller) { shown($0.view.traitCollection.preferredContentSizeCategory) }
     }
 
     /// Shows a hosting controller's view in a window of its own, `specimenWidth` wide and as tall
@@ -272,7 +287,12 @@
     /// to show a window in. Drawing the layers leaves out Core Animation's filters, such as the
     /// blur of a material: a view that uses one would be drawn without it.
     @MainActor
-    func drawInWindow<Content: View>(_ controller: UIHostingController<Content>) throws -> CGImage {
+    ///
+    /// - Parameter shown: Given the controller while its view is shown, before it is drawn.
+    func drawInWindow<Content: View>(
+        _ controller: UIHostingController<Content>,
+        shown: (UIHostingController<Content>) -> Void = { _ in }
+    ) throws -> CGImage {
         // UIKit's views do not animate either.
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
@@ -299,6 +319,7 @@
         window.layoutIfNeeded()
         // Every layer has drawn its content before the layers are drawn.
         CATransaction.flush()
+        shown(controller)
 
         let format = UIGraphicsImageRendererFormat()
         format.scale = snapshotScale
@@ -308,6 +329,17 @@
             window.layer.render(in: context.cgContext)
         }
         return try #require(image.cgImage, "the window could not be drawn")
+    }
+
+    /// How many times as large the system draws body text at a text size as at the default size.
+    @MainActor
+    private func bodyTextScale(at category: UIContentSizeCategory) -> CGFloat {
+        let size = { (category: UIContentSizeCategory) in
+            UIFont.preferredFont(
+                forTextStyle: .body, compatibleWith: UITraitCollection(preferredContentSizeCategory: category)
+            ).pointSize
+        }
+        return size(category) / size(.large)
     }
 
     /// The UIKit text size of a Dynamic Type size.
