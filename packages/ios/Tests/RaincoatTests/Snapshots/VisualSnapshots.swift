@@ -156,9 +156,9 @@
             "the specimen's canvas was not drawn"
         )
 
-        // The snapshot's text size is in effect. SwiftUI and the window are given it, and body
-        // text is drawn nearer the size the system gives it there than the sizes beside it: at
-        // the largest size, nearer 3.12 times as large (53 points instead of 17) than 2.76.
+        // The snapshot's text size is in effect: SwiftUI and the window are given it, and body
+        // text grows as much as the system's body text there, within 1%: at the largest size,
+        // 3.12 times as large (53 points instead of 17).
         let scale = try #require(reading.scale, "the text size was not read")
         let size = snapshot.textSize.dynamicTypeSize
         let category = contentSizeCategory(size)
@@ -168,28 +168,15 @@
         )
         #expect(windowCategory == category, "the window's text size is \(windowCategory.rawValue), not \(category.rawValue)")
         let expected = bodyTextScale(at: category)
-        let sizes = DynamicTypeSize.allCases
-        if let index = sizes.firstIndex(of: size) {
-            for neighbour in [index - 1, index + 1] where sizes.indices.contains(neighbour) {
-                let other = contentSizeCategory(sizes[neighbour])
-                let otherScale = bodyTextScale(at: other)
-                #expect(
-                    abs(scale - expected) < abs(scale - otherScale),
-                    """
-                    body text is drawn \(scale) times as large: nearer \(otherScale), at \(other.rawValue), \
-                    than \(expected), at \(category.rawValue)
-                    """
-                )
-            }
-        }
-        // How far that is from the system's own scale is logged, to see, and not checked.
-        if size != .large || abs(scale - expected) > 0.05 {
+        #expect(
+            abs(scale / expected - 1) < 0.01,
+            "body text is drawn \(scale) times as large, where the system's is \(expected) times as large at \(category.rawValue)"
+        )
+        if size != .large {
             print(
                 """
                 \(theme.id)/\(component)/\(snapshot.id): body text is drawn \(scale) times as large; \
-                the system draws it \(expected) times as large at \(category.rawValue)\
-                \(abs(scale - expected) > 0.05 ? ", more than 0.05 apart" : ""). SwiftUI's size is \
-                \(reading.dynamicTypeSize.map { "\($0)" } ?? "unknown"), the window's \(windowCategory.rawValue).
+                the system draws it \(expected) times as large at \(category.rawValue).
                 """
             )
         }
@@ -401,6 +388,27 @@
     }
 
     extension VisualSnapshots {
+        /// At every Dynamic Type size, the components' text grows as much as the system's body
+        /// text, within 1%: at the largest, 3.12 times as large (53 points instead of 17), not
+        /// the rounded 3 that a scaled metric of 1 gives. It runs here because only iOS scales
+        /// text by the Dynamic Type size.
+        @MainActor
+        @Test(arguments: DynamicTypeSize.allCases)
+        func bodyTextGrowsAsTheSystemsDoes(size: DynamicTypeSize) throws {
+            let reading = TextScaleProbe.Reading()
+            let category = contentSizeCategory(size)
+            let controller = UIHostingController(
+                rootView: TextScaleProbe(reading: reading)
+                    .frame(width: 10, height: 10)
+                    .dynamicTypeSize(size)
+            )
+            controller.traitOverrides.preferredContentSizeCategory = category
+            _ = try drawInWindow(controller)
+            let scale = try #require(reading.scale, "the text size was not read")
+            let expected = bodyTextScale(at: category)
+            #expect(abs(scale / expected - 1) < 0.01, "\(size): \(scale) times as large, where the system's is \(expected)")
+        }
+
         /// The window draws the text of a text field, which UIKit provides: an Input shows one.
         @MainActor
         @Test func theWindowDrawsATextFieldsText() throws {

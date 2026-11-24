@@ -3,6 +3,27 @@
     import RaincoatTokens
     import SwiftUI
 
+    /// How much the person's text size setting enlarges a system text style: its size at the
+    /// setting over its size at the default, such as 53 / 17 for body text at the largest
+    /// accessibility size.
+    ///
+    /// `@ScaledMetric` rounds the value it scales, so a scale read as the scaled value of 1 is
+    /// off: at the largest accessibility size it is 3, where body text is 3.12 times as large,
+    /// and token sizes multiplied by it came out 4% small. A large value scaled and divided
+    /// back keeps the ratio to within a thousandth.
+    @propertyWrapper
+    struct TextScale: DynamicProperty {
+        private static let base: CGFloat = 1000
+
+        @ScaledMetric private var scaled: CGFloat
+
+        init(relativeTo textStyle: Font.TextStyle) {
+            _scaled = ScaledMetric(wrappedValue: Self.base, relativeTo: textStyle)
+        }
+
+        var wrappedValue: CGFloat { scaled / Self.base }
+    }
+
     /// A token text style made ready for SwiftUI.
     struct ResolvedTextStyle {
         let font: Font

@@ -247,7 +247,7 @@
 
         @Tokens private var tokens
         @Environment(\.accessibilityReduceMotion) private var reduceMotion
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
         @State private var isHovered = false
 
         var body: some View {
@@ -296,7 +296,7 @@
         let icon: Image?
 
         @Tokens private var tokens
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
 
         var body: some View {
             let measurements = TabMeasurements(tokens.tabs)

@@ -122,10 +122,10 @@ what was left open.
 - The text is set in the snapshot's language (`typesettingLanguage`), as on a device set to that
   language, so that line height, line breaks, and spacing follow its script.
 - Each snapshot checks that its text size is in effect: SwiftUI and the window are given it, and
-  body text is drawn nearer the system's size for it than the sizes beside it. The log shows how
-  far Raincoat's scaled metrics are from the system's body font: drawn at a scale of 2, body text
-  was 3.0 times as large at the largest size, where the system's is 3.12 times as large (53
-  points instead of 17).
+  body text grows as much as the system's body text there, within 1%: 3.12 times as large at
+  the largest size (53 points instead of 17). The check found the components' text growing 3.0
+  times: they multiplied token sizes by a scaled metric of 1, which `@ScaledMetric` rounds.
+  They now divide back a large scaled value instead.
 - Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
   fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
   belongs to no theme, component, or snapshot.

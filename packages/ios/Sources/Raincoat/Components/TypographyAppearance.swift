@@ -87,7 +87,7 @@ struct TextAppearance: Hashable, Sendable {
 }
 
 /// How much each system text style enlarges text at the person's text size setting: 1 at the
-/// default size. SwiftUI gives each one through `ScaledMetric(relativeTo:)`.
+/// default size. SwiftUI gives each one through `TextScale(relativeTo:)`.
 struct TextScales: Hashable, Sendable {
     var largeTitle: Double = 1
     var title2: Double = 1

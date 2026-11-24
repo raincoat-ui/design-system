@@ -1,5 +1,5 @@
 #if os(iOS)
-    import Raincoat
+    @testable import Raincoat
     import SwiftUI
 
     /// A specimen is this wide, in points, as the web's is in CSS pixels, so that long text wraps
@@ -109,7 +109,7 @@
         }
 
         let reading: Reading
-        @ScaledMetric(relativeTo: .body) private var scale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var scale
         @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
         init(reading: Reading) {
