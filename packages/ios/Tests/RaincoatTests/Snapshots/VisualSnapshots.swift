@@ -222,6 +222,26 @@
         }
     }
 
+    /// An instance of an example that knows which example it belongs to, for a component whose
+    /// examples differ in what they show rather than in their properties.
+    struct ExampleInstance<Properties: Sendable>: Sendable {
+        let example: String
+        let properties: Properties
+    }
+
+    /// The examples, with each instance told which example it belongs to.
+    func withExampleIDs<Properties: Sendable>(
+        _ examples: [SpecExample<Properties>]
+    ) -> [SpecExample<ExampleInstance<Properties>>] {
+        examples.map { example in
+            SpecExample(
+                id: example.id,
+                instances: example.instances.map { ExampleInstance(example: example.id, properties: $0) },
+                text: example.text
+            )
+        }
+    }
+
     /// The text of an example in the snapshot's locale, by the content it fills.
     struct SnapshotText: Sendable {
         let example: String
