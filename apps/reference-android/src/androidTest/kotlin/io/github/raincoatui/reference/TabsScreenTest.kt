@@ -1,6 +1,7 @@
 package io.github.raincoatui.reference
 
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
@@ -21,7 +22,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -52,8 +53,9 @@ class TabsScreenTest {
         compose.onNode(isTab and (hasText(name) or hasContentDescription(name)))
 
     /**
-     * The node an accessibility service, such as TalkBack, stops on for a tab: the one that
-     * takes clicks and carries the name, as its own text or description or a child's.
+     * The node an accessibility service, such as TalkBack, stops on for a tab: the one it can
+     * focus that carries the name, as its own text or description or a child's. A tab that is
+     * already selected is not offered a click, so the node is found by focus, not by click.
      */
     private fun serviceNode(name: String): AccessibilityNodeInfo {
         compose.waitForIdle()
@@ -63,7 +65,8 @@ class TabsScreenTest {
         repeat(50) {
             seen = automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
             val found = seen.firstOrNull { node ->
-                node.isClickable && (listOf(node) + children(node)).any { it.text?.toString() == name || it.contentDescription?.toString() == name }
+                node.isScreenReaderFocusable &&
+                    (listOf(node) + children(node)).any { it.text?.toString() == name || it.contentDescription?.toString() == name }
             }
             if (found != null) return found
             Thread.sleep(100)
@@ -100,12 +103,12 @@ class TabsScreenTest {
     fun aServiceIsGivenEachTabWithItsSelectedState() {
         assertTrue(serviceNode("Details").isSelected)
         assertFalse(serviceNode("Reviews").isSelected)
+        // A tab that is not selected can be activated by the service.
+        assertTrue(serviceNode("Reviews").isClickable)
         tab("Reviews").performClick()
         assertTrue(serviceNode("Reviews").isSelected)
         assertFalse(serviceNode("Details").isSelected)
-        for (name in listOf("Details", "Reviews")) {
-            assertTrue(name, serviceNode(name).isScreenReaderFocusable)
-        }
+        assertTrue(serviceNode("Details").isClickable)
     }
 
     @Test
@@ -130,8 +133,11 @@ class TabsScreenTest {
             return bounds.left >= visible.left && bounds.right <= visible.right
         }
         assertFalse(lastIsShown())
+        // Swipes across the row of tabs, from right to left, until the last tab is in view.
         repeat(TRANSLATED.size) {
-            if (!lastIsShown()) tab(TRANSLATED.first()).performTouchInput { swipeLeft() }
+            if (!lastIsShown()) {
+                row.performTouchInput { swipe(Offset(width - 10f, 20f), Offset(10f, 20f)) }
+            }
             compose.waitForIdle()
         }
         assertTrue(lastIsShown())
