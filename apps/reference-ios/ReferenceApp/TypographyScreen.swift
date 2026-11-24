@@ -37,12 +37,26 @@ struct TypographyScreen: View {
                 Text("Recent files").raincoatHeading(level: 3, variant: .headingSm)
                 Text("Shared with you").raincoatHeading(level: 3, color: .muted)
 
+                // Each look, from the largest, as short as a heading gets, so that the tests can
+                // compare their sizes at any text size.
+                Text("Looks").raincoatHeading(level: 2)
+                ForEach(HeadingVariant.allCases, id: \.self) { look in
+                    Text(verbatim: "Aa")
+                        .raincoatHeading(level: 3, variant: look)
+                        .accessibilityIdentifier("look-\(look.rawValue)")
+                }
+
                 Text("Long text").raincoatHeading(level: 2)
                 Text(Self.longHeading).raincoatHeading(level: 3)
                 Text(Self.paragraph)
                     .raincoatText(maxLines: 2)
                     .accessibilityIdentifier("max-lines")
-                Text("Message from \(Self.name), 2 minutes ago").raincoatText()
+                // The name is isolated: between U+2068 FIRST STRONG ISOLATE and U+2069 POP
+                // DIRECTIONAL ISOLATE it takes its own direction, and the comma and the number
+                // after it stay in the sentence.
+                Text(verbatim: "Message from \u{2068}\(Self.name)\u{2069}, 2 minutes ago")
+                    .raincoatText()
+                    .accessibilityIdentifier("message")
             }
             .padding(tokens.space._6)
             .frame(maxWidth: .infinity, alignment: .leading)
