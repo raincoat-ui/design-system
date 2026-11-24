@@ -165,6 +165,15 @@ final class DialogTests: ReferenceAppTestCase {
         // The field is still being edited, and still wholly above the keyboard.
         XCTAssertEqual(field.value(forKey: "hasKeyboardFocus") as? Bool, true)
         assertAboveTheKeyboard(field, keyboard, "scrolled to Cancel")
+        // The system's audit scrolls the dialog to each element it checks. With the keyboard up
+        // at this size, it scrolled the dialog back to its top and reported the description,
+        // black on white, as too low in contrast, in both themes (run 45475521126). The dialog
+        // with the keyboard up is audited at the default size, and the lines above check here
+        // that the field and the footer stay above the keyboard. At this size the dialog is
+        // audited as Return leaves it, with the keyboard put away.
+        field.typeText("\n")
+        XCTAssertTrue(keyboard.waitForNonExistence(timeout: 10))
+        settle(title)
         try audit(app, "Rename file at the largest text size", sheet: "Rename file")
         cancel.tap()
         XCTAssertTrue(title.waitForNonExistence(timeout: 10))
