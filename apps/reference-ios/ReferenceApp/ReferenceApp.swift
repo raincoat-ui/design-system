@@ -17,6 +17,8 @@ struct ReferenceApp: App {
                 switch screen {
                 case "typography": TypographyScreen()
                 case "dialog": DialogScreen()
+                // TEMPORARY, for PR 65: removed before it merges.
+                case "dialog-diagnostics": DialogDiagnosticsScreen()
                 case "card": CardScreen()
                 case "tabs": TabsScreen()
                 default: ButtonScreen()
