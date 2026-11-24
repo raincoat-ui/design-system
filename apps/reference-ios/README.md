@@ -64,7 +64,7 @@ synchronized with the project, so new files need no change to the project file.
 
 The app shows one screen: the Button's, unless the launch argument `-screen <name>` names another
 (`ReferenceApp.swift` lists them). A test class opens its component's screen with it, as
-`TypographyTests` does with `-screen typography`.
+`TypographyTests` does with `-screen typography`, and `DialogTests` with `-screen dialog`.
 
 ## What the audit does not cover
 
