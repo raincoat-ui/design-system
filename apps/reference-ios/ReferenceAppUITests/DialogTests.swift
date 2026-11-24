@@ -23,18 +23,6 @@ final class DialogTests: ReferenceAppTestCase {
         app.staticTexts["status"].label
     }
 
-    /// Waits for the rename dialog's field to take focus, then puts the keyboard away with Return.
-    /// The keyboard, and the typing predictions over it, are the system's: the accessibility
-    /// audit is of the dialog.
-    @MainActor
-    private func putTheKeyboardAway(_ app: XCUIApplication) {
-        let field = app.textFields["Name"]
-        expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: field)
-        waitForExpectations(timeout: 10)
-        field.typeText("\n")
-        XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 10))
-    }
-
     /// A paragraph of the terms of use, in the dialog with long content.
     @MainActor
     private func terms(_ app: XCUIApplication) -> XCUIElement {
@@ -146,12 +134,16 @@ final class DialogTests: ReferenceAppTestCase {
         app.buttons["Rename file"].tap()
         let title = app.staticTexts["Rename file"]
         XCTAssertTrue(title.waitForExistence(timeout: 10))
-        putTheKeyboardAway(app)
+        let description = app.staticTexts["Everyone the file is shared with sees the new name."]
+        let field = app.textFields["Name"]
+        // The field takes focus, and the keyboard leaves the dialog less of the screen.
+        expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: field)
+        waitForExpectations(timeout: 10)
         // The whole dialog scrolls when the screen is too short for it, so the footer can be
-        // reached.
+        // reached. Scrolled to the field, it may show neither the title nor the description.
         let cancel = app.buttons["Cancel"]
         for _ in 0..<4 where !cancel.isHittable {
-            title.swipeUp()
+            ([title, description].first { $0.isHittable } ?? field).swipeUp()
         }
         XCTAssertTrue(cancel.isHittable)
         try audit(app)
@@ -168,7 +160,11 @@ final class DialogTests: ReferenceAppTestCase {
         ] {
             app.buttons[button].tap()
             XCTAssertTrue(app.buttons[close].waitForExistence(timeout: 10), button)
-            if button == "Rename file" { putTheKeyboardAway(app) }
+            if button == "Rename file" {
+                // Audited as the person finds it: in the field, with the keyboard up.
+                expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: app.textFields["Name"])
+                waitForExpectations(timeout: 10)
+            }
             try audit(app)
             app.buttons[close].tap()
             XCTAssertTrue(app.buttons[close].waitForNonExistence(timeout: 10), button)
@@ -180,16 +176,25 @@ final class DialogTests: ReferenceAppTestCase {
         alert.buttons["Cancel"].tap()
     }
 
+    /// The system's accessibility audit of the screen. An issue it finds fails the test, with what
+    /// XCTest attaches to it, unless it is one of these.
     @MainActor
-    private func audit(_ app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) throws {
-        var problems: [String] = []
+    private func audit(_ app: XCUIApplication) throws {
         try app.performAccessibilityAudit { issue in
             // The audit takes any font that was not made from a text style to be fixed in size.
             // Raincoat scales its token sizes itself, which the Typography tests check.
             if issue.auditType == .dynamicType { return true }
-            problems.append("\(issue.compactDescription): \(issue.element?.label ?? "no element")")
-            return true
+            // The keyboard, and the typing predictions over it, are the system's, not the app's.
+            if let element = issue.element, isTheKeyboards(element, app) { return true }
+            return false
         }
-        XCTAssertEqual(problems, [], file: file, line: line)
+    }
+
+    /// Whether an element is the system keyboard's, or one of the typing predictions over it.
+    @MainActor
+    private func isTheKeyboards(_ element: XCUIElement, _ app: XCUIApplication) -> Bool {
+        let frame = element.frame
+        let keyboard = [app.keyboards.firstMatch, app.otherElements["SystemInputAssistantView"]]
+        return keyboard.contains { $0.exists && $0.frame.contains(frame) }
     }
 }

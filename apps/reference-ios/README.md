@@ -76,3 +76,7 @@ Two kinds of audit finding are ignored, each for a stated reason in `ButtonTests
 - Dynamic Type. The audit reports any font that was not made from a system text style, and
   Raincoat scales its token sizes itself. `testButtonsGrowWithTheTextSize` checks the growth
   directly.
+
+`DialogTests.swift` also ignores a finding about an element of the system keyboard, or of the
+typing predictions over it, which a dialog with a field in focus shows. They are the system's,
+and the app cannot describe them.
