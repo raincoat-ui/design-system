@@ -50,6 +50,33 @@ class PixelsTest {
     }
 
     @Test
+    fun `parts are stacked inside the padding, a gap apart, and blended over the background`() {
+        val clear = 0x00000000
+        val halfBlack = 0x80000000.toInt()
+        val parts = listOf(image(2, 1, black), image(2, 2, halfBlack), image(1, 1, clear))
+        val stack = Pixels.stack(parts, width = 4, padding = 1, gap = 1, background = white)
+        assertEquals(4, stack.width)
+        // Padding, 1 row, gap, 2 rows, gap, 1 row, padding.
+        assertEquals(8, stack.height)
+        assertEquals(white, stack[0, 0])
+        assertEquals(black, stack[1, 1])
+        assertEquals(white, stack[3, 1])
+        assertEquals(white, stack[1, 2])
+        // Half black over white.
+        assertEquals(0xFF7F7F7F.toInt(), stack[2, 4])
+        // A clear part shows the background.
+        assertEquals(white, stack[1, 6])
+    }
+
+    @Test
+    fun `rows are cut from an image`() {
+        val image = Pixels(1, 3, intArrayOf(white, black, red))
+        val cut = image.rows(1, 3)
+        assertEquals(2, cut.height)
+        assertArrayEquals(intArrayOf(black, red), cut.argb)
+    }
+
+    @Test
     fun `a PNG keeps every pixel`() {
         val pixels = Pixels(3, 1, intArrayOf(white, 0xFF123456.toInt(), 0x80FF8000.toInt()))
         val file = folder.root.resolve("image.png")

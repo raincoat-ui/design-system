@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
@@ -21,9 +22,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.Density
+import io.github.raincoatui.tokens.RaincoatTokenSet
 import io.github.raincoatui.ui.LocalRaincoatTokens
 import io.github.raincoatui.ui.RaincoatTheme
 import io.github.raincoatui.ui.generated.SpecExample
+import io.github.raincoatui.ui.generated.VisualSnapshot
 import io.github.raincoatui.ui.generated.allSnapshots
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
@@ -39,6 +42,9 @@ import org.robolectric.annotation.Config
 /** The text an example shows, by the content it fills: text("label"). */
 internal typealias Text = (content: String) -> String
 
+/** The text of content that only some examples have, such as a description: null where it has none. */
+internal fun Text.optional(content: String): String? = runCatching { this(content) }.getOrNull()
+
 /**
  * The visual snapshots of a component: each snapshot of specs/snapshots.yaml, in each theme. A
  * snapshot shows every example of the component's spec together, as a specimen, in the
@@ -47,7 +53,8 @@ internal typealias Text = (content: String) -> String
  *
  * To add a component, write <Component>SnapshotTest.kt beside this file: a subclass that passes
  * the component's spec id, its generated examples, and a function that draws one instance of
- * them. SnapshotCoverageTest fails while a spec with an Android implementation has none.
+ * them. SnapshotCoverageTest fails while a spec with an Android implementation has none. A
+ * component that opens a window of its own, such as a dialog, also overrides [drawSpecimen].
  *
  * In CI each snapshot is compared with its baseline,
  * src/test/__screenshots__/<theme>/<component>/<snapshot>.png. A missing or different baseline
@@ -67,9 +74,9 @@ internal abstract class SnapshotTest<Properties>(
     snapshotId: String,
     /** The component's spec id: specs/components/<component>. */
     private val component: String,
-    private val examples: List<SpecExample<Properties>>,
+    protected val examples: List<SpecExample<Properties>>,
     /** Draws one instance of an example, with the example's text. */
-    private val draw: @Composable (instance: Properties, text: Text) -> Unit,
+    protected val draw: @Composable (instance: Properties, text: Text) -> Unit,
 ) {
     companion object {
         /** Every snapshot of the matrix, in every theme. The token build generates both lists. */
@@ -79,14 +86,17 @@ internal abstract class SnapshotTest<Properties>(
             allThemes.flatMap { theme -> allSnapshots.map { snapshot -> arrayOf(theme.id, snapshot.id) } }
 
         /** A fixed width, so that long text wraps the same way in every run. As on the web. */
-        private const val WIDTH = 480
-        private const val PADDING = 24
-        private const val GAP = 16
+        const val WIDTH = 480
+        const val PADDING = 24
+        const val GAP = 16
         private const val SPECIMEN = "specimen"
     }
 
     private val theme = allThemes.first { it.id == themeId }
-    private val snapshot = allSnapshots.first { it.id == snapshotId }
+    protected val snapshot: VisualSnapshot = allSnapshots.first { it.id == snapshotId }
+
+    /** The tokens of the snapshot's theme and color mode. */
+    protected val tokens: RaincoatTokenSet get() = theme.tokens(snapshot.mode, Density.Comfortable)
 
     @get:Rule
     val compose = createComposeRule()
@@ -103,18 +113,8 @@ internal abstract class SnapshotTest<Properties>(
         RuntimeEnvironment.setFontScale(snapshot.textSize.fontScale)
         assertEquals("the locale", snapshot.locale, Locale.getDefault().toLanguageTag())
 
-        compose.setContent { Specimen() }
-        compose.waitForIdle()
-
         val name = "${theme.id}/$component/${snapshot.id}"
-        val image = compose.onNodeWithTag(SPECIMEN).captureToImage()
-        // The content is as tall as it needs, up to the window. A capture shows nothing below it.
-        val height = checkNotNull(window).height
-        if (image.height >= height) {
-            throw AssertionError("$name: the specimen is as tall as the window, $height px, so a capture cuts it off")
-        }
-        val drawn = Pixels(image.width, image.height, IntArray(image.width * image.height))
-        image.readPixels(drawn.argb)
+        val drawn = drawSpecimen(name)
 
         val files = SnapshotFiles.fromSystem()
         if (!files.compare) {
@@ -143,20 +143,15 @@ internal abstract class SnapshotTest<Properties>(
         }
     }
 
-    /** Every example of the spec, one row each, in the snapshot's theme, mode, and direction. */
-    @Composable
-    private fun Specimen() {
-        val view = LocalView.current
-        SideEffect { window = view.rootView }
-        val mode = snapshot.mode
-        RaincoatTheme(
-            theme = theme,
-            darkTheme = mode == ColorMode.Dark || mode == ColorMode.DarkHighContrast,
-            increasedContrast = mode == ColorMode.LightHighContrast || mode == ColorMode.DarkHighContrast,
-            density = Density.Comfortable,
-        ) {
-            val direction = if (snapshot.rightToLeft) LayoutDirection.Rtl else LayoutDirection.Ltr
-            CompositionLocalProvider(LocalLayoutDirection provides direction) {
+    /**
+     * Draws every example of the spec, one row each, on the theme's canvas color, and returns
+     * the pixels. [name] names the snapshot in a failure.
+     */
+    protected open fun drawSpecimen(name: String): Pixels {
+        compose.setContent {
+            val view = LocalView.current
+            SideEffect { window = view.rootView }
+            Themed {
                 Column(
                     modifier = Modifier
                         .testTag(SPECIMEN)
@@ -166,10 +161,7 @@ internal abstract class SnapshotTest<Properties>(
                     verticalArrangement = Arrangement.spacedBy(GAP.dp),
                 ) {
                     for (example in examples) {
-                        val text: Text = { content ->
-                            example.text[snapshot.locale]?.get(content)
-                                ?: error("${example.id}: no $content in ${snapshot.locale}")
-                        }
+                        val text = textOf(example)
                         // The instances of an example side by side, wrapping onto more rows.
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(GAP.dp),
@@ -181,5 +173,37 @@ internal abstract class SnapshotTest<Properties>(
                 }
             }
         }
+        compose.waitForIdle()
+
+        val image = compose.onNodeWithTag(SPECIMEN).captureToImage()
+        // The content is as tall as it needs, up to the window. A capture shows nothing below it.
+        val height = checkNotNull(window).height
+        if (image.height >= height) {
+            throw AssertionError("$name: the specimen is as tall as the window, $height px, so a capture cuts it off")
+        }
+        return image.toPixels()
     }
+
+    /** [content] in the snapshot's theme, color mode, and layout direction. */
+    @Composable
+    protected fun Themed(content: @Composable () -> Unit) {
+        val mode = snapshot.mode
+        RaincoatTheme(
+            theme = theme,
+            darkTheme = mode == ColorMode.Dark || mode == ColorMode.DarkHighContrast,
+            increasedContrast = mode == ColorMode.LightHighContrast || mode == ColorMode.DarkHighContrast,
+            density = Density.Comfortable,
+        ) {
+            val direction = if (snapshot.rightToLeft) LayoutDirection.Rtl else LayoutDirection.Ltr
+            CompositionLocalProvider(LocalLayoutDirection provides direction, content = content)
+        }
+    }
+
+    /** The text of [example] in the snapshot's locale. */
+    protected fun textOf(example: SpecExample<Properties>): Text = { content ->
+        example.text[snapshot.locale]?.get(content) ?: error("${example.id}: no $content in ${snapshot.locale}")
+    }
+
+    protected fun ImageBitmap.toPixels(): Pixels =
+        Pixels(width, height, IntArray(width * height)).also { readPixels(it.argb) }
 }

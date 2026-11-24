@@ -16,6 +16,12 @@ internal class Pixels(val width: Int, val height: Int, val argb: IntArray) {
 
     operator fun get(x: Int, y: Int): Int = argb[y * width + x]
 
+    /** The rows from [from] until [to]. */
+    fun rows(from: Int, to: Int): Pixels {
+        require(from in 0..to && to <= height) { "rows $from until $to of $height" }
+        return Pixels(width, to - from, argb.copyOfRange(from * width, to * width))
+    }
+
     fun writePng(file: File) {
         val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
         image.setRGB(0, 0, width, height, argb, 0, width)
@@ -59,6 +65,40 @@ internal class Pixels(val width: Int, val height: Int, val argb: IntArray) {
         private const val MAX_DELTA = 35215 * THRESHOLD * THRESHOLD
 
         private const val DIFFERENT = 0xFFFF0000.toInt()
+
+        /**
+         * [parts] one under another, [gap] apart and [padding] in from every edge, on an opaque
+         * [background], [width] wide. Each part is blended over the background, so a translucent
+         * part, such as a scrim, shows the background through it.
+         */
+        fun stack(parts: List<Pixels>, width: Int, padding: Int, gap: Int, background: Int): Pixels {
+            require(parts.isNotEmpty()) { "nothing to stack" }
+            val height = 2 * padding + parts.sumOf { it.height } + gap * (parts.size - 1)
+            val argb = IntArray(width * height) { background or (0xFF shl 24) }
+            var top = padding
+            for (part in parts) {
+                require(padding + part.width <= width) { "a part ${part.width} wide does not fit in $width" }
+                for (y in 0 until part.height) {
+                    for (x in 0 until part.width) {
+                        val index = (top + y) * width + padding + x
+                        argb[index] = over(part[x, y], argb[index])
+                    }
+                }
+                top += part.height + gap
+            }
+            return Pixels(width, height, argb)
+        }
+
+        /** [color] blended over the opaque [below]. */
+        private fun over(color: Int, below: Int): Int {
+            val alpha = color ushr 24 and 0xFF
+            fun channel(shift: Int): Int {
+                val top = color ushr shift and 0xFF
+                val bottom = below ushr shift and 0xFF
+                return (top * alpha + bottom * (255 - alpha) + 127) / 255
+            }
+            return (0xFF shl 24) or (channel(16) shl 16) or (channel(8) shl 8) or channel(0)
+        }
 
         fun readPng(file: File): Pixels {
             val image = ImageIO.read(file) ?: error("$file is not an image ImageIO can read")
