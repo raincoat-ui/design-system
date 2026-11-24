@@ -181,7 +181,7 @@
 
     /// The message, and the action after it while the two fit on one line. When they do not, the
     /// message takes the whole width and wraps, and the action moves below it, at the end.
-    private struct MessageAndAction: Layout {
+    struct MessageAndAction: Layout {
         let spacing: CGFloat
 
         func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache _: inout ()) -> CGSize {
@@ -238,14 +238,14 @@
     }
 
     /// The parts of a toast that VoiceOver or the keyboard can be on.
-    private enum ToastPart: Hashable {
+    enum ToastPart: Hashable {
         case message
         case action
         case close
     }
 
     /// The cross of the close button, in the button's color, with the stroke of its spinner.
-    private struct ToastCross: View {
+    struct ToastCross: View {
         let size: CGFloat
 
         var body: some View {
