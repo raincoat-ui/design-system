@@ -95,7 +95,9 @@ function reveal(list: HTMLElement, tab: Element) {
 
 /**
  * Scrolls the list by about a page toward one of its ends: the first tab cut off at that end
- * moves to the other edge of the list.
+ * moves to the other edge of the list. A tab already at that edge, because it is wider than the
+ * list, is scrolled through by the list's width instead, so that a long translated label never
+ * stops the buttons. Distances are whole pixels, since some browsers scroll only by those.
  */
 function page(list: HTMLElement, toward: "start" | "end") {
   const outer = list.getBoundingClientRect();
@@ -103,10 +105,14 @@ function page(list: HTMLElement, toward: "start" | "end") {
   const towardRight = (toward === "end") !== (directionOf(list) === "rtl");
   if (towardRight) {
     const cut = tabs.filter((tab) => tab.right > outer.right + 1).sort((a, b) => a.left - b.left);
-    if (cut[0]) list.scrollBy({ left: cut[0].left - outer.left });
+    if (!cut[0]) return;
+    const distance = Math.floor(cut[0].left - outer.left);
+    list.scrollBy({ left: distance >= 1 ? distance : Math.ceil(outer.width) });
   } else {
     const cut = tabs.filter((tab) => tab.left < outer.left - 1).sort((a, b) => b.right - a.right);
-    if (cut[0]) list.scrollBy({ left: cut[0].right - outer.right });
+    if (!cut[0]) return;
+    const distance = Math.floor(outer.right - cut[0].right);
+    list.scrollBy({ left: -(distance >= 1 ? distance : Math.ceil(outer.width)) });
   }
 }
 

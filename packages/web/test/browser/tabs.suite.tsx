@@ -931,31 +931,104 @@ export function describeTabs(environment: string) {
           await userEvent.tab();
           await expect.element(screen.getByRole("button", { name: "After" })).toHaveFocus();
 
-          // At the start, only the button toward the end is shown. It pages the list until the
-          // last tab is in view, without taking focus.
-          expect(shown(start)).toBe(false);
-          expect(shown(end)).toBe(true);
-          const last = screen.getByRole("tab", { name: "Warranty" }).element();
-          for (let page = 0; page < MANY.length && !shownInList(last); page++) {
-            const before = list.scrollLeft;
-            await userEvent.click(end);
-            await expect.poll(() => list.scrollLeft).not.toBe(before);
-          }
-          expect(shownInList(last)).toBe(true);
-          expect(document.activeElement).not.toBe(end);
-          await expect.poll(() => shown(end)).toBe(false);
-          expect(shown(start)).toBe(true);
+          // How far the list is scrolled toward its end, on whichever side that is, and what a
+          // failure reports about it.
+          const toward = dir === "ltr" ? 1 : -1;
+          const position = () => ({
+            progress: list.scrollLeft * toward,
+            scrollLeft: list.scrollLeft,
+            scrollWidth: list.scrollWidth,
+            clientWidth: list.clientWidth,
+          });
 
-          // And back.
-          const first = screen.getByRole("tab", { name: "Overview" }).element();
-          for (let page = 0; page < MANY.length && !shownInList(first); page++) {
-            await userEvent.click(start);
-            await settle(50);
-          }
-          expect(shownInList(first)).toBe(true);
-          await expect.poll(() => shown(start)).toBe(false);
+          // At the start, only the button toward the end is shown. A click on it moves the list
+          // toward its end, without taking focus.
+          // (Within a pixel: a browser may scroll by whole pixels and lay out in fractions.)
+          expect(Math.abs(position().progress), JSON.stringify(position())).toBeLessThanOrEqual(1);
+          expect(shown(start), JSON.stringify(position())).toBe(false);
+          expect(shown(end), JSON.stringify(position())).toBe(true);
+          await userEvent.click(end);
+          await expect.poll(position).toSatisfy(({ progress }) => progress > 0);
+          expect(document.activeElement).not.toBe(end);
+          await expect.poll(() => shown(start)).toBe(true);
+
+          // At the end, only the button toward the start is shown, and the last tab is in view.
+          list.scrollLeft = toward * list.scrollWidth;
+          await expect
+            .poll(() => [shown(end), position()])
+            .toSatisfy(([endShown]) => endShown === false);
+          expect(shown(start), JSON.stringify(position())).toBe(true);
+          const last = screen.getByRole("tab", { name: "Warranty" }).element();
+          expect(
+            shownInList(last),
+            `${JSON.stringify(position())}; the last tab ${JSON.stringify(last.getBoundingClientRect())}, the list ${JSON.stringify(list.getBoundingClientRect())}`,
+          ).toBe(true);
+          // A click on it moves the list back toward its start.
+          const atEnd = position().progress;
+          await userEvent.click(start);
+          await expect.poll(position).toSatisfy(({ progress }) => progress < atEnd);
         },
       );
+    });
+
+    describe("a tab wider than the list", () => {
+      test.each(DIRECTIONS)("in %s, does not stop the scroll buttons", async (dir) => {
+        const labels = [
+          "Overview",
+          "Questions and answers from the people who bought this jacket",
+          "Warranty",
+        ];
+        const screen = await render(
+          <Stage dir={dir} width={NARROW}>
+            <Tabs defaultValue="0">
+              <TabsList aria-label="Product">
+                {labels.map((label, index) => (
+                  <TabsTrigger key={label} value={String(index)}>
+                    {label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </Stage>,
+        );
+        const buttons = () =>
+          [
+            ...screen.container.querySelectorAll('[data-slot="tabs-scroll-button"]'),
+          ] as HTMLElement[];
+        await expect.poll(() => buttons().length).toBe(2);
+        const [start, end] = buttons() as [HTMLElement, HTMLElement];
+        const list = screen.getByRole("tablist").element() as HTMLElement;
+        const shown = (button: HTMLElement) => computed(button).visibility === "visible";
+        const toward = dir === "ltr" ? 1 : -1;
+        const position = () => ({
+          progress: list.scrollLeft * toward,
+          scrollLeft: list.scrollLeft,
+          scrollWidth: list.scrollWidth,
+          clientWidth: list.clientWidth,
+        });
+        const wide = screen.getByRole("tab", { name: labels[1] }).element();
+        expect(wide.getBoundingClientRect().width).toBeGreaterThan(list.clientWidth);
+
+        // Each click moves the list on, until it reaches its end and the button goes.
+        for (let click = 0; click < 20 && shown(end); click++) {
+          const before = position().progress;
+          await userEvent.click(end);
+          await expect.poll(position).toSatisfy(({ progress }) => progress > before);
+          await settle(50);
+        }
+        expect(shown(end), JSON.stringify(position())).toBe(false);
+        expect(shownInList(screen.getByRole("tab", { name: "Warranty" }).element())).toBe(true);
+
+        // And back to the start.
+        for (let click = 0; click < 20 && shown(start); click++) {
+          const before = position().progress;
+          await userEvent.click(start);
+          await expect.poll(position).toSatisfy(({ progress }) => progress < before);
+          await settle(50);
+        }
+        expect(shown(start), JSON.stringify(position())).toBe(false);
+        expect(Math.abs(position().progress), JSON.stringify(position())).toBeLessThanOrEqual(1);
+      });
     });
 
     describe("server-rendered", () => {
