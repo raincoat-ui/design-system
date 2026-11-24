@@ -3,8 +3,8 @@
 - Status: accepted
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
-- Amended: 2026-11-24, iOS draws its snapshots in a simulator, through a window rather than
-  `ImageRenderer`, at a scale of 2, in a job of its own, with its baselines in
+- Amended: 2026-11-24, iOS draws its snapshots in a simulator, by drawing a window's layers
+  rather than with `ImageRenderer`, at a scale of 2, in a job of its own, with its baselines in
   `packages/ios/__screenshots__`
 
 ## Context
@@ -93,11 +93,15 @@ what was left open.
 - iOS draws a specimen through a window, not with `ImageRenderer`. `ImageRenderer` draws only
   the views SwiftUI draws itself, and leaves out those UIKit provides, such as the text field of
   an Input and the scroll view of the Tabs. The specimen is shown by a `UIHostingController` in a
-  window of its own, 480 points wide, in the test runner's scene, and the window's traits are the
-  snapshot's: light or dark, the contrast, the text size, and the layout direction. The window is
-  drawn with `drawHierarchy(in:afterScreenUpdates:)`, which draws nothing for a window that is
-  not shown in a scene; a snapshot it cannot draw fails. Nothing in the window animates, so a
-  spinner is drawn where it starts.
+  window of its own, 480 points wide, whose traits are the snapshot's: light or dark, the
+  contrast, the text size, the layout direction, and a display scale of 2. The window's layers
+  are drawn (`layer.render(in:)`). Every view is a layer, those UIKit provides included, so the
+  layers draw a text field's text and a scroll view's content where it is scrolled to; a test of
+  the harness checks both. `drawHierarchy(in:afterScreenUpdates:)`, which draws a window as the
+  screen shows it, draws nothing there: a package's tests on the simulator have no window scene
+  to show a window in. Drawing the layers leaves out Core Animation's filters, such as the blur
+  of a material, so a view that uses one is drawn without it. Nothing in the window animates, so
+  a spinner is drawn where it starts.
 - An alert dialog is left out of the iOS snapshots. On iOS it is the system alert, which the
   platform draws, not Raincoat.
 - iOS draws at a scale of 2, the smaller of an iPhone's two, so a specimen 480 points wide is 960

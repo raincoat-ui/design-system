@@ -118,4 +118,39 @@
             return Color.clear.frame(width: 0, height: 0)
         }
     }
+
+    /// A text field holding a word, black on white, and nothing else to draw.
+    struct TextFieldCheck: View {
+        var body: some View {
+            TextField("Name", text: .constant("Raincoat"))
+                .textFieldStyle(.plain)
+                .font(.system(size: 40))
+                .foregroundStyle(Color(.sRGB, red: 0, green: 0, blue: 0))
+                .padding(24)
+                .frame(width: specimenWidth, alignment: .leading)
+                .background(Color(.sRGB, red: 1, green: 1, blue: 1))
+                .environment(\.colorScheme, .light)
+        }
+    }
+
+    /// A row four times as wide as the window, red then blue, that scrolls to its blue end as it
+    /// appears, as a row of tabs scrolls to the selected tab.
+    struct ScrollCheck: View {
+        var body: some View {
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 0) {
+                        Color(.sRGB, red: 1, green: 0, blue: 0)
+                            .frame(width: 2 * specimenWidth, height: 40)
+                        Color(.sRGB, red: 0, green: 0, blue: 1)
+                            .frame(width: 2 * specimenWidth, height: 40)
+                            .id("end")
+                    }
+                }
+                .scrollIndicators(.hidden)
+                .onAppear { proxy.scrollTo("end", anchor: .trailing) }
+            }
+            .frame(width: specimenWidth, height: 40)
+        }
+    }
 #endif

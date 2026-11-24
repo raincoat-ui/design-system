@@ -17,9 +17,9 @@
     // one instance of them. ButtonSnapshots.swift is the model.
     //
     // The snapshots are drawn by iOS, in a simulator: SwiftUI on macOS does not enlarge text for
-    // a larger Dynamic Type size. A specimen is shown in a window of its own and the window is
-    // drawn, as the system draws an app, so that the views UIKit provides, such as a text field
-    // and a scroll view, are drawn too; ImageRenderer leaves them out. They run only when
+    // a larger Dynamic Type size. A specimen is shown in a window of its own and the window's
+    // layers are drawn, so that the views UIKit provides, such as a text field and a scroll view,
+    // are drawn too; ImageRenderer leaves them out. They run only when
     // RAINCOAT_SNAPSHOTS is set, which xcodebuild passes to the tests from
     // TEST_RUNNER_RAINCOAT_SNAPSHOTS. From packages/ios:
     //
@@ -157,6 +157,7 @@
         // The snapshot's text size is in effect: only a size larger than the default enlarges text.
         let scale = try #require(reading.scale, "the text size was not read")
         if snapshot.textSize.dynamicTypeSize > .large {
+            print("\(theme.id)/\(component)/\(snapshot.id): body text is drawn \(scale) times as large")
             #expect(scale > 1, "Dynamic Type's \(snapshot.textSize.dynamicTypeSize) does not enlarge text here")
         } else {
             #expect(scale == 1)
@@ -213,8 +214,7 @@
     }
 
     /// Draws a specimen as the snapshot asks, in a theme: shown in a window of its own, with the
-    /// snapshot's appearance set as the system sets it, and the window drawn as the system draws
-    /// an app, UIKit's views included.
+    /// snapshot's appearance set as the system sets it, UIKit's views included.
     @MainActor
     private func drawSpecimen(
         _ specimen: some View, theme: RaincoatTheme, snapshot: VisualSnapshot, reading: TextScaleProbe.Reading
@@ -249,7 +249,6 @@
             }
 
         let controller = UIHostingController(rootView: root)
-        controller.safeAreaRegions = []
         controller.overrideUserInterfaceStyle = isDark ? .dark : .light
         controller.traitOverrides.accessibilityContrast = isHighContrast ? .high : .normal
         controller.traitOverrides.preferredContentSizeCategory = contentSizeCategory(
@@ -257,18 +256,31 @@
         )
         controller.traitOverrides.layoutDirection = snapshot.rightToLeft ? .rightToLeft : .leftToRight
         controller.view.semanticContentAttribute = snapshot.rightToLeft ? .forceRightToLeft : .forceLeftToRight
-        // Shows below a specimen whose height is not a whole number of points.
         controller.view.backgroundColor = UIColor(
             red: canvas.red, green: canvas.green, blue: canvas.blue, alpha: canvas.alpha
         )
+        return try drawInWindow(controller)
+    }
 
-        // A window draws its views only when it is shown in a scene: the test runner's.
-        let scene = try #require(
-            UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first,
-            "the test runner has no window scene to show the specimen in"
-        )
-        let window = UIWindow(windowScene: scene)
-        window.frame = CGRect(x: 0, y: 0, width: specimenWidth, height: specimenWidth)
+    /// Shows a hosting controller's view in a window of its own, `specimenWidth` wide and as tall
+    /// as the view, and draws the window's layers at `snapshotScale`.
+    ///
+    /// Each view is a Core Animation layer, those UIKit provides included, so the layers draw a
+    /// text field's text and a scroll view's content where it is scrolled to. ImageRenderer draws
+    /// only what SwiftUI draws itself. `drawHierarchy(in:afterScreenUpdates:)`, which draws a
+    /// window as the screen shows it, draws nothing here: a package's tests have no window scene
+    /// to show a window in. Drawing the layers leaves out Core Animation's filters, such as the
+    /// blur of a material: a view that uses one would be drawn without it.
+    @MainActor
+    func drawInWindow<Content: View>(_ controller: UIHostingController<Content>) throws -> CGImage {
+        // UIKit's views do not animate either.
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+        controller.safeAreaRegions = []
+        // The view is laid out on the pixels of the drawing.
+        controller.traitOverrides.displayScale = snapshotScale
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: specimenWidth, height: specimenWidth))
         window.rootViewController = controller
         window.isHidden = false
         defer {
@@ -276,7 +288,8 @@
             window.rootViewController = nil
         }
         let size = controller.sizeThatFits(in: CGSize(width: specimenWidth, height: .greatestFiniteMagnitude))
-        window.frame = CGRect(x: 0, y: 0, width: specimenWidth, height: size.height.rounded(.up))
+        let height = (size.height * snapshotScale).rounded(.up) / snapshotScale
+        window.frame = CGRect(x: 0, y: 0, width: specimenWidth, height: height)
         // Let the window finish what views do as they appear, such as scrolling a selected tab
         // into view.
         for _ in 0..<3 {
@@ -284,25 +297,17 @@
             RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
         }
         window.layoutIfNeeded()
+        // Every layer has drawn its content before the layers are drawn.
+        CATransaction.flush()
 
         let format = UIGraphicsImageRendererFormat()
         format.scale = snapshotScale
         format.opaque = true
         format.preferredRange = .standard
-        var drewHierarchy = false
         let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { context in
-            drewHierarchy = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
-            if !drewHierarchy {
-                // Drawn only to be looked at: drawing the layers can leave out UIKit's views.
-                window.layer.render(in: context.cgContext)
-            }
+            window.layer.render(in: context.cgContext)
         }
-        if !drewHierarchy {
-            Issue.record(
-                "\(theme.id)/\(snapshot.id): the window could not be drawn as the system draws it (drawHierarchy drew nothing)"
-            )
-        }
-        return try #require(image.cgImage, "the specimen could not be drawn")
+        return try #require(image.cgImage, "the window could not be drawn")
     }
 
     /// The UIKit text size of a Dynamic Type size.
@@ -325,6 +330,28 @@
     }
 
     extension VisualSnapshots {
+        /// The window draws the text of a text field, which UIKit provides: an Input shows one.
+        @MainActor
+        @Test func theWindowDrawsATextFieldsText() throws {
+            let drawing = try Bitmap(drawInWindow(UIHostingController(rootView: TextFieldCheck())))
+            // White, but for the field's text, which is black.
+            let ink = stride(from: 0, to: drawing.pixels.count, by: 4).filter { drawing.pixels[$0] < 128 }
+            #expect(ink.count > 500, "the text field's text was not drawn")
+        }
+
+        /// The window draws a scroll view's content where it is scrolled to as it appears, which
+        /// UIKit provides: a row of tabs that does not fit scrolls the selected tab into view.
+        @MainActor
+        @Test func theWindowDrawsAScrollViewWhereItIsScrolledTo() throws {
+            let drawing = try Bitmap(drawInWindow(UIHostingController(rootView: ScrollCheck())))
+            let middle = drawing.height / 2
+            // Blue, the end of the row, from one edge to the other; red where it is not scrolled.
+            for x in [2, drawing.width / 2, drawing.width - 3] {
+                let pixel = drawing.pixel(x, middle)
+                #expect(pixel[0] < 16 && pixel[1] < 16 && pixel[2] > 239, "at \(x): \(pixel)")
+            }
+        }
+
         /// Each component whose spec names a SwiftUI implementation has a snapshot test,
         /// Snapshots/<Component>Snapshots.swift, which draws the examples generated from its spec.
         @Test func everyComponentWithASwiftUIImplementationHasSnapshots() throws {
