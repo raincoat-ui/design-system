@@ -383,6 +383,37 @@ export function describeTypography(environment: string) {
     });
 
     describe("text size", () => {
+      test("at the default and at twice the root font size, a heading is never smaller than the heading one level below it", async () => {
+        const screen = await render(
+          <Stage>
+            {HEADING_LEVELS.map((level) => (
+              <Heading key={level} level={level}>{`Level ${level}`}</Heading>
+            ))}
+          </Stage>,
+        );
+        const sizes = () =>
+          HEADING_LEVELS.map((level) =>
+            pixels(computed(screen.getByRole("heading", { level }).element()).fontSize),
+          );
+        const checkOrder = (where: string) => {
+          const measured = sizes();
+          for (const [index, size] of measured.slice(1).entries()) {
+            expect(
+              measured[index],
+              `${where}: level ${index + 1} of ${measured}`,
+            ).toBeGreaterThanOrEqual(size);
+          }
+        };
+        checkOrder("at the default size");
+        document.documentElement.style.fontSize = "200%";
+        try {
+          await nextFrame();
+          checkOrder("at twice the size");
+        } finally {
+          document.documentElement.style.fontSize = "";
+        }
+      });
+
       test("at twice the root font size, text and headings are twice as large and nothing is clipped", async () => {
         const screen = await render(
           <Stage width={360}>

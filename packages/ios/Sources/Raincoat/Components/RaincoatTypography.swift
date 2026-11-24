@@ -88,24 +88,34 @@
     }
 
     /// Sets text in a token text style, through the same line-height handling as the Button's
-    /// label, and grows it with the system text style nearest its role.
+    /// label, and grows it with the system text style nearest its role. A heading also grows to
+    /// at least the size of the heading look below it (`TypographyChoice.scale`).
     private struct TypographyModifier: ViewModifier {
         let choice: TypographyChoice
         let maxLines: Int?
 
         @Tokens private var tokens
-        @ScaledMetric private var textScale: CGFloat
+        // How much each system text style enlarges text at the person's setting. A heading
+        // needs the styles of the looks below it too.
+        @ScaledMetric(relativeTo: .largeTitle) private var largeTitle: CGFloat = 1
+        @ScaledMetric(relativeTo: .title2) private var title2: CGFloat = 1
+        @ScaledMetric(relativeTo: .title3) private var title3: CGFloat = 1
+        @ScaledMetric(relativeTo: .headline) private var headline: CGFloat = 1
+        @ScaledMetric(relativeTo: .body) private var bodyText: CGFloat = 1
+        @ScaledMetric(relativeTo: .caption) private var caption: CGFloat = 1
 
         init(choice: TypographyChoice, maxLines: Int?) {
             self.choice = choice
             self.maxLines = maxLines
-            // Each style grows with the system text style nearest its role.
-            _textScale = ScaledMetric(wrappedValue: 1, relativeTo: TextScaling(choice).textStyle)
         }
 
         func body(content: Content) -> some View {
             let look = TextAppearance(tokens, choice)
-            let text = look.style.resolved(scale: textScale)
+            let scales = TextScales(
+                largeTitle: largeTitle, title2: title2, title3: title3, headline: headline,
+                body: bodyText, caption: caption
+            )
+            let text = look.style.resolved(scale: choice.scale(scales, headings: tokens.type.heading))
             content
                 .font(text.font)
                 .tracking(text.tracking)
