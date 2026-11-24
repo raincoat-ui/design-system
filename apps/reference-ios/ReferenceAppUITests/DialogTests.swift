@@ -184,16 +184,24 @@ final class DialogTests: ReferenceAppTestCase {
                 }
                 // The sheet moves to the height of its content once it is measured.
                 settle(title)
-                guard let sheet = openSheet(titled: dialog.title, in: app) else {
-                    XCTFail("\(dialog.title): no sheet holds the title")
+                guard let top = sheetTop(titled: dialog.title, in: app) else {
+                    XCTFail("\(dialog.title): no title")
                     continue
                 }
-                let shown = sheet.frame.intersection(app.frame)
-                heights[dialog.title, default: []].append(shown.height)
+                // The sheet is attached to the bottom of the screen, so it shows from its top down.
+                let shown = CGRect(x: app.frame.minX, y: top, width: app.frame.width, height: app.frame.maxY - top)
+                heights[dialog.title, default: []].append(app.frame.maxY - title.frame.minY)
+                if size == sizes[0] {
+                    // As tall as its content, the sheet stops well short of the top of the screen.
+                    XCTAssertGreaterThan(
+                        title.frame.minY, app.frame.minY + app.frame.height / 4,
+                        "\(dialog.title): the title's top is at \(title.frame.minY) of \(app.frame.height)"
+                    )
+                }
                 let parts = [title] + dialog.texts.map { app.staticTexts[$0] } + dialog.buttons.map { app.buttons[$0] }
                 for part in parts {
                     for _ in 0..<4 where !part.isHittable {
-                        sheet.swipeUp()
+                        title.swipeUp()
                     }
                     let name = "\(dialog.title), \(part.label), \(size)"
                     XCTAssertTrue(part.isHittable, name)
@@ -206,12 +214,16 @@ final class DialogTests: ReferenceAppTestCase {
             }
             app.terminate()
         }
-        // Each fits the screen at both sizes, so its sheet is as tall as its text needs.
+        // Each fits the screen at both sizes, so its sheet is as tall as its text needs: what
+        // shows of it, from its title to the bottom of the screen, grows with the text.
         for dialog in dialogs {
             let measured = heights[dialog.title] ?? []
             XCTAssertEqual(measured.count, 2, dialog.title)
             if measured.count == 2 {
-                XCTAssertGreaterThan(measured[1], measured[0] * 1.25, "\(dialog.title): \(measured)")
+                XCTAssertGreaterThan(
+                    measured[1], measured[0] * 1.25,
+                    "\(dialog.title): \(measured[0]) at the default size, \(measured[1]) at the largest"
+                )
             }
         }
     }
@@ -296,36 +308,41 @@ final class DialogTests: ReferenceAppTestCase {
         }
     }
 
-    /// Whether an element is the system keyboard's, or one of the typing predictions over it.
+    /// Whether an element is the system keyboard's, or one of the typing predictions over it:
+    /// within the frame of the keys or of the predictions, or one of the elements of the window
+    /// that holds the keyboard, which holds the predictions too, at any text size. The app's own
+    /// elements are in a window of their own.
     @MainActor
     private func isTheKeyboards(_ element: XCUIElement, _ app: XCUIApplication) -> Bool {
         let frame = element.frame
         let keyboard = [app.keyboards.firstMatch, app.otherElements["SystemInputAssistantView"]]
-        return keyboard.contains { $0.exists && $0.frame.contains(frame) }
+        if keyboard.contains(where: { $0.exists && $0.frame.contains(frame) }) { return true }
+        let window = app.windows.containing(.keyboard, identifier: nil).firstMatch
+        guard window.exists else { return false }
+        let same = NSPredicate(format: "label == %@", element.label)
+        return window.descendants(matching: element.elementType).matching(same).allElementsBoundByIndex
+            .contains { $0.frame == frame }
     }
 
-    /// The sheet of the open dialog with this title: the largest element that holds the title
-    /// and not the screen beneath it, whose heading is "Files".
+    /// How far the top of a dialog's sheet can be above its title: the dialog's padding, with
+    /// room to spare for a theme's.
+    private static let sheetTopPadding: CGFloat = 40
+
+    /// The top of the open dialog's sheet: the top of its title, less the sheet's padding above
+    /// it. The sheet is attached to the bottom of the screen, so all from there down is the
+    /// sheet's.
     @MainActor
-    private func openSheet(titled title: String, in app: XCUIApplication) -> XCUIElement? {
-        let titleText = NSPredicate(
-            format: "elementType == %lu AND label == %@", XCUIElement.ElementType.staticText.rawValue, title
-        )
-        return app.otherElements.containing(titleText).allElementsBoundByIndex
-            .filter { $0.frame.width > 0 && !$0.staticTexts["Files"].exists }
-            .max { $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height }
+    private func sheetTop(titled title: String, in app: XCUIApplication) -> CGFloat? {
+        let text = app.staticTexts[title]
+        guard text.exists else { return nil }
+        return text.frame.minY - Self.sheetTopPadding
     }
 
-    /// Whether an element is one of the open dialog's own, inside its sheet: the sheet holds an
-    /// element of the same type and label, in the same place.
+    /// Whether an element is in the open dialog's sheet: at or below the sheet's top.
     @MainActor
     private func isInSheet(_ element: XCUIElement, titled title: String, _ app: XCUIApplication) -> Bool {
-        guard let sheet = openSheet(titled: title, in: app) else { return false }
-        let frame = element.frame
-        let same = NSPredicate(
-            format: "elementType == %lu AND label == %@", element.elementType.rawValue, element.label
-        )
-        return sheet.descendants(matching: .any).matching(same).allElementsBoundByIndex.contains { $0.frame == frame }
+        guard let top = sheetTop(titled: title, in: app) else { return false }
+        return element.frame.minY >= top
     }
 
     /// Waits until an element stops moving, as a sheet does once it reaches its height.
