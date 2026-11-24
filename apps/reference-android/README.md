@@ -36,4 +36,5 @@ expect a phone-sized screen.
 ## Adding a component
 
 Add a screen for it in `src/main/`, with one example for each state in its spec, and a test
-class in `src/androidTest/`.
+class in `src/androidTest/`. The launcher shows the Button's screen; a later component's screen
+has an activity of its own, as the Toast's has `ToastActivity`, which its tests start.
