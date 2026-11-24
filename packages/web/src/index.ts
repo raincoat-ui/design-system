@@ -62,6 +62,16 @@ export {
   type SheetTriggerProps,
 } from "./components/ui/sheet.js";
 export {
+  Tabs,
+  TabsContent,
+  type TabsContentProps,
+  TabsList,
+  type TabsListProps,
+  type TabsProps,
+  TabsTrigger,
+  type TabsTriggerProps,
+} from "./components/ui/tabs.js";
+export {
   Heading,
   type HeadingProps,
   headingVariants,
@@ -91,6 +101,9 @@ export {
   SHEET_EDGE_DEFAULT,
   SHEET_EDGES,
   type SheetEdge,
+  TABS_ACTIVATION_MODE_DEFAULT,
+  TABS_ACTIVATION_MODES,
+  type TabsActivationMode,
   TEXT_COLOR_DEFAULT,
   TEXT_COLORS,
   TEXT_VARIANT_DEFAULT,

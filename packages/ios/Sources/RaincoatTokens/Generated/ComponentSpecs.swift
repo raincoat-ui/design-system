@@ -52,6 +52,17 @@ public enum SheetEdge: String, CaseIterable, Sendable {
     public static let standard: SheetEdge = .bottom
 }
 
+/// Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control.
+public enum TabsActivationMode: String, CaseIterable, Sendable {
+    /// The arrow keys select the tab they move to. The panel shows at once.
+    case automatic
+    /// The arrow keys only move focus, and Enter or Space selects. For panels that are slow to show.
+    case manual
+
+    /// The value used when none is given.
+    public static let standard: TabsActivationMode = .automatic
+}
+
 /// Text: The text style.
 public enum TextVariant: String, CaseIterable, Sendable {
     /// An introductory paragraph.

@@ -66,6 +66,20 @@ public enum class SheetEdge(public val id: String) {
     }
 }
 
+/** Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control. */
+public enum class TabsActivationMode(public val id: String) {
+    /** The arrow keys select the tab they move to. The panel shows at once. */
+    Automatic("automatic"),
+    /** The arrow keys only move focus, and Enter or Space selects. For panels that are slow to show. */
+    Manual("manual"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: TabsActivationMode = Automatic
+    }
+}
+
 /** Text: The text style. */
 public enum class TextVariant(public val id: String) {
     /** An introductory paragraph. */
