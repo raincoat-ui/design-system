@@ -37,14 +37,20 @@
         )
     }
 
-    /// The text of an instance. In person-name, the name goes where {name} marks it, with nothing
-    /// around it, as an app puts it there.
+    /// The text of an instance. In person-name, the name goes where {name} marks it.
+    ///
+    /// The name is isolated, between U+2068 FIRST STRONG ISOLATE and U+2069 POP DIRECTIONAL
+    /// ISOLATE, so that it takes its direction from its own first strong character, as the web
+    /// snapshot isolates it with dir="auto". Without them, iOS draws the comma and the number after
+    /// an Arabic name in English as part of the name's right-to-left run: "Message from 2 ,<name>
+    /// minutes ago".
     private func typographyText(of instance: TypographyInstance, _ text: (String) -> String) -> String {
         let value = instance.decomposed ? text("text").decomposedStringWithCanonicalMapping : text("text")
         guard let open = value.firstIndex(of: "{"), let close = value[open...].firstIndex(of: "}") else {
             return value
         }
-        return String(value[..<open]) + text("name") + String(value[value.index(after: close)...])
+        let name = "\u{2068}" + text("name") + "\u{2069}"
+        return String(value[..<open]) + name + String(value[value.index(after: close)...])
     }
 
     /// One Text or Heading, as an app writes it.
