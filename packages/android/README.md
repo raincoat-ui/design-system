@@ -131,6 +131,62 @@ Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and SwiftUI versions follow too.
 
+## Card
+
+```kotlin
+// Static: a container, which can hold links and buttons.
+RaincoatCard(
+    title = "Storage",
+    level = 3,
+    footer = { RaincoatButton("Manage storage", onClick = ::manageStorage) },
+) {
+    RaincoatText("4.2 GB of 15 GB used", color = TextColor.Muted)
+}
+
+// Interactive: the whole card is one button.
+RaincoatCard(
+    title = "Order 1042",
+    level = 3,
+    onClick = { openOrder(1042) },
+    media = {
+        Image(
+            painterResource(R.drawable.parcel),
+            contentDescription = "A parcel at a front door",
+            modifier = Modifier.fillMaxWidth().height(120.dp),
+            contentScale = ContentScale.Crop,
+        )
+    },
+) {
+    RaincoatText("Delivered on Monday", color = TextColor.Muted)
+}
+```
+
+| Parameter           | Type                        | Default  | Notes                                                                            |
+| ------------------- | --------------------------- | -------- | -------------------------------------------------------------------------------- |
+| `title`             | `String`                    | Required | A heading in the `HeadingSm` look. It wraps and is never cut short               |
+| `level`             | `Int`                       | Required | 1 to 6, for the card's place in the outline of the screen                        |
+| `onClick`           | `(() -> Unit)?`             | `null`   | Makes the whole card one button. `null` is a static card                         |
+| `media`             | `(@Composable () -> Unit)?` | `null`   | An image at the top, edge to edge, with the card's top corners. Give it a height |
+| `footer`            | `(@Composable () -> Unit)?` | `null`   | Buttons at the end edge of a static card. They wrap when they do not fit         |
+| `interactionSource` | `MutableInteractionSource?` | `null`   | Observes or drives an interactive card's presses, hovers, and focus              |
+| `content`           | `(@Composable () -> Unit)?` | `null`   | The body                                                                         |
+
+- **One action per interactive card.** With `onClick`, the card is one button: a touch, a
+  click, Enter, or Space anywhere on it activates it, and its semantics merge its content, title
+  first. Put no other controls in it. Compose has no link role, so a card that opens another
+  screen is a button too.
+- **States.** An interactive card's outline steps to the strong border color under a mouse, and
+  its fill changes while it is pressed. Keyboard focus draws the focus ring around the whole
+  card, from the focus ring tokens.
+- **Media** is drawn at the top. TalkBack reads the title first.
+- **Width.** A card fills the width it is given and grows with its content. The list or grid
+  around it is the app's; give a list collection semantics, or use a lazy list, so that TalkBack
+  says how many cards there are.
+
+The Card follows the
+[Card spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/card/spec.yaml),
+which the React and SwiftUI Cards follow too.
+
 ## Working on these modules
 
 ```sh
