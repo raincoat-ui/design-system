@@ -114,136 +114,138 @@
         RaincoatCard("Storage", level: 3) { Text("4.2 GB of 15 GB used") }
     }
 
-    @MainActor
-    @Test(arguments: allThemes, ColorMode.allCases)
-    func aCardFillsItsWidthAndIsPaintedWithItsTokens(theme: RaincoatTheme, mode: ColorMode) throws {
-        let card = tokens(mode, in: theme).card
-        let drawing = try Drawing(storage(), theme: theme, mode: mode)
-        let middle = drawing.height / 2
-        #expect(drawing.width == 300, "the card fills the width it is offered")
-        #expect(drawing.has(card.border.default, at: 0, middle), "the outline")
-        #expect(drawing.has(card.border.default, at: drawing.width - 1, middle), "the outline")
-        #expect(drawing.has(card.bg.default, at: Int(card.border.width) + 2, middle), "the fill")
-    }
+    @Suite struct CardRenderingTests {
+        @MainActor
+        @Test(arguments: allThemes, ColorMode.allCases)
+        func aCardFillsItsWidthAndIsPaintedWithItsTokens(theme: RaincoatTheme, mode: ColorMode) throws {
+            let card = tokens(mode, in: theme).card
+            let drawing = try Drawing(storage(), theme: theme, mode: mode)
+            let middle = drawing.height / 2
+            #expect(drawing.width == 300, "the card fills the width it is offered")
+            #expect(drawing.has(card.border.default, at: 0, middle), "the outline")
+            #expect(drawing.has(card.border.default, at: drawing.width - 1, middle), "the outline")
+            #expect(drawing.has(card.bg.default, at: Int(card.border.width) + 2, middle), "the fill")
+        }
 
-    @MainActor
-    @Test(arguments: allThemes, ColorMode.allCases)
-    func eachStateOfTheCardStyleIsPaintedWithItsTokens(theme: RaincoatTheme, mode: ColorMode) throws {
-        let card = tokens(mode, in: theme).card
-        for state in CardState.allCases {
-            let colors = CardColors(card, state: state)
+        @MainActor
+        @Test(arguments: allThemes, ColorMode.allCases)
+        func eachStateOfTheCardStyleIsPaintedWithItsTokens(theme: RaincoatTheme, mode: ColorMode) throws {
+            let card = tokens(mode, in: theme).card
+            for state in CardState.allCases {
+                let colors = CardColors(card, state: state)
+                let drawing = try Drawing(
+                    storage().environment(\.raincoatCardState, state), theme: theme, mode: mode
+                )
+                let middle = drawing.height / 2
+                #expect(drawing.has(colors.border, at: 0, middle), "the outline, \(state)")
+                #expect(drawing.has(colors.fill, at: Int(card.border.width) + 2, middle), "the fill, \(state)")
+            }
+        }
+
+        @MainActor
+        @Test(arguments: allThemes)
+        func aCardInTheCardStyleLooksStaticAtRest(theme: RaincoatTheme) throws {
+            let card = tokens(in: theme).card
             let drawing = try Drawing(
-                storage().environment(\.raincoatCardState, state), theme: theme, mode: mode
+                Button(action: {}, label: { storage() }).buttonStyle(.raincoatCard), theme: theme
             )
             let middle = drawing.height / 2
-            #expect(drawing.has(colors.border, at: 0, middle), "the outline, \(state)")
-            #expect(drawing.has(colors.fill, at: Int(card.border.width) + 2, middle), "the fill, \(state)")
+            #expect(drawing.width == 300, "the card fills the width it is offered")
+            #expect(drawing.has(card.border.default, at: 0, middle), "the outline at rest")
+            #expect(drawing.has(card.bg.default, at: Int(card.border.width) + 2, middle), "the fill at rest")
         }
-    }
 
-    @MainActor
-    @Test(arguments: allThemes)
-    func aCardInTheCardStyleLooksStaticAtRest(theme: RaincoatTheme) throws {
-        let card = tokens(in: theme).card
-        let drawing = try Drawing(
-            Button(action: {}, label: { storage() }).buttonStyle(.raincoatCard), theme: theme
-        )
-        let middle = drawing.height / 2
-        #expect(drawing.width == 300, "the card fills the width it is offered")
-        #expect(drawing.has(card.border.default, at: 0, middle), "the outline at rest")
-        #expect(drawing.has(card.bg.default, at: Int(card.border.width) + 2, middle), "the fill at rest")
-    }
-
-    @MainActor
-    @Test(arguments: allThemes)
-    func thePartsAreInsideThePaddingTheGapApart(theme: RaincoatTheme) throws {
-        let set = tokens(in: theme)
-        let title = lineHeight(set.type.heading.sm)
-        let body = lineHeight(set.type.body.md)
-        let alone = try Drawing(RaincoatCard("Storage", level: 3), theme: theme)
-        let withBody = try Drawing(
-            RaincoatCard("Storage", level: 3) { Text("4.2 GB of 15 GB used").raincoatText() }, theme: theme
-        )
-        // The padding is inside the outline.
-        let inset = set.card.border.width + set.card.padding
-        #expect(abs(Double(alone.height) - (2 * inset + title)) < 2, "a title alone: \(alone.height)")
-        #expect(
-            abs(Double(withBody.height) - (2 * inset + title + set.card.gap + body)) < 3,
-            "a title and a body: \(withBody.height)"
-        )
-    }
-
-    @MainActor
-    @Test(arguments: allThemes)
-    func theMediaIsAtTheTopEdgeToEdgeAndTheTitleBelowIt(theme: RaincoatTheme) throws {
-        let card = tokens(in: theme).card
-        let title = lineHeight(tokens(in: theme).type.heading.sm)
-        let drawing = try Drawing(
-            RaincoatCard("Summer trip", level: 3)
-                .media { marker(magenta).resizable().frame(height: 40) },
-            theme: theme
-        )
-        let border = Int(card.border.width)
-        // Across the width, inside the outline.
-        let across = drawing.columns(with: magenta, inRow: 20)
-        #expect(across.first == border, "from the leading outline: \(across.first ?? -1)")
-        #expect(across.last == drawing.width - 1 - border, "to the trailing outline: \(across.last ?? -1)")
-        // From the top, inside the outline, 40 points tall.
-        let down = drawing.rows(with: magenta, inColumn: drawing.width / 2)
-        #expect(down.first == border, "from the top outline: \(down.first ?? -1)")
-        #expect(down.last == 39, "40 points tall: \(down.last ?? -1)")
-        // The title is the gap below it, and the padding and the outline below the title.
-        #expect(
-            abs(Double(drawing.height) - (40 + card.gap + title + card.padding + card.border.width)) < 2,
-            "the height: \(drawing.height)"
-        )
-        // The top corners follow the card's.
-        if card.radius > card.border.width + 2 {
-            #expect(!drawing.has(magenta, at: border, border), "the top corner is round")
+        @MainActor
+        @Test(arguments: allThemes)
+        func thePartsAreInsideThePaddingTheGapApart(theme: RaincoatTheme) throws {
+            let set = tokens(in: theme)
+            let title = lineHeight(set.type.heading.sm)
+            let body = lineHeight(set.type.body.md)
+            let alone = try Drawing(RaincoatCard("Storage", level: 3), theme: theme)
+            let withBody = try Drawing(
+                RaincoatCard("Storage", level: 3) { Text("4.2 GB of 15 GB used").raincoatText() }, theme: theme
+            )
+            // The padding is inside the outline.
+            let inset = set.card.border.width + set.card.padding
+            #expect(abs(Double(alone.height) - (2 * inset + title)) < 2, "a title alone: \(alone.height)")
+            #expect(
+                abs(Double(withBody.height) - (2 * inset + title + set.card.gap + body)) < 3,
+                "a title and a body: \(withBody.height)"
+            )
         }
-    }
 
-    @MainActor
-    @Test(arguments: allThemes)
-    func aLongTitleWrapsAndTheCardGrowsTaller(theme: RaincoatTheme) throws {
-        let set = tokens(in: theme)
-        let short = try Drawing(RaincoatCard("Order 1042", level: 3), theme: theme, width: 220)
-        let long = try Drawing(RaincoatCard(longTitle, level: 3), theme: theme, width: 220)
-        #expect(long.width == 220, "the card keeps its width")
-        #expect(
-            Double(long.height - short.height) > 1.5 * lineHeight(set.type.heading.sm),
-            "\(long.height) against \(short.height)"
-        )
-    }
-
-    @MainActor
-    @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
-    func theFooterSitsAtTheTrailingEdge(direction: LayoutDirection) throws {
-        let card = tokens().card
-        let drawing = try Drawing(
-            storage().footer { Rectangle().fill(Color(magenta)).frame(width: 40, height: 20) },
-            direction: direction
-        )
-        let inset = Int(card.border.width + card.padding)
-        let action = drawing.columns(with: magenta)
-        if direction == .leftToRight {
-            #expect(action.last == drawing.width - 1 - inset, "on the right: \(action.last ?? -1)")
-        } else {
-            #expect(action.first == inset, "on the left: \(action.first ?? -1)")
+        @MainActor
+        @Test(arguments: allThemes)
+        func theMediaIsAtTheTopEdgeToEdgeAndTheTitleBelowIt(theme: RaincoatTheme) throws {
+            let card = tokens(in: theme).card
+            let title = lineHeight(tokens(in: theme).type.heading.sm)
+            let drawing = try Drawing(
+                RaincoatCard("Summer trip", level: 3)
+                    .media { marker(magenta).resizable().frame(height: 40) },
+                theme: theme
+            )
+            let border = Int(card.border.width)
+            // Across the width, inside the outline.
+            let across = drawing.columns(with: magenta, inRow: 20)
+            #expect(across.first == border, "from the leading outline: \(across.first ?? -1)")
+            #expect(across.last == drawing.width - 1 - border, "to the trailing outline: \(across.last ?? -1)")
+            // From the top, inside the outline, 40 points tall.
+            let down = drawing.rows(with: magenta, inColumn: drawing.width / 2)
+            #expect(down.first == border, "from the top outline: \(down.first ?? -1)")
+            #expect(down.last == 39, "40 points tall: \(down.last ?? -1)")
+            // The title is the gap below it, and the padding and the outline below the title.
+            #expect(
+                abs(Double(drawing.height) - (40 + card.gap + title + card.padding + card.border.width)) < 2,
+                "the height: \(drawing.height)"
+            )
+            // The top corners follow the card's.
+            if card.radius > card.border.width + 2 {
+                #expect(!drawing.has(magenta, at: border, border), "the top corner is round")
+            }
         }
-    }
 
-    @MainActor
-    @Test func footerActionsThatDoNotFitMoveToAnotherRow() throws {
-        let card = tokens().card
-        let action = { (color: TokenColor) in Rectangle().fill(Color(color)).frame(width: 120, height: 20) }
-        let wide = try Drawing(storage().footer { action(magenta); action(cyan) }, width: 400)
-        let narrow = try Drawing(storage().footer { action(magenta); action(cyan) }, width: 220)
-        // Side by side, the gap apart, when there is room.
-        let first = try #require(wide.columns(with: magenta).last)
-        let second = try #require(wide.columns(with: cyan).first)
-        #expect(second - first - 1 == Int(card.gap), "the gap between them: \(second - first - 1)")
-        // One under the other, the gap apart, when there is not.
-        #expect(narrow.height - wide.height == 20 + Int(card.gap), "\(narrow.height) against \(wide.height)")
+        @MainActor
+        @Test(arguments: allThemes)
+        func aLongTitleWrapsAndTheCardGrowsTaller(theme: RaincoatTheme) throws {
+            let set = tokens(in: theme)
+            let short = try Drawing(RaincoatCard("Order 1042", level: 3), theme: theme, width: 220)
+            let long = try Drawing(RaincoatCard(longTitle, level: 3), theme: theme, width: 220)
+            #expect(long.width == 220, "the card keeps its width")
+            #expect(
+                Double(long.height - short.height) > 1.5 * lineHeight(set.type.heading.sm),
+                "\(long.height) against \(short.height)"
+            )
+        }
+
+        @MainActor
+        @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
+        func theFooterSitsAtTheTrailingEdge(direction: LayoutDirection) throws {
+            let card = tokens().card
+            let drawing = try Drawing(
+                storage().footer { Rectangle().fill(Color(magenta)).frame(width: 40, height: 20) },
+                direction: direction
+            )
+            let inset = Int(card.border.width + card.padding)
+            let action = drawing.columns(with: magenta)
+            if direction == .leftToRight {
+                #expect(action.last == drawing.width - 1 - inset, "on the right: \(action.last ?? -1)")
+            } else {
+                #expect(action.first == inset, "on the left: \(action.first ?? -1)")
+            }
+        }
+
+        @MainActor
+        @Test func footerActionsThatDoNotFitMoveToAnotherRow() throws {
+            let card = tokens().card
+            let action = { (color: TokenColor) in Rectangle().fill(Color(color)).frame(width: 120, height: 20) }
+            let wide = try Drawing(storage().footer { action(magenta); action(cyan) }, width: 400)
+            let narrow = try Drawing(storage().footer { action(magenta); action(cyan) }, width: 220)
+            // Side by side, the gap apart, when there is room.
+            let first = try #require(wide.columns(with: magenta).last)
+            let second = try #require(wide.columns(with: cyan).first)
+            #expect(second - first - 1 == Int(card.gap), "the gap between them: \(second - first - 1)")
+            // One under the other, the gap apart, when there is not.
+            #expect(narrow.height - wide.height == 20 + Int(card.gap), "\(narrow.height) against \(wide.height)")
+        }
     }
 #endif
