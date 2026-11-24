@@ -41,6 +41,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  type ToastOptions,
+  ToastProvider,
+  useToast,
 } from "../../src/index.js";
 
 const MODES = ["light", "dark", "light-hc", "dark-hc"] as const;
@@ -111,6 +114,7 @@ function RenameDialog({
   footer = true,
   description = true,
   onOpenChange,
+  onEscapeKeyDown,
   open,
   focusField = false,
   size,
@@ -119,6 +123,7 @@ function RenameDialog({
   footer?: boolean;
   description?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
   open?: boolean;
   focusField?: boolean;
   size?: (typeof DIALOG_SIZES)[number];
@@ -133,6 +138,7 @@ function RenameDialog({
         size={size}
         closeLabel={closeLabel}
         initialFocus={focusField ? field : undefined}
+        onEscapeKeyDown={onEscapeKeyDown}
       >
         <DialogHeader>
           <DialogTitle level={2}>Rename file</DialogTitle>
@@ -161,10 +167,12 @@ function RenameDialog({
 function DeleteAlert({
   onAction,
   onOpenChange,
+  onEscapeKeyDown,
   labels = ["Cancel", "Delete address"],
 }: {
   onAction?: () => void;
   onOpenChange?: (open: boolean) => void;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
   labels?: [string, string];
 }) {
   return (
@@ -172,7 +180,7 @@ function DeleteAlert({
       <AlertDialogTrigger asChild>
         <Button variant="danger">Delete</Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent onEscapeKeyDown={onEscapeKeyDown}>
         <AlertDialogHeader>
           <AlertDialogTitle level={2}>Delete this address?</AlertDialogTitle>
           <AlertDialogDescription>It is removed from your account.</AlertDialogDescription>
@@ -189,13 +197,21 @@ function DeleteAlert({
 }
 
 /** A sheet with a close button and one action, opened by its trigger. */
-function FilterSheet({ edge }: { edge?: (typeof SHEET_EDGES)[number] }) {
+function FilterSheet({
+  edge,
+  onOpenChange,
+  onEscapeKeyDown,
+}: {
+  edge?: (typeof SHEET_EDGES)[number];
+  onOpenChange?: (open: boolean) => void;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+}) {
   return (
-    <Sheet>
+    <Sheet onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         <Button>Filters</Button>
       </SheetTrigger>
-      <SheetContent edge={edge} closeLabel="Close">
+      <SheetContent edge={edge} closeLabel="Close" onEscapeKeyDown={onEscapeKeyDown}>
         <SheetHeader>
           <SheetTitle level={2}>Filters</SheetTitle>
         </SheetHeader>
@@ -205,6 +221,82 @@ function FilterSheet({ edge }: { edge?: (typeof SHEET_EDGES)[number] }) {
         </SheetFooter>
       </SheetContent>
     </Sheet>
+  );
+}
+
+/** A toast with an action, which stays until it is used or closed. */
+const toastWithUndo = (message: string): ToastOptions => ({
+  message,
+  action: { label: "Undo", onClick: () => {} },
+  closeLabel: "Dismiss",
+});
+
+/** The open toast on the screen, or null. */
+const openToast = () =>
+  document.querySelector<HTMLElement>('[data-slot="toast"][data-state="open"]');
+
+/** A button on the page that shows a toast. */
+function MarkAllRead() {
+  const toast = useToast();
+  return (
+    <Button onClick={() => toast.show(toastWithUndo("All messages marked read"))}>
+      Mark all read
+    </Button>
+  );
+}
+
+/** The page behind a dialog in an app that shows toasts, with a button that shows one. */
+function ToastPage({ children }: { children: ReactNode }) {
+  return (
+    <ToastProvider label="Notifications">
+      <Page>
+        <MarkAllRead />
+        {children}
+      </Page>
+    </ToastProvider>
+  );
+}
+
+/**
+ * A dialog, or a sheet, whose Archive button shows a toast and leaves it open, as an action in a
+ * dialog can. Opened by its trigger, "Open the report".
+ */
+function ReportDialog({
+  sheet = false,
+  onOpenChange,
+  onEscapeKeyDown,
+}: {
+  sheet?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+}) {
+  const toast = useToast();
+  const archive = () => toast.show(toastWithUndo("Report archived"));
+  const trigger = <Button>Open the report</Button>;
+  const archiveButton = <Button onClick={archive}>Archive</Button>;
+  if (sheet) {
+    return (
+      <Sheet onOpenChange={onOpenChange}>
+        <SheetTrigger asChild>{trigger}</SheetTrigger>
+        <SheetContent closeLabel="Close" onEscapeKeyDown={onEscapeKeyDown}>
+          <SheetHeader>
+            <SheetTitle level={2}>Weekly report</SheetTitle>
+          </SheetHeader>
+          <SheetFooter>{archiveButton}</SheetFooter>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+  return (
+    <Dialog onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent closeLabel="Close" onEscapeKeyDown={onEscapeKeyDown}>
+        <DialogHeader>
+          <DialogTitle level={2}>Weekly report</DialogTitle>
+        </DialogHeader>
+        <DialogFooter>{archiveButton}</DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -509,6 +601,32 @@ export function describeDialog(environment: string) {
         expect(onAction).not.toHaveBeenCalled();
       });
 
+      test("one Escape asks the app to close once, for each kind", async () => {
+        type Handlers = {
+          onOpenChange: (open: boolean) => void;
+          onEscapeKeyDown: (event: KeyboardEvent) => void;
+        };
+        const kinds: [string, (handlers: Handlers) => ReactNode, string][] = [
+          ["Rename", (handlers) => <RenameDialog {...handlers} />, "dialog"],
+          ["Delete", (handlers) => <DeleteAlert {...handlers} />, "alertdialog"],
+          ["Filters", (handlers) => <FilterSheet {...handlers} />, "dialog"],
+        ];
+        for (const [trigger, ui, role] of kinds) {
+          const onOpenChange = vi.fn();
+          const onEscapeKeyDown = vi.fn();
+          const { screen, dialog } = await open(
+            ui({ onOpenChange, onEscapeKeyDown }),
+            trigger,
+            role,
+          );
+          await userEvent.keyboard("{Escape}");
+          await expect.element(dialog).not.toBeInTheDocument();
+          expect(onOpenChange.mock.calls, trigger).toEqual([[true], [false]]);
+          expect(onEscapeKeyDown, trigger).toHaveBeenCalledTimes(1);
+          await screen.unmount();
+        }
+      });
+
       test("the app can refuse to close, as while there are unsaved changes", async () => {
         const onOpenChange = vi.fn();
         // A dialog that the app keeps open: it does not set `open` to false when asked to.
@@ -521,6 +639,69 @@ export function describeDialog(environment: string) {
         await userEvent.keyboard("{Escape}");
         expect(onOpenChange).toHaveBeenCalledWith(false);
         await expect.element(page.getByRole("dialog")).toBeVisible();
+      });
+    });
+
+    describe("Escape with a toast on the screen", () => {
+      test("a toast shown before the dialog opened stays when Escape closes the dialog", async () => {
+        const onOpenChange = vi.fn();
+        const screen = await render(
+          <ToastPage>
+            <ReportDialog onOpenChange={onOpenChange} />
+          </ToastPage>,
+        );
+        await screen.getByRole("button", { name: "Mark all read" }).click();
+        await expect.poll(openToast).not.toBeNull();
+        await screen.getByRole("button", { name: "Open the report" }).click();
+        const dialog = page.getByRole("dialog");
+        await expect.element(page.getByRole("heading", { name: "Weekly report" })).toHaveFocus();
+        await userEvent.keyboard("{Escape}");
+        await expect.element(dialog).not.toBeInTheDocument();
+        expect(onOpenChange.mock.calls).toEqual([[true], [false]]);
+        expect(openToast()?.textContent).toContain("All messages marked read");
+        await expect.element(screen.getByRole("button", { name: "Open the report" })).toHaveFocus();
+      });
+
+      test.each([
+        ["dialog", false],
+        ["sheet", true],
+      ])("a toast shown from a %s stays when Escape closes it", async (_kind, sheet) => {
+        const onOpenChange = vi.fn();
+        const screen = await render(
+          <ToastPage>
+            <ReportDialog sheet={sheet} onOpenChange={onOpenChange} />
+          </ToastPage>,
+        );
+        await screen.getByRole("button", { name: "Open the report" }).click();
+        const dialog = page.getByRole("dialog");
+        await expect.element(dialog).toBeVisible();
+        await page.getByRole("button", { name: "Archive" }).click();
+        await expect.poll(openToast).not.toBeNull();
+        // Focus is still in the dialog, on the button that showed the toast.
+        await expect.element(page.getByRole("button", { name: "Archive" })).toHaveFocus();
+        await userEvent.keyboard("{Escape}");
+        await expect.element(dialog).not.toBeInTheDocument();
+        expect(onOpenChange.mock.calls).toEqual([[true], [false]]);
+        expect(openToast()?.textContent).toContain("Report archived");
+        await expect.element(screen.getByRole("button", { name: "Open the report" })).toHaveFocus();
+      });
+
+      test("with a toast shown from the dialog, onEscapeKeyDown can still keep the dialog open", async () => {
+        const onOpenChange = vi.fn();
+        const onEscapeKeyDown = vi.fn((event: KeyboardEvent) => event.preventDefault());
+        const screen = await render(
+          <ToastPage>
+            <ReportDialog onOpenChange={onOpenChange} onEscapeKeyDown={onEscapeKeyDown} />
+          </ToastPage>,
+        );
+        await screen.getByRole("button", { name: "Open the report" }).click();
+        await page.getByRole("button", { name: "Archive" }).click();
+        await expect.poll(openToast).not.toBeNull();
+        await userEvent.keyboard("{Escape}");
+        expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+        expect(onOpenChange.mock.calls).toEqual([[true]]);
+        await expect.element(page.getByRole("dialog")).toBeVisible();
+        expect(openToast()).not.toBeNull();
       });
     });
 

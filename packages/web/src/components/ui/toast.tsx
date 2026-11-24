@@ -226,6 +226,9 @@ function LiveToast({
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const remaining = React.useRef(TOAST_DURATION);
+  const element = React.useRef<HTMLLIElement>(null);
+  // Whether the Escape being handled was pressed outside the toast. See onEscapeKeyDown below.
+  const escapeOutside = React.useRef(false);
   const timed = toast.options.action === undefined;
   const paused = hovered || focused || inBackground;
 
@@ -251,10 +254,24 @@ function LiveToast({
 
   return (
     <RadixToast.Root
+      ref={element}
       data-slot="toast"
       open={open}
       onOpenChange={(next) => {
-        if (!next) close();
+        if (!next && !escapeOutside.current) close();
+      }}
+      // Radix closes a toast on an Escape pressed anywhere while the toast is the layer opened
+      // last, as it is when it was shown from a dialog, and gives that Escape to no other layer.
+      // Raincoat closes a toast only on an Escape pressed in it (RFC 0008). For an Escape
+      // pressed elsewhere, Radix asks to close the toast at once, in this same call, and
+      // onOpenChange refuses. The Escape is not prevented, which would also stop Radix asking:
+      // a prevented Escape counts as handled, and the dialog or the page would ignore it.
+      onEscapeKeyDown={(event) => {
+        const target = event.target;
+        escapeOutside.current = !(target instanceof Node && element.current?.contains(target));
+        queueMicrotask(() => {
+          escapeOutside.current = false;
+        });
       }}
       className={cn(toastClasses)}
       onPointerEnter={() => setHovered(true)}
