@@ -185,7 +185,7 @@ final class DialogTests: ReferenceAppTestCase {
             // Raincoat scales its token sizes itself, which the Typography tests check.
             if issue.auditType == .dynamicType { return true }
             // The keyboard, and the typing predictions over it, are the system's, not the app's.
-            if let element = issue.element, isTheKeyboards(element, app) { return true }
+            if let element = issue.element, self.isTheKeyboards(element, app) { return true }
             return false
         }
     }
