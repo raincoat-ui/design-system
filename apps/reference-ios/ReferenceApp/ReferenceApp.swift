@@ -7,14 +7,15 @@ import SwiftUI
 /// what assistive technology is told, the system's accessibility audit, touches, and text sizes.
 @main
 struct ReferenceApp: App {
-    /// The screen to show: the Button's, unless the app is launched with `-screen <name>`, as the
-    /// UI tests of each other component launch it.
+    /// The component screen to show. A UI test names it with the launch argument
+    /// `-screen <name>`; the Button's screen is the first.
     private let screen = UserDefaults.standard.string(forKey: "screen")
 
     var body: some Scene {
         WindowGroup {
             Group {
                 switch screen {
+                case "typography": TypographyScreen()
                 case "tabs": TabsScreen()
                 default: ButtonScreen()
                 }

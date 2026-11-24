@@ -1,5 +1,5 @@
 {
-  "$comment": "The shadcn/ui source each component was adapted from. The file named by `upstream` is that source, unmodified, so that a later upstream change can be compared with it and merged by hand. packages/web/test/shadcn.test.js checks this file.",
+  "$comment": "The shadcn/ui source each component was adapted from. The file named by `upstream` is that source, unmodified, so that a later upstream change can be compared with it and merged by hand. A component with no source in the registry has `upstream: null`, the date the registry was checked, and the reason. packages/web/test/shadcn.test.js checks this file.",
   "style": "new-york-v4",
   "base": "radix",
   "license": ".shadcn-upstream/LICENSE.md",
@@ -17,6 +17,13 @@
       "sha256": "e1df6e2f95ece373ca909c1d54b8ba8cf4c47dd425c1784bbb9a01c38dd0936b",
       "fetched": "2026-11-24",
       "local": "src/components/ui/tabs.tsx"
+    },
+    "typography": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/typography.json",
+      "upstream": null,
+      "checked": "2026-11-24",
+      "reason": "The registry has no typography item: its address answered 404 when checked. shadcn/ui shows typography as Tailwind classes on its documentation site only. Text and Heading are written in this package (RFC 0003).",
+      "local": "src/components/ui/typography.tsx"
     }
   }
 }

@@ -91,6 +91,46 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the React and SwiftUI Buttons follow too.
 
+## Text and headings
+
+```kotlin
+RaincoatHeading("Settings", level = 1)
+RaincoatHeading("Recent files", level = 3, variant = HeadingVariant.HeadingSm)
+RaincoatText("Your files are kept on this device and in the cloud.")
+RaincoatText("Synced 2 minutes ago", variant = TextVariant.Caption, color = TextColor.Muted)
+RaincoatText(message.preview, maxLines = 2)
+```
+
+`RaincoatText` sets running text and labels:
+
+| Parameter  | Type          | Default              | Notes                                                                    |
+| ---------- | ------------- | -------------------- | ------------------------------------------------------------------------ |
+| `variant`  | `TextVariant` | `TextVariant.BodyMd` | `BodyLg`, `BodyMd`, `BodySm`, `LabelLg`, `LabelMd`, `LabelSm`, `Caption` |
+| `color`    | `TextColor`   | `TextColor.Default`  | `Default`, `Muted`, `Danger`                                             |
+| `maxLines` | `Int`         | `Int.MAX_VALUE`      | Ends the text in an ellipsis after that many lines                       |
+
+`RaincoatHeading` sets a heading:
+
+| Parameter | Type              | Default                  | Notes                                                           |
+| --------- | ----------------- | ------------------------ | --------------------------------------------------------------- |
+| `level`   | `Int`             | Required                 | 1 to 6                                                          |
+| `variant` | `HeadingVariant?` | `null`, the level's look | 1 `HeadingXl`, 2 `HeadingLg`, 3 `HeadingMd`, 4 to 6 `HeadingSm` |
+| `color`   | `HeadingColor`    | `HeadingColor.Default`   | `Default`, `Muted`                                              |
+
+- **Headings.** Assistive technology is told that a heading is one, so TalkBack can move from
+  heading to heading. Android has no heading levels: `level` chooses the look, and keeps code the
+  same on every platform. Choose it for the heading's place in the outline of the screen.
+- **Text size.** Sizes are in sp, so text follows the person's font size setting. Android
+  enlarges large text less than small text itself, and the line height keeps its proportion.
+- **Long text wraps.** A heading is never cut short. Text cut short by `maxLines` is still read
+  in full by TalkBack.
+- **Direction.** Each paragraph takes its direction from its first strong character, and
+  aligns to its start.
+
+Text and headings follow the
+[Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
+which the React and SwiftUI versions follow too.
+
 ## Tabs
 
 ```kotlin

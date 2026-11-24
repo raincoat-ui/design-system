@@ -14,7 +14,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- The screens of the other components. The tests start each directly. -->
+        <!-- Each other component's screen, which its test opens. -->
+        <activity
+            android:name=".TypographyActivity"
+            android:exported="false" />
         <activity
             android:name=".TabsActivity"
             android:exported="false" />

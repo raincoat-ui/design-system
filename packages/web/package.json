@@ -35,6 +35,10 @@
       "types": "./dist/components/ui/button.d.ts",
       "default": "./dist/components/ui/button.js"
     },
+    "./typography": {
+      "types": "./dist/components/ui/typography.d.ts",
+      "default": "./dist/components/ui/typography.js"
+    },
     "./tabs": {
       "types": "./dist/components/ui/tabs.d.ts",
       "default": "./dist/components/ui/tabs.js"

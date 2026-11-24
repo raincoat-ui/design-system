@@ -107,6 +107,54 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the SwiftUI and Compose Buttons follow too.
 
+## Text and Heading
+
+```tsx
+import { Heading, Text } from "@raincoat-ui/react";
+
+<Heading level={1}>Settings</Heading>
+<Heading level={3} variant="heading-sm">Recent files</Heading>
+<Text>Your files are kept on this device and in the cloud.</Text>
+<Text variant="caption" color="muted">Synced 2 minutes ago</Text>
+<Text as="label" htmlFor="email" variant="label-md">Email</Text>
+<Text maxLines={2}>{message.preview}</Text>
+```
+
+| Prop       | Type                                                                                         | Default     | Notes                                                       |
+| ---------- | -------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| `variant`  | `"body-lg" \| "body-md" \| "body-sm" \| "label-lg" \| "label-md" \| "label-sm" \| "caption"` | `"body-md"` | The text style                                              |
+| `color`    | `"default" \| "muted" \| "danger"`                                                           | `"default"` | One of the theme's text roles                               |
+| `maxLines` | `number`                                                                                     |             | Ends the text in an ellipsis after that many lines          |
+| `as`       | `"p" \| "span" \| "div" \| "label"`                                                          | `"p"`       | The element. Its own props, such as `htmlFor`, are accepted |
+
+| Prop      | Type                                                           | Default           | Notes                                                               |
+| --------- | -------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------- |
+| `level`   | `1 \| 2 \| 3 \| 4 \| 5 \| 6`                                   | Required          | Renders `h1` to `h6`. Choose it for the outline of the page         |
+| `variant` | `"heading-xl" \| "heading-lg" \| "heading-md" \| "heading-sm"` | Follows the level | 1 `heading-xl`, 2 `heading-lg`, 3 `heading-md`, 4 to 6 `heading-sm` |
+| `color`   | `"default" \| "muted"`                                         | `"default"`       |                                                                     |
+
+Every other prop of the element is passed through, including `ref`.
+
+- **Server Components.** Text and Heading hold no state, so they render in a React Server
+  Component and need no JavaScript in the browser.
+- **The look is not the level.** A heading's level places it in the outline of the page, which
+  is how people move through it with a screen reader. Choose the level first, then set
+  `variant` if the default look does not fit.
+- **Long text wraps.** Nothing is cut off unless you set `maxLines`, which a Heading does not
+  have. Text cut short is still read in full by assistive technology. Headings balance their
+  lines where the browser can.
+- **Text from people.** Set `dir="auto"` on the Text that holds a name or a message, so that its
+  direction comes from its first strong character.
+- **Languages.** Text aligns to the start edge. Lines break strictly in Japanese and between
+  whole words in Korean, read from the `lang` attribute of the text or of any element around it.
+- **Margins.** Neither has a margin: spacing between paragraphs and headings is your layout's.
+
+`textVariants()` and `headingVariants()` return the class names alone.
+
+Text and Heading follow the
+[Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
+which the SwiftUI and Compose versions follow too.
+
 ## Tabs
 
 ```tsx

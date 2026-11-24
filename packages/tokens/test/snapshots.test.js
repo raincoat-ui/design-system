@@ -290,7 +290,7 @@ test("TypeScript gets the matrix, and each spec's examples typed with the compon
   // Other components' generated types may follow the Button's.
   assert.match(
     typescript,
-    /import type \{ ButtonVariant, ButtonSize(, \w+)* \} from "\.\.\/\.\.\/\.\.\/src\/generated\/specs\.js";/,
+    /import type \{ ButtonVariant, ButtonSize[,\s][^}]*\} from "\.\.\/\.\.\/\.\.\/src\/generated\/specs\.js";/,
   );
   assert.match(
     typescript,
@@ -346,5 +346,49 @@ test("text is escaped for each language", () => {
   assert.match(
     snapshotsKotlin(dir),
     /"en" to mapOf\("label" to "Pay \\\$5 \\"now\\" \\\\ later"\)/,
+  );
+});
+
+test("a spec with parts has an instance type for each part, and an instance leaves out what follows another property", () => {
+  const typography = loadSpecs(repoRoot).find((entry) => entry.id === "typography").spec;
+  const examples = componentExamples(repoRoot, typography, loadMatrix(repoRoot));
+  const levels = examples.find(({ id }) => id === "heading-levels");
+  assert.equal(levels.part, "heading");
+  // A heading's look follows its level, so an instance that does not set it leaves it out.
+  assert.deepEqual(levels.instances[0], { level: 1, color: "default" });
+  const lines = examples.find(({ id }) => id === "max-lines");
+  assert.deepEqual(lines.instances, [{ variant: "body-md", color: "default", "max-lines": 2 }]);
+  assert.equal(componentExamples(repoRoot, button(), loadMatrix(repoRoot))[0].part, null);
+
+  const typescript = snapshotsTypeScript(repoRoot);
+  assert.match(
+    typescript,
+    /export type TypographyExampleProperties = TextExampleProperties \| HeadingExampleProperties;/,
+  );
+  assert.match(typescript, /readonly part: "heading";\n {2}readonly level: HeadingLevel;/);
+  assert.match(typescript, /readonly variant\?: HeadingVariant;/);
+  assert.match(typescript, /readonly maxLines\?: number;/);
+  assert.match(
+    typescript,
+    /\{ part: "heading", level: 2, variant: "heading-sm", color: "default" \}/,
+  );
+
+  const swift = snapshotsSwift(repoRoot);
+  assert.match(
+    swift,
+    /enum TypographyExampleProperties: Sendable \{\n {4}case text\(TextExampleProperties\)/,
+  );
+  assert.match(swift, /let maxLines: Int\?/);
+  assert.match(
+    swift,
+    /\.heading\(HeadingExampleProperties\(level: 1, variant: nil, color: \.`default`\)\),/,
+  );
+
+  const kotlin = snapshotsKotlin(repoRoot);
+  assert.match(kotlin, /internal sealed interface TypographyExampleProperties\n/);
+  assert.match(kotlin, /\) : TypographyExampleProperties/);
+  assert.match(
+    kotlin,
+    /TextExampleProperties\(variant = TextVariant\.BodyMd, color = TextColor\.Default, maxLines = 2\)/,
   );
 });
