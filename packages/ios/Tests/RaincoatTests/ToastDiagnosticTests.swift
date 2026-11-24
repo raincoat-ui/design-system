@@ -195,11 +195,60 @@
         }
     }
 
+    /// The message in a view of its own that reads the tokens, as step 1 of the probe draws it.
+    private struct MessageWithTokens: View {
+        @Tokens private var tokens
+
+        var body: some View {
+            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
+        }
+    }
+
+    /// The message in a view that also declares the toast's VoiceOver focus, and uses it.
+    private struct MessageWithVoiceOverFocus: View {
+        @Tokens private var tokens
+        @AccessibilityFocusState private var voiceOverFocus: ToastPart?
+
+        var body: some View {
+            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
+                .accessibilityFocused($voiceOverFocus, equals: .message)
+        }
+    }
+
+    /// The message in a view that also declares the toast's keyboard focus.
+    private struct MessageWithKeyboardFocus: View {
+        @Tokens private var tokens
+        @FocusState private var keyboardFocus: ToastPart?
+
+        var body: some View {
+            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
+                .onChange(of: keyboardFocus != nil) { _, _ in }
+        }
+    }
+
+    /// The message in a view that also reads the toast's control from the environment.
+    private struct MessageWithControl: View {
+        @Tokens private var tokens
+        @Environment(\.raincoatToastControl) private var control
+
+        var body: some View {
+            RaincoatToast.message("Message archived", tokens: tokens, scale: 1)
+                .onHover { hovering in control?.setPaused(.hover, hovering) }
+        }
+    }
+
     @MainActor
     @Test func diagnoseTheToastsSize() {
         var lines = ["TOAST DIAGNOSTIC 2"]
         for width in [nil, 360] as [CGFloat?] {
             let offered = width.map { "\($0)" } ?? "nil"
+            lines += [
+                "width \(offered) message view, tokens: \(measured(MessageWithTokens(), width: width))",
+                "width \(offered) message view, VoiceOver focus: "
+                    + measured(MessageWithVoiceOverFocus(), width: width),
+                "width \(offered) message view, keyboard focus: \(measured(MessageWithKeyboardFocus(), width: width))",
+                "width \(offered) message view, control: \(measured(MessageWithControl(), width: width))",
+            ]
             for step in 1...18 {
                 lines.append("width \(offered) up to step \(step): \(measured(ToastProbe(last: step), width: width))")
             }
