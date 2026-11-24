@@ -20,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Input,
   Sheet,
   SheetBody,
   SheetContent,
@@ -29,7 +30,7 @@ import {
   Text,
 } from "@raincoat-ui/react";
 import { useRef, useState } from "react";
-import { Field, Row } from "../ui";
+import { Row } from "../ui";
 
 /**
  * The Dialog, the alert dialog, and the Sheet in a Client Component
@@ -54,7 +55,7 @@ export function DialogScreen() {
               </DialogDescription>
             </DialogHeader>
             <DialogBody>
-              <Field label="Name" ref={field} defaultValue="Quarterly report" />
+              <Input label="Name" ref={field} defaultValue="Quarterly report" />
             </DialogBody>
             <DialogFooter>
               <DialogClose asChild>
