@@ -54,6 +54,19 @@ host about any bar the app keeps at the bottom of the screen, so the toast sits 
   inside the tab.
 - On Android, place `RaincoatToastHost` above the bar, as you would a snackbar host.
 
+## With a dialog or sheet
+
+On the web, a toast shown while a dialog or sheet is open appears above it. On iOS and Android it
+appears on the screen behind, where the dialog covers it and its buttons cannot be reached. This
+is tracked in [issue 68](https://github.com/raincoat-ui/design-system/issues/68).
+
+- When an action closes the dialog, close it, then show the toast. On Android, show it from the
+  screen's coroutine scope: a scope remembered in the dialog ends when the dialog closes, and the
+  toast with it.
+- When the dialog stays open, show the result in the dialog, such as a button that reads "Link
+  copied".
+- Do not put a toast host inside a dialog or sheet.
+
 ## Do and don't
 
 | Do                                     | Don't                                           |

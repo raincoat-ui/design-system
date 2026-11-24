@@ -77,5 +77,6 @@ Toast, with a bar of the app's own at the bottom of the window.
 
 - A tap cannot show where a touch target ends: Chromium moves a tap that lands near a target
   onto it. The target's edge is checked by hit testing instead.
-- Firefox and WebKit, and what a screen reader says out loud. Both are planned for milestone 3
-  and the manual accessibility audit of milestone 4.
+- Firefox and WebKit. These tests run in Chromium only. The React components' own tests, in
+  `packages/web`, run in Chromium, Firefox, and WebKit in CI.
+- What a screen reader says out loud. That is for the manual accessibility audit of milestone 4.
