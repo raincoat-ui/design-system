@@ -619,11 +619,12 @@ export function describeButton(environment: string) {
             const icon = screen.getByTestId("icon").element().getBoundingClientRect();
             expect(icon.width).toBeCloseTo(2 * iconSize, 2);
             expect(icon.height).toBeCloseTo(2 * iconSize, 2);
-            const spinner = screen.container
-              .querySelector('[data-slot="button-spinner"]')
-              ?.getBoundingClientRect();
-            expect(spinner?.width).toBeCloseTo(2 * iconSize, 2);
-            expect(spinner?.height).toBeCloseTo(2 * iconSize, 2);
+            // The spinner turns, and the box around a turned element grows with the angle, so
+            // its own size is measured: a transform does not change it.
+            const spinner = screen.container.querySelector('[data-slot="button-spinner"]');
+            if (!spinner) throw new Error("the busy button has no spinner");
+            expect(pixels(computed(spinner).width)).toBeCloseTo(2 * iconSize, 2);
+            expect(pixels(computed(spinner).height)).toBeCloseTo(2 * iconSize, 2);
           });
         },
       );

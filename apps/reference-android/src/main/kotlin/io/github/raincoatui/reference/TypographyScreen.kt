@@ -89,6 +89,12 @@ fun TypographyScreen() {
         RaincoatHeading("Long text", level = 2)
         RaincoatHeading(LONG_HEADING, level = 3)
         RaincoatText(PARAGRAPH, Modifier.testTag("max-lines"), maxLines = 2)
-        RaincoatText("Message from $NAME, 2 minutes ago")
+        // The name is isolated: between U+2068 FIRST STRONG ISOLATE and U+2069 POP DIRECTIONAL
+        // ISOLATE it takes its own direction, and the comma and the number after it stay in the
+        // sentence.
+        RaincoatText(MESSAGE, Modifier.testTag("message"))
     }
 }
+
+/** A sentence with a person's name in it, isolated. */
+internal const val MESSAGE = "Message from ⁨$NAME⁩, 2 minutes ago"

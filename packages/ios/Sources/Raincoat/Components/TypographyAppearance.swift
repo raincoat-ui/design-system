@@ -71,13 +71,7 @@ struct TextAppearance: Hashable, Sendable {
     }
 
     init(_ tokens: RaincoatTokenSet, variant: HeadingVariant, color: HeadingColor) {
-        let heading = tokens.type.heading
-        switch variant {
-        case .headingXl: style = heading.xl
-        case .headingLg: style = heading.lg
-        case .headingMd: style = heading.md
-        case .headingSm: style = heading.sm
-        }
+        style = Self.style(of: variant, in: tokens.type.heading)
         switch color {
         case .default: self.color = tokens.color.fg.default
         case .muted: self.color = tokens.color.fg.muted
@@ -88,6 +82,70 @@ struct TextAppearance: Hashable, Sendable {
         switch choice {
         case .text(let variant, let color): self.init(tokens, variant: variant, color: color)
         case .heading(let variant, let color): self.init(tokens, variant: variant, color: color)
+        }
+    }
+}
+
+/// How much each system text style enlarges text at the person's text size setting: 1 at the
+/// default size. SwiftUI gives each one through `ScaledMetric(relativeTo:)`.
+struct TextScales: Hashable, Sendable {
+    var largeTitle: Double = 1
+    var title2: Double = 1
+    var title3: Double = 1
+    var headline: Double = 1
+    var body: Double = 1
+    var caption: Double = 1
+
+    subscript(scaling: TextScaling) -> Double {
+        switch scaling {
+        case .largeTitle: largeTitle
+        case .title2: title2
+        case .title3: title3
+        case .headline: headline
+        case .body: body
+        case .caption: caption
+        }
+    }
+}
+
+extension TypographyChoice {
+    /// How much this text is enlarged at the person's text size setting: 1 at the default size.
+    ///
+    /// Text grows with the system text style nearest its role. A heading also grows to at least
+    /// the size of the heading look below it, so that a heading is never smaller than the
+    /// heading one level below it. iOS enlarges its large title less than its smaller titles:
+    /// at the largest accessibility size, heading-xl would otherwise be smaller than heading-lg.
+    func scale(_ scales: TextScales, headings: RaincoatTokenSet.TypeHeadingTokens) -> Double {
+        switch self {
+        case .text(let variant, _):
+            return scales[TextScaling(variant)]
+        case .heading(let variant, _):
+            let size = { (look: HeadingVariant) in TextAppearance.style(of: look, in: headings).size }
+            return Self.headingSize(variant, scales, size) / size(variant)
+        }
+    }
+
+    /// The point size of a heading look at the person's setting: its own scaled size, or the
+    /// size of the look below it, whichever is larger. The looks are in the spec's order, from
+    /// the largest.
+    private static func headingSize(
+        _ look: HeadingVariant, _ scales: TextScales, _ size: (HeadingVariant) -> Double
+    ) -> Double {
+        let own = size(look) * scales[TextScaling(look)]
+        let looks = HeadingVariant.allCases
+        guard let index = looks.firstIndex(of: look), index + 1 < looks.count else { return own }
+        return max(own, headingSize(looks[index + 1], scales, size))
+    }
+}
+
+extension TextAppearance {
+    /// The text style of a heading look.
+    static func style(of look: HeadingVariant, in headings: RaincoatTokenSet.TypeHeadingTokens) -> TokenTextStyle {
+        switch look {
+        case .headingXl: headings.xl
+        case .headingLg: headings.lg
+        case .headingMd: headings.md
+        case .headingSm: headings.sm
         }
     }
 }
