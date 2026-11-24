@@ -9,7 +9,6 @@ import { createRef, type ReactNode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { describe, expect, inject, test, vi } from "vitest";
-import { cdp } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import {
   HEADING_COLORS,
@@ -105,32 +104,6 @@ function expectStyle(element: Element, variant: TextVariant | HeadingVariant, de
 /** Whether any of an element's content is cut off by its own box. */
 const clipped = (element: Element) =>
   element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight;
-
-/**
- * The text that Chromium gives assistive technology for the page the tests run in: the name of
- * every text node of its accessibility tree. The tests run in a frame of the page, so every
- * frame is read.
- */
-async function accessibleText(): Promise<string> {
-  type Frame = { frame: { id: string }; childFrames?: Frame[] };
-  const { frameTree } = (await cdp().send("Page.getFrameTree")) as { frameTree: Frame };
-  const frames = (tree: Frame): string[] => [
-    tree.frame.id,
-    ...(tree.childFrames ?? []).flatMap(frames),
-  ];
-  const names: string[] = [];
-  for (const frameId of frames(frameTree)) {
-    const { nodes } = (await cdp().send("Accessibility.getFullAXTree", { frameId })) as {
-      nodes: { ignored: boolean; role?: { value: string }; name?: { value: string } }[];
-    };
-    for (const node of nodes) {
-      if (!node.ignored && node.role?.value === "StaticText" && node.name?.value) {
-        names.push(node.name.value);
-      }
-    }
-  }
-  return names.join("\n");
-}
 
 export function describeTypography(environment: string) {
   describe(`Typography, ${environment}`, () => {
@@ -263,7 +236,10 @@ export function describeTypography(environment: string) {
         );
         const heading = screen.getByRole("heading", { name: LONG_HEADING }).element();
         const style = computed(heading);
-        expect(style.getPropertyValue("text-wrap-style")).toBe("balance");
+        // The longhand where the browser has it, or else the shorthand.
+        expect(
+          style.getPropertyValue("text-wrap-style") || style.getPropertyValue("text-wrap"),
+        ).toContain("balance");
         // More than one line, inside the stage, with nothing clipped or elided.
         expect(heading.getBoundingClientRect().height).toBeGreaterThan(
           1.5 * number("type.heading.xl.line-height"),
@@ -390,13 +366,24 @@ export function describeTypography(environment: string) {
           0,
         );
         expect(text.textContent).toBe(PARAGRAPH);
-        // What Chromium gives assistive technology holds the whole text.
-        expect(await accessibleText()).toContain(PARAGRAPH);
+      });
+
+      test("text cut short is read in full: a link named by it has the whole text as its name", async () => {
+        // A message in a list, as a link whose preview is cut short.
+        const screen = await render(
+          <Stage width={280}>
+            <a href="#message">
+              <Text maxLines={1}>{PARAGRAPH}</Text>
+            </a>
+          </Stage>,
+        );
+        const link = screen.getByRole("link");
+        await expect.element(link).toHaveAccessibleName(PARAGRAPH);
       });
     });
 
     describe("text size", () => {
-      test("at twice the browser's font size, text and headings are twice as large and nothing is clipped", async () => {
+      test("at twice the root font size, text and headings are twice as large and nothing is clipped", async () => {
         const screen = await render(
           <Stage width={360}>
             <Heading level={1}>{LONG_HEADING}</Heading>
@@ -412,8 +399,9 @@ export function describeTypography(environment: string) {
         const sizes = () => elements.map((element) => pixels(computed(element).fontSize));
         const before = sizes();
 
-        // The browser's font size setting, at twice its default of 16px.
-        await cdp().send("Page.setFontSizes", { fontSizes: { standard: 32 } });
+        // Twice the root font size, as the browser's font size setting at twice its default of
+        // 16px gives it, and as the snapshots draw the largest text size.
+        document.documentElement.style.fontSize = "200%";
         try {
           await nextFrame();
           const after = sizes();
@@ -432,7 +420,7 @@ export function describeTypography(environment: string) {
             2 * 2 * number("type.heading.xl.line-height"),
           );
         } finally {
-          await cdp().send("Page.setFontSizes", { fontSizes: { standard: 16 } });
+          document.documentElement.style.fontSize = "";
         }
       });
     });
