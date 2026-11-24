@@ -97,17 +97,24 @@ function combinations(matrix = {}) {
 
 /**
  * The examples of a spec, each with its instances and its text in every locale of the matrix:
- * {id, description, instances: [{<property>: value}], text: {<locale>: {<content>: text}}}.
- * An instance sets every property of the spec: the example's value, or else the default.
+ * {id, description, part, instances: [{<property>: value}], text: {<locale>: {<content>: text}}}.
+ * An instance sets every property of the spec, or in a spec with parts of the example's part:
+ * the example's value, or else the default. A property whose default is not a value, such as a
+ * heading's look, which follows its level, or that has no default, is left out unless the
+ * example sets it. `part` is null in a spec without parts.
  */
 export function componentExamples(root, spec, matrix) {
   const file = stringsFile(spec.id);
   const { data: strings, error } = readYaml(root, file);
   if (error) throw new Error(`${file}: ${error}. Run \`pnpm tokens:lint\`.`);
-  const defaults = Object.fromEntries(
-    Object.entries(spec.properties).map(([name, property]) => [name, property.default]),
-  );
+  const defaults = (properties) =>
+    Object.fromEntries(
+      Object.entries(properties)
+        .filter(([, property]) => ["string", "boolean", "number"].includes(typeof property.default))
+        .map(([name, property]) => [name, property.default]),
+    );
   return spec.examples.map((example) => {
+    const properties = spec.parts ? spec.parts[example.part].properties : spec.properties;
     const written = strings.examples?.[example.id];
     if (!written) throw new Error(`${file}: no text for the example "${example.id}"`);
     const text = Object.fromEntries(
@@ -124,8 +131,9 @@ export function componentExamples(root, spec, matrix) {
     return {
       id: example.id,
       description: example.description,
+      part: example.part ?? null,
       instances: combinations(example.matrix).map((combination) => ({
-        ...defaults,
+        ...defaults(properties),
         ...example.properties,
         ...combination,
       })),

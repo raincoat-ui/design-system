@@ -28,3 +28,69 @@ export const BUTTON_SIZES = ["sm", "md", "lg"] as const satisfies readonly Butto
 
 /** The ButtonSize used when none is given. */
 export const BUTTON_SIZE_DEFAULT: ButtonSize = "md";
+
+/**
+ * Text: The text style.
+ * - `body-lg`: An introductory paragraph.
+ * - `body-md`: Running text. The default.
+ * - `body-sm`: Secondary running text, such as help text under a field.
+ * - `label-lg`: Text beside or in a large control.
+ * - `label-md`: Text beside or in a medium control.
+ * - `label-sm`: Text beside or in a small control.
+ * - `caption`: Timestamps, counts, and other short secondary facts. Never prose.
+ */
+export type TextVariant = "body-lg" | "body-md" | "body-sm" | "label-lg" | "label-md" | "label-sm" | "caption";
+
+/** Every TextVariant, in the order the spec lists them. */
+export const TEXT_VARIANTS = ["body-lg", "body-md", "body-sm", "label-lg", "label-md", "label-sm", "caption"] as const satisfies readonly TextVariant[];
+
+/** The TextVariant used when none is given. */
+export const TEXT_VARIANT_DEFAULT: TextVariant = "body-md";
+
+/**
+ * Text: The color of the text, from the theme's text roles.
+ * - `default`: Primary text.
+ * - `muted`: Secondary text, such as a caption or help text.
+ * - `danger`: An error, or text about something destructive.
+ */
+export type TextColor = "default" | "muted" | "danger";
+
+/** Every TextColor, in the order the spec lists them. */
+export const TEXT_COLORS = ["default", "muted", "danger"] as const satisfies readonly TextColor[];
+
+/** The TextColor used when none is given. */
+export const TEXT_COLOR_DEFAULT: TextColor = "default";
+
+/**
+ * Heading: How the heading looks. It follows the level unless it is given: set it to change the look and keep the level.
+ * - `heading-xl`: The title of a screen. Once per screen.
+ * - `heading-lg`: Section titles on a screen.
+ * - `heading-md`: Dialog and sheet titles, and subsection titles.
+ * - `heading-sm`: Card titles and group titles in lists.
+ */
+export type HeadingVariant = "heading-xl" | "heading-lg" | "heading-md" | "heading-sm";
+
+/** Every HeadingVariant, in the order the spec lists them. */
+export const HEADING_VARIANTS = ["heading-xl", "heading-lg", "heading-md", "heading-sm"] as const satisfies readonly HeadingVariant[];
+
+/** The HeadingVariant used when none is given, for each level. */
+export const HEADING_VARIANT_DEFAULT_BY_LEVEL = { 1: "heading-xl", 2: "heading-lg", 3: "heading-md", 4: "heading-sm", 5: "heading-sm", 6: "heading-sm" } as const satisfies Readonly<Record<1 | 2 | 3 | 4 | 5 | 6, HeadingVariant>>;
+
+/**
+ * Heading: The color of the heading, from the theme's text roles.
+ * - `default`: Primary text.
+ * - `muted`: A heading that steps back, such as a group title in a list.
+ */
+export type HeadingColor = "default" | "muted";
+
+/** Every HeadingColor, in the order the spec lists them. */
+export const HEADING_COLORS = ["default", "muted"] as const satisfies readonly HeadingColor[];
+
+/** The HeadingColor used when none is given. */
+export const HEADING_COLOR_DEFAULT: HeadingColor = "default";
+
+/** Heading: The heading's place in the outline of the screen, from 1 to 6. Chosen for that place, not for its size. */
+export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
+/** Every HeadingLevel, from the lowest. */
+export const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const satisfies readonly HeadingLevel[];

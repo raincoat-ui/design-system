@@ -14,11 +14,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- One activity per component screen after the Button's. Their tests start them. -->
+        <!-- Each other component's screen, which its test opens. -->
+        <activity
+            android:name=".TypographyActivity"
+            android:exported="false" />
         <activity
             android:name=".ToastActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

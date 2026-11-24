@@ -3,7 +3,7 @@
 // The visual snapshot matrix of specs/snapshots.yaml, and the examples of each component spec
 // with their text in every locale of the matrix. See docs/adr/0019-visual-snapshots.md.
 
-import type { ButtonVariant, ButtonSize } from "../../../src/generated/specs.js";
+import type { ButtonVariant, ButtonSize, TextVariant, TextColor, HeadingLevel, HeadingVariant, HeadingColor } from "../../../src/generated/specs.js";
 
 /** A snapshot of the matrix: all the examples of a component, drawn together in one theme. */
 export interface Snapshot {
@@ -286,6 +286,170 @@ export const TOAST_EXAMPLES: readonly SpecExample<ToastExampleProperties>[] = [
       ko: { message: "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다", "action-label": "실행 취소", "close-label": "닫기" },
       ar: { message: "نُقلت الرسائل التي مضى عليها أكثر من عام من الأرشيف إلى مجلد المحذوفات", "action-label": "تراجع", "close-label": "إغلاق" },
       "en-XA": { message: "[Ṁéššåĝéš öļðéŕ ţĥåñ öñé ýéåŕ ŵéŕé ɱöṽéð ƒŕöɱ Åŕçĥîṽé ţö ţĥé Ðéļéţéð ƒöļðéŕ one two three four five six]", "action-label": "[Ûñðö]", "close-label": "[Çļöšé]" },
+    },
+  },
+];
+
+/** The properties of one Text in an example, as the React component names them. */
+export interface TextExampleProperties {
+  readonly part: "text";
+  readonly variant: TextVariant;
+  readonly color: TextColor;
+  readonly maxLines?: number;
+}
+
+/** The properties of one Heading in an example, as the React component names them. */
+export interface HeadingExampleProperties {
+  readonly part: "heading";
+  readonly level: HeadingLevel;
+  readonly variant?: HeadingVariant;
+  readonly color: HeadingColor;
+}
+
+/** The properties of one part of Typography in an example. */
+export type TypographyExampleProperties = TextExampleProperties | HeadingExampleProperties;
+
+/** The examples of specs/components/typography/spec.yaml, with their text. */
+export const TYPOGRAPHY_EXAMPLES: readonly SpecExample<TypographyExampleProperties>[] = [
+  {
+    id: "text-variants",
+    description: "Every text style, in the default color.",
+    instances: [
+      { part: "text", variant: "body-lg", color: "default" },
+      { part: "text", variant: "body-md", color: "default" },
+      { part: "text", variant: "body-sm", color: "default" },
+      { part: "text", variant: "label-lg", color: "default" },
+      { part: "text", variant: "label-md", color: "default" },
+      { part: "text", variant: "label-sm", color: "default" },
+      { part: "text", variant: "caption", color: "default" },
+    ],
+    text: {
+      en: { text: "Synced 2 minutes ago" },
+      vi: { text: "Đã đồng bộ 2 phút trước" },
+      "zh-Hans": { text: "2 分钟前已同步" },
+      ja: { text: "2 分前に同期済み" },
+      ko: { text: "2분 전에 동기화됨" },
+      ar: { text: "تمت المزامنة قبل دقيقتين" },
+      "en-XA": { text: "[Šýñçéð 2 ɱîñûţéš åĝö one two]" },
+    },
+  },
+  {
+    id: "text-colors",
+    description: "Every text color, in the default style.",
+    instances: [
+      { part: "text", variant: "body-md", color: "default" },
+      { part: "text", variant: "body-md", color: "muted" },
+      { part: "text", variant: "body-md", color: "danger" },
+    ],
+    text: {
+      en: { text: "This file could not be opened." },
+      vi: { text: "Không thể mở tệp này." },
+      "zh-Hans": { text: "无法打开此文件。" },
+      ja: { text: "このファイルを開けませんでした。" },
+      ko: { text: "이 파일을 열 수 없습니다." },
+      ar: { text: "تعذر فتح هذا الملف." },
+      "en-XA": { text: "[Ţĥîš ƒîļé çöûļð ñöţ ƀé öþéñéð. one two three]" },
+    },
+  },
+  {
+    id: "max-lines",
+    description: "A paragraph cut short after two lines. It ends in an ellipsis and is read in full.",
+    instances: [
+      { part: "text", variant: "body-md", color: "default", maxLines: 2 },
+    ],
+    text: {
+      en: { text: "Your files are kept on this device and in the cloud. Changes made on one device reach the others the next time they connect, usually within a minute." },
+      vi: { text: "Tệp của bạn được lưu trên thiết bị này và trên đám mây. Những thay đổi trên một thiết bị sẽ đến các thiết bị khác vào lần kết nối tiếp theo, thường trong vòng một phút." },
+      "zh-Hans": { text: "你的文件保存在此设备和云端。在一台设备上所做的更改，会在其他设备下次连接时同步过去，通常在一分钟内完成。" },
+      ja: { text: "ファイルはこのデバイスとクラウドに保存されます。あるデバイスでの変更は、ほかのデバイスが次に接続したときに反映されます。通常は 1 分以内です。" },
+      ko: { text: "파일은 이 기기와 클라우드에 보관됩니다. 한 기기에서 변경한 내용은 다른 기기가 다음에 연결될 때 반영되며, 보통 1분 안에 반영됩니다." },
+      ar: { text: "تُحفظ ملفاتك على هذا الجهاز وفي السحابة. تصل التغييرات التي تجريها على جهاز إلى الأجهزة الأخرى عند اتصالها التالي، عادةً خلال دقيقة." },
+      "en-XA": { text: "[Ýöûŕ ƒîļéš åŕé ķéþţ öñ ţĥîš ðéṽîçé åñð îñ ţĥé çļöûð. Çĥåñĝéš ɱåðé öñ öñé ðéṽîçé ŕéåçĥ ţĥé öţĥéŕš ţĥé ñéẋţ ţîɱé ţĥéý çöññéçţ, ûšûåļļý ŵîţĥîñ å ɱîñûţé. one two three four five six seven eight nine ten one two three]" },
+    },
+  },
+  {
+    id: "person-name",
+    description: "A sentence with a person's name in it, in another script: an Arabic name in English, and an English name in Arabic. The name takes its direction from its first strong character.",
+    instances: [
+      { part: "text", variant: "body-md", color: "default" },
+    ],
+    text: {
+      en: { text: "Message from {name}, 2 minutes ago", name: "مريم الحسيني" },
+      vi: { text: "Tin nhắn từ {name}, 2 phút trước", name: "مريم الحسيني" },
+      "zh-Hans": { text: "来自 {name} 的消息，2 分钟前", name: "مريم الحسيني" },
+      ja: { text: "{name} さんからのメッセージ、2 分前", name: "مريم الحسيني" },
+      ko: { text: "{name} 님의 메시지, 2분 전", name: "مريم الحسيني" },
+      ar: { text: "رسالة من {name} قبل دقيقتين", name: "Ada Lovelace" },
+      "en-XA": { text: "[Ṁéššåĝé ƒŕöɱ {ñåɱé}, 2 ɱîñûţéš åĝö one two three]", name: "[مريم الحسيني one]" },
+    },
+  },
+  {
+    id: "heading-levels",
+    description: "Every level, each in the look its level gives.",
+    instances: [
+      { part: "heading", level: 1, color: "default" },
+      { part: "heading", level: 2, color: "default" },
+      { part: "heading", level: 3, color: "default" },
+      { part: "heading", level: 4, color: "default" },
+      { part: "heading", level: 5, color: "default" },
+      { part: "heading", level: 6, color: "default" },
+    ],
+    text: {
+      en: { text: "Notifications" },
+      vi: { text: "Thông báo" },
+      "zh-Hans": { text: "通知" },
+      ja: { text: "通知" },
+      ko: { text: "알림" },
+      ar: { text: "الإشعارات" },
+      "en-XA": { text: "[Ñöţîƒîçåţîöñš one]" },
+    },
+  },
+  {
+    id: "heading-variant",
+    description: "A heading of level 2 that looks like heading-sm, as the title of a card can.",
+    instances: [
+      { part: "heading", level: 2, variant: "heading-sm", color: "default" },
+    ],
+    text: {
+      en: { text: "Recent files" },
+      vi: { text: "Tệp gần đây" },
+      "zh-Hans": { text: "最近的文件" },
+      ja: { text: "最近使ったファイル" },
+      ko: { text: "최근 파일" },
+      ar: { text: "الملفات الأخيرة" },
+      "en-XA": { text: "[Ŕéçéñţ ƒîļéš one]" },
+    },
+  },
+  {
+    id: "heading-muted",
+    description: "A muted heading of level 3.",
+    instances: [
+      { part: "heading", level: 3, color: "muted" },
+    ],
+    text: {
+      en: { text: "Shared with you" },
+      vi: { text: "Được chia sẻ với bạn" },
+      "zh-Hans": { text: "与你共享" },
+      ja: { text: "共有アイテム" },
+      ko: { text: "나와 공유됨" },
+      ar: { text: "تمت مشاركتها معك" },
+      "en-XA": { text: "[Šĥåŕéð ŵîţĥ ýöû one]" },
+    },
+  },
+  {
+    id: "long-heading",
+    description: "A heading too long for one line, which wraps and is never cut short.",
+    instances: [
+      { part: "heading", level: 2, color: "default" },
+    ],
+    text: {
+      en: { text: "Notifications for comments, mentions, and changes to shared documents" },
+      vi: { text: "Thông báo về bình luận, lượt nhắc đến và những thay đổi trong tài liệu được chia sẻ" },
+      "zh-Hans": { text: "关于评论、提及以及共享文档更改的通知" },
+      ja: { text: "コメント、メンション、共有ドキュメントの変更に関する通知" },
+      ko: { text: "댓글, 멘션 및 공유 문서 변경 사항에 대한 알림" },
+      ar: { text: "إشعارات التعليقات والإشارات والتغييرات على المستندات المشتركة" },
+      "en-XA": { text: "[Ñöţîƒîçåţîöñš ƒöŕ çöɱɱéñţš, ɱéñţîöñš, åñð çĥåñĝéš ţö šĥåŕéð ðöçûɱéñţš one two three four five six]" },
     },
   },
 ];

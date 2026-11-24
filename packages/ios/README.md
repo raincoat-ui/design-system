@@ -112,6 +112,49 @@ showToast(RaincoatToast("Message archived", action: .init("Undo") { undo() }, cl
 The Toast follows the
 [Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
 
+## Text and headings
+
+```swift
+Text("Settings").raincoatHeading(level: 1)
+Text("Recent files").raincoatHeading(level: 3, variant: .headingSm)
+Text("Your files are kept on this device and in the cloud.").raincoatText()
+Text("Synced 2 minutes ago").raincoatText(.caption, color: .muted)
+Label("Shared with you", systemImage: "person.2").raincoatText(.labelMd)
+Text(message.preview).raincoatText(maxLines: 2)
+```
+
+`.raincoatText(_:color:maxLines:)` sets any `Text`, `Label`, or `TextField` in a text style:
+
+| Parameter  | Type          | Default    | Notes                                                                           |
+| ---------- | ------------- | ---------- | ------------------------------------------------------------------------------- |
+| `variant`  | `TextVariant` | `.bodyMd`  | `.bodyLg`, `.bodyMd`, `.bodySm`, `.labelLg`, `.labelMd`, `.labelSm`, `.caption` |
+| `color`    | `TextColor`   | `.default` | `.default`, `.muted`, `.danger`                                                 |
+| `maxLines` | `Int?`        | `nil`      | Ends the text in an ellipsis after that many lines                              |
+
+`.raincoatHeading(level:variant:color:)` makes a view a heading:
+
+| Parameter | Type              | Default           | Notes                                                               |
+| --------- | ----------------- | ----------------- | ------------------------------------------------------------------- |
+| `level`   | `Int`             | Required          | 1 to 6. VoiceOver is told the view is a header, at this level       |
+| `variant` | `HeadingVariant?` | Follows the level | 1 `.headingXl`, 2 `.headingLg`, 3 `.headingMd`, 4 to 6 `.headingSm` |
+| `color`   | `HeadingColor`    | `.default`        | `.default`, `.muted`                                                |
+
+- **The look is not the level.** People move through a screen from heading to heading with the
+  VoiceOver rotor, by level. Choose the level for the heading's place in the outline, then set
+  `variant` if the default look does not fit.
+- **Text size.** Each style grows with Dynamic Type, with the system text style nearest its
+  role: headings with `.largeTitle`, `.title2`, `.title3`, and `.headline`, body and label
+  styles with `.body`, and captions with `.caption`. Large headings grow less than body text, as
+  the system's own do.
+- **Long text wraps**, and the view grows taller. A heading is never cut short, even inside a
+  `lineLimit`. Text cut short by `maxLines` is still read in full by VoiceOver.
+- **Direction.** Text aligns to the leading edge: the right in right-to-left layouts. The
+  direction of a name or a message inside it is left to SwiftUI's default.
+
+Text and headings follow the
+[Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
+which the React and Compose versions follow too.
+
 ## Working on this package
 
 ```sh
