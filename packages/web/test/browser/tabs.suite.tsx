@@ -255,12 +255,15 @@ async function withTouch(context: TestContext, run: () => Promise<void>) {
   }
 }
 
-/** Whether the element lies wholly inside the visible part of the scrolling list. */
+/**
+ * Whether the element lies inside the visible part of the scrolling list, to within a pixel: a
+ * browser may scroll in whole pixels only, and lay the tabs out in fractions of one.
+ */
 function shownInList(element: Element) {
   const list = element.closest('[role="tablist"]') as Element;
   const outer = list.getBoundingClientRect();
   const inner = element.getBoundingClientRect();
-  return inner.left >= outer.left - 0.5 && inner.right <= outer.right + 0.5;
+  return inner.left >= outer.left - 1 && inner.right <= outer.right + 1;
 }
 
 const selectedTab = (screen: { getByRole: Locator["getByRole"] }) =>
@@ -613,14 +616,7 @@ export function describeTabs(environment: string) {
         await userEvent.keyboard("[/Space]");
       });
 
-      test("a tab under a hovering pointer", async (context) => {
-        // Chromium does not give a page its mouse back after a touch screen was turned on and
-        // off in it, and test files take turns in the same pages. In a page an earlier file
-        // left so, nothing can hover.
-        context.skip(
-          !matchMedia("(hover: hover)").matches,
-          "an earlier test file left this page without a pointer that hovers",
-        );
+      test("a tab under a hovering pointer", async () => {
         const screen = await render(
           <Stage mode={mode}>
             <Product />
@@ -879,8 +875,9 @@ export function describeTabs(environment: string) {
       });
 
       test("when every tab fits there are no scroll buttons", async () => {
+        // Wide enough for three short labels in any browser's fonts.
         const screen = await render(
-          <Stage width={NARROW}>
+          <Stage width={2 * NARROW}>
             <Product />
           </Stage>,
         );
@@ -1015,8 +1012,6 @@ export function describeTabs(environment: string) {
       });
     });
 
-    // Last, because Chromium does not give a page its mouse back after a touch screen was
-    // turned on in it.
     describe("pointer and touch", () => {
       test("with a mouse, only the visible tab can be hit", async () => {
         const screen = await render(
@@ -1029,7 +1024,24 @@ export function describeTabs(environment: string) {
         expect(matchMedia("(pointer: coarse)").matches).toBe(false);
         expect(document.elementFromPoint(box.left + box.width / 2, box.top - 2)).not.toBe(tab);
       });
+    });
 
+    test("the activation modes are the spec's", () => {
+      expect(TABS_ACTIVATION_MODES).toEqual(["automatic", "manual"]);
+    });
+  });
+}
+
+/**
+ * The Tabs on a touch screen. These tests run in projects of their own, after every other
+ * component test (vitest.config.ts): Chromium does not give a page its mouse back once a touch
+ * screen was turned on in it.
+ */
+export function describeTabsOnTouchScreens(environment: string) {
+  describe(`Tabs, ${environment}`, () => {
+    beforeEach(parkPointer);
+
+    describe("pointer and touch", () => {
       test("on a touch screen, a tab shorter than the minimum can be hit across it, the list takes no more room, and there is no hover", async (context) => {
         await withTouch(context, async () => {
           const screen = await render(
@@ -1078,10 +1090,6 @@ export function describeTabs(environment: string) {
           expect(computed(list).overflowX).toBe("auto");
         });
       });
-    });
-
-    test("the activation modes are the spec's", () => {
-      expect(TABS_ACTIVATION_MODES).toEqual(["automatic", "manual"]);
     });
   });
 }

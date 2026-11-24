@@ -165,6 +165,11 @@ async function withMedia(media: Media, run: () => Promise<void>) {
   }
 }
 
+const center = (rect: DOMRect) => ({
+  x: rect.left + rect.width / 2,
+  y: rect.top + rect.height / 2,
+});
+
 export function describeButton(environment: string) {
   describe(`Button, ${environment}`, () => {
     beforeEach(parkPointer);
@@ -831,11 +836,6 @@ export function describeButton(environment: string) {
     });
 
     describe("pointer and touch", () => {
-      const center = (rect: DOMRect) => ({
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      });
-
       test("with a mouse, only the visible button can be hit", async () => {
         const screen = await render(
           <Stage density="compact">
@@ -847,7 +847,31 @@ export function describeButton(environment: string) {
         expect(matchMedia("(pointer: coarse)").matches).toBe(false);
         expect(document.elementFromPoint(center(rect).x, rect.top - 2)).not.toBe(button);
       });
+    });
 
+    describe("system preferences", () => {
+      test("without a data-theme, the button follows the system's color scheme", async () => {
+        await withMedia({ colorScheme: "dark" }, async () => {
+          const screen = await render(<Button>Save</Button>);
+          const style = computed(screen.getByRole("button").element());
+          expect(style.backgroundColor).toBe(color("button.secondary.bg.default", "dark"));
+          expect(style.color).toBe(color("button.secondary.fg", "dark"));
+        });
+      });
+    });
+  });
+}
+
+/**
+ * The Button on a touch screen. These tests run in projects of their own, after every other
+ * component test (vitest.config.ts): Chromium does not give a page its mouse back once a touch
+ * screen was turned on in it.
+ */
+export function describeButtonOnTouchScreens(environment: string) {
+  describe(`Button, ${environment}`, () => {
+    beforeEach(parkPointer);
+
+    describe("pointer and touch", () => {
       test("on a touch screen, a small button can be hit across the minimum target, and has no hover state", async (context) => {
         // Chromium alone can turn a touch screen on in a page that is already open. Firefox and
         // WebKit take it only when the browser starts, which would make every test a touch test.
@@ -885,17 +909,6 @@ export function describeButton(environment: string) {
         } finally {
           await cdp().send("Emulation.setTouchEmulationEnabled", { enabled: false });
         }
-      });
-    });
-
-    describe("system preferences", () => {
-      test("without a data-theme, the button follows the system's color scheme", async () => {
-        await withMedia({ colorScheme: "dark" }, async () => {
-          const screen = await render(<Button>Save</Button>);
-          const style = computed(screen.getByRole("button").element());
-          expect(style.backgroundColor).toBe(color("button.secondary.bg.default", "dark"));
-          expect(style.color).toBe(color("button.secondary.fg", "dark"));
-        });
       });
     });
   });

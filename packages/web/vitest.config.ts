@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import type { Page } from "playwright";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 import type { BrowserCommand, ToMatchScreenshotOptions } from "vitest/node";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
@@ -78,6 +78,9 @@ const emulateMedia: BrowserCommand<[Parameters<Page["emulateMedia"]>[0]]> = asyn
   await page.emulateMedia(media);
 };
 
+/** The component tests that turn on a touch screen. See the touch projects below. */
+const TOUCH_TESTS = "test/browser/**/*.touch.test.tsx";
+
 const themeUnderTest = (theme: string) => ({
   alias: { "@raincoat-ui/theme-under-test/theme.css": `${themesDir}/${theme}/theme.css` },
 });
@@ -109,11 +112,30 @@ export default defineConfig({
         test: {
           name: theme,
           include: ["test/browser/**/*.test.tsx"],
+          exclude: [...configDefaults.exclude, TOUCH_TESTS],
           provide: { theme },
           globalSetup: ["./test/browser/expected-tokens.js"],
+          // Each file starts with a mouse, or fails before its first test.
+          setupFiles: ["./test/browser/mouse.setup.ts"],
           // One theme at a time. Two themes' browsers side by side lose pointer hover in one of
           // their pages, which fails every hover test of that page's file.
           sequence: { groupOrder: index },
+          browser: { instances: [{ browser, viewport }] },
+        },
+      })),
+      // The tests that turn on a touch screen, in projects of their own that run after every
+      // other component test. Chromium does not give a page its mouse back once a touch screen
+      // was turned on in it, hover and pointer media included, and test files take turns in the
+      // same pages: a hover test in a file that ran after a touch test would find no mouse.
+      ...themes.map((theme, index) => ({
+        extends: true,
+        resolve: themeUnderTest(theme),
+        test: {
+          name: `${theme} touch`,
+          include: [TOUCH_TESTS],
+          provide: { theme },
+          globalSetup: ["./test/browser/expected-tokens.js"],
+          sequence: { groupOrder: themes.length + index },
           browser: { instances: [{ browser, viewport }] },
         },
       })),
@@ -125,7 +147,7 @@ export default defineConfig({
           include: ["test/snapshots/**/*.test.tsx"],
           provide: { theme, compareSnapshots },
           globalSetup: ["./test/snapshots/baselines.js"],
-          sequence: { groupOrder: themes.length + index },
+          sequence: { groupOrder: 2 * themes.length + index },
           browser: {
             // Tall, because a screenshot shows nothing of a specimen below the viewport.
             instances: [{ browser: "chromium" as const, viewport: { width: 1024, height: 4096 } }],
