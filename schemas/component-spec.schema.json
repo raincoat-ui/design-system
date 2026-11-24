@@ -11,13 +11,13 @@
     "rfc",
     "group",
     "summary",
-    "properties",
     "anatomy",
     "states",
     "accessibility",
     "internationalization",
     "examples"
   ],
+  "oneOf": [{ "required": ["properties"] }, { "required": ["parts"] }],
   "additionalProperties": false,
   "properties": {
     "id": { "$ref": "#/$defs/kebab" },
@@ -26,26 +26,21 @@
     "rfc": { "type": "integer", "minimum": 1 },
     "group": { "type": "string", "minLength": 1 },
     "summary": { "$ref": "#/$defs/prose" },
-    "properties": {
+    "properties": { "$ref": "#/$defs/properties" },
+    "parts": {
+      "description": "The parts of a component that an app uses on their own, such as the Text and the Heading of Typography. Each part has properties of its own, and its generated types are named after it. A spec has either properties or parts.",
       "type": "object",
-      "minProperties": 1,
+      "minProperties": 2,
       "propertyNames": { "$ref": "#/$defs/kebab" },
       "additionalProperties": {
         "type": "object",
-        "required": ["description", "default"],
+        "required": ["name", "summary", "properties"],
         "additionalProperties": false,
         "properties": {
-          "description": { "$ref": "#/$defs/prose" },
-          "type": { "const": "boolean" },
-          "default": { "type": ["string", "boolean"] },
-          "values": {
-            "type": "object",
-            "minProperties": 2,
-            "propertyNames": { "$ref": "#/$defs/kebab" },
-            "additionalProperties": { "$ref": "#/$defs/prose" }
-          }
-        },
-        "oneOf": [{ "required": ["values"] }, { "required": ["type"] }]
+          "name": { "type": "string", "pattern": "^[A-Z][A-Za-z]+$" },
+          "summary": { "$ref": "#/$defs/prose" },
+          "properties": { "$ref": "#/$defs/properties" }
+        }
       }
     },
     "content": {
@@ -140,6 +135,10 @@
         "properties": {
           "id": { "$ref": "#/$defs/kebab" },
           "description": { "$ref": "#/$defs/prose" },
+          "part": {
+            "description": "In a spec with parts, the part the example shows.",
+            "$ref": "#/$defs/kebab"
+          },
           "label": { "type": "string", "minLength": 1 },
           "properties": { "type": "object" },
           "matrix": {
@@ -152,6 +151,38 @@
     }
   },
   "$defs": {
+    "properties": {
+      "description": "A component's properties, or a part's, by name.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/kebab" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["description"],
+        "additionalProperties": false,
+        "properties": {
+          "description": { "$ref": "#/$defs/prose" },
+          "type": { "enum": ["boolean", "integer"] },
+          "default": {
+            "description": "The value used when none is given. When it depends on another property, an object that names that property and maps each of its values to one of this property's, such as {level: {1: heading-xl}}. A boolean, and a property with values, has a default; a whole number may have none, and is then required or unset until it is given.",
+            "type": ["string", "boolean", "integer", "object"]
+          },
+          "required": {
+            "description": "A whole number that must be given. It has no default.",
+            "type": "boolean"
+          },
+          "minimum": { "type": "integer" },
+          "maximum": { "type": "integer" },
+          "values": {
+            "type": "object",
+            "minProperties": 2,
+            "propertyNames": { "$ref": "#/$defs/kebab" },
+            "additionalProperties": { "$ref": "#/$defs/prose" }
+          }
+        },
+        "oneOf": [{ "required": ["values"] }, { "required": ["type"] }]
+      }
+    },
     "implementation": {
       "type": "object",
       "required": ["file", "name"],

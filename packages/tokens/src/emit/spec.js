@@ -2,7 +2,7 @@
 // with a fixed set of values (a Button's variant and size, for example). Because every
 // platform's implementation takes these generated types, a value added to a spec is a compile
 // error on any platform that does not handle it.
-import { enumerations, loadSpecs } from "../specs.js";
+import { enumerations, loadSpecs, propertyGroups } from "../specs.js";
 import { camel, indent, pascal } from "./shared.js";
 
 const HEADER =
@@ -14,18 +14,18 @@ const SWIFT_KEYWORDS = new Set(
   ),
 );
 
-/** Every enumeration of every spec: {component, type, description, default, values}. */
+/**
+ * Every enumeration of every spec: {component, type, description, default, defaultBy, values}.
+ * `component` is the component's name, or the part's in a spec with parts.
+ */
 function allEnumerations(root) {
   return loadSpecs(root)
     .filter(({ spec }) => spec)
-    .flatMap(({ spec }) =>
-      enumerations(spec).map((enumeration) => ({
-        ...enumeration,
-        component: spec.name,
-        type: `${spec.name}${pascal(enumeration.name)}`,
-      })),
-    );
+    .flatMap(({ spec }) => enumerations(spec));
 }
+
+/** "Level" for "level": the name of a default's dependency in a declaration. */
+const byName = (enumeration) => pascal(enumeration.defaultBy.property);
 
 /** RaincoatTokens/Generated/ComponentSpecs.swift */
 export function specsSwift(root) {
@@ -36,13 +36,27 @@ export function specsSwift(root) {
       `/// ${description}`,
       camel(value) === value ? `case ${swiftCase(value)}` : `case ${swiftCase(value)} = "${value}"`,
     ]);
+    let standard;
+    if (enumeration.defaultBy) {
+      const { keyType, values } = enumeration.defaultBy;
+      const key = (raw) => (keyType === "integer" ? raw : `.${camel(raw)}`);
+      const entries = Object.entries(values).map(([raw, value]) => `${key(raw)}: .${camel(value)}`);
+      standard = [
+        `    /// The value used when none is given, for each ${enumeration.defaultBy.property}.`,
+        `    public static let standardBy${byName(enumeration)}: [${keyType === "integer" ? "Int" : keyType}: ${enumeration.type}] = [${entries.join(", ")}]`,
+      ];
+    } else {
+      standard = [
+        "    /// The value used when none is given.",
+        `    public static let standard: ${enumeration.type} = .${camel(enumeration.default)}`,
+      ];
+    }
     return [
       `/// ${enumeration.component}: ${enumeration.description}`,
       `public enum ${enumeration.type}: String, CaseIterable, Sendable {`,
       indent(cases.join("\n"), 1),
       "",
-      "    /// The value used when none is given.",
-      `    public static let standard: ${enumeration.type} = .${camel(enumeration.default)}`,
+      ...standard,
       "}",
     ].join("\n");
   });
@@ -54,6 +68,22 @@ export function specsTypeScript(root) {
   const constant = (name) => name.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
   const types = allEnumerations(root).map((enumeration) => {
     const values = enumeration.values.map(({ value }) => `"${value}"`);
+    let standard;
+    if (enumeration.defaultBy) {
+      const { property, keyType, values: map } = enumeration.defaultBy;
+      const keys = Object.keys(map);
+      const key = (raw) => (keyType === "integer" ? raw : `"${raw}"`);
+      const entries = Object.entries(map).map(([raw, value]) => `${key(raw)}: "${value}"`);
+      standard = [
+        `/** The ${enumeration.type} used when none is given, for each ${property}. */`,
+        `export const ${constant(enumeration.type)}_DEFAULT_BY_${constant(byName(enumeration))} = { ${entries.join(", ")} } as const satisfies Readonly<Record<${keyType === "integer" ? keys.join(" | ") : keyType}, ${enumeration.type}>>;`,
+      ];
+    } else {
+      standard = [
+        `/** The ${enumeration.type} used when none is given. */`,
+        `export const ${constant(enumeration.type)}_DEFAULT: ${enumeration.type} = "${enumeration.default}";`,
+      ];
+    }
     return [
       "/**",
       ` * ${enumeration.component}: ${enumeration.description}`,
@@ -64,11 +94,33 @@ export function specsTypeScript(root) {
       `/** Every ${enumeration.type}, in the order the spec lists them. */`,
       `export const ${constant(enumeration.type)}S = [${values.join(", ")}] as const satisfies readonly ${enumeration.type}[];`,
       "",
-      `/** The ${enumeration.type} used when none is given. */`,
-      `export const ${constant(enumeration.type)}_DEFAULT: ${enumeration.type} = "${enumeration.default}";`,
+      ...standard,
     ].join("\n");
   });
-  return `${HEADER}\n\n${types.join("\n\n")}\n`;
+  // A whole number with a range is a fixed set of values too. TypeScript can name them, so
+  // a heading of level 7 does not compile; Swift and Kotlin take an integer and check it.
+  const ranges = loadSpecs(root)
+    .filter(({ spec }) => spec)
+    .flatMap(({ spec }) => propertyGroups(spec))
+    .flatMap(({ name: owner, properties }) =>
+      Object.entries(properties)
+        .filter(([, property]) => property.type === "integer" && property.maximum !== undefined)
+        .map(([name, property]) => {
+          const type = `${owner}${pascal(name)}`;
+          const numbers = Array.from(
+            { length: property.maximum - property.minimum + 1 },
+            (_, index) => property.minimum + index,
+          );
+          return [
+            `/** ${owner}: ${property.description} */`,
+            `export type ${type} = ${numbers.join(" | ")};`,
+            "",
+            `/** Every ${type}, from the lowest. */`,
+            `export const ${constant(type)}S = [${numbers.join(", ")}] as const satisfies readonly ${type}[];`,
+          ].join("\n");
+        }),
+    );
+  return `${HEADER}\n\n${[...types, ...ranges].join("\n\n")}\n`;
 }
 
 /** tokens/.../generated/ComponentSpecs.kt */
@@ -78,6 +130,21 @@ export function specsKotlin(root) {
       `/** ${description} */`,
       `${pascal(value)}("${value}"),`,
     ]);
+    let standard;
+    if (enumeration.defaultBy) {
+      const { property, keyType, values } = enumeration.defaultBy;
+      const key = (raw) => (keyType === "integer" ? raw : `${keyType}.${pascal(raw)}`);
+      const pairs = Object.entries(values).map(([raw, value]) => `${key(raw)} to ${pascal(value)}`);
+      standard = [
+        `        /** The value used when none is given, for each ${property}. */`,
+        `        public val StandardBy${byName(enumeration)}: Map<${keyType === "integer" ? "Int" : keyType}, ${enumeration.type}> = mapOf(${pairs.join(", ")})`,
+      ];
+    } else {
+      standard = [
+        "        /** The value used when none is given. */",
+        `        public val Standard: ${enumeration.type} = ${pascal(enumeration.default)}`,
+      ];
+    }
     return [
       `/** ${enumeration.component}: ${enumeration.description} */`,
       `public enum class ${enumeration.type}(public val id: String) {`,
@@ -85,8 +152,7 @@ export function specsKotlin(root) {
       "    ;",
       "",
       "    public companion object {",
-      "        /** The value used when none is given. */",
-      `        public val Standard: ${enumeration.type} = ${pascal(enumeration.default)}`,
+      ...standard,
       "    }",
       "}",
     ].join("\n");

@@ -34,19 +34,132 @@ export function loadSpecs(root) {
     });
 }
 
-/** The properties of a spec that have a fixed set of values, such as variant and size. */
-export function enumerations(spec) {
-  return Object.entries(spec.properties)
-    .filter(([, property]) => property.values)
-    .map(([name, property]) => ({
+const pascal = (name) =>
+  name
+    .split("-")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join("");
+
+/**
+ * The properties of a spec, in groups: the component's own, or, for a spec with parts, each
+ * part's. `name` is what the group's types are named after: the component, or the part.
+ * @returns {{part: string|null, name: string, properties: object}[]}
+ */
+export function propertyGroups(spec) {
+  if (spec.parts) {
+    return Object.entries(spec.parts).map(([part, { name, properties }]) => ({
+      part,
       name,
-      description: property.description,
-      default: property.default,
-      values: Object.entries(property.values).map(([value, description]) => ({
-        value,
-        description,
-      })),
+      properties,
     }));
+  }
+  return [{ part: null, name: spec.name, properties: spec.properties }];
+}
+
+/**
+ * The properties of a spec that have a fixed set of values, such as variant and size, each
+ * with the name of the type generated for it: the component's or part's name, then the
+ * property's. A default that depends on another property is given as `defaultBy`:
+ * {property, keyType, values: {<that property's value>: <this property's value>}}, where
+ * `keyType` is "integer" for a whole number, or else the type generated for that property.
+ */
+export function enumerations(spec) {
+  return propertyGroups(spec).flatMap(({ part, name: owner, properties }) =>
+    Object.entries(properties)
+      .filter(([, property]) => property.values)
+      .map(([name, property]) => {
+        const [by] = typeof property.default === "object" ? Object.entries(property.default) : [];
+        const keyType = by && (properties[by[0]]?.values ? `${owner}${pascal(by[0])}` : "integer");
+        return {
+          name,
+          part,
+          component: owner,
+          type: `${owner}${pascal(name)}`,
+          description: property.description,
+          default: by ? undefined : property.default,
+          defaultBy: by ? { property: by[0], keyType, values: by[1] } : undefined,
+          values: Object.entries(property.values).map(([value, description]) => ({
+            value,
+            description,
+          })),
+        };
+      }),
+  );
+}
+
+/** The values a property can take, as text: those of its list, or each whole number in range. */
+function valuesOf(property) {
+  if (property.values) return Object.keys(property.values);
+  if (property.type === "integer" && property.maximum !== undefined) {
+    const count = property.maximum - property.minimum + 1;
+    return Array.from({ length: Math.max(0, count) }, (_, index) =>
+      String(property.minimum + index),
+    );
+  }
+  return undefined;
+}
+
+/** Problems with the properties of one group, each as [where, message]. */
+function propertyProblems(properties, prefix) {
+  const problems = [];
+  const add = (name, message) => problems.push(`${prefix}${name}: ${message}`);
+  for (const [name, property] of Object.entries(properties)) {
+    const integer = property.type === "integer";
+    for (const field of ["minimum", "maximum", "required"]) {
+      if (!integer && property[field] !== undefined) {
+        add(name, `only a whole number has "${field}"`);
+      }
+    }
+    if (property.values) {
+      const standard = property.default;
+      if (standard === undefined) {
+        add(name, "needs a default");
+      } else if (typeof standard === "object") {
+        const entries = Object.entries(standard);
+        const other = entries.length === 1 ? properties[entries[0][0]] : undefined;
+        const keys = other && entries[0][0] !== name ? valuesOf(other) : undefined;
+        if (!keys) {
+          add(
+            name,
+            "a default that depends on another property names one property of the same part, whose values are listed or bounded",
+          );
+          continue;
+        }
+        const [by, map] = entries[0];
+        const missing = keys.filter((key) => !Object.hasOwn(map, key));
+        const extra = Object.keys(map).filter((key) => !keys.includes(key));
+        if (missing.length > 0)
+          add(name, `the default gives no value for ${by} ${missing.join(", ")}`);
+        if (extra.length > 0)
+          add(name, `the default maps ${extra.join(", ")}, which ${by} cannot be`);
+        for (const value of Object.values(map)) {
+          if (!Object.hasOwn(property.values, value)) {
+            add(name, `the default "${value}" is not one of its values`);
+          }
+        }
+      } else if (!Object.hasOwn(property.values, standard)) {
+        add(name, `the default "${standard}" is not one of its values`);
+      }
+    } else if (property.type === "boolean") {
+      if (typeof property.default !== "boolean") {
+        add(name, "the default of a boolean must be true or false");
+      }
+    } else if (integer) {
+      const { minimum, maximum, default: standard, required } = property;
+      if (minimum === undefined) add(name, "a whole number needs a minimum");
+      if (maximum !== undefined && minimum !== undefined && maximum < minimum) {
+        add(name, "the maximum is less than the minimum");
+      }
+      if (standard !== undefined) {
+        if (required) add(name, "a required property has no default");
+        if (!Number.isInteger(standard)) add(name, "the default must be a whole number");
+        else if (standard < minimum || (maximum !== undefined && standard > maximum)) {
+          add(name, `the default ${standard} is out of range`);
+        }
+      }
+    }
+  }
+  return problems;
 }
 
 /**
@@ -77,7 +190,9 @@ export function lintSpecs(
     }
     if (!validate(spec)) {
       for (const issue of validate.errors) {
-        if (issue.keyword === "oneOf") {
+        if (issue.keyword === "oneOf" && issue.instancePath === "") {
+          add(`(spec root): needs either "properties" or "parts", not both`);
+        } else if (issue.keyword === "oneOf") {
           add(
             `${issue.instancePath.slice(1).replaceAll("/", ".")}: needs either "values" or "type"`,
           );
@@ -106,13 +221,14 @@ export function lintSpecs(
       add(`rfc ${spec.rfc}: rfcs/${rfcFile} is not accepted`);
     }
 
-    // Defaults are among the allowed values.
-    for (const [name, property] of Object.entries(spec.properties)) {
-      if (property.values && !Object.hasOwn(property.values, property.default)) {
-        add(`properties.${name}: the default "${property.default}" is not one of its values`);
-      }
-      if (property.type === "boolean" && typeof property.default !== "boolean") {
-        add(`properties.${name}: the default of a boolean must be true or false`);
+    // Defaults are among the allowed values, and whole numbers have a range.
+    const groups = propertyGroups(spec);
+    for (const { part, properties } of groups) {
+      for (const message of propertyProblems(
+        properties,
+        part ? `parts.${part}.properties.` : "properties.",
+      )) {
+        add(message);
       }
     }
 
@@ -126,31 +242,60 @@ export function lintSpecs(
       }
     }
 
-    // Every variant has tokens of its own.
-    for (const variant of Object.keys(spec.properties.variant?.values ?? {})) {
+    // Every variant of a component has tokens of its own. (The variants of a part, such as
+    // Typography's, name the semantic text styles it sets text in.)
+    for (const variant of Object.keys(spec.properties?.variant?.values ?? {})) {
       if (!tokenIds.some((tokenId) => tokenId.startsWith(`${id}.${variant}.`))) {
         add(`properties.variant: no tokens under "${id}.${variant}."`);
       }
     }
 
-    // Examples use real properties and values.
+    // Examples use real properties and values, and give every required property.
     const seen = new Set();
     for (const example of spec.examples) {
       if (seen.has(example.id)) add(`examples: "${example.id}" is used twice`);
       seen.add(example.id);
+      const where = `examples.${example.id}`;
+      let properties = spec.properties;
+      if (spec.parts) {
+        properties = spec.parts[example.part]?.properties;
+        if (!properties) {
+          add(
+            example.part === undefined
+              ? `${where}: needs a part, one of ${Object.keys(spec.parts).join(", ")}`
+              : `${where}: "${example.part}" is not a part`,
+          );
+          continue;
+        }
+      } else if (example.part !== undefined) {
+        add(`${where}: the spec has no parts`);
+      }
       const check = (name, value) => {
-        const property = spec.properties[name];
+        const property = properties[name];
         if (!property) {
-          add(`examples.${example.id}: "${name}" is not a property`);
+          add(`${where}: "${name}" is not a property`);
         } else if (property.values && !Object.hasOwn(property.values, value)) {
-          add(`examples.${example.id}: "${value}" is not a value of ${name}`);
+          add(`${where}: "${value}" is not a value of ${name}`);
         } else if (property.type === "boolean" && typeof value !== "boolean") {
-          add(`examples.${example.id}: ${name} must be true or false`);
+          add(`${where}: ${name} must be true or false`);
+        } else if (
+          property.type === "integer" &&
+          (!Number.isInteger(value) ||
+            value < property.minimum ||
+            (property.maximum !== undefined && value > property.maximum))
+        ) {
+          add(`${where}: ${name} must be a whole number in its range, not ${value}`);
         }
       };
       for (const [name, value] of Object.entries(example.properties ?? {})) check(name, value);
       for (const [name, values] of Object.entries(example.matrix ?? {})) {
         for (const value of values) check(name, value);
+      }
+      for (const [name, property] of Object.entries(properties)) {
+        const given =
+          Object.hasOwn(example.properties ?? {}, name) ||
+          Object.hasOwn(example.matrix ?? {}, name);
+        if (property.required && !given) add(`${where}: needs ${name}, which is required`);
       }
     }
 

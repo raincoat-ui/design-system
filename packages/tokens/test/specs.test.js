@@ -12,16 +12,18 @@ import { enumerations, lintSpecs, loadSpecs } from "../src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
 const SPEC = "specs/components/button/spec.yaml";
+const TYPOGRAPHY = "specs/components/typography/spec.yaml";
 const scratch = [];
 after(() => {
   for (const dir of scratch) rmSync(dir, { recursive: true, force: true });
 });
 
 /**
- * Copies what the spec linter reads to a temp dir, then edits the Button spec. Of the platform
- * packages, only the files the specs list as implementations are copied.
+ * Copies what the spec linter reads to a temp dir, then edits the Button spec, or the spec
+ * `file` names. Of the platform packages, only the files the specs list as implementations are
+ * copied.
  */
-function withSpec(edit, extra = () => {}) {
+function withSpec(edit, extra = () => {}, file = SPEC) {
   const dir = mkdtempSync(join(tmpdir(), "raincoat-specs-"));
   scratch.push(dir);
   for (const part of ["specs", "schemas", "tokens", "rfcs"]) {
@@ -33,15 +35,15 @@ function withSpec(edit, extra = () => {}) {
       cpSync(join(repoRoot, file), join(dir, file));
     }
   }
-  const spec = parse(readFileSync(join(dir, SPEC), "utf8"));
+  const spec = parse(readFileSync(join(dir, file), "utf8"));
   edit(spec);
-  writeFileSync(join(dir, SPEC), stringify(spec));
+  writeFileSync(join(dir, file), stringify(spec));
   extra(dir);
   return dir;
 }
 
-const assertProblem = (edit, pattern, extra) => {
-  const found = lintSpecs(withSpec(edit, extra)).map((problem) => problem.message);
+const assertProblem = (edit, pattern, extra, file) => {
+  const found = lintSpecs(withSpec(edit, extra, file)).map((problem) => problem.message);
   assert.ok(
     found.some((message) => pattern.test(message)),
     `expected a problem matching ${pattern}, got:\n${found.join("\n") || "(none)"}`,
@@ -210,4 +212,127 @@ test("Swift and Kotlin types are generated for each enumeration, with its defaul
   assert.match(kotlin, /Primary\("primary"\),/);
   assert.match(kotlin, /public val Standard: ButtonVariant = Secondary/);
   assert.match(kotlin, /public val Standard: ButtonSize = Md/);
+});
+
+/** Expects a problem in the Typography spec, the one spec with parts, after an edit. */
+const assertTypographyProblem = (edit, pattern) =>
+  assertProblem(edit, pattern, undefined, TYPOGRAPHY);
+
+test("a spec has properties or parts, not both", () => {
+  assertProblem((spec) => {
+    spec.parts = { a: { name: "A", summary: "The first part.", properties: spec.properties } };
+  }, /needs either "properties" or "parts", not both/);
+});
+
+test("a part's defaults are checked, and a default can follow another property", () => {
+  assertTypographyProblem((spec) => {
+    spec.parts.text.properties.variant.default = "heading-xl";
+  }, /parts\.text\.properties\.variant: the default "heading-xl" is not one of its values/);
+  assertTypographyProblem((spec) => {
+    delete spec.parts.heading.properties.variant.default.level["6"];
+  }, /parts\.heading\.properties\.variant: the default gives no value for level 6/);
+  assertTypographyProblem((spec) => {
+    spec.parts.heading.properties.variant.default.level["7"] = "heading-sm";
+  }, /the default maps 7, which level cannot be/);
+  assertTypographyProblem((spec) => {
+    spec.parts.heading.properties.variant.default.level["1"] = "body-md";
+  }, /parts\.heading\.properties\.variant: the default "body-md" is not one of its values/);
+  assertTypographyProblem((spec) => {
+    spec.parts.heading.properties.variant.default = { size: { 1: "heading-xl" } };
+  }, /a default that depends on another property names one property of the same part/);
+  assertTypographyProblem((spec) => {
+    delete spec.parts.text.properties.color.default;
+  }, /parts\.text\.properties\.color: needs a default/);
+});
+
+test("a whole number has a range, and a required one has no default", () => {
+  assertTypographyProblem((spec) => {
+    spec.parts.heading.properties.level.default = 2;
+  }, /parts\.heading\.properties\.level: a required property has no default/);
+  assertTypographyProblem((spec) => {
+    spec.parts.text.properties["max-lines"].default = 0;
+  }, /parts\.text\.properties\.max-lines: the default 0 is out of range/);
+  assertTypographyProblem((spec) => {
+    delete spec.parts.text.properties["max-lines"].minimum;
+  }, /max-lines: a whole number needs a minimum/);
+  assertTypographyProblem((spec) => {
+    spec.parts.heading.properties.level.maximum = 0;
+  }, /level: the maximum is less than the minimum/);
+  assertTypographyProblem((spec) => {
+    spec.parts.text.properties.variant.minimum = 1;
+  }, /parts\.text\.properties\.variant: only a whole number has "minimum"/);
+});
+
+test("an example of a spec with parts names its part and gives what that part requires", () => {
+  const levels = (spec) => spec.examples.find((example) => example.id === "heading-levels");
+  assertTypographyProblem((spec) => {
+    delete spec.examples[0].part;
+  }, /examples\.text-variants: needs a part, one of text, heading/);
+  assertTypographyProblem((spec) => {
+    spec.examples[0].part = "caption";
+  }, /examples\.text-variants: "caption" is not a part/);
+  assertTypographyProblem((spec) => {
+    spec.examples[0].properties = { level: 2 };
+  }, /examples\.text-variants: "level" is not a property/);
+  assertTypographyProblem((spec) => {
+    delete levels(spec).matrix;
+  }, /examples\.heading-levels: needs level, which is required/);
+  assertTypographyProblem((spec) => {
+    levels(spec).matrix.level.push(7);
+  }, /examples\.heading-levels: level must be a whole number in its range, not 7/);
+  assertProblem((spec) => {
+    spec.examples[0].part = "label";
+  }, /examples\.variants: the spec has no parts/);
+});
+
+test("the types of a part are named after the part", () => {
+  const { spec } = loadSpecs(repoRoot).find((entry) => entry.id === "typography");
+  assert.deepEqual(
+    enumerations(spec).map(({ part, type, default: standard }) => [part, type, standard]),
+    [
+      ["text", "TextVariant", "body-md"],
+      ["text", "TextColor", "default"],
+      ["heading", "HeadingVariant", undefined],
+      ["heading", "HeadingColor", "default"],
+    ],
+  );
+  assert.deepEqual(enumerations(spec)[2].defaultBy, {
+    property: "level",
+    keyType: "integer",
+    values: {
+      1: "heading-xl",
+      2: "heading-lg",
+      3: "heading-md",
+      4: "heading-sm",
+      5: "heading-sm",
+      6: "heading-sm",
+    },
+  });
+});
+
+test("a default that follows another property is generated as a table on every platform", () => {
+  const typescript = specsTypeScript(repoRoot);
+  assert.match(
+    typescript,
+    /export const HEADING_VARIANT_DEFAULT_BY_LEVEL = \{ 1: "heading-xl", 2: "heading-lg", 3: "heading-md", 4: "heading-sm", 5: "heading-sm", 6: "heading-sm" \} as const satisfies Readonly<Record<1 \| 2 \| 3 \| 4 \| 5 \| 6, HeadingVariant>>;/,
+  );
+  assert.doesNotMatch(typescript, /HEADING_VARIANT_DEFAULT:/);
+  // A whole number with a range is a type in TypeScript.
+  assert.match(typescript, /export type HeadingLevel = 1 \| 2 \| 3 \| 4 \| 5 \| 6;/);
+  assert.match(typescript, /export const TEXT_COLOR_DEFAULT: TextColor = "default";/);
+
+  const swift = specsSwift(repoRoot);
+  assert.match(
+    swift,
+    /public static let standardByLevel: \[Int: HeadingVariant\] = \[1: \.headingXl, 2: \.headingLg, 3: \.headingMd, 4: \.headingSm, 5: \.headingSm, 6: \.headingSm\]/,
+  );
+  assert.match(swift, /case `default`\n/);
+  assert.match(swift, /public static let standard: TextColor = \.default/);
+
+  const kotlin = specsKotlin(repoRoot);
+  assert.match(
+    kotlin,
+    /public val StandardByLevel: Map<Int, HeadingVariant> = mapOf\(1 to HeadingXl, 2 to HeadingLg, 3 to HeadingMd, 4 to HeadingSm, 5 to HeadingSm, 6 to HeadingSm\)/,
+  );
+  assert.match(kotlin, /public val Standard: TextColor = Default/);
 });

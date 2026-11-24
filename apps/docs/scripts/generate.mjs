@@ -589,7 +589,10 @@ async function componentPage(spec, order) {
   const proposedIn = rfc
     ? `[RFC ${number}](/design-system/project/rfcs/${rfc.replace(/\.md$/, "")}/)`
     : `RFC ${number}`;
-  const types = enumerations(spec).map(({ name }) => readable(name).toLowerCase());
+  // A spec with parts names each type after its part, so the names say which is which.
+  const types = enumerations(spec).map(({ name, type }) =>
+    spec.parts ? code(type) : readable(name).toLowerCase(),
+  );
   const generated =
     types.length === 0
       ? ""
@@ -598,21 +601,59 @@ async function componentPage(spec, order) {
         : ` The ${list(types)} types used by every platform's implementation are generated from this spec.`;
   const renditions = await renditionsOf(spec);
 
-  const propertyRows = Object.entries(spec.properties).map(([name, property]) => [
-    code(name),
-    property.values ? Object.keys(property.values).map(code).join(", ") : "true, false",
-    code(String(property.default)),
-    property.description,
-  ]);
-  const valueTables = Object.entries(spec.properties)
-    .filter(([, property]) => property.values)
-    .map(
-      ([name, property]) =>
-        `### ${readable(name)}\n\n${table(
-          ["Value", "Use"],
-          Object.entries(property.values).map(([value, use]) => [code(value), use]),
-        )}`,
-    );
+  const valuesOf = (property) => {
+    if (property.values) return Object.keys(property.values).map(code).join(", ");
+    if (property.type === "integer") {
+      return property.maximum === undefined
+        ? `A whole number from ${property.minimum}`
+        : `${property.minimum} to ${property.maximum}`;
+    }
+    return "true, false";
+  };
+  const defaultOf = (property) => {
+    if (typeof property.default === "object") {
+      // {level: {1: heading-xl, ...}}: "From level: 1 heading-xl, ...", with runs joined.
+      const [[by, map]] = Object.entries(property.default);
+      const runs = [];
+      for (const [key, value] of Object.entries(map)) {
+        const last = runs.at(-1);
+        if (last?.value === value) last.keys.push(key);
+        else runs.push({ keys: [key], value });
+      }
+      const keys = ({ keys: all }) =>
+        all.length > 2 ? `${all[0]} to ${all.at(-1)}` : all.join(" and ");
+      return `From ${code(by)}: ${runs.map((run) => `${keys(run)} ${code(run.value)}`).join(", ")}`;
+    }
+    if (property.default !== undefined) return code(String(property.default));
+    return property.required ? "Required" : "None";
+  };
+  /** The properties table and a table of each property's values, under headings of `depth`. */
+  const propertyTables = (properties, depth) => [
+    table(
+      ["Property", "Values", "Default", "Description"],
+      Object.entries(properties).map(([name, property]) => [
+        code(name),
+        valuesOf(property),
+        defaultOf(property),
+        property.description,
+      ]),
+    ),
+    ...Object.entries(properties)
+      .filter(([, property]) => property.values)
+      .map(
+        ([name, property]) =>
+          `${"#".repeat(depth)} ${readable(name)}\n\n${table(
+            ["Value", "Use"],
+            Object.entries(property.values).map(([value, use]) => [code(value), use]),
+          )}`,
+      ),
+  ];
+  const propertySections = spec.parts
+    ? Object.values(spec.parts).flatMap(({ name, summary, properties }) => [
+        `### ${name}\n\n${summary}`,
+        ...propertyTables(properties, 4),
+      ])
+    : propertyTables(spec.properties, 3);
   const required = (value) =>
     value === true ? "Yes" : value === false ? "No" : `${value[0].toUpperCase()}${value.slice(1)}`;
   const contentRows = Object.entries(spec.content ?? {}).map(([part, detail]) => [
@@ -659,8 +700,7 @@ async function componentPage(spec, order) {
   ]);
 
   const sections = [
-    `## Properties\n\n${table(["Property", "Values", "Default", "Description"], propertyRows)}`,
-    ...valueTables,
+    `## Properties\n\n${propertySections.join("\n\n")}`,
     contentRows.length > 0 &&
       `## Content\n\n${table(["Content", "Description", "Required"], contentRows)}`,
     ...(renditions?.sections ?? []).map(({ heading, body }) => `## ${heading}\n\n${body.trim()}`),
