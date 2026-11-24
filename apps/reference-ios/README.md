@@ -60,7 +60,10 @@ version, and a maintainer can for any version: Actions, reference apps, Run work
 
 Add a screen for it in `ReferenceApp/`, with one example for each state in its spec, and a test
 class in `ReferenceAppUITests/` that subclasses `ReferenceAppTestCase`. Both folders are
-synchronized with the project, so new files need no change to the project file.
+synchronized with the project, so new files need no change to the project file. The app shows
+the Button's screen, or another one when launched with `-screen <name>`, such as `-screen tabs`
+(`ReferenceApp.swift`). A test class other than `ButtonTests` imports no theme module, because
+the theme switch links only the theme under test.
 
 ## What the audit does not cover
 

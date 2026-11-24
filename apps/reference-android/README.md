@@ -36,4 +36,5 @@ expect a phone-sized screen.
 ## Adding a component
 
 Add a screen for it in `src/main/`, with one example for each state in its spec, and a test
-class in `src/androidTest/`.
+class in `src/androidTest/`. A component other than the Button has an activity of its own, listed
+in the manifest, such as `TabsActivity`, which its test starts.

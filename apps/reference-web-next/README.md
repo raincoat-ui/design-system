@@ -78,7 +78,9 @@ Component stops the page from rendering; this app found that bug.
 ## Adding a component
 
 Add a Client Component for it in `app/`, with one example for each state in its spec, and render
-it from the Server Component too, wherever it can be used there. Add a test file in `tests/`.
+it from the Server Component too, wherever it can be used there. Add a test file in `tests/`. A
+component other than the Button has a page of its own, such as `app/tabs/page.tsx`, which a
+Server Component renders.
 
 ## Licenses
 
