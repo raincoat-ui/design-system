@@ -25,5 +25,6 @@ Versions and licenses quoted in these records were verified on the date of the r
 | [0016](0016-native-components.md)                 | Native components follow the platform where it knows better                 |
 | [0017](0017-release-pipeline.md)                  | The release pipeline                                                        |
 | [0018](0018-theme-directories-and-theme-packs.md) | A theme is a directory the build reads; theme packs use the published build |
+| [0019](0019-visual-snapshots.md)                  | Visual snapshots: one matrix from the specs, baselines recorded in CI       |
 
 To add one, copy `0000-template.md`.

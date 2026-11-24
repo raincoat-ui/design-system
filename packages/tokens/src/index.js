@@ -5,6 +5,12 @@ export { lint, lintTheme } from "./lint.js";
 export { compose, DENSITIES, flatten, loadSource, MODES, TIERS } from "./load.js";
 export { bundledBase, openProject, raincoatVersion } from "./project.js";
 export { aliasesIn, aliasTarget, resolvedType, resolveToken } from "./resolve.js";
+export {
+  componentExamples,
+  expandText,
+  loadMatrix,
+  resolveSnapshots,
+} from "./snapshots.js";
 export { enumerations, lintSpecs, loadSpecs, propertyGroups } from "./specs.js";
 export { BASE_ID, baseTheme, loadTheme, loadThemes, THEME_ID, themeDirs } from "./theme.js";
 export { checkValue } from "./values.js";

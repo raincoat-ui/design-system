@@ -82,6 +82,11 @@ content:
       The text. A heading's text names the section it starts. It comes from the app, and
       the component changes none of it.
     required: true
+  name:
+    description: >-
+      A name or a message from a person, inside the text. It can be in any script, so it takes
+      its direction from its own first strong character.
+    required: false
 
 anatomy:
   text:
@@ -174,8 +179,8 @@ examples:
   - id: person-name
     part: text
     description: >-
-      A sentence with an Arabic name in it. The name takes its direction from its first strong
-      character.
+      A sentence with a person's name in it, in another script: an Arabic name in English, and
+      an English name in Arabic. The name takes its direction from its first strong character.
   - id: heading-levels
     part: heading
     description: Every level, each in the look its level gives.

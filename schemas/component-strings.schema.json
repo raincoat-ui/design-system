@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raincoat-ui.github.io/design-system/schemas/component-strings.schema.json",
+  "title": "Raincoat component strings",
+  "description": "The text the examples of one component spec show, in every locale of the snapshot matrix: specs/components/<id>/strings.yaml. This schema checks structure; the spec linter checks that every example and locale has its text, and nothing else.",
+  "type": "object",
+  "required": ["examples"],
+  "additionalProperties": false,
+  "properties": {
+    "examples": {
+      "description": "By example id, then by the content the text fills, such as label.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/kebab" },
+      "additionalProperties": {
+        "type": "object",
+        "propertyNames": { "$ref": "#/$defs/kebab" },
+        "additionalProperties": {
+          "description": "The text, by locale.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+          },
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "kebab": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+  }
+}

@@ -1,10 +1,11 @@
 // Component specs: the platform-neutral contract of each component, in
 // specs/components/<id>/spec.yaml. This module loads them and checks what a schema cannot.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { parse as parseYaml } from "yaml";
 import { compose, DENSITIES, loadSource, MODES } from "./load.js";
+import { lintSnapshots } from "./snapshots.js";
 
 /** The language of each platform's components, which an implementation's file must be in. */
 const SOURCE_LANGUAGES = {
@@ -163,7 +164,8 @@ function propertyProblems(properties, prefix) {
 }
 
 /**
- * Lints the component specs under `<root>/specs/components`.
+ * Lints the component specs under `<root>/specs/components`, the text of their examples, and
+ * the snapshot matrix.
  * @returns {{file: string, message: string}[]} problems, empty when every spec is valid.
  */
 export function lintSpecs(
@@ -181,6 +183,7 @@ export function lintSpecs(
   const tokens = compose(loadSource(root), { mode: MODES[0], density: DENSITIES[0] }).tokens;
   const tokenIds = [...tokens.keys()];
   const rfcs = existsSync(join(root, "rfcs")) ? readdirSync(join(root, "rfcs")) : [];
+  const valid = [];
 
   for (const { id, file, spec, error } of specs) {
     const add = (message) => problems.push({ file, message });
@@ -206,6 +209,7 @@ export function lintSpecs(
       }
       continue;
     }
+    valid.push({ id, spec });
 
     if (spec.id !== id) add(`id is "${spec.id}" but the directory is "${id}"`);
     if (!existsSync(join(root, `specs/components/${id}/guidelines.md`))) {
@@ -326,5 +330,6 @@ export function lintSpecs(
       }
     }
   }
+  problems.push(...lintSnapshots(root, valid, { schemaDir: dirname(schemaPath) }));
   return problems;
 }
