@@ -107,120 +107,117 @@
         )
     }
 
-    @MainActor
-    @Test(arguments: allThemes, ColorMode.allCases)
-    func aDialogIsFilledWithItsBackgroundAndItsTitleIsPaintedInItsForeground(
-        theme: RaincoatTheme, mode: ColorMode
-    ) throws {
-        let look = DialogAppearance(theme.tokens(mode: mode, density: .comfortable))
-        let drawing = try Drawing(renameDialog(), theme: theme, mode: mode, width: 400)
-        #expect(drawing.has(look.background, at: 2, 2), "the fill at the top left corner")
-        #expect(drawing.has(look.background, at: drawing.width - 3, drawing.height - 3), "and the bottom right")
-        #expect(drawing.contains(look.foreground), "the title and description")
-    }
-
-    @MainActor
-    @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
-    func theTitleStartsThePaddingInFromTheLeadingEdge(direction: LayoutDirection) throws {
-        let look = DialogAppearance(RaincoatTheme.base.tokens(mode: .light, density: .comfortable))
-        let drawing = try Drawing(
-            DialogPanel(heading: heading(), content: EmptyView(), actions: EmptyView()),
-            direction: direction,
-            width: 400
-        )
-        let padding = Int(look.padding)
-        // Only the title is drawn, in the rows below the padding.
-        let title = drawing.columns(notOf: look.background, inRows: padding..<(drawing.height - padding))
-        let first = try #require(title.first, "the title is drawn")
-        let last = try #require(title.last, "the title is drawn")
-        if direction == .leftToRight {
-            #expect(abs(first - padding) <= 2, "starts at the padding: \(first)")
-            #expect(last < drawing.width / 2, "and is short")
-        } else {
-            #expect(abs(last - (drawing.width - 1 - padding)) <= 2, "starts at the padding: \(last)")
-            #expect(first > drawing.width / 2, "and is short")
+    @MainActor @Suite struct DialogRenderingTests {
+        @Test(arguments: allThemes, ColorMode.allCases)
+        func aDialogIsFilledWithItsBackgroundAndItsTitleIsPaintedInItsForeground(
+            theme: RaincoatTheme, mode: ColorMode
+        ) throws {
+            let look = DialogAppearance(theme.tokens(mode: mode, density: .comfortable))
+            let drawing = try Drawing(renameDialog(), theme: theme, mode: mode, width: 400)
+            #expect(drawing.has(look.background, at: 2, 2), "the fill at the top left corner")
+            #expect(drawing.has(look.background, at: drawing.width - 3, drawing.height - 3), "and the bottom right")
+            #expect(drawing.contains(look.foreground), "the title and description")
         }
-        // A dialog with only a title is the padding, a line of the title, and the padding.
-        let line = look.title.lineHeight * look.title.size
-        #expect(abs(Double(drawing.height) - (2 * look.padding + line)) < 2, "height \(drawing.height)")
-    }
 
-    @MainActor
-    @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
-    func theFootersButtonsSitInARowAtTheTrailingEdgeThePrimaryLast(direction: LayoutDirection) throws {
-        let set = RaincoatTheme.base.tokens(mode: .light, density: .comfortable)
-        let look = DialogAppearance(set)
-        let primary = set.button.primary.bg.default
-        let drawing = try Drawing(renameDialog(), direction: direction, width: 400)
-        let middle = drawing.width / 2
-        // The primary button's fill, in the footer, the padding up from the bottom.
-        let row = drawing.height - Int(look.padding) - Int(set.button.height.md / 2)
-        let fill = drawing.columns(of: primary, inRow: row)
-        let first = try #require(fill.first, "the primary button is drawn")
-        let last = try #require(fill.last, "the primary button is drawn")
-        let padding = Int(look.padding)
-        if direction == .leftToRight {
-            #expect(abs(last - (drawing.width - 1 - padding)) <= 2, "against the trailing edge: \(last)")
-            #expect(first > middle, "on the right")
-        } else {
-            #expect(abs(first - padding) <= 2, "against the trailing edge: \(first)")
-            #expect(last < middle, "on the left")
+        @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
+        func theTitleStartsThePaddingInFromTheLeadingEdge(direction: LayoutDirection) throws {
+            let look = DialogAppearance(RaincoatTheme.base.tokens(mode: .light, density: .comfortable))
+            let drawing = try Drawing(
+                DialogPanel(heading: heading(), content: EmptyView(), actions: EmptyView()),
+                direction: direction,
+                width: 400
+            )
+            let padding = Int(look.padding)
+            // Only the title is drawn, in the rows below the padding.
+            let title = drawing.columns(notOf: look.background, inRows: padding..<(drawing.height - padding))
+            let first = try #require(title.first, "the title is drawn")
+            let last = try #require(title.last, "the title is drawn")
+            if direction == .leftToRight {
+                #expect(abs(first - padding) <= 2, "starts at the padding: \(first)")
+                #expect(last < drawing.width / 2, "and is short")
+            } else {
+                #expect(abs(last - (drawing.width - 1 - padding)) <= 2, "starts at the padding: \(last)")
+                #expect(first > drawing.width / 2, "and is short")
+            }
+            // A dialog with only a title is the padding, a line of the title, and the padding.
+            let line = look.title.lineHeight * look.title.size
+            #expect(abs(Double(drawing.height) - (2 * look.padding + line)) < 2, "height \(drawing.height)")
         }
-        // Cancel is beside it, on the same line, and not above it.
-        #expect(drawing.rows(of: primary, inColumn: (first + last) / 2).count < Int(set.button.height.md) + 2)
-    }
 
-    @MainActor
-    @Test func theFootersButtonsStackThePrimaryFirstWhenTheyDoNotFit() throws {
-        let set = RaincoatTheme.base.tokens(mode: .light, density: .comfortable)
-        let look = DialogAppearance(set)
-        let width: CGFloat = 280
-        let drawing = try Drawing(
-            DialogPanel(
-                heading: heading("Delete this address?"),
-                content: EmptyView(),
-                actions: Group {
-                    RaincoatButton("Keep the address") {}
-                    RaincoatButton("Delete the address", variant: .danger) {}
-                }
-            ),
-            width: width
-        )
-        let danger = set.button.danger.bg.default
-        let border = set.button.secondary.border
-        let center = drawing.width / 2
-        let dangerRows = drawing.rows(of: danger, inColumn: center)
-        let borderRows = drawing.rows(of: border, inColumn: center)
-        let dangerTop = try #require(dangerRows.first, "the danger button is drawn")
-        let cancelBottom = try #require(borderRows.last, "the secondary button is drawn")
-        #expect(dangerTop < cancelBottom, "the primary action is first")
-        #expect(dangerRows.last! < borderRows.first!, "and the other is below it")
-        // Each is as wide as the footer.
-        let fill = drawing.columns(of: danger, inRow: dangerTop + 4)
-        let padding = Int(look.padding)
-        #expect(abs((fill.first ?? 0) - padding) <= 2, "from the leading padding: \(fill.first ?? -1)")
-        #expect(abs((fill.last ?? 0) - (drawing.width - 1 - padding)) <= 2, "to the trailing padding")
-    }
+        @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
+        func theFootersButtonsSitInARowAtTheTrailingEdgeThePrimaryLast(direction: LayoutDirection) throws {
+            let set = RaincoatTheme.base.tokens(mode: .light, density: .comfortable)
+            let look = DialogAppearance(set)
+            let primary = set.button.primary.bg.default
+            let drawing = try Drawing(renameDialog(), direction: direction, width: 400)
+            let middle = drawing.width / 2
+            // The primary button's fill, in the footer, the padding up from the bottom.
+            let row = drawing.height - Int(look.padding) - Int(set.button.height.md / 2)
+            let fill = drawing.columns(of: primary, inRow: row)
+            let first = try #require(fill.first, "the primary button is drawn")
+            let last = try #require(fill.last, "the primary button is drawn")
+            let padding = Int(look.padding)
+            if direction == .leftToRight {
+                #expect(abs(last - (drawing.width - 1 - padding)) <= 2, "against the trailing edge: \(last)")
+                #expect(first > middle, "on the right")
+            } else {
+                #expect(abs(first - padding) <= 2, "against the trailing edge: \(first)")
+                #expect(last < middle, "on the left")
+            }
+            // Cancel is beside it, on the same line, and not above it.
+            #expect(drawing.rows(of: primary, inColumn: (first + last) / 2).count < Int(set.button.height.md) + 2)
+        }
 
-    @MainActor
-    @Test func aBodySitsBetweenTheHeaderAndTheFooterInTheDescriptionsColor() throws {
-        let look = DialogAppearance(RaincoatTheme.base.tokens(mode: .light, density: .comfortable))
-        let withBody = try Drawing(
-            DialogPanel(
-                heading: heading(closeLabel: "Close"),
-                content: Text("Press N for a new file."),
-                actions: EmptyView()
-            ),
-            width: 400
-        )
-        let without = try Drawing(
-            DialogPanel(heading: heading(closeLabel: "Close"), content: EmptyView(), actions: EmptyView()),
-            width: 400
-        )
-        // The body adds a line of text, and the gap between it and the header: half on each side.
-        let line = look.description.lineHeight * look.description.size
-        let added = Double(withBody.height - without.height)
-        #expect(abs(added - (line + look.gap)) < 2, "the body adds \(added)")
-        #expect(withBody.contains(look.foreground), "the body's text")
+        @Test func theFootersButtonsStackThePrimaryFirstWhenTheyDoNotFit() throws {
+            let set = RaincoatTheme.base.tokens(mode: .light, density: .comfortable)
+            let look = DialogAppearance(set)
+            let width: CGFloat = 280
+            let drawing = try Drawing(
+                DialogPanel(
+                    heading: heading("Delete this address?"),
+                    content: EmptyView(),
+                    actions: Group {
+                        RaincoatButton("Keep the address") {}
+                        RaincoatButton("Delete the address", variant: .danger) {}
+                    }
+                ),
+                width: width
+            )
+            let danger = set.button.danger.bg.default
+            let border = set.button.secondary.border
+            let center = drawing.width / 2
+            let dangerRows = drawing.rows(of: danger, inColumn: center)
+            let borderRows = drawing.rows(of: border, inColumn: center)
+            let dangerTop = try #require(dangerRows.first, "the danger button is drawn")
+            let cancelBottom = try #require(borderRows.last, "the secondary button is drawn")
+            #expect(dangerTop < cancelBottom, "the primary action is first")
+            #expect(dangerRows.last! < borderRows.first!, "and the other is below it")
+            // Each is as wide as the footer.
+            let fill = drawing.columns(of: danger, inRow: dangerTop + 4)
+            let padding = Int(look.padding)
+            #expect(abs((fill.first ?? 0) - padding) <= 2, "from the leading padding: \(fill.first ?? -1)")
+            #expect(abs((fill.last ?? 0) - (drawing.width - 1 - padding)) <= 2, "to the trailing padding")
+        }
+
+        @Test func aBodySitsBetweenTheHeaderAndTheFooterInTheDescriptionsColor() throws {
+            let look = DialogAppearance(RaincoatTheme.base.tokens(mode: .light, density: .comfortable))
+            let withBody = try Drawing(
+                DialogPanel(
+                    heading: heading(closeLabel: "Close"),
+                    content: Text("Press N for a new file."),
+                    actions: EmptyView()
+                ),
+                width: 400
+            )
+            let without = try Drawing(
+                DialogPanel(heading: heading(closeLabel: "Close"), content: EmptyView(), actions: EmptyView()),
+                width: 400
+            )
+            // The body adds a line of text, and the gap between it and the header: half on each side.
+            let line = look.description.lineHeight * look.description.size
+            let added = Double(withBody.height - without.height)
+            #expect(abs(added - (line + look.gap)) < 2, "the body adds \(added)")
+            #expect(withBody.contains(look.foreground), "the body's text")
+        }
     }
 #endif
