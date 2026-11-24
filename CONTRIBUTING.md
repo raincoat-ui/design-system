@@ -118,6 +118,23 @@ runner's. When a change alters how a component looks, or adds one:
 `packages/web/test-results/snapshots/local/`, for you to look at. It compares nothing and writes
 no baseline; do not copy what it draws into `__screenshots__`.
 
+**Android.** The Compose components' snapshots are drawn with Robolectric, in the
+`android modules` job, and compared with `packages/android/ui/src/test/__screenshots__`. The job
+uploads what it drew as the `android-snapshots` artifact, with `actual/` and `diff/` as on the
+web. Accept them the same way:
+
+```sh
+gh run download <run-id> --name android-snapshots --dir /tmp/android-snapshots
+cp -R /tmp/android-snapshots/actual/. packages/android/ui/src/test/__screenshots__/
+git add packages/android/ui/src/test/__screenshots__
+```
+
+`./gradlew :ui:testDebugUnitTest` draws them on your machine, into
+`packages/android/ui/build/snapshots/local/`, and compares nothing. A component with an Android
+implementation needs `<Component>SnapshotTest.kt` in
+`packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/snapshots/`, which draws one instance
+of its generated examples, as `ButtonSnapshotTest.kt` does; the tests fail until it has one.
+
 To give a new component its snapshots, write its `strings.yaml` (`pnpm tokens:lint` says what is
 missing), run `pnpm tokens:build`, and add `packages/web/test/snapshots/<id>.snapshots.test.tsx`,
 which draws one instance of its examples. [Record 0019](docs/adr/0019-visual-snapshots.md)

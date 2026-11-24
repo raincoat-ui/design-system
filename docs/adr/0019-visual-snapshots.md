@@ -3,6 +3,8 @@
 - Status: accepted
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
+- Amended: 2026-11-24, Android sets a snapshot's font scale as the system does, not with a
+  `Density`
 
 ## Context
 
@@ -72,10 +74,22 @@ generated `allSnapshots` and `<component>Examples`:
   snapshot. It encodes the image as PNG and compares it with a baseline in a `__screenshots__`
   directory of the same layout. The `swift package (macos)` job runs it and uploads what it drew;
   Linux has no SwiftUI and skips it.
-- Android draws with Robolectric and `captureToImage` at one pixel per dp, as
-  `RaincoatButtonTest` does: the same examples with `LocalLayoutDirection`, a `Density` whose
-  `fontScale` is the snapshot's, and the snapshot's locale. The `android modules` job runs it and
-  uploads what it drew.
+- Android draws with Robolectric's native graphics and `captureToImage` at one pixel per dp, as
+  `RaincoatButtonTest` does: the same examples on a stage 480dp wide, with `LocalLayoutDirection`,
+  and the snapshot's locale and font scale set in the system's configuration, before anything is
+  drawn (`RuntimeEnvironment.setQualifiers` and `setFontScale`). A `Density` whose `fontScale` is
+  the snapshot's would enlarge all text by the same factor; Android enlarges large text by less,
+  and the snapshot shows what a person who chose that scale sees. Text is set in the fonts
+  Robolectric's native runtime ships with Android's font configuration, the same files on every
+  machine: Roboto, which covers Vietnamese, then Noto Naskh Arabic and Noto Sans CJK, chosen by
+  the locale. Each component has a `<Component>SnapshotTest` in
+  `packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/snapshots/`, and its baselines are
+  in `packages/android/ui/src/test/__screenshots__/`, laid out as on the web. A pixel differs when
+  its color is further from the baseline's than 0.1 by pixelmatch's measure, the web's threshold,
+  and no pixel may differ. Unlike pixelmatch, the comparison does not excuse antialiased pixels:
+  Robolectric draws in software, and draws the same pixels on every run. A check fails when a
+  spec with an Android implementation has no snapshot test. The `android modules` job runs them
+  and uploads what it drew as the `android-snapshots` artifact.
 
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.
@@ -97,7 +111,8 @@ without testing more of the components.
   pull request, where reviewers see the images.
 - A new runner image, new fonts in Ubuntu, or a Playwright update that brings a new Chromium can
   change many baselines at once. Each is accepted the same way, in the pull request that brings
-  the change; a dependency update of Playwright cannot merge without it.
+  the change; a dependency update of Playwright cannot merge without it. On Android, a Robolectric
+  update brings its own graphics and fonts, and the same holds.
 - The baselines add about 30 KB per image: about 700 KB for the Button's 22 on the web.
 - Until themes ship their fonts, the snapshots show the system's fonts, not each theme's.
 - Firefox gives a button `:active`, which a pressed fill selects, only while a pointer presses
