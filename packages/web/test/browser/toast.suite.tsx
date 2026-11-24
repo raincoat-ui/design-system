@@ -29,6 +29,12 @@ const LABEL = "Notifications";
 const DURATION = 6000;
 const LONG_MESSAGE =
   "Every message in the Archive folder older than one year was moved to the Deleted folder";
+// The long message in Japanese and in Korean, as specs/components/toast/strings.yaml has it.
+const LONG_MESSAGE_JA = "1年以上前のメッセージをアーカイブから削除済みフォルダに移動しました";
+const LONG_MESSAGE_KO = "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다";
+// What may not start a line of Japanese: small kana and the prolonged sound mark, which strict
+// line breaking keeps on the line before, and the closing comma and full stop.
+const NO_LINE_START_JA = /[ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿー、。]/u;
 const ARCHIVED: ToastOptions = { message: "Message archived" };
 const WITH_UNDO = (onClick = () => {}): ToastOptions => ({
   message: "Message archived",
@@ -51,6 +57,30 @@ const number = (id: string, density?: Density) => Number(token(id, "light", dens
 const computed = (element: Element) => getComputedStyle(element);
 const pixels = (value: string) => Number.parseFloat(value);
 const rect = (element: Element) => element.getBoundingClientRect();
+
+/** The lines an element's text is drawn on, as the characters of each. */
+function lines(element: Element) {
+  const lineHeight = pixels(computed(element).lineHeight);
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  const found: string[] = [];
+  let top = Number.NEGATIVE_INFINITY;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const text = node as Text;
+    for (let index = 0; index < text.length; index++) {
+      const character = text.data.charAt(index);
+      range.setStart(text, index);
+      range.setEnd(text, index + 1);
+      const box = range.getBoundingClientRect();
+      if (found.length === 0 || (character.trim() !== "" && box.top > top + lineHeight / 2)) {
+        found.push("");
+        top = box.top;
+      }
+      found[found.length - 1] += character;
+    }
+  }
+  return found;
+}
 
 /** Lets React render and run effects. Animation frames are not faked by the fake clock. */
 async function frames(count = 3) {
@@ -740,6 +770,48 @@ export function describeToast(environment: string) {
         // Still centered.
         const box = rect(toast);
         expect(box.left + box.width / 2).toBeCloseTo(innerWidth / 2, 0);
+      });
+
+      /** The lines of a long message, in a toast drawn at every width from narrow to wide. */
+      async function messageLinesAtEveryWidth(lang: string, message: string) {
+        const screen = await render(
+          <div data-testid="holder" data-theme="light" lang={lang}>
+            <Toast message={message} />
+          </div>,
+        );
+        const holder = screen.getByTestId("holder").element() as HTMLElement;
+        const element = part(screen.container, "toast-message");
+        const found: string[][] = [];
+        for (let width = 160; width <= 480; width += 4) {
+          holder.style.width = `${width}px`;
+          found.push(lines(element));
+        }
+        // Guard against a run that broke no line.
+        expect(found.filter((each) => each.length > 1).length).toBeGreaterThan(found.length / 2);
+        expect(found.every((each) => each.join("") === message)).toBe(true);
+        return { style: computed(element), found };
+      }
+
+      test("a Korean message breaks only between words", async () => {
+        const { style, found } = await messageLinesAtEveryWidth("ko", LONG_MESSAGE_KO);
+        const ended = found.flatMap((each) => each.slice(0, -1));
+        expect(ended.filter((line) => !line.endsWith(" "))).toEqual([]);
+        expect(style.wordBreak).toBe("keep-all");
+      });
+
+      test("a Japanese message never starts a line with a small kana or a prolonged sound mark", async () => {
+        const { style, found } = await messageLinesAtEveryWidth("ja", LONG_MESSAGE_JA);
+        const later = found.flatMap((each) => each.slice(1));
+        expect(later.filter((line) => NO_LINE_START_JA.test(line.charAt(0)))).toEqual([]);
+        expect(style.lineBreak).toBe("strict");
+        // Japanese has no spaces, so its lines still break between characters.
+        expect(style.wordBreak).toBe("normal");
+      });
+
+      test("lines of other languages break by the default rules", async () => {
+        const { style } = await messageLinesAtEveryWidth("en", LONG_MESSAGE);
+        expect(style.lineBreak).toBe("auto");
+        expect(style.wordBreak).toBe("normal");
       });
     });
 

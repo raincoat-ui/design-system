@@ -91,8 +91,10 @@ function ToastParts({
       >
         <RadixToast.Description
           data-slot="toast-message"
-          // The first line is centered on the buttons beside it.
-          className="m-0 min-w-0 flex-auto py-[calc((var(--rc-button-height-sm)_-_1lh)_/_2)] font-(family-name:--rc-toast-message-font-family) text-(length:--rc-toast-message-font-size) leading-(--rc-toast-message-line-height) font-(--rc-toast-message-font-weight) tracking-(--rc-toast-message-letter-spacing) wrap-break-word whitespace-normal"
+          // The first line is centered on the buttons beside it. Lines break by the rules of the
+          // message's language, read from lang, as in Text: strictly for Japanese, and between
+          // whole words for Korean. The action's label, a Button's, breaks by the same rules.
+          className="m-0 min-w-0 flex-auto py-[calc((var(--rc-button-height-sm)_-_1lh)_/_2)] font-(family-name:--rc-toast-message-font-family) text-(length:--rc-toast-message-font-size) leading-(--rc-toast-message-line-height) font-(--rc-toast-message-font-weight) tracking-(--rc-toast-message-letter-spacing) wrap-break-word whitespace-normal [&:lang(ja)]:[line-break:strict] [&:lang(ko)]:break-keep"
         >
           {message}
         </RadixToast.Description>
