@@ -9,6 +9,8 @@ covered and cannot be used.
 - If people need the screen behind to do the task, use a sheet, or put the task in the page.
 - Do not use a dialog for a message that needs no decision. A toast or an inline message
   interrupts less.
+- To show a toast from a dialog or sheet, see the Toast guidelines,
+  [With a dialog or sheet](../toast/guidelines.md#with-a-dialog-or-sheet).
 - Do not open a dialog from a dialog. Replace the content, or close the first.
 
 ## Choosing a kind
