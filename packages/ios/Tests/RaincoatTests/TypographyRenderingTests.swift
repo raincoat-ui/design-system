@@ -81,112 +81,116 @@
     /// The height of one line of a text style, in points.
     private func lineHeight(_ style: TokenTextStyle) -> Double { style.lineHeight * style.size }
 
-    @MainActor
-    @Test(arguments: allThemes)
-    func oneLineOfTextIsAsTallAsItsStylesLineHeight(theme: RaincoatTheme) throws {
-        let type = theme.tokens(mode: .light, density: .comfortable).type
-        let styles: [(TextVariant, TokenTextStyle)] = [
-            (.bodyLg, type.body.lg), (.bodyMd, type.body.md), (.bodySm, type.body.sm),
-            (.labelLg, type.label.lg), (.labelMd, type.label.md), (.labelSm, type.label.sm),
-            (.caption, type.caption),
-        ]
-        for (variant, style) in styles {
-            let drawing = try Drawing(Text("Synced 2 minutes ago").raincoatText(variant), theme: theme)
-            #expect(abs(Double(drawing.height) - lineHeight(style)) < 1.5, "\(variant): \(drawing.height)")
+    /// The tests are in a suite, so that a test of another component with the same name cannot
+    /// clash with them.
+    @Suite struct TypographyRenderingTests {
+        @MainActor
+        @Test(arguments: allThemes)
+        func oneLineOfTextIsAsTallAsItsStylesLineHeight(theme: RaincoatTheme) throws {
+            let type = theme.tokens(mode: .light, density: .comfortable).type
+            let styles: [(TextVariant, TokenTextStyle)] = [
+                (.bodyLg, type.body.lg), (.bodyMd, type.body.md), (.bodySm, type.body.sm),
+                (.labelLg, type.label.lg), (.labelMd, type.label.md), (.labelSm, type.label.sm),
+                (.caption, type.caption),
+            ]
+            for (variant, style) in styles {
+                let drawing = try Drawing(Text("Synced 2 minutes ago").raincoatText(variant), theme: theme)
+                #expect(abs(Double(drawing.height) - lineHeight(style)) < 1.5, "\(variant): \(drawing.height)")
+            }
+            let headings: [(Int, TokenTextStyle)] = [
+                (1, type.heading.xl), (2, type.heading.lg), (3, type.heading.md), (4, type.heading.sm),
+                (5, type.heading.sm), (6, type.heading.sm),
+            ]
+            for (level, style) in headings {
+                let drawing = try Drawing(Text("Notifications").raincoatHeading(level: level), theme: theme)
+                #expect(abs(Double(drawing.height) - lineHeight(style)) < 1.5, "level \(level): \(drawing.height)")
+            }
         }
-        let headings: [(Int, TokenTextStyle)] = [
-            (1, type.heading.xl), (2, type.heading.lg), (3, type.heading.md), (4, type.heading.sm),
-            (5, type.heading.sm), (6, type.heading.sm),
-        ]
-        for (level, style) in headings {
-            let drawing = try Drawing(Text("Notifications").raincoatHeading(level: level), theme: theme)
-            #expect(abs(Double(drawing.height) - lineHeight(style)) < 1.5, "level \(level): \(drawing.height)")
+
+        @MainActor
+        @Test func aHeadingVariantChangesTheLookAndNotTheLevel() throws {
+            let type = RaincoatTheme.base.tokens(mode: .light, density: .comfortable).type
+            let drawing = try Drawing(Text("Recent files").raincoatHeading(level: 1, variant: .headingSm))
+            #expect(abs(Double(drawing.height) - lineHeight(type.heading.sm)) < 1.5)
         }
-    }
 
-    @MainActor
-    @Test func aHeadingVariantChangesTheLookAndNotTheLevel() throws {
-        let type = RaincoatTheme.base.tokens(mode: .light, density: .comfortable).type
-        let drawing = try Drawing(Text("Recent files").raincoatHeading(level: 1, variant: .headingSm))
-        #expect(abs(Double(drawing.height) - lineHeight(type.heading.sm)) < 1.5)
-    }
+        @MainActor
+        @Test(arguments: allThemes, ColorMode.allCases)
+        func textIsPaintedInTheTokenOfItsColor(theme: RaincoatTheme, mode: ColorMode) throws {
+            let fg = theme.tokens(mode: mode, density: .comfortable).color.fg
+            let colors: [(TextColor, TokenColor)] = [(.default, fg.default), (.muted, fg.muted), (.danger, fg.danger)]
+            for (color, token) in colors {
+                let drawing = try Drawing(
+                    Text("Settings").raincoatText(.labelLg, color: color), theme: theme, mode: mode
+                )
+                #expect(drawing.contains(token), "\(color)")
+            }
+            let headings: [(HeadingColor, TokenColor)] = [(.default, fg.default), (.muted, fg.muted)]
+            for (color, token) in headings {
+                let drawing = try Drawing(
+                    Text("Settings").raincoatHeading(level: 2, color: color), theme: theme, mode: mode
+                )
+                #expect(drawing.contains(token), "heading in \(color)")
+            }
+        }
 
-    @MainActor
-    @Test(arguments: allThemes, ColorMode.allCases)
-    func textIsPaintedInTheTokenOfItsColor(theme: RaincoatTheme, mode: ColorMode) throws {
-        let fg = theme.tokens(mode: mode, density: .comfortable).color.fg
-        let colors: [(TextColor, TokenColor)] = [(.default, fg.default), (.muted, fg.muted), (.danger, fg.danger)]
-        for (color, token) in colors {
+        @MainActor
+        @Test(arguments: allThemes)
+        func aLongHeadingWrapsAndIsNeverCutShort(theme: RaincoatTheme) throws {
+            let xl = theme.tokens(mode: .light, density: .comfortable).type.heading.xl
+            // A limit from further up does not cut a heading short.
             let drawing = try Drawing(
-                Text("Settings").raincoatText(.labelLg, color: color), theme: theme, mode: mode
+                Text(longHeading).raincoatHeading(level: 1).lineLimit(1), theme: theme, width: 240
             )
-            #expect(drawing.contains(token), "\(color)")
+            #expect(drawing.width <= 240)
+            #expect(Double(drawing.height) > 2.5 * lineHeight(xl))
         }
-        let headings: [(HeadingColor, TokenColor)] = [(.default, fg.default), (.muted, fg.muted)]
-        for (color, token) in headings {
+
+        @MainActor
+        @Test(arguments: allThemes)
+        func maxLinesCutsTextShortAfterThatManyLines(theme: RaincoatTheme) throws {
+            let md = theme.tokens(mode: .light, density: .comfortable).type.body.md
+            let whole = try Drawing(Text(paragraph).raincoatText(), theme: theme, width: 220)
+            let two = try Drawing(Text(paragraph).raincoatText(maxLines: 2), theme: theme, width: 220)
+            let one = try Drawing(Text(paragraph).raincoatText(maxLines: 1), theme: theme, width: 220)
+            #expect(Double(whole.height) > 3 * lineHeight(md))
+            #expect(abs(Double(two.height) - 2 * lineHeight(md)) < 2, "\(two.height)")
+            #expect(abs(Double(one.height) - lineHeight(md)) < 1.5, "\(one.height)")
+        }
+
+        @MainActor
+        @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
+        func textStartsOnTheSideWhereReadingStarts(direction: LayoutDirection) throws {
+            // A short word, then a long one that fills the width: the short line starts at the
+            // leading edge.
             let drawing = try Drawing(
-                Text("Settings").raincoatHeading(level: 2, color: color), theme: theme, mode: mode
+                Text("Hi\n" + longHeading).raincoatText().frame(maxWidth: .infinity, alignment: .leading),
+                direction: direction,
+                width: 400
             )
-            #expect(drawing.contains(token), "heading in \(color)")
+            let firstLine = (0..<drawing.width).filter { x in
+                (0..<Int(drawing.height / 4)).contains { y in drawing.pixel(x, y)[3] > 0 }
+            }
+            let first = try #require(firstLine.first)
+            let last = try #require(firstLine.last)
+            if direction == .leftToRight {
+                #expect(first < 8)
+                #expect(last < drawing.width / 2)
+            } else {
+                #expect(last > drawing.width - 8)
+                #expect(first > drawing.width / 2)
+            }
         }
-    }
 
-    @MainActor
-    @Test(arguments: allThemes)
-    func aLongHeadingWrapsAndIsNeverCutShort(theme: RaincoatTheme) throws {
-        let xl = theme.tokens(mode: .light, density: .comfortable).type.heading.xl
-        // A limit from further up does not cut a heading short.
-        let drawing = try Drawing(
-            Text(longHeading).raincoatHeading(level: 1).lineLimit(1), theme: theme, width: 240
-        )
-        #expect(drawing.width <= 240)
-        #expect(Double(drawing.height) > 2.5 * lineHeight(xl))
-    }
-
-    @MainActor
-    @Test(arguments: allThemes)
-    func maxLinesCutsTextShortAfterThatManyLines(theme: RaincoatTheme) throws {
-        let md = theme.tokens(mode: .light, density: .comfortable).type.body.md
-        let whole = try Drawing(Text(paragraph).raincoatText(), theme: theme, width: 220)
-        let two = try Drawing(Text(paragraph).raincoatText(maxLines: 2), theme: theme, width: 220)
-        let one = try Drawing(Text(paragraph).raincoatText(maxLines: 1), theme: theme, width: 220)
-        #expect(Double(whole.height) > 3 * lineHeight(md))
-        #expect(abs(Double(two.height) - 2 * lineHeight(md)) < 2, "\(two.height)")
-        #expect(abs(Double(one.height) - lineHeight(md)) < 1.5, "\(one.height)")
-    }
-
-    @MainActor
-    @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
-    func textStartsOnTheSideWhereReadingStarts(direction: LayoutDirection) throws {
-        // A short word, then a long one that fills the width: the short line starts at the
-        // leading edge.
-        let drawing = try Drawing(
-            Text("Hi\n" + longHeading).raincoatText().frame(maxWidth: .infinity, alignment: .leading),
-            direction: direction,
-            width: 400
-        )
-        let firstLine = (0..<drawing.width).filter { x in
-            (0..<Int(drawing.height / 4)).contains { y in drawing.pixel(x, y)[3] > 0 }
+        @MainActor
+        @Test func theStyleAppliesToALabelAndATextField() throws {
+            let md = RaincoatTheme.base.tokens(mode: .light, density: .comfortable).type.label.md
+            let label = try Drawing(Label("Shared with you", systemImage: "person.2").raincoatText(.labelMd))
+            #expect(abs(Double(label.height) - lineHeight(md)) < 2, "\(label.height)")
+            let field = try Drawing(
+                TextField("Name", text: .constant("Ada")).raincoatText(.labelMd), width: 200
+            )
+            #expect(Double(field.height) >= lineHeight(md) - 1, "\(field.height)")
         }
-        let first = try #require(firstLine.first)
-        let last = try #require(firstLine.last)
-        if direction == .leftToRight {
-            #expect(first < 8)
-            #expect(last < drawing.width / 2)
-        } else {
-            #expect(last > drawing.width - 8)
-            #expect(first > drawing.width / 2)
-        }
-    }
-
-    @MainActor
-    @Test func theStyleAppliesToALabelAndATextField() throws {
-        let md = RaincoatTheme.base.tokens(mode: .light, density: .comfortable).type.label.md
-        let label = try Drawing(Label("Shared with you", systemImage: "person.2").raincoatText(.labelMd))
-        #expect(abs(Double(label.height) - lineHeight(md)) < 2, "\(label.height)")
-        let field = try Drawing(
-            TextField("Name", text: .constant("Ada")).raincoatText(.labelMd), width: 200
-        )
-        #expect(Double(field.height) >= lineHeight(md) - 1, "\(field.height)")
     }
 #endif

@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import io.github.raincoatui.tokens.HeadingColor
@@ -85,6 +87,8 @@ public fun RaincoatHeading(
 
 @Composable
 private fun TypographyText(text: String, appearance: TextAppearance, modifier: Modifier, maxLines: Int) {
+    // Text is broken into lines by the rules of the language Compose sets it in: the person's.
+    val language = Locale.current.language
     BasicText(
         text = text,
         modifier = modifier,
@@ -93,9 +97,25 @@ private fun TypographyText(text: String, appearance: TextAppearance, modifier: M
         style = appearance.style.toTextStyle().copy(
             color = appearance.color.toColor(),
             textAlign = TextAlign.Start,
+            lineBreak = typographyLineBreak(language),
         ),
         // Only the drawing stops: the text is all still there for assistive technology.
         overflow = TextOverflow.Ellipsis,
         maxLines = maxLines,
     )
 }
+
+/**
+ * How text breaks into lines in a language, as the Typography spec says. Lines break by the
+ * strict rules, as the Button's label does, so that no line of Japanese starts with a small kana
+ * or a prolonged sound mark. Korean, which puts spaces between words, breaks only between whole
+ * words: Android otherwise breaks it between any two syllables. Breaking by phrase needs Android
+ * 13; earlier versions break Korean between syllables.
+ *
+ * @param language The ISO 639 code of the language, such as "ko".
+ */
+internal fun typographyLineBreak(language: String): LineBreak = LineBreak(
+    strategy = LineBreak.Strategy.Simple,
+    strictness = LineBreak.Strictness.Strict,
+    wordBreak = if (language == "ko") LineBreak.WordBreak.Phrase else LineBreak.WordBreak.Default,
+)
