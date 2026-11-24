@@ -557,55 +557,6 @@ export function describeToast(environment: string) {
       });
     });
 
-    describe("swipe", () => {
-      test("a swipe down closes the toast, and a short one does not", async (context) => {
-        // Chromium alone can turn a touch screen on in a page that is already open.
-        context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
-        // Leave room below the toast to swipe into.
-        await render(<Stage bottomInset={240} />);
-        const toast = await showAndWait(WITH_UNDO());
-        // Input goes to the page, which holds this test's frame.
-        const frame = (window.frameElement as HTMLElement | null)?.getBoundingClientRect();
-        const scale = frame ? frame.width / innerWidth : 1;
-        const at = (x: number, y: number) => ({
-          x: (frame?.left ?? 0) + x * scale,
-          y: (frame?.top ?? 0) + y * scale,
-        });
-        const box = rect(toast);
-        const start = { x: box.left + box.width / 2, y: box.top + 8 };
-        const swipe = async (distance: number) => {
-          await cdp().send("Emulation.setTouchEmulationEnabled", {
-            enabled: true,
-            maxTouchPoints: 1,
-          });
-          try {
-            await cdp().send("Input.dispatchTouchEvent", {
-              type: "touchStart",
-              touchPoints: [at(start.x, start.y)],
-            });
-            for (let step = 1; step <= 5; step += 1) {
-              await cdp().send("Input.dispatchTouchEvent", {
-                type: "touchMove",
-                touchPoints: [at(start.x, start.y + (distance * step) / 5)],
-              });
-            }
-            await cdp().send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-          } finally {
-            await cdp().send("Emulation.setTouchEmulationEnabled", { enabled: false });
-          }
-        };
-
-        await swipe(20);
-        await frames();
-        expect(openToast()).not.toBeNull();
-        // It went back to where it was.
-        expect(openToast()?.style.translate).toBe("");
-
-        await swipe(120);
-        await gone();
-      });
-    });
-
     describe.each(MODES)("colors in %s mode", (mode) => {
       test("the toast is drawn with its tokens", async () => {
         await render(<Stage mode={mode} />);
@@ -913,6 +864,66 @@ export function describeToast(environment: string) {
           expect(style.backgroundColor).toBe(color("toast.bg", "dark"));
           expect(style.color).toBe(color("toast.fg", "dark"));
         });
+      });
+    });
+  });
+}
+
+/**
+ * The Toast on a touch screen. These tests run in projects of their own, after every other
+ * component test (vitest.config.ts): Chromium does not give a page its mouse back once a touch
+ * screen was turned on in it.
+ */
+export function describeToastOnTouchScreens(environment: string) {
+  describe(`Toast, ${environment}`, () => {
+    beforeEach(parkPointer);
+
+    describe("swipe", () => {
+      test("a swipe down closes the toast, and a short one does not", async (context) => {
+        // Chromium alone can turn a touch screen on in a page that is already open.
+        context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
+        // Leave room below the toast to swipe into.
+        await render(<Stage bottomInset={240} />);
+        const toast = await showAndWait(WITH_UNDO());
+        // Input goes to the page, which holds this test's frame.
+        const frame = (window.frameElement as HTMLElement | null)?.getBoundingClientRect();
+        const scale = frame ? frame.width / innerWidth : 1;
+        const at = (x: number, y: number) => ({
+          x: (frame?.left ?? 0) + x * scale,
+          y: (frame?.top ?? 0) + y * scale,
+        });
+        const box = rect(toast);
+        const start = { x: box.left + box.width / 2, y: box.top + 8 };
+        const swipe = async (distance: number) => {
+          await cdp().send("Emulation.setTouchEmulationEnabled", {
+            enabled: true,
+            maxTouchPoints: 1,
+          });
+          try {
+            await cdp().send("Input.dispatchTouchEvent", {
+              type: "touchStart",
+              touchPoints: [at(start.x, start.y)],
+            });
+            for (let step = 1; step <= 5; step += 1) {
+              await cdp().send("Input.dispatchTouchEvent", {
+                type: "touchMove",
+                touchPoints: [at(start.x, start.y + (distance * step) / 5)],
+              });
+            }
+            await cdp().send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+          } finally {
+            await cdp().send("Emulation.setTouchEmulationEnabled", { enabled: false });
+          }
+        };
+
+        await swipe(20);
+        await frames();
+        expect(openToast()).not.toBeNull();
+        // It went back to where it was.
+        expect(openToast()?.style.translate).toBe("");
+
+        await swipe(120);
+        await gone();
       });
     });
   });
