@@ -51,6 +51,7 @@ import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -205,6 +206,9 @@ class RaincoatTabsTest(themeId: String) {
 
     private fun tab(name: String): SemanticsNodeInteraction = compose.onNodeWithText(name)
 
+    /** The width a node is laid out at, including any part scrolled out of view. */
+    private fun widthOf(node: SemanticsNodeInteraction): Dp = node.getUnclippedBoundsInRoot().let { it.right - it.left }
+
     // Semantics and selection
 
     @Test
@@ -295,7 +299,8 @@ class RaincoatTabsTest(themeId: String) {
             val middle = reviews.height / 2
             // At rest a tab has no fill; the selected one has the indicator along its bottom edge.
             assertTrue(where, reviews.isClear(3, middle))
-            assertTrue(where, reviews.isClear(3, reviews.height - 1))
+            // Under a tab that is not selected, the row's hairline shows.
+            assertPainted("$where, hairline", tabs.divider.color, reviews, 3, reviews.height - 1)
             assertTrue(where, details.isClear(3, middle))
             for (y in details.height - tabs.indicator.width.toInt() until details.height) {
                 assertPainted("$where, indicator", tabs.indicator.color, details, 3, y)
@@ -378,10 +383,10 @@ class RaincoatTabsTest(themeId: String) {
     @Test
     fun `selecting a tab does not change its width`() {
         show { Product() }
-        val before = tab("Reviews").getUnclippedBoundsInRoot().width
+        val before = widthOf(tab("Reviews"))
         tab("Reviews").performClick()
         tab("Reviews").assertIsSelected()
-        assertEquals(before, tab("Reviews").getUnclippedBoundsInRoot().width)
+        assertEquals(before, widthOf(tab("Reviews")))
     }
 
     // Touch target
@@ -405,7 +410,11 @@ class RaincoatTabsTest(themeId: String) {
         val reach = (target - height) / 2f
         assertTrue("the compact tab is shorter than the target", reach >= 2)
         show(density = Density.Compact) { Product() }
-        tab("Reviews").performMouseInput { click(Offset(centerX, -2f)) }
+        tab("Reviews").performMouseInput {
+            click(Offset(centerX, -2f))
+            // Away from where any later test draws a tab, so that none starts out hovered.
+            exit(Offset(-100f, -100f))
+        }
         tab("Reviews").assertIsNotSelected()
         tab("Reviews").performTouchInput { click(Offset(centerX, -reach + 1)) }
         tab("Reviews").assertIsSelected()
@@ -428,7 +437,7 @@ class RaincoatTabsTest(themeId: String) {
         tab(long).assertHeightIsEqualTo(height.dp)
         compose.onNodeWithTag(row).assertHeightIsEqualTo(height.dp)
         // The label is laid out at its full width, wider than the row.
-        assertTrue(tab(long).getUnclippedBoundsInRoot().width > 240.dp)
+        assertTrue(widthOf(tab(long)) > 240.dp)
     }
 
     @Test

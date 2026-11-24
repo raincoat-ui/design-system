@@ -139,7 +139,7 @@ class TabsScreenTest {
         compose.onNodeWithText("Đang xem: ${TRANSLATED.last()}").assertIsDisplayed()
 
         // Each label is on one line, at its full width: every tab is as tall as the others.
-        val heights = TRANSLATED.map { tab(it).getUnclippedBoundsInRoot().height }.toSet()
+        val heights = TRANSLATED.map { tab(it).getUnclippedBoundsInRoot().let { box -> box.bottom - box.top } }.toSet()
         assertEquals(1, heights.size)
     }
 
