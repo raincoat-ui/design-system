@@ -3,7 +3,7 @@
 Raincoat components for Android 8 (API 26) and later, written in Jetpack Compose. Every color,
 size, and text style they use comes from a Raincoat theme.
 
-The current version is the prerelease `0.1.0-next.4`. Anything in it may change before 1.0.
+The current version is the prerelease `0.1.0-next.5`. Anything in it may change before 1.0.
 
 ## Install
 
@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 // build.gradle.kts
 dependencies {
-    implementation("io.github.raincoat-ui:ui:0.1.0-next.4")
+    implementation("io.github.raincoat-ui:ui:0.1.0-next.5")
 }
 ```
 
