@@ -151,42 +151,69 @@ final class DialogTests: ReferenceAppTestCase {
         XCTAssertTrue(title.waitForNonExistence(timeout: 10))
     }
 
-    /// The system's accessibility audit, with each dialog and sheet, and the alert, open in turn.
+    /// The system's accessibility audit, of the screen alone, then with each dialog and sheet, and
+    /// the alert, open in turn. Every one is audited even when one fails, and each is an activity
+    /// of its own in the results, so that a failure says which it was.
     @MainActor
     func testEachOpenDialogPassesTheAccessibilityAudit() throws {
         let app = launch()
+        continueAfterFailure = true
+        try audit(app, "the screen alone")
         for (button, close) in [
             ("Rename file", "Cancel"), ("Terms of use", "Close"), ("Share", "Cancel"), ("Filters", "Close"),
         ] {
             app.buttons[button].tap()
             XCTAssertTrue(app.buttons[close].waitForExistence(timeout: 10), button)
             if button == "Rename file" {
-                // Audited as the person finds it: in the field, with the keyboard up.
-                expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: app.textFields["Name"])
+                // As the person finds it: in the field, with the keyboard up.
+                let field = app.textFields["Name"]
+                expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: field)
                 waitForExpectations(timeout: 10)
+                try audit(app, "\(button), with the keyboard up")
+                // And with the keyboard put away, as Return does.
+                field.typeText("\n")
+                XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 10))
+                try audit(app, "\(button), with the keyboard away")
+            } else {
+                try audit(app, button)
             }
-            try audit(app)
             app.buttons[close].tap()
             XCTAssertTrue(app.buttons[close].waitForNonExistence(timeout: 10), button)
         }
         app.buttons["Delete address"].tap()
         let alert = app.alerts.firstMatch
         XCTAssertTrue(alert.waitForExistence(timeout: 10))
-        try audit(app)
+        try audit(app, "the alert dialog")
         alert.buttons["Cancel"].tap()
     }
 
-    /// The system's accessibility audit of the screen. An issue it finds fails the test, with what
-    /// XCTest attaches to it, unless it is one of these.
+    /// The system's accessibility audit of the screen, as an activity named for what is open. An
+    /// issue it finds fails the test, with what XCTest attaches to it, unless it is one of these.
+    /// For an issue that names no element, the activity also keeps what the screen showed when
+    /// the issue was reported, and the app's elements, so that it can be traced.
     @MainActor
-    private func audit(_ app: XCUIApplication) throws {
-        try app.performAccessibilityAudit { issue in
-            // The audit takes any font that was not made from a text style to be fixed in size.
-            // Raincoat scales its token sizes itself, which the Typography tests check.
-            if issue.auditType == .dynamicType { return true }
-            // The keyboard, and the typing predictions over it, are the system's, not the app's.
-            if let element = issue.element, self.isTheKeyboards(element, app) { return true }
-            return false
+    private func audit(_ app: XCUIApplication, _ state: String = "the dialog") throws {
+        try XCTContext.runActivity(named: "Audit: \(state)") { activity in
+            var traced = false
+            try app.performAccessibilityAudit { issue in
+                // The audit takes any font that was not made from a text style to be fixed in
+                // size. Raincoat scales its token sizes itself, which the Typography tests check.
+                if issue.auditType == .dynamicType { return true }
+                // The keyboard, and the typing predictions over it, are the system's.
+                if let element = issue.element, self.isTheKeyboards(element, app) { return true }
+                if issue.element == nil, !traced {
+                    traced = true
+                    let screenshot = XCTAttachment(screenshot: app.screenshot())
+                    screenshot.name = "\(state): \(issue.compactDescription): \(issue.detailedDescription)"
+                    screenshot.lifetime = .keepAlways
+                    activity.add(screenshot)
+                    let elements = XCTAttachment(string: app.debugDescription)
+                    elements.name = "\(state): the app's elements"
+                    elements.lifetime = .keepAlways
+                    activity.add(elements)
+                }
+                return false
+            }
         }
     }
 
