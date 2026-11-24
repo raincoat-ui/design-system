@@ -10,6 +10,13 @@
       "sha256": "79dd6f75f8136394442202d6b8b922fb269eaad0a5dba579397c9d5b41f893bb",
       "fetched": "2026-11-16",
       "local": "src/components/ui/button.tsx"
+    },
+    "tabs": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/tabs.json",
+      "upstream": ".shadcn-upstream/tabs.tsx",
+      "sha256": "e1df6e2f95ece373ca909c1d54b8ba8cf4c47dd425c1784bbb9a01c38dd0936b",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/tabs.tsx"
     }
   }
 }

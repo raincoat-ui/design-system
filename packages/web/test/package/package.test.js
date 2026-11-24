@@ -124,6 +124,8 @@ const NEUTRAL = new Set([
   ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
   ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  // Layout and overflow keywords, for a row that scrolls sideways.
+  ...["auto", "hidden", "column", "nowrap"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
