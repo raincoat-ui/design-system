@@ -13,12 +13,15 @@ on top.
 
 **Documentation: <https://raincoat-ui.github.io/design-system/>**
 
-> **Status: milestone 2 complete; milestone 3, the v1 components, in progress.** The proposals
-> for its six new components, [RFCs 0003 to 0008](rfcs/), are accepted. One token source
-> drives a Button on the web, iOS, and Android, in two themes, published as prereleases to npm,
-> the Maven repository, and the Swift mirror. The
+> **Status: milestone 3, the v1 components, complete.** One token source drives seven
+> components on the web, iOS, and Android, in two themes: the Button, Typography, Input, Card,
+> Dialog and Sheet, Tabs, and Toast. They are published as prereleases to npm, the Maven
+> repository, and the Swift mirror. Milestone 4, hardening, is next. The
 > [releases page](https://github.com/raincoat-ui/design-system/releases) says which registries
-> each one has reached, and the [roadmap](docs/roadmap.md) what each milestone delivers.
+> each one has reached, the
+> [parity matrix](https://raincoat-ui.github.io/design-system/components/parity-matrix/) which
+> platforms each component is on, and the [roadmap](docs/roadmap.md) what each milestone
+> delivers.
 
 ## What it will be
 

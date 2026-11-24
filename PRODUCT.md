@@ -81,12 +81,13 @@ Raincoat in awesome-design-systems.
 
 ## Capabilities and Constraints
 
-- **Today (0.1.0-next.3; milestone 2 complete):** the token source with its linter and contrast
-  checker; the generated web theme stylesheet, Swift package, and Kotlin modules; and a Button
-  on all three platforms, published to all three registries and tested in the reference apps
-  from each of them. Two themes, the base and Ink: a theme is a directory under `themes/`,
-  built, tested, and published on every platform by the same pipeline (ADR 0018). The token
-  build is published as `@raincoat-ui/tokens`, for theme packs kept outside the repository.
+- **Today (<RELEASE-VERSION>; milestone 3 complete):** the token source with its linter and
+  contrast checker; the generated web theme stylesheet, Swift package, and Kotlin modules; and
+  the seven v1 components on all three platforms, published to all three registries and tested
+  in the reference apps from each of them. Two themes, the base and Ink: a theme is a directory
+  under `themes/`, built, tested, and published on every platform by the same pipeline
+  (ADR 0018). The token build is published as `@raincoat-ui/tokens`, for theme packs kept
+  outside the repository.
 - **v1 component set:** Button, Input, Card, Dialog/Sheet, Tabs, Toast, Typography. Select,
   Checkbox, Radio, Switch, Menu, Tooltip, date picker, table, and navigation bars follow in 1.x.
 - **Token model:** primitive, semantic, and component tiers. Every theme has four color modes
@@ -129,21 +130,26 @@ Raincoat in awesome-design-systems.
 
 ## Evidence on Hand
 
-- The prereleases 0.1.0-next.0 to 0.1.0-next.3 on GitHub Releases, with provenance
+- The prereleases 0.1.0-next.0 to <RELEASE-VERSION> on GitHub Releases, with provenance
   attestations and a bill of materials. From 0.1.0-next.1 on, each is on npm, the Maven
   repository, and the Swift mirror. 0.1.0-next.2 was published to npm through trusted
   publishing, with no token; 0.1.0-next.3 brought two new npm packages, the Ink theme and the
   token build, which needed a token for their first publish. The release runs of both passed
-  every reference app's tests, in every theme.
+  every reference app's tests, in every theme. <RELEASE-VERSION> is the first with the six
+  components milestone 3 added, and its release run installed it into every reference app.
 - A second theme added with no code (pull request 41, Ink), and a theme pack kept outside the
   repository, built with the published token build and tested against the published Swift
   mirror and Maven repository: the evidence for milestone 2 in `docs/roadmap.md`.
+- Seven components on three platforms, each with an accepted RFC and a pull request that goes
+  through the Definition of Done, and the snapshot matrix drawn on every platform: the evidence
+  for milestone 3 in `docs/roadmap.md`.
 - The contrast table on the docs site (`foundations/contrast`): every declared color pair in
   every mode, all checks passing.
-- Platform test evidence: the reference apps' accessibility audits, the pixel tests of the
-  Button on each platform, and the planted-GPL proof of the license gate (pull request 1).
-- The prior-art comparison (`docs/research/prior-art.md`) and RFC 0001 (foundation tokens and
-  Button).
+- Platform test evidence: the reference apps' accessibility audits, the pixel tests of each
+  component on each platform, the visual snapshot baselines, and the planted-GPL proof of the
+  license gate (pull request 1).
+- The prior-art comparison (`docs/research/prior-art.md`) and the component RFCs: 0001
+  (foundation tokens and Button) and 0003 to 0008 (the six v1 components that followed).
 - **Do not invent:** Raincoat has no outside adopters, testimonials, usage numbers, case studies,
   performance benchmarks, or press. No real brand theme is public. Trademark registers were not
   checked for the name.
@@ -172,5 +178,6 @@ Raincoat in awesome-design-systems.
 - Screen readers are told each component's role, name, and state. On iOS, a loading button says
   "In progress" in words, translated into en, vi, zh-Hans, zh-Hant, ja, and ko.
 - Right-to-left layout, text expansion, Vietnamese, and CJK are part of every component's tests.
-  The Button is tested left-to-right and right-to-left on every platform. The full snapshot
-  matrix of languages and text sizes is due in milestone 3.
+  Every component is drawn on every platform, in each theme, right to left, at the largest text
+  size, and in Vietnamese, Chinese, Japanese, Korean, and expanded English, and CI compares each
+  drawing with its baseline (ADR 0019).
