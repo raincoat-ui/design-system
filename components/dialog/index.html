@@ -1,0 +1,799 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-e5zlmhtl" data-astro-cid-e5zlmhtl><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Dialog | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/components/dialog/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="apple-touch-icon" href="/design-system/apple-touch-icon.png"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.12"/><meta name="generator" content="Starlight v0.43.1"/><meta property="og:title" content="Dialog"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/components/dialog/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Interrupts a task to ask for something or to confirm it, in a panel above the screen."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Interrupts a task to ask for something or to confirm it, in a panel above the screen."/><meta property="og:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Raincoat: one design-system foundation, compiled to native code for iOS, Android, and the web."/><meta name="twitter:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><script>
+	(() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+	})();
+</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.B88wDbzW.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body data-astro-cid-e5zlmhtl><a class="sl-skip-link" href="#_top" data-astro-cid-gqf5geeq>Skip to content</a><div class="page sl-flex" data-astro-cid-i2x5ll5c><header class="header" data-astro-cid-i2x5ll5c><div class="header" data-astro-cid-ipx4v6nm><div class="title-wrapper sl-flex" data-astro-cid-ipx4v6nm><a href="/design-system/" class="site-title sl-flex" data-astro-cid-jjlhdxu5><img class="light:sl-hidden print:hidden" alt="Raincoat" src="/design-system/_astro/raincoat-logo-dark.CMmnjvhr.svg" width="291" height="64" data-astro-cid-jjlhdxu5><img class="dark:sl-hidden print:block" alt="Raincoat" src="/design-system/_astro/raincoat-logo-light.DEUigS9Z.svg" width="291" height="64" data-astro-cid-jjlhdxu5><span class="sr-only" translate="no" data-astro-cid-jjlhdxu5>Raincoat</span></a></div><div class="sl-flex print:hidden" data-astro-cid-ipx4v6nm><site-search data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}" data-astro-cid-ip2d5p4j="true"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" data-astro-cid-ip2d5p4j><svg data-astro-cid-ip2d5p4j="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block" aria-hidden="true" data-astro-cid-ip2d5p4j>Search</span><kbd class="sl-hidden md:sl-flex" style="display: none" data-astro-cid-ip2d5p4j><kbd data-astro-cid-ip2d5p4j>Ctrl</kbd><kbd data-astro-cid-ip2d5p4j>K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" data-astro-cid-ip2d5p4j><div class="dialog-frame sl-flex" data-astro-cid-ip2d5p4j><button data-close-modal class="sl-flex md:sl-hidden" data-astro-cid-ip2d5p4j>Cancel</button><div class="search-container" data-astro-cid-ip2d5p4j><div id="starlight__search" data-astro-cid-ip2d5p4j></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group" data-astro-cid-ipx4v6nm><div class="sl-flex social-icons" data-astro-cid-ipx4v6nm><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){document.querySelectorAll(`starlight-theme-select select`).forEach(t=>{t.value=e}),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden" aria-label="Main" data-astro-cid-i2x5ll5c><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden" data-astro-cid-jzmkxtxo><svg class="open-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg class="close-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only" data-astro-cid-jzmkxtxo>Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane" data-astro-cid-i2x5ll5c="true"><div class="sidebar-content sl-flex" data-astro-cid-i2x5ll5c><sl-sidebar-state-persist data-hash="039k8br" data-astro-cid-ziy3hoto="true"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level" data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Start here</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Overview</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/roadmap/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Roadmap</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Foundations</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/color/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Color</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/contrast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Contrast</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/spacing-and-shape/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Spacing and shape</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/motion/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Motion</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Themes</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Components</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/components/button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Button</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/toast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Toast</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/input/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Input</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/card/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Card</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/tabs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Tabs</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/dialog/" aria-current="page" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Dialog</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/components/parity-matrix/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Parity matrix</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Contributing</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/overview/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>How to contribute</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-token/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add or change a token</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-theme/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add a theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/rfcs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Proposing a change (RFCs)</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Project</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/prior-art/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Prior art</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/licenses/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>License allowlist</span></a></li><li data-astro-cid-3p2e2a5a><details data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Proposals (RFCs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0001: Foundation tokens and Button</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0002-base-theme-standards-manual/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0002: A quieter, sharper base theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0003-typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0003: Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0004-input/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0004: Input</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0005-card/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0005: Card</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0006-dialog-and-sheet/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0006: Dialog and Sheet</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0007-tabs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0007: Tabs</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0008-toast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0008: Toast</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Decisions (ADRs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0003. Style Dictionary compiles the tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0004-web-stack/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0005-platform-targets/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0005. Minimum OS and browser targets</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0006-github-hosted-ci/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0006. A public GitHub repository with hosted CI runners</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0007-distribution/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0008-lockstep-versioning/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0008. One version for every package</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0009-license-policy/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0010-themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0010. Themes are overlays, shipped one artifact per theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0011-claude-design-output/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0011. The Claude Design output is optional and isolated</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0012-name/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0012. The name Raincoat</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0013-own-token-emitters/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0013. The token build uses its own emitters, not Style Dictionary</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0014-license-gates-per-ecosystem/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0014. One license gate per ecosystem, all reading one allowlist</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0015-web-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0015. Web components: adapted shadcn/ui source, styled only with tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0016-native-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0016. Native components follow the platform where it knows better</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0017-release-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0017. The release pipeline</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0018-theme-directories-and-theme-packs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0018. A theme is a directory the build reads; theme packs use the published build</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0019-visual-snapshots/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0019. Visual snapshots: one matrix from the specs, baselines recorded in CI</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex" data-astro-cid-qahywmkh><div class="social-icons" data-astro-cid-qahywmkh><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame" data-astro-cid-i2x5ll5c><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex" data-astro-cid-unqmq2mu><aside class="right-sidebar-container print:hidden" data-astro-cid-unqmq2mu><div class="right-sidebar" data-astro-cid-unqmq2mu><div class="lg:sl-hidden" data-astro-cid-wbevfekt><mobile-starlight-toc data-min-h="2" data-max-h="3" data-astro-cid-ykpjbajl="true"><nav aria-labelledby="starlight__on-this-page--mobile" data-astro-cid-ykpjbajl><details id="starlight__mobile-toc" data-astro-cid-ykpjbajl><summary id="starlight__on-this-page--mobile" class="sl-flex" data-astro-cid-ykpjbajl><span class="toggle sl-flex" data-astro-cid-ykpjbajl>On this page<svg class="caret astro-dtrqdpou" data-astro-cid-ykpjbajl="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current" data-astro-cid-ykpjbajl></span></summary><div class="dropdown" data-astro-cid-ykpjbajl><ul class="isMobile" style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#properties" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Properties</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#dialog" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Dialog</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#alertdialog" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>AlertDialog</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#sheet" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Sheet</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#content" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Content</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#sizes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Sizes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#sheets" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Sheets</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#in-every-color-mode" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>In every color mode</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#light" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Light</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#dark" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Dark</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#light-high-contrast" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Light, high contrast</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#dark-high-contrast" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Dark, high contrast</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#compact-density" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Compact density</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#states" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>States</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#keyboard" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Keyboard</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#motion" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Motion</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#guidelines" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Guidelines</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#when-to-use" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>When to use</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#choosing-a-kind" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Choosing a kind</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#writing-it" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Writing it</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#giving-a-way-out" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Giving a way out</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#focus" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Focus</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#layout" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Layout</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#do-and-dont" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Do and don’t</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block" data-astro-cid-wbevfekt><div class="sl-container" data-astro-cid-wbevfekt><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#properties" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Properties</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#dialog" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Dialog</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#alertdialog" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>AlertDialog</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#sheet" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Sheet</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#content" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Content</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#sizes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Sizes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#sheets" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Sheets</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#in-every-color-mode" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>In every color mode</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#light" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Light</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#dark" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Dark</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#light-high-contrast" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Light, high contrast</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#dark-high-contrast" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Dark, high contrast</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#compact-density" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Compact density</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#states" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>States</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#keyboard" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Keyboard</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#motion" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Motion</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#guidelines" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Guidelines</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#when-to-use" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>When to use</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#choosing-a-kind" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Choosing a kind</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#writing-it" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Writing it</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#giving-a-way-out" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Giving a way out</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#focus" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Focus</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#layout" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Layout</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#do-and-dont" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Do and don’t</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane" data-astro-cid-unqmq2mu><main data-pagefind-body class="astro-e5zlmhtl" lang="en" dir="ltr" data-astro-cid-e5zlmhtl><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="rc-title"><span class="rc-title-number" aria-hidden="true">3.6</span><h1 id="_top">Dialog</h1></div></div></div><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="sl-markdown-content"><p>Interrupts a task to ask for something or to confirm it, in a panel above the screen.</p>
+<p>Spec version 1.0.0, proposed in <a href="/design-system/project/rfcs/0006-dialog-and-sheet/">RFC 0006</a>. The <code dir="auto">DialogSize</code> and <code dir="auto">SheetEdge</code> types used by every platform’s implementation are generated from this spec.</p>
+<p>Implemented in React (<a href="https://github.com/raincoat-ui/design-system/blob/main/packages/web/src/components/ui/dialog.tsx"><code dir="auto">Dialog</code></a>, <a href="https://github.com/raincoat-ui/design-system/blob/main/packages/web/src/components/ui/dialog.tsx"><code dir="auto">AlertDialog</code></a>, and <a href="https://github.com/raincoat-ui/design-system/blob/main/packages/web/src/components/ui/dialog.tsx"><code dir="auto">Sheet</code></a> in <code dir="auto">@raincoat-ui/react</code>), SwiftUI (<a href="https://github.com/raincoat-ui/design-system/blob/main/packages/ios/Sources/Raincoat/Components/RaincoatDialog.swift"><code dir="auto">.raincoatDialog(isPresented:)</code></a>, <a href="https://github.com/raincoat-ui/design-system/blob/main/packages/ios/Sources/Raincoat/Components/RaincoatDialog.swift"><code dir="auto">.raincoatAlertDialog(_:isPresented:)</code></a>, and <a href="https://github.com/raincoat-ui/design-system/blob/main/packages/ios/Sources/Raincoat/Components/RaincoatDialog.swift"><code dir="auto">.raincoatSheet(isPresented:)</code></a> in <code dir="auto">Raincoat</code>), and Compose (<a href="https://github.com/raincoat-ui/design-system/blob/main/packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatDialog.kt"><code dir="auto">RaincoatDialog</code></a>, <a href="https://github.com/raincoat-ui/design-system/blob/main/packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatDialog.kt"><code dir="auto">RaincoatAlertDialog</code></a>, and <a href="https://github.com/raincoat-ui/design-system/blob/main/packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatDialog.kt"><code dir="auto">RaincoatSheet</code></a> in <code dir="auto">io.github.raincoat-ui:ui</code>). The <a href="/design-system/components/parity-matrix/">parity matrix</a> shows every component on every platform.</p>
+<aside aria-label="About the renditions" class="starlight-aside starlight-aside--note"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 11a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0v-4a1 1 0 0 0-1-1Zm.38-3.92a1 1 0 0 0-.76 0 1 1 0 0 0-.33.21 1.15 1.15 0 0 0-.21.33 1 1 0 0 0 .21 1.09c.097.088.209.16.33.21A1 1 0 0 0 13 8a1.05 1.05 0 0 0-.29-.71 1 1 0 0 0-.33-.21ZM12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 18a8 8 0 1 1 0-16.001A8 8 0 0 1 12 20Z"/></svg>About the renditions</p><div class="starlight-aside__content"><p>The panels on this page are static renditions, not the component: a small window, with
+the scrim filling it and a dialog on it. They are styled only with the custom properties of the
+generated theme stylesheet, and each panel under “In every color mode” selects its mode with a
+<code dir="auto">data-theme</code> attribute. A real dialog covers the whole window, and on iOS dialogs and
+sheets are the system sheet and an alert dialog the system alert.</p></div></aside>
+<style>
+.rc-dialog-stage {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.rc-dialog-window {
+  display: flex;
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding: var(--rc-dialog-margin);
+  background: var(--rc-dialog-scrim);
+}
+
+.rc-dialog-window[data-kind="sheet-bottom"] {
+  padding-block-end: 0;
+}
+
+.rc-dialog-window[data-kind="sheet-end"] {
+  padding-block: 0;
+  padding-inline-end: 0;
+}
+
+.rc-dialog {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  inline-size: 100%;
+  margin-inline: auto;
+  border: var(--rc-dialog-border-width) solid var(--rc-dialog-border-color);
+  border-radius: var(--rc-dialog-radius);
+  background: var(--rc-dialog-bg);
+  box-shadow: var(--rc-dialog-shadow);
+  color: var(--rc-dialog-fg);
+  font-family: var(--rc-dialog-description-font-family);
+  font-size: var(--rc-dialog-description-font-size);
+  line-height: var(--rc-dialog-description-line-height);
+}
+
+.rc-dialog[data-size="sm"] {
+  max-inline-size: var(--rc-dialog-width-sm);
+}
+
+.rc-dialog[data-size="md"] {
+  max-inline-size: var(--rc-dialog-width-md);
+}
+
+.rc-dialog[data-size="lg"] {
+  max-inline-size: var(--rc-dialog-width-lg);
+}
+
+.rc-dialog[data-edge="bottom"] {
+  max-inline-size: var(--rc-sheet-max-width-bottom);
+  border-block-end: 0;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.rc-dialog[data-edge="end"] {
+  max-inline-size: var(--rc-sheet-width-end);
+  margin-inline: auto 0;
+  border-block: 0;
+  border-inline-end: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.rc-dialog > * {
+  padding: calc(var(--rc-dialog-gap) / 2) var(--rc-dialog-padding);
+}
+
+.rc-dialog > :first-child {
+  padding-block-start: var(--rc-dialog-padding);
+}
+
+.rc-dialog > :last-child {
+  padding-block-end: var(--rc-dialog-padding);
+}
+
+.rc-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rc-dialog-gap);
+}
+
+.rc-dialog-titles {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--rc-space-2);
+}
+
+.rc-dialog-titles > p {
+  margin: 0;
+}
+
+.rc-dialog-title {
+  font-family: var(--rc-dialog-title-font-family);
+  font-size: var(--rc-dialog-title-font-size);
+  font-weight: var(--rc-dialog-title-font-weight);
+  line-height: var(--rc-dialog-title-line-height);
+  letter-spacing: var(--rc-dialog-title-letter-spacing);
+}
+
+.rc-dialog-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--rc-button-height-sm);
+  block-size: var(--rc-button-height-sm);
+  color: var(--rc-button-ghost-fg);
+}
+
+.rc-dialog-close svg {
+  inline-size: var(--rc-button-icon-size-sm);
+  block-size: var(--rc-button-icon-size-sm);
+}
+
+.rc-dialog-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--rc-dialog-footer-gap);
+}
+</style>
+<div class="sl-heading-wrapper level-h2"><h2 id="properties">Properties</h2><a class="sl-anchor-link" href="#properties"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Properties”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="dialog">Dialog</h3><a class="sl-anchor-link" href="#dialog"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Dialog”</span></a></div>
+<p>A panel centered over the screen, for a short task that must be finished or abandoned before going on: rename, choose, fill in a few fields.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">size</code></td>
+<td><code dir="auto">sm</code>, <code dir="auto">md</code>, <code dir="auto">lg</code></td>
+<td><code dir="auto">md</code></td>
+<td>The width of the dialog. On a window narrower than that, it spans the width of the window less a margin.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h4"><h4 id="size">Size</h4><a class="sl-anchor-link" href="#size"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Size”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">sm</code></td>
+<td>A dialog with a sentence or two and a few buttons.</td>
+</tr>
+<tr>
+<td><code dir="auto">md</code></td>
+<td>The default width, for a short form.</td>
+</tr>
+<tr>
+<td><code dir="auto">lg</code></td>
+<td>A dialog with wide content, such as a table or a preview.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="alertdialog">AlertDialog</h3><a class="sl-anchor-link" href="#alertdialog"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “AlertDialog”</span></a></div>
+<p>A small centered dialog that asks people to confirm something consequential or irreversible. On iOS it is the system alert.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">destructive</code></td>
+<td>true, false</td>
+<td><code dir="auto">false</code></td>
+<td>The confirming action destroys something, such as deleting. Its button is a danger button on the web and on Android, and has the destructive role in the iOS alert.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="sheet">Sheet</h3><a class="sl-anchor-link" href="#sheet"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Sheet”</span></a></div>
+<p>A panel that rises from the bottom edge or slides in from the end edge, for a longer task or one that keeps the screen behind in view.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">edge</code></td>
+<td><code dir="auto">bottom</code>, <code dir="auto">end</code></td>
+<td><code dir="auto">bottom</code></td>
+<td>The edge of the window the sheet comes from. On iOS every sheet is the system sheet, from the bottom on iPhone and centered on iPad.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h4"><h4 id="edge">Edge</h4><a class="sl-anchor-link" href="#edge"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Edge”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">bottom</code></td>
+<td>Rises from the bottom edge. It is as wide as the window, up to the medium panel width, and centered on wider windows.</td>
+</tr>
+<tr>
+<td><code dir="auto">end</code></td>
+<td>Slides in from the end edge: the right in left-to-right layouts, the left in right-to-left ones. On a window less than twice its width, it comes from the bottom instead.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="content">Content</h2><a class="sl-anchor-link" href="#content"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Content”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Content</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title</td>
+<td>Names the dialog, and is what assistive technology reads first. In an alert dialog it says what will happen, as a question: “Delete this address?”. It wraps and is never cut short.</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>One sentence under the title that the dialog is described by: what the task is for, or what confirming does.</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>Any content: text, fields, a list. It scrolls between the header and the footer when it does not fit.</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Action label</td>
+<td>The label of the primary action, the last button of the footer. In an alert dialog it repeats the verb of the title: “Delete address”.</td>
+<td>In an alert dialog</td>
+</tr>
+<tr>
+<td>Cancel label</td>
+<td>The label of the button that closes the dialog without doing anything, such as “Cancel”. It is the alert dialog’s least destructive action, and where focus starts there.</td>
+<td>In an alert dialog, and in a dialog or sheet without a close button</td>
+</tr>
+<tr>
+<td>Close label</td>
+<td>The name of the close button, read by assistive technology, such as “Close”. The button shows a cross drawn by the component.</td>
+<td>In a dialog or sheet whose footer has no Cancel</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="sizes">Sizes</h2><a class="sl-anchor-link" href="#sizes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Sizes”</span></a></div>
+<p>The <code dir="auto">sm</code>, <code dir="auto">md</code>, and <code dir="auto">lg</code> widths, each with a close button and no footer. On a narrower window, a dialog spans the window less a margin.</p>
+<div class="rc-stage rc-dialog-stage"><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="sm"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Keyboard shortcuts (sm)</p></div><span class="rc-dialog-close" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div class="rc-dialog-body">Press N to start a new file, and S to share it.</div></div></div><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Keyboard shortcuts (md)</p></div><span class="rc-dialog-close" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div class="rc-dialog-body">Press N to start a new file, and S to share it.</div></div></div><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="lg"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Keyboard shortcuts (lg)</p></div><span class="rc-dialog-close" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div class="rc-dialog-body">Press N to start a new file, and S to share it.</div></div></div></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="sheets">Sheets</h2><a class="sl-anchor-link" href="#sheets"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Sheets”</span></a></div>
+<p>A sheet from the bottom edge, and one from the end edge.</p>
+<div class="rc-stage rc-dialog-stage"><div class="rc-dialog-window" data-kind="sheet-bottom"><div class="rc-dialog" data-kind="sheet" data-edge="bottom" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Filters</p></div><span class="rc-dialog-close" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div class="rc-dialog-body">Show files shared with you in the last 30 days.</div><div class="rc-dialog-footer"><span class="rc-button" data-variant="primary">Show results</span></div></div></div><div class="rc-dialog-window" data-kind="sheet-end"><div class="rc-dialog" data-kind="sheet" data-edge="end" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Filters</p></div><span class="rc-dialog-close" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div class="rc-dialog-body">Show files shared with you in the last 30 days.</div><div class="rc-dialog-footer"><span class="rc-button" data-variant="primary">Show results</span></div></div></div></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="in-every-color-mode">In every color mode</h2><a class="sl-anchor-link" href="#in-every-color-mode"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “In every color mode”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="light">Light</h3><a class="sl-anchor-link" href="#light"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Light”</span></a></div>
+<div class="rc-stage" data-theme="light"><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Rename file</p><p class="rc-dialog-description">Everyone the file is shared with sees the new name.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="primary">Rename</span></div></div></div><div class="rc-dialog-window" data-kind="alert"><div class="rc-dialog" data-kind="alert" data-size="sm"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Delete this address?</p><p class="rc-dialog-description">It is removed from your account. This cannot be undone.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="danger">Delete address</span></div></div></div></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="dark">Dark</h3><a class="sl-anchor-link" href="#dark"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Dark”</span></a></div>
+<div class="rc-stage" data-theme="dark"><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Rename file</p><p class="rc-dialog-description">Everyone the file is shared with sees the new name.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="primary">Rename</span></div></div></div><div class="rc-dialog-window" data-kind="alert"><div class="rc-dialog" data-kind="alert" data-size="sm"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Delete this address?</p><p class="rc-dialog-description">It is removed from your account. This cannot be undone.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="danger">Delete address</span></div></div></div></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="light-high-contrast">Light, high contrast</h3><a class="sl-anchor-link" href="#light-high-contrast"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Light, high contrast”</span></a></div>
+<div class="rc-stage" data-theme="light-hc"><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Rename file</p><p class="rc-dialog-description">Everyone the file is shared with sees the new name.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="primary">Rename</span></div></div></div><div class="rc-dialog-window" data-kind="alert"><div class="rc-dialog" data-kind="alert" data-size="sm"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Delete this address?</p><p class="rc-dialog-description">It is removed from your account. This cannot be undone.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="danger">Delete address</span></div></div></div></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="dark-high-contrast">Dark, high contrast</h3><a class="sl-anchor-link" href="#dark-high-contrast"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Dark, high contrast”</span></a></div>
+<div class="rc-stage" data-theme="dark-hc"><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Rename file</p><p class="rc-dialog-description">Everyone the file is shared with sees the new name.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="primary">Rename</span></div></div></div><div class="rc-dialog-window" data-kind="alert"><div class="rc-dialog" data-kind="alert" data-size="sm"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Delete this address?</p><p class="rc-dialog-description">It is removed from your account. This cannot be undone.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="danger">Delete address</span></div></div></div></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="compact-density">Compact density</h3><a class="sl-anchor-link" href="#compact-density"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Compact density”</span></a></div>
+<div class="rc-stage" data-theme="light" data-density="compact"><div class="rc-dialog-window" data-kind="dialog"><div class="rc-dialog" data-kind="dialog" data-size="md"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Rename file</p><p class="rc-dialog-description">Everyone the file is shared with sees the new name.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="primary">Rename</span></div></div></div><div class="rc-dialog-window" data-kind="alert"><div class="rc-dialog" data-kind="alert" data-size="sm"><div class="rc-dialog-header"><div class="rc-dialog-titles"><p class="rc-dialog-title">Delete this address?</p><p class="rc-dialog-description">It is removed from your account. This cannot be undone.</p></div></div><div class="rc-dialog-footer"><span class="rc-button" data-variant="secondary">Cancel</span><span class="rc-button" data-variant="danger">Delete address</span></div></div></div></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="states">States</h2><a class="sl-anchor-link" href="#states"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “States”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open</td>
+<td>The dialog is shown and holds focus. The screen behind is under the scrim and inert.</td>
+</tr>
+<tr>
+<td>Scrolled</td>
+<td>The body has content scrolled beneath the header or above the footer. A hairline shows at that edge.</td>
+</tr>
+<tr>
+<td>Short window</td>
+<td>The window is too short to show the header, the footer, and three lines of the body, as at 400% zoom. The whole container scrolls as one, and the header and footer scroll with it.</td>
+</tr>
+<tr>
+<td>Stacked</td>
+<td>The footer’s buttons do not fit in a row, as with long translated labels. They stack, the primary action first.</td>
+</tr>
+<tr>
+<td>Dragging</td>
+<td>A bottom sheet on iOS or Android follows a finger that drags it down. Let go far enough or fast enough, it closes; otherwise it settles back.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="anatomy">Anatomy</h2><a class="sl-anchor-link" href="#anatomy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Anatomy”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+<th>Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scrim</td>
+<td>Covers the screen behind and makes it inert: nothing behind takes a pointer, focus, or the attention of assistive technology. It fades in and out with the dialog.</td>
+<td><code dir="auto">dialog.scrim</code></td>
+</tr>
+<tr>
+<td>Container</td>
+<td>A raised surface with a hairline outline, which holds the header, the body, and the footer. A dialog is centered, at least the margin away from every edge of the window. A bottom sheet touches the bottom edge and rounds its top corners; an end sheet is as tall as the window and rounds the corners that face the screen.</td>
+<td><code dir="auto">dialog.bg</code><br><code dir="auto">dialog.border.width</code><br><code dir="auto">dialog.border.color</code><br><code dir="auto">dialog.radius</code><br><code dir="auto">dialog.shadow</code><br><code dir="auto">dialog.width.*</code><br><code dir="auto">dialog.margin</code><br><code dir="auto">dialog.padding</code><br><code dir="auto">dialog.gap</code><br><code dir="auto">sheet.width.end</code><br><code dir="auto">sheet.max-width.bottom</code></td>
+</tr>
+<tr>
+<td>Title</td>
+<td>A heading at the start of the header, at the level the app gives it, set in heading-md. It wraps, and is never truncated.</td>
+<td><code dir="auto">dialog.title</code><br><code dir="auto">dialog.fg</code></td>
+</tr>
+<tr>
+<td>Description</td>
+<td>An optional sentence under the title.</td>
+<td><code dir="auto">dialog.description</code><br><code dir="auto">dialog.fg</code></td>
+</tr>
+<tr>
+<td>Body</td>
+<td>Any content, between the header and the footer. When it does not fit, it scrolls and the header and footer stay in place.</td>
+<td><code dir="auto">dialog.padding</code></td>
+</tr>
+<tr>
+<td>Divider</td>
+<td>A hairline under the header, and another above the footer, shown only while the body has content scrolled beneath them.</td>
+<td><code dir="auto">dialog.divider</code><br><code dir="auto">dialog.border.width</code></td>
+</tr>
+<tr>
+<td>Footer</td>
+<td>The buttons, at the end edge, the primary action last. When they do not fit in a row they stack, the primary action first, each as wide as the container.</td>
+<td><code dir="auto">dialog.footer.gap</code></td>
+</tr>
+<tr>
+<td>Close button</td>
+<td>An icon-only ghost Button at the end of the header, named by the app. It is shown only when the footer has no Cancel, so that there is one visible way out, not two that mean the same.</td>
+<td></td>
+</tr>
+<tr>
+<td>Drag handle</td>
+<td>A short bar at the top of a bottom sheet on iOS and Android, where it can be dragged. It is a visual cue only: dragging is never the only way to close. The web has no drag gesture, and so no handle.</td>
+<td><code dir="auto">sheet.handle.color</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="accessibility">Accessibility</h2><a class="sl-anchor-link" href="#accessibility"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accessibility”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Role</td>
+<td>A modal dialog, or an alert dialog for an alert dialog, named by its title and described by its description. On iOS an alert dialog is the system alert.</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>The title. The close button is named by the app.</td>
+</tr>
+<tr>
+<td>Focus</td>
+<td>On open, focus moves into the dialog: to the title by default, so that a screen reader starts at the top and nothing is activated by accident. The app can name another target, such as the first field of a form. In an alert dialog focus starts on the least destructive action, the Cancel button. On close, focus returns to the control that opened the dialog; if that control is gone, to a target the app names. The title takes focus but shows no ring: it is not a control.</td>
+</tr>
+<tr>
+<td>Hidden</td>
+<td>While a dialog is open, everything behind it is hidden from assistive technology and cannot be reached with the keyboard or a pointer.</td>
+</tr>
+<tr>
+<td>Dismissal</td>
+<td>A dialog and a sheet close on Escape, a click or tap on the scrim, the close button or Cancel, and the system’s back gesture on Android; a bottom sheet also closes when it is dragged down on iOS and Android. An alert dialog closes only on Escape, Cancel, the back gesture, and its own actions: Escape and back mean Cancel, and the scrim does nothing, so that a stray tap never counts as an answer. Every way out but dragging works without a pointer, and dragging is never the only one.</td>
+</tr>
+<tr>
+<td>Text size</td>
+<td>The title, description, body, and buttons grow with the person’s text size setting. At 400% zoom on the web, the largest accessibility text size on iOS, and a font scale of 2 on Android, the dialog can still be read and used to the end.</td>
+</tr>
+<tr>
+<td>Contrast</td>
+<td>The title and description have 4.5:1 against the container, and 7:1 in the high-contrast modes. The drag handle has 3:1. The scrim is not a background for contrast, because what is under it is unknown.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="keyboard">Keyboard</h3><a class="sl-anchor-link" href="#keyboard"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Keyboard”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><kbd>Tab</kbd> or <kbd>Shift+Tab</kbd></td>
+<td>Move focus among the dialog’s controls. Focus stays inside the dialog while it is open, and wraps from the last control to the first.</td>
+</tr>
+<tr>
+<td><kbd>Escape</kbd></td>
+<td>Closes a dialog or a sheet, and cancels an alert dialog. The app can refuse, as while there are unsaved changes.</td>
+</tr>
+<tr>
+<td><kbd>Enter</kbd> or <kbd>Space</kbd></td>
+<td>Activate the focused button, as they do anywhere.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="internationalization">Internationalization</h2><a class="sl-anchor-link" href="#internationalization"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Internationalization”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right to left</td>
+<td>The footer’s buttons and the close button sit at the end edge, which is the left; the end sheet comes from the left. Nothing is placed by left or right.</td>
+</tr>
+<tr>
+<td>Long text</td>
+<td>Titles and descriptions wrap. The footer’s buttons stack when their labels do not fit in a row, as translations up to three times as long as English can.</td>
+</tr>
+<tr>
+<td>Scripts</td>
+<td>The title and description use the heading-md and body-md styles, whose line heights clear stacked Vietnamese diacritics. Chinese, Japanese, and Korean use system fonts.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="motion">Motion</h2><a class="sl-anchor-link" href="#motion"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Motion”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enter</td>
+<td>The scrim and a dialog fade in, with dialog.enter.duration and its easing. A sheet slides in from its edge while the scrim fades in.</td>
+</tr>
+<tr>
+<td>Exit</td>
+<td>The scrim and a dialog fade out, with dialog.exit.duration and its easing. A sheet slides back to its edge.</td>
+</tr>
+<tr>
+<td>Reduced motion</td>
+<td>Everything fades and nothing moves.</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="guidelines">Guidelines</h2><a class="sl-anchor-link" href="#guidelines"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Guidelines”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="when-to-use">When to use</h3><a class="sl-anchor-link" href="#when-to-use"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “When to use”</span></a></div>
+<p>Use a dialog for a task that must be finished or abandoned before going on: renaming a file,
+choosing one of a few options, filling in a few fields. While it is open, the screen behind is
+covered and cannot be used.</p>
+<ul>
+<li>If people need the screen behind to do the task, use a sheet, or put the task in the page.</li>
+<li>Do not use a dialog for a message that needs no decision. A toast or an inline message
+interrupts less.</li>
+<li>Do not open a dialog from a dialog. Replace the content, or close the first.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="choosing-a-kind">Choosing a kind</h3><a class="sl-anchor-link" href="#choosing-a-kind"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Choosing a kind”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Use it for</th>
+<th>Avoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dialog</td>
+<td>A short task: rename, choose, fill in a few fields</td>
+<td>Long forms, or tasks that need the screen</td>
+</tr>
+<tr>
+<td>Alert dialog</td>
+<td>Confirming something consequential or irreversible, such as delete</td>
+<td>Questions that are not about a consequence</td>
+</tr>
+<tr>
+<td>Sheet</td>
+<td>A longer task, or one that keeps the screen behind in view</td>
+<td>A confirmation: use an alert dialog for that</td>
+</tr>
+</tbody>
+</table>
+<p>Choose a dialog’s size for its content: <code dir="auto">sm</code> for a sentence or two and a few buttons, <code dir="auto">md</code> for a
+short form, <code dir="auto">lg</code> for wide content such as a table. A sheet comes from the bottom unless it holds
+something people compare with the screen, such as filters for a list: then from the end edge.</p>
+<p>On iOS every dialog and sheet is the system sheet, and an alert dialog is the system alert,
+which looks like iOS rather than like your theme. That is what people on iOS recognize, and it
+follows their text size, bold text, and contrast settings.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="writing-it">Writing it</h3><a class="sl-anchor-link" href="#writing-it"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Writing it”</span></a></div>
+<ul>
+<li>Give every dialog a title that names it, in sentence case, without a full stop: “Rename file”.</li>
+<li>In an alert dialog, the title says what will happen, as a question: “Delete this address?”.
+Its confirming button repeats the verb: “Delete address”, not “Yes” or “OK”.</li>
+<li>Use the description for one sentence about the task or its consequence. Do not repeat the
+title.</li>
+<li>Keep the primary action last in the footer, and put Cancel before it.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="giving-a-way-out">Giving a way out</h3><a class="sl-anchor-link" href="#giving-a-way-out"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Giving a way out”</span></a></div>
+<p>Every dialog and sheet has one visible way out: a Cancel button in the footer, or a close button
+at the end of the header. Not both: two buttons that mean the same make people wonder which one
+keeps their work.</p>
+<ul>
+<li>Use Cancel when the footer has actions. Use the close button when it has none, as in a dialog
+that only shows information.</li>
+<li>Give the close button a name that says what it does, such as “Close”. It shows only a cross.</li>
+<li>Escape closes every dialog. So does a click or tap on the scrim, except for an alert dialog:
+there a stray tap must not count as an answer.</li>
+<li>To keep a dialog open while it holds unsaved changes, refuse to close it and ask first. Every
+platform lets the app refuse.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="focus">Focus</h3><a class="sl-anchor-link" href="#focus"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Focus”</span></a></div>
+<p>Focus moves to the title when a dialog opens, so that a screen reader starts at the top and a
+keyboard user is one Tab from the first control. In a short form, give the first field focus
+instead. An alert dialog starts on Cancel, never on the destructive action.</p>
+<p>When the dialog closes, focus returns to the control that opened it. If that control no longer
+exists, as after deleting the row it was in, name where focus goes.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="layout">Layout</h3><a class="sl-anchor-link" href="#layout"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Layout”</span></a></div>
+<ul>
+<li>The header and the footer stay in place, and the body scrolls between them. A hairline shows
+under the header and above the footer while content is beneath them.</li>
+<li>When the window is too short for the header, the footer, and three lines of the body, as at
+400% zoom, the whole dialog scrolls instead.</li>
+<li>Footer buttons stack when they do not fit in a row, with the primary action on top. Let them:
+do not shorten a translated label to keep them side by side.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="do-and-dont">Do and don’t</h3><a class="sl-anchor-link" href="#do-and-dont"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Do and don’t”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Do</th>
+<th>Don’t</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name the dialog in its title</td>
+<td>Title it “Are you sure?”</td>
+</tr>
+<tr>
+<td>Repeat the verb on an alert dialog’s confirming button</td>
+<td>Label it “Yes”, “OK”, or “Confirm”</td>
+</tr>
+<tr>
+<td>Give one way out: Cancel, or the close button</td>
+<td>Show the close button beside a Cancel</td>
+</tr>
+<tr>
+<td>Let a long title wrap</td>
+<td>Truncate a title with an ellipsis</td>
+</tr>
+<tr>
+<td>Use a sheet when people need the screen behind</td>
+<td>Open a dialog over a dialog</td>
+</tr>
+<tr>
+<td>Close a sheet with a button as well as by dragging</td>
+<td>Make dragging the only way out</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="tokens">Tokens</h2><a class="sl-anchor-link" href="#tokens"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Tokens”</span></a></div>
+<p>Values shown are for the light mode at comfortable density.</p>
+<table>
+<thead>
+<tr>
+<th>Token, and what it points to</th>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">dialog.scrim</code><br><code dir="auto">{color.bg.scrim}</code></td>
+<td><span class="rc-swatch rc-translucent" style="--rc-fill:#00000066"></span><code dir="auto">#000000</code> at 40%</td>
+<td>The veil over the screen behind a dialog or a sheet.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.bg</code><br><code dir="auto">{color.bg.raised}</code></td>
+<td><span class="rc-swatch" style="background:#ffffff"></span><code dir="auto">#ffffff</code></td>
+<td>Fill of a dialog or a sheet.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.border.width</code><br><code dir="auto">{border-width.thin}</code></td>
+<td>1px</td>
+<td>Outline width of a dialog or a sheet.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.border.color</code><br><code dir="auto">{color.border.default}</code></td>
+<td><span class="rc-swatch" style="background:#cfd1d4"></span><code dir="auto">#cfd1d4</code></td>
+<td>The hairline outline of a dialog or a sheet.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.radius</code><br><code dir="auto">{radius.lg}</code></td>
+<td>2px</td>
+<td>Corner radius of a dialog, and of the open corners of a sheet.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.shadow</code><br><code dir="auto">{shadow.overlay}</code></td>
+<td>None</td>
+<td>Shadow of a dialog or a sheet.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.width.sm</code><br><code dir="auto">{size.panel.sm}</code></td>
+<td>400px</td>
+<td>Width of the small dialog.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.width.md</code><br><code dir="auto">{size.panel.md}</code></td>
+<td>560px</td>
+<td>Width of the medium dialog.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.width.lg</code><br><code dir="auto">{size.panel.lg}</code></td>
+<td>800px</td>
+<td>Width of the large dialog.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.margin</code><br><code dir="auto">{space.4}</code></td>
+<td>16px</td>
+<td>The least space between a dialog and the edge of the window.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.padding</code><br><code dir="auto">{space.6}</code></td>
+<td>24px</td>
+<td>Space between the edge of a dialog or a sheet and its content.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.gap</code><br><code dir="auto">{space.4}</code></td>
+<td>16px</td>
+<td>Space between the header, the body, and the footer.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.footer.gap</code><br><code dir="auto">{space.2}</code></td>
+<td>8px</td>
+<td>Space between the buttons in the footer.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.title</code><br><code dir="auto">{type.heading.md}</code></td>
+<td>1.25rem (20px), weight 600, line height 1.4</td>
+<td>Text style of the title.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.description</code><br><code dir="auto">{type.body.md}</code></td>
+<td>1rem (16px), weight 400, line height 1.5</td>
+<td>Text style of the description under the title.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.fg</code><br><code dir="auto">{color.fg.default}</code></td>
+<td><span class="rc-swatch" style="background:#191b1d"></span><code dir="auto">#191b1d</code></td>
+<td>Color of the title and the description.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.divider</code><br><code dir="auto">{color.border.default}</code></td>
+<td><span class="rc-swatch" style="background:#cfd1d4"></span><code dir="auto">#cfd1d4</code></td>
+<td>The hairline under the header once the body has scrolled under it.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.enter.duration</code><br><code dir="auto">{motion.duration.normal}</code></td>
+<td>200ms</td>
+<td>Duration of a dialog or a sheet appearing.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.enter.easing</code><br><code dir="auto">{motion.easing.interactive}</code></td>
+<td><code dir="auto">cubic-bezier(0.2, 0, 0, 1)</code></td>
+<td>Easing of a dialog or a sheet appearing.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.exit.duration</code><br><code dir="auto">{motion.duration.fast}</code></td>
+<td>100ms</td>
+<td>Duration of a dialog or a sheet leaving.</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.exit.easing</code><br><code dir="auto">{motion.easing.leave}</code></td>
+<td><code dir="auto">cubic-bezier(0.4, 0, 1, 1)</code></td>
+<td>Easing of a dialog or a sheet leaving.</td>
+</tr>
+<tr>
+<td><code dir="auto">sheet.width.end</code><br><code dir="auto">{size.panel.sm}</code></td>
+<td>400px</td>
+<td>Width of a sheet at the end edge of the window.</td>
+</tr>
+<tr>
+<td><code dir="auto">sheet.max-width.bottom</code><br><code dir="auto">{size.panel.md}</code></td>
+<td>560px</td>
+<td>The widest a sheet at the bottom edge grows. On wider windows it is centered.</td>
+</tr>
+<tr>
+<td><code dir="auto">sheet.handle.color</code><br><code dir="auto">{color.border.strong}</code></td>
+<td><span class="rc-swatch" style="background:#191b1d"></span><code dir="auto">#191b1d</code></td>
+<td>Color of the handle at the top of a bottom sheet.</td>
+</tr>
+</tbody>
+</table>
+</div><footer class="sl-flex" data-astro-cid-g3jxymr7><div class="meta sl-flex" data-astro-cid-g3jxymr7></div><div class="pagination-links print:hidden" dir="ltr" data-astro-cid-6o7xkmda><a href="/design-system/components/tabs/" rel="prev" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span data-astro-cid-6o7xkmda>Previous<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>Tabs</span></span></a><a href="/design-system/components/typography/" rel="next" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span data-astro-cid-6o7xkmda>Next<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>Typography</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
