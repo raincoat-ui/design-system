@@ -23,6 +23,18 @@ final class DialogTests: ReferenceAppTestCase {
         app.staticTexts["status"].label
     }
 
+    /// Waits for the rename dialog's field to take focus, then puts the keyboard away with Return.
+    /// The keyboard, and the typing predictions over it, are the system's: the accessibility
+    /// audit is of the dialog.
+    @MainActor
+    private func putTheKeyboardAway(_ app: XCUIApplication) {
+        let field = app.textFields["Name"]
+        expectation(for: NSPredicate(format: "hasKeyboardFocus == true"), evaluatedWith: field)
+        waitForExpectations(timeout: 10)
+        field.typeText("\n")
+        XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 10))
+    }
+
     /// A paragraph of the terms of use, in the dialog with long content.
     @MainActor
     private func terms(_ app: XCUIApplication) -> XCUIElement {
@@ -109,7 +121,12 @@ final class DialogTests: ReferenceAppTestCase {
         app.buttons["Filters"].tap()
         let text = app.staticTexts["Show files shared with you in the last 30 days."]
         XCTAssertTrue(text.waitForExistence(timeout: 10))
-        text.swipeDown(velocity: .fast)
+        // A drag from the title, over the sheet's height and down to the bottom of the screen.
+        // A swipe on an element moves only a fraction of its height, a few points on a line of
+        // text, which does not move the sheet at all.
+        let start = app.staticTexts["Filters"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.97))
+        start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .fast, thenHoldForDuration: 0)
         XCTAssertTrue(text.waitForNonExistence(timeout: 10))
     }
 
@@ -129,6 +146,7 @@ final class DialogTests: ReferenceAppTestCase {
         app.buttons["Rename file"].tap()
         let title = app.staticTexts["Rename file"]
         XCTAssertTrue(title.waitForExistence(timeout: 10))
+        putTheKeyboardAway(app)
         // The whole dialog scrolls when the screen is too short for it, so the footer can be
         // reached.
         let cancel = app.buttons["Cancel"]
@@ -137,6 +155,8 @@ final class DialogTests: ReferenceAppTestCase {
         }
         XCTAssertTrue(cancel.isHittable)
         try audit(app)
+        cancel.tap()
+        XCTAssertTrue(title.waitForNonExistence(timeout: 10))
     }
 
     /// The system's accessibility audit, with each dialog and sheet, and the alert, open in turn.
@@ -148,6 +168,7 @@ final class DialogTests: ReferenceAppTestCase {
         ] {
             app.buttons[button].tap()
             XCTAssertTrue(app.buttons[close].waitForExistence(timeout: 10), button)
+            if button == "Rename file" { putTheKeyboardAway(app) }
             try audit(app)
             app.buttons[close].tap()
             XCTAssertTrue(app.buttons[close].waitForNonExistence(timeout: 10), button)
