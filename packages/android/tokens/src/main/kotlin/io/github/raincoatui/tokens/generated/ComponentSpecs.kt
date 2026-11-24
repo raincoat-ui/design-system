@@ -36,6 +36,36 @@ public enum class ButtonSize(public val id: String) {
     }
 }
 
+/** Dialog: The width of the dialog. On a window narrower than that, it spans the width of the window less a margin. */
+public enum class DialogSize(public val id: String) {
+    /** A dialog with a sentence or two and a few buttons. */
+    Sm("sm"),
+    /** The default width, for a short form. */
+    Md("md"),
+    /** A dialog with wide content, such as a table or a preview. */
+    Lg("lg"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: DialogSize = Md
+    }
+}
+
+/** Sheet: The edge of the window the sheet comes from. On iOS every sheet is the system sheet, from the bottom on iPhone and centered on iPad. */
+public enum class SheetEdge(public val id: String) {
+    /** Rises from the bottom edge. It is as wide as the window, up to the medium panel width, and centered on wider windows. */
+    Bottom("bottom"),
+    /** Slides in from the end edge: the right in left-to-right layouts, the left in right-to-left ones. On a window less than twice its width, it comes from the bottom instead. */
+    End("end"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: SheetEdge = Bottom
+    }
+}
+
 /** Input: The height and text size of the field, the same heights as the Button's. */
 public enum class InputSize(public val id: String) {
     /** For dense layouts such as toolbars and tables. Its text is 14px. */

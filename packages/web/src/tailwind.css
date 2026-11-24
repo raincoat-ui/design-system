@@ -61,6 +61,66 @@
   }
 }
 
+/* A dialog, a sheet, and their scrim entering and leaving. The scrim and a dialog fade; a sheet
+   slides in from beyond its edge and back out, and with reduced motion fades instead. */
+@theme inline {
+  --animate-rc-dialog-in: rc-dialog-in var(--rc-dialog-enter-duration) var(--rc-dialog-enter-easing);
+  --animate-rc-dialog-out: rc-dialog-out var(--rc-dialog-exit-duration) var(--rc-dialog-exit-easing);
+  --animate-rc-sheet-in-bottom: rc-sheet-in-bottom var(--rc-dialog-enter-duration)
+    var(--rc-dialog-enter-easing);
+  --animate-rc-sheet-out-bottom: rc-sheet-out-bottom var(--rc-dialog-exit-duration)
+    var(--rc-dialog-exit-easing);
+  --animate-rc-sheet-in-end: rc-sheet-in-end var(--rc-dialog-enter-duration)
+    var(--rc-dialog-enter-easing);
+  --animate-rc-sheet-out-end: rc-sheet-out-end var(--rc-dialog-exit-duration)
+    var(--rc-dialog-exit-easing);
+  --animate-rc-sheet-in-end-rtl: rc-sheet-in-end-rtl var(--rc-dialog-enter-duration)
+    var(--rc-dialog-enter-easing);
+  --animate-rc-sheet-out-end-rtl: rc-sheet-out-end-rtl var(--rc-dialog-exit-duration)
+    var(--rc-dialog-exit-easing);
+
+  @keyframes rc-dialog-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes rc-dialog-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes rc-sheet-in-bottom {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes rc-sheet-out-bottom {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes rc-sheet-in-end {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes rc-sheet-out-end {
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes rc-sheet-in-end-rtl {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes rc-sheet-out-end-rtl {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+}
+
 /* A toast entering and leaving. It slides up from as far below as its margin while it fades in,
    and back down as it fades out; with reduced motion it only fades. */
 @theme inline {

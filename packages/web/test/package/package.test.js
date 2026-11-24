@@ -209,6 +209,13 @@ const NEUTRAL = new Set([
   "#0000",
   // The properties that transition.
   ...["background-color", "border-color", "color"],
+  // Layout keywords.
+  ...["auto", "fixed", "column", "wrap", "flex-start"],
+  // More layout keywords: a dialog's position, size, and sections, and its footer's buttons.
+  ...["row", "column-reverse", "flex-end", "stretch", "visible", "fit-content", "max-content"],
+  // The stacking order of a modal surface and its scrim: shadcn/ui's, so that a dialog stacks
+  // with an app's other overlays as shadcn/ui's do.
+  "50",
   // A card: its media first in the flex order, as a block, with corners no less than square;
   // actions that wrap at the end edge, below the rest; and a link or button that takes its
   // title's look.

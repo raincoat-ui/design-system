@@ -30,6 +30,33 @@ export const BUTTON_SIZES = ["sm", "md", "lg"] as const satisfies readonly Butto
 export const BUTTON_SIZE_DEFAULT: ButtonSize = "md";
 
 /**
+ * Dialog: The width of the dialog. On a window narrower than that, it spans the width of the window less a margin.
+ * - `sm`: A dialog with a sentence or two and a few buttons.
+ * - `md`: The default width, for a short form.
+ * - `lg`: A dialog with wide content, such as a table or a preview.
+ */
+export type DialogSize = "sm" | "md" | "lg";
+
+/** Every DialogSize, in the order the spec lists them. */
+export const DIALOG_SIZES = ["sm", "md", "lg"] as const satisfies readonly DialogSize[];
+
+/** The DialogSize used when none is given. */
+export const DIALOG_SIZE_DEFAULT: DialogSize = "md";
+
+/**
+ * Sheet: The edge of the window the sheet comes from. On iOS every sheet is the system sheet, from the bottom on iPhone and centered on iPad.
+ * - `bottom`: Rises from the bottom edge. It is as wide as the window, up to the medium panel width, and centered on wider windows.
+ * - `end`: Slides in from the end edge: the right in left-to-right layouts, the left in right-to-left ones. On a window less than twice its width, it comes from the bottom instead.
+ */
+export type SheetEdge = "bottom" | "end";
+
+/** Every SheetEdge, in the order the spec lists them. */
+export const SHEET_EDGES = ["bottom", "end"] as const satisfies readonly SheetEdge[];
+
+/** The SheetEdge used when none is given. */
+export const SHEET_EDGE_DEFAULT: SheetEdge = "bottom";
+
+/**
  * Input: The height and text size of the field, the same heights as the Button's.
  * - `sm`: For dense layouts such as toolbars and tables. Its text is 14px.
  * - `md`: The default size.

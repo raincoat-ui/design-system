@@ -227,8 +227,14 @@ function snapshotSource(root) {
         spec,
         types: enumerations(spec).map(({ type }) => type),
         groups,
-        // The type of an instance: the component's, or for a spec with parts, any part's.
-        instanceType: `${spec.name}ExampleProperties`,
+        // The type of an instance: the component's, or for a spec with parts, any part's. A
+        // part can have the component's name, as the Dialog's dialog part does: the type of
+        // any part is then named for parts, so that the two do not collide.
+        instanceType: groups.some(
+          ({ part, name }) => part && name === `${spec.name}ExampleProperties`,
+        )
+          ? `${spec.name}PartExampleProperties`
+          : `${spec.name}ExampleProperties`,
         examples,
       };
     });

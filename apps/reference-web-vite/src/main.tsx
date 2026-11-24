@@ -3,6 +3,7 @@ import { type JSX, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ButtonScreen } from "./ButtonScreen";
 import { CardScreen } from "./CardScreen";
+import { DialogScreen } from "./DialogScreen";
 import { InputScreen } from "./InputScreen";
 import { TabsScreen } from "./TabsScreen";
 import { ToastScreen } from "./ToastScreen";
@@ -15,6 +16,7 @@ if (!root) throw new Error("index.html has no #root element");
 const SCREENS: Record<string, () => JSX.Element> = {
   "/typography": TypographyScreen,
   "/card": CardScreen,
+  "/dialog": DialogScreen,
   "/tabs": TabsScreen,
   "/input": InputScreen,
   "/toast": ToastScreen,

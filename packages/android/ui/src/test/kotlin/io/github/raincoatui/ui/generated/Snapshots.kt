@@ -8,10 +8,12 @@ package io.github.raincoatui.ui.generated
 import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.ColorMode
+import io.github.raincoatui.tokens.DialogSize
 import io.github.raincoatui.tokens.HeadingColor
 import io.github.raincoatui.tokens.HeadingVariant
 import io.github.raincoatui.tokens.InputSize
 import io.github.raincoatui.tokens.InputType
+import io.github.raincoatui.tokens.SheetEdge
 import io.github.raincoatui.tokens.TabsActivationMode
 import io.github.raincoatui.tokens.TextColor
 import io.github.raincoatui.tokens.TextVariant
@@ -242,6 +244,104 @@ internal val cardExamples: List<SpecExample<CardExampleProperties>> = listOf(
             "ko" to mapOf("title" to "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다", "body" to "목요일 도착 예정"),
             "ar" to mapOf("title" to "طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك", "body" to "يصل يوم الخميس"),
             "en-XA" to mapOf("title" to "[Ýöûŕ öŕðéŕ öƒ ţĥŕéé ļîñéñ šĥîŕţš åñð å ŵööļ šçåŕƒ îš öñ îţš ŵåý one two three four five]", "body" to "[Åŕŕîṽéš öñ Ţĥûŕšðåý one two]"),
+        ),
+    ),
+)
+
+/** The properties of one part of Dialog in an example. */
+internal sealed interface DialogPartExampleProperties
+
+/** The properties of one Dialog in an example. */
+internal data class DialogExampleProperties(
+    val size: DialogSize,
+) : DialogPartExampleProperties
+
+/** The properties of one AlertDialog in an example. */
+internal data class AlertDialogExampleProperties(
+    val destructive: Boolean,
+) : DialogPartExampleProperties
+
+/** The properties of one Sheet in an example. */
+internal data class SheetExampleProperties(
+    val edge: SheetEdge,
+) : DialogPartExampleProperties
+
+/** The examples of specs/components/dialog/spec.yaml, with their text. */
+internal val dialogExamples: List<SpecExample<DialogPartExampleProperties>> = listOf(
+    SpecExample(
+        id = "dialog",
+        instances = listOf(
+            DialogExampleProperties(size = DialogSize.Md),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Rename file", "description" to "Everyone the file is shared with sees the new name.", "cancel-label" to "Cancel", "action-label" to "Rename"),
+            "vi" to mapOf("title" to "Đổi tên tệp", "description" to "Mọi người được chia sẻ tệp đều thấy tên mới.", "cancel-label" to "Hủy", "action-label" to "Đổi tên"),
+            "zh-Hans" to mapOf("title" to "重命名文件", "description" to "此文件的所有共享对象都会看到新名称。", "cancel-label" to "取消", "action-label" to "重命名"),
+            "ja" to mapOf("title" to "ファイル名を変更", "description" to "このファイルを共有しているすべてのユーザーに新しい名前が表示されます。", "cancel-label" to "キャンセル", "action-label" to "名前を変更"),
+            "ko" to mapOf("title" to "파일 이름 바꾸기", "description" to "이 파일을 공유받은 모든 사람에게 새 이름이 표시됩니다.", "cancel-label" to "취소", "action-label" to "이름 바꾸기"),
+            "ar" to mapOf("title" to "إعادة تسمية الملف", "description" to "سيرى كل من تمت مشاركة الملف معه الاسم الجديد.", "cancel-label" to "إلغاء", "action-label" to "إعادة تسمية"),
+            "en-XA" to mapOf("title" to "[Ŕéñåɱé ƒîļé one]", "description" to "[Éṽéŕýöñé ţĥé ƒîļé îš šĥåŕéð ŵîţĥ šééš ţĥé ñéŵ ñåɱé. one two three four]", "cancel-label" to "[Çåñçéļ one]", "action-label" to "[Ŕéñåɱé one]"),
+        ),
+    ),
+    SpecExample(
+        id = "close-button",
+        instances = listOf(
+            DialogExampleProperties(size = DialogSize.Md),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Keyboard shortcuts", "body" to "Press N to start a new file, and S to share it.", "close-label" to "Close"),
+            "vi" to mapOf("title" to "Phím tắt", "body" to "Nhấn N để tạo tệp mới và S để chia sẻ tệp.", "close-label" to "Đóng"),
+            "zh-Hans" to mapOf("title" to "键盘快捷键", "body" to "按 N 新建文件，按 S 共享文件。", "close-label" to "关闭"),
+            "ja" to mapOf("title" to "キーボードショートカット", "body" to "N キーで新しいファイルを作成し、S キーで共有します。", "close-label" to "閉じる"),
+            "ko" to mapOf("title" to "단축키", "body" to "N 키를 눌러 새 파일을 만들고 S 키를 눌러 공유합니다.", "close-label" to "닫기"),
+            "ar" to mapOf("title" to "اختصارات لوحة المفاتيح", "body" to "اضغط N لإنشاء ملف جديد، وS لمشاركته.", "close-label" to "إغلاق"),
+            "en-XA" to mapOf("title" to "[Ķéýƀöåŕð šĥöŕţçûţš one two]", "body" to "[Þŕéšš Ñ ţö šţåŕţ å ñéŵ ƒîļé, åñð Š ţö šĥåŕé îţ. one two three four]", "close-label" to "[Çļöšé]"),
+        ),
+    ),
+    SpecExample(
+        id = "long-title",
+        instances = listOf(
+            DialogExampleProperties(size = DialogSize.Sm),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Share the third-quarter sales report with everyone on your team", "cancel-label" to "Cancel", "action-label" to "Share with your team"),
+            "vi" to mapOf("title" to "Chia sẻ báo cáo doanh số quý ba với mọi người trong nhóm của bạn", "cancel-label" to "Hủy", "action-label" to "Chia sẻ với nhóm"),
+            "zh-Hans" to mapOf("title" to "将第三季度销售报告共享给你团队中的每一位成员", "cancel-label" to "取消", "action-label" to "与团队共享"),
+            "ja" to mapOf("title" to "第 3 四半期の売上レポートをチームの全員と共有", "cancel-label" to "キャンセル", "action-label" to "チームと共有"),
+            "ko" to mapOf("title" to "3분기 판매 보고서를 팀의 모든 구성원과 공유", "cancel-label" to "취소", "action-label" to "팀과 공유"),
+            "ar" to mapOf("title" to "مشاركة تقرير مبيعات الربع الثالث مع جميع أعضاء فريقك", "cancel-label" to "إلغاء", "action-label" to "مشاركة مع فريقك"),
+            "en-XA" to mapOf("title" to "[Šĥåŕé ţĥé ţĥîŕð-ǫûåŕţéŕ šåļéš ŕéþöŕţ ŵîţĥ éṽéŕýöñé öñ ýöûŕ ţéåɱ one two three four five]", "cancel-label" to "[Çåñçéļ one]", "action-label" to "[Šĥåŕé ŵîţĥ ýöûŕ ţéåɱ one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "alert-dialog",
+        instances = listOf(
+            AlertDialogExampleProperties(destructive = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Delete this address?", "description" to "It is removed from your account. This cannot be undone.", "cancel-label" to "Cancel", "action-label" to "Delete address"),
+            "vi" to mapOf("title" to "Xóa địa chỉ này?", "description" to "Địa chỉ sẽ bị xóa khỏi tài khoản của bạn. Không thể hoàn tác thao tác này.", "cancel-label" to "Hủy", "action-label" to "Xóa địa chỉ"),
+            "zh-Hans" to mapOf("title" to "删除此地址？", "description" to "此地址将从你的账户中移除。此操作无法撤消。", "cancel-label" to "取消", "action-label" to "删除地址"),
+            "ja" to mapOf("title" to "この住所を削除しますか？", "description" to "この住所はアカウントから削除されます。この操作は元に戻せません。", "cancel-label" to "キャンセル", "action-label" to "住所を削除"),
+            "ko" to mapOf("title" to "이 주소를 삭제할까요?", "description" to "이 주소가 계정에서 삭제됩니다. 이 작업은 되돌릴 수 없습니다.", "cancel-label" to "취소", "action-label" to "주소 삭제"),
+            "ar" to mapOf("title" to "حذف هذا العنوان؟", "description" to "ستتم إزالته من حسابك. لا يمكن التراجع عن ذلك.", "cancel-label" to "إلغاء", "action-label" to "حذف العنوان"),
+            "en-XA" to mapOf("title" to "[Ðéļéţé ţĥîš åððŕéšš? one two]", "description" to "[Îţ îš ŕéɱöṽéð ƒŕöɱ ýöûŕ åççöûñţ. Ţĥîš çåññöţ ƀé ûñðöñé. one two three four five]", "cancel-label" to "[Çåñçéļ one]", "action-label" to "[Ðéļéţé åððŕéšš one]"),
+        ),
+    ),
+    SpecExample(
+        id = "sheet-edges",
+        instances = listOf(
+            SheetExampleProperties(edge = SheetEdge.Bottom),
+            SheetExampleProperties(edge = SheetEdge.End),
+        ),
+        text = mapOf(
+            "en" to mapOf("title" to "Filters", "body" to "Show files shared with you in the last 30 days.", "close-label" to "Close", "action-label" to "Show results"),
+            "vi" to mapOf("title" to "Bộ lọc", "body" to "Hiển thị các tệp được chia sẻ với bạn trong 30 ngày qua.", "close-label" to "Đóng", "action-label" to "Hiển thị kết quả"),
+            "zh-Hans" to mapOf("title" to "筛选", "body" to "显示过去 30 天内与你共享的文件。", "close-label" to "关闭", "action-label" to "显示结果"),
+            "ja" to mapOf("title" to "フィルター", "body" to "過去 30 日間に共有されたファイルを表示します。", "close-label" to "閉じる", "action-label" to "結果を表示"),
+            "ko" to mapOf("title" to "필터", "body" to "지난 30일 동안 나와 공유된 파일을 표시합니다.", "close-label" to "닫기", "action-label" to "결과 보기"),
+            "ar" to mapOf("title" to "عوامل التصفية", "body" to "عرض الملفات التي تمت مشاركتها معك خلال آخر 30 يومًا.", "close-label" to "إغلاق", "action-label" to "عرض النتائج"),
+            "en-XA" to mapOf("title" to "[Ƒîļţéŕš one]", "body" to "[Šĥöŵ ƒîļéš šĥåŕéð ŵîţĥ ýöû îñ ţĥé ļåšţ 30 ðåýš. one two three four]", "close-label" to "[Çļöšé]", "action-label" to "[Šĥöŵ ŕéšûļţš one]"),
         ),
     ),
 )
