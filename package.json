@@ -25,6 +25,7 @@
     "web:typecheck": "pnpm --filter @raincoat-ui/react typecheck",
     "web:build": "pnpm --filter @raincoat-ui/react build",
     "web:test": "pnpm --filter @raincoat-ui/react test",
+    "web:snapshots": "pnpm --filter @raincoat-ui/react test:snapshots",
     "web:browsers": "pnpm --filter @raincoat-ui/react exec playwright install --only-shell chromium",
     "web:reference": "pnpm web:build && pnpm --filter \"@raincoat-ui/reference-web-*\" typecheck && pnpm --filter \"@raincoat-ui/reference-web-*\" --workspace-concurrency=1 --no-bail test",
     "docs:build": "pnpm --filter @raincoat-ui/docs build",

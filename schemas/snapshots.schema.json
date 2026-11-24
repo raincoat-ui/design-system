@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raincoat-ui.github.io/design-system/schemas/snapshots.schema.json",
+  "title": "Raincoat visual snapshot matrix",
+  "description": "The visual snapshots every component has, on every platform: specs/snapshots.yaml. This schema checks structure; the spec linter checks that every mode, locale, and text size a snapshot names exists.",
+  "type": "object",
+  "required": ["locales", "text-sizes", "defaults", "snapshots"],
+  "additionalProperties": false,
+  "properties": {
+    "locales": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/locale" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 2 },
+          "direction": { "enum": ["ltr", "rtl"] },
+          "pseudo": {
+            "description": "A pseudo-locale, derived from English by the token build. expanded: about 40% longer, accented, in brackets.",
+            "enum": ["expanded"]
+          }
+        }
+      }
+    },
+    "text-sizes": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/kebab" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["description", "web", "ios", "android"],
+        "additionalProperties": false,
+        "properties": {
+          "description": { "$ref": "#/$defs/prose" },
+          "web": {
+            "description": "The root font size, as a percentage.",
+            "type": "string",
+            "pattern": "^[1-9][0-9]*%$"
+          },
+          "ios": {
+            "description": "A case of SwiftUI's DynamicTypeSize.",
+            "enum": [
+              "xSmall",
+              "small",
+              "medium",
+              "large",
+              "xLarge",
+              "xxLarge",
+              "xxxLarge",
+              "accessibility1",
+              "accessibility2",
+              "accessibility3",
+              "accessibility4",
+              "accessibility5"
+            ]
+          },
+          "android": {
+            "description": "The font scale.",
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "required": ["mode", "locale", "text-size"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "$ref": "#/$defs/kebab" },
+        "locale": { "$ref": "#/$defs/locale" },
+        "text-size": { "$ref": "#/$defs/kebab" }
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/kebab" },
+          "description": { "$ref": "#/$defs/prose" },
+          "mode": { "$ref": "#/$defs/kebab" },
+          "locale": { "$ref": "#/$defs/locale" },
+          "text-size": { "$ref": "#/$defs/kebab" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "kebab": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "prose": { "type": "string", "minLength": 8 },
+    "locale": {
+      "description": "A BCP 47 language tag, such as vi, zh-Hans, or en-XA.",
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+    }
+  }
+}

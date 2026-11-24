@@ -2,6 +2,10 @@
 // with a fixed set of values (a Button's variant and size, for example). Because every
 // platform's implementation takes these generated types, a value added to a spec is a compile
 // error on any platform that does not handle it.
+//
+// It also emits, for each platform's snapshot tests, the visual snapshot matrix and the examples
+// of every spec with their text in each locale.
+import { componentExamples, loadMatrix, resolveSnapshots } from "../snapshots.js";
 import { enumerations, loadSpecs } from "../specs.js";
 import { camel, indent, pascal } from "./shared.js";
 
@@ -92,4 +96,354 @@ export function specsKotlin(root) {
     ].join("\n");
   });
   return `${HEADER}\n\npackage io.github.raincoatui.tokens\n\n${types.join("\n\n")}\n`;
+}
+
+// ---------------------------------------------------------------------------------------------
+// The visual snapshot matrix (specs/snapshots.yaml), and each spec's examples with their text in
+// every locale (specs/components/<id>/strings.yaml), for each platform's snapshot tests.
+
+const SNAPSHOT_HEADER = `${HEADER}
+//
+// The visual snapshot matrix of specs/snapshots.yaml, and the examples of each component spec
+// with their text in every locale of the matrix. See docs/adr/0019-visual-snapshots.md.`;
+
+// The cases of ColorMode in the Swift and Kotlin token modules.
+const MODE_CASES = {
+  light: "light",
+  dark: "dark",
+  "light-hc": "lightHighContrast",
+  "dark-hc": "darkHighContrast",
+};
+function modeCase(mode) {
+  if (!MODE_CASES[mode]) throw new Error(`no native ColorMode case for "${mode}"`);
+  return MODE_CASES[mode];
+}
+
+/** The matrix, its snapshots resolved, and the examples of every spec with their text. */
+function snapshotSource(root) {
+  const matrix = loadMatrix(root);
+  const components = loadSpecs(root)
+    .filter(({ spec }) => spec)
+    .map(({ spec }) => ({
+      spec,
+      types: enumerations(spec).map(({ name }) => `${spec.name}${pascal(name)}`),
+      examples: componentExamples(root, spec, matrix),
+    }));
+  return { matrix, snapshots: resolveSnapshots(matrix), components };
+}
+
+/** The text of an example as [locale, [[content, text]]], in the matrix's order of locales. */
+const textEntries = (example) =>
+  Object.entries(example.text).map(([locale, contents]) => [locale, Object.entries(contents)]);
+
+/** packages/web/test/snapshots/generated/snapshots.ts */
+export function snapshotsTypeScript(root) {
+  const { snapshots, components } = snapshotSource(root);
+  const string = (value) => JSON.stringify(value);
+  const key = (name) => (/^[A-Za-z_$][\w$]*$/.test(name) ? name : string(name));
+  const modes = Object.keys(MODE_CASES).map(string).join(" | ");
+
+  const snapshotList = snapshots.map((snapshot) =>
+    [
+      "  {",
+      `    id: ${string(snapshot.id)},`,
+      `    description: ${string(snapshot.description)},`,
+      `    mode: ${string(snapshot.mode)},`,
+      `    locale: ${string(snapshot.locale)},`,
+      `    direction: ${string(snapshot.direction)},`,
+      `    textSize: { id: ${string(snapshot.textSize.id)}, rootFontSize: ${string(snapshot.textSize.web)} },`,
+      "  },",
+    ].join("\n"),
+  );
+
+  const componentBlocks = components.map(({ spec, examples }) => {
+    const type = `${spec.name}ExampleProperties`;
+    const fields = Object.entries(spec.properties).map(
+      ([name, property]) =>
+        `  readonly ${camel(name)}: ${property.values ? `${spec.name}${pascal(name)}` : "boolean"};`,
+    );
+    const instance = (properties) =>
+      `{ ${Object.entries(properties)
+        .map(([name, value]) => `${camel(name)}: ${string(value)}`)
+        .join(", ")} }`;
+    const exampleList = examples.map((example) =>
+      [
+        "  {",
+        `    id: ${string(example.id)},`,
+        `    description: ${string(example.description)},`,
+        "    instances: [",
+        ...example.instances.map((properties) => `      ${instance(properties)},`),
+        "    ],",
+        "    text: {",
+        ...textEntries(example).map(
+          ([locale, contents]) =>
+            `      ${key(locale)}: { ${contents.map(([content, text]) => `${key(content)}: ${string(text)}`).join(", ")} },`,
+        ),
+        "    },",
+        "  },",
+      ].join("\n"),
+    );
+    return [
+      `/** The properties of one ${spec.name} in an example, as the React component names them. */`,
+      `export interface ${type} {`,
+      ...fields,
+      "}",
+      "",
+      `/** The examples of specs/components/${spec.id}/spec.yaml, with their text. */`,
+      `export const ${spec.id.replaceAll("-", "_").toUpperCase()}_EXAMPLES: readonly SpecExample<${type}>[] = [`,
+      ...exampleList,
+      "];",
+    ].join("\n");
+  });
+
+  return `${SNAPSHOT_HEADER}
+
+import type { ${components.flatMap(({ types }) => types).join(", ")} } from "../../../src/generated/specs.js";
+
+/** A snapshot of the matrix: all the examples of a component, drawn together in one theme. */
+export interface Snapshot {
+  /** Names the snapshot, and its baseline image. */
+  readonly id: string;
+  readonly description: string;
+  readonly mode: ${modes};
+  /** A BCP 47 language tag. "en-XA" is the expanded pseudo-locale. */
+  readonly locale: string;
+  readonly direction: "ltr" | "rtl";
+  /** The text size, and the root font size that gives it on the web. */
+  readonly textSize: { readonly id: string; readonly rootFontSize: string };
+}
+
+/** Every snapshot each component has, in each theme. */
+export const SNAPSHOTS: readonly Snapshot[] = [
+${snapshotList.join("\n")}
+];
+
+/** An example of a component spec: the instances it draws, and its text in each locale. */
+export interface SpecExample<Properties> {
+  readonly id: string;
+  readonly description: string;
+  readonly instances: readonly Properties[];
+  /** The text of the example's content, such as its label: by locale, then content. */
+  readonly text: Readonly<Record<string, Readonly<Record<string, string>>>>;
+}
+
+${componentBlocks.join("\n\n")}
+`;
+}
+
+/** packages/ios/Tests/RaincoatTests/Generated/Snapshots.swift */
+export function snapshotsSwift(root) {
+  const { matrix, snapshots, components } = snapshotSource(root);
+  const string = (value) =>
+    `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\n")}"`;
+  const swiftCase = (value) =>
+    SWIFT_KEYWORDS.has(camel(value)) ? `\`${camel(value)}\`` : camel(value);
+  const textSizes = Object.entries(matrix["text-sizes"]);
+
+  const sizeCases = textSizes.flatMap(([id, { description }]) => [
+    `/// ${description}`,
+    `case ${swiftCase(id)}`,
+  ]);
+  const dynamicTypeCases = textSizes.map(([id, { ios }]) => `case .${camel(id)}: .${ios}`);
+  const snapshotList = snapshots.flatMap((snapshot) => [
+    `// ${snapshot.description}`,
+    `VisualSnapshot(id: ${string(snapshot.id)}, mode: .${modeCase(snapshot.mode)}, locale: ${string(snapshot.locale)}, rightToLeft: ${snapshot.direction === "rtl"}, textSize: .${camel(snapshot.textSize.id)}),`,
+  ]);
+
+  const componentBlocks = components.map(({ spec, examples }) => {
+    const type = `${spec.name}ExampleProperties`;
+    const fields = Object.entries(spec.properties).map(
+      ([name, property]) =>
+        `let ${camel(name)}: ${property.values ? `${spec.name}${pascal(name)}` : "Bool"}`,
+    );
+    const value = (name, raw) =>
+      spec.properties[name].values ? `.${swiftCase(raw)}` : String(raw);
+    const instance = (properties) =>
+      `${type}(${Object.entries(properties)
+        .map(([name, raw]) => `${camel(name)}: ${value(name, raw)}`)
+        .join(", ")}),`;
+    const exampleList = examples.map((example) =>
+      [
+        "SpecExample(",
+        `    id: ${string(example.id)},`,
+        "    instances: [",
+        ...example.instances.map((properties) => `        ${instance(properties)}`),
+        "    ],",
+        "    text: [",
+        ...textEntries(example).map(
+          ([locale, contents]) =>
+            `        ${string(locale)}: [${contents.map(([content, text]) => `${string(content)}: ${string(text)}`).join(", ")}],`,
+        ),
+        "    ]",
+        "),",
+      ].join("\n"),
+    );
+    return [
+      `/// The properties of one ${spec.name} in an example.`,
+      `struct ${type}: Sendable {`,
+      indent(fields.join("\n"), 1),
+      "}",
+      "",
+      `/// The examples of specs/components/${spec.id}/spec.yaml, with their text.`,
+      `let ${camel(spec.id)}Examples: [SpecExample<${type}>] = [`,
+      indent(exampleList.join("\n"), 1),
+      "]",
+    ].join("\n");
+  });
+
+  return `${SNAPSHOT_HEADER}
+
+import RaincoatTokens
+import Testing
+
+#if canImport(SwiftUI)
+    import SwiftUI
+#endif
+
+/// A text size of the snapshot matrix.
+enum SnapshotTextSize: String, CaseIterable, Sendable {
+${indent(sizeCases.join("\n"), 1)}
+}
+
+/// A snapshot of the matrix: all the examples of a component, drawn together in one theme.
+struct VisualSnapshot: Sendable {
+    /// Names the snapshot, and its baseline image.
+    let id: String
+    let mode: ColorMode
+    /// A BCP 47 language tag. "en-XA" is the expanded pseudo-locale.
+    let locale: String
+    let rightToLeft: Bool
+    let textSize: SnapshotTextSize
+}
+
+extension VisualSnapshot: CustomTestStringConvertible {
+    /// A test that takes a snapshot is listed under the snapshot's id.
+    var testDescription: String { id }
+}
+
+/// Every snapshot each component has, in each theme.
+let allSnapshots: [VisualSnapshot] = [
+${indent(snapshotList.join("\n"), 1)}
+]
+
+#if canImport(SwiftUI)
+    extension SnapshotTextSize {
+        /// The Dynamic Type size that gives this text size.
+        var dynamicTypeSize: DynamicTypeSize {
+            switch self {
+${indent(dynamicTypeCases.join("\n"), 3)}
+            }
+        }
+    }
+
+    extension VisualSnapshot {
+        var layoutDirection: LayoutDirection { rightToLeft ? .rightToLeft : .leftToRight }
+    }
+#endif
+
+/// An example of a component spec: the instances it draws, and its text in each locale.
+struct SpecExample<Properties: Sendable>: Sendable {
+    let id: String
+    let instances: [Properties]
+    /// The text of the example's content, such as its label: by locale, then content.
+    let text: [String: [String: String]]
+}
+
+${componentBlocks.join("\n\n")}
+`;
+}
+
+/** packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/generated/Snapshots.kt */
+export function snapshotsKotlin(root) {
+  const { matrix, snapshots, components } = snapshotSource(root);
+  const string = (value) =>
+    `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("$", "\\$").replaceAll("\n", "\\n")}"`;
+  const imports = [...components.flatMap(({ types }) => types), "ColorMode"].sort();
+
+  const sizeEntries = Object.entries(matrix["text-sizes"]).flatMap(
+    ([id, { description, android }]) => [`/** ${description} */`, `${pascal(id)}(${android}f),`],
+  );
+  const snapshotList = snapshots.flatMap((snapshot) => [
+    `// ${snapshot.description}`,
+    `VisualSnapshot(id = ${string(snapshot.id)}, mode = ColorMode.${pascal(modeCase(snapshot.mode))}, locale = ${string(snapshot.locale)}, rightToLeft = ${snapshot.direction === "rtl"}, textSize = SnapshotTextSize.${pascal(snapshot.textSize.id)}),`,
+  ]);
+
+  const componentBlocks = components.map(({ spec, examples }) => {
+    const type = `${spec.name}ExampleProperties`;
+    const fields = Object.entries(spec.properties).map(
+      ([name, property]) =>
+        `val ${camel(name)}: ${property.values ? `${spec.name}${pascal(name)}` : "Boolean"},`,
+    );
+    const value = (name, raw) =>
+      spec.properties[name].values ? `${spec.name}${pascal(name)}.${pascal(raw)}` : String(raw);
+    const instance = (properties) =>
+      `${type}(${Object.entries(properties)
+        .map(([name, raw]) => `${camel(name)} = ${value(name, raw)}`)
+        .join(", ")}),`;
+    const exampleList = examples.map((example) =>
+      [
+        "SpecExample(",
+        `    id = ${string(example.id)},`,
+        "    instances = listOf(",
+        ...example.instances.map((properties) => `        ${instance(properties)}`),
+        "    ),",
+        "    text = mapOf(",
+        ...textEntries(example).map(
+          ([locale, contents]) =>
+            `        ${string(locale)} to mapOf(${contents.map(([content, text]) => `${string(content)} to ${string(text)}`).join(", ")}),`,
+        ),
+        "    ),",
+        "),",
+      ].join("\n"),
+    );
+    return [
+      `/** The properties of one ${spec.name} in an example. */`,
+      `internal data class ${type}(`,
+      indent(fields.join("\n"), 1),
+      ")",
+      "",
+      `/** The examples of specs/components/${spec.id}/spec.yaml, with their text. */`,
+      `internal val ${camel(spec.id)}Examples: List<SpecExample<${type}>> = listOf(`,
+      indent(exampleList.join("\n"), 1),
+      ")",
+    ].join("\n");
+  });
+
+  return `${SNAPSHOT_HEADER}
+
+package io.github.raincoatui.ui.generated
+
+${imports.map((name) => `import io.github.raincoatui.tokens.${name}`).join("\n")}
+
+/** A text size of the snapshot matrix, and the font scale that gives it. */
+internal enum class SnapshotTextSize(val fontScale: Float) {
+${indent(sizeEntries.join("\n"), 1)}
+}
+
+/** A snapshot of the matrix: all the examples of a component, drawn together in one theme. */
+internal data class VisualSnapshot(
+    /** Names the snapshot, and its baseline image. */
+    val id: String,
+    val mode: ColorMode,
+    /** A BCP 47 language tag. "en-XA" is the expanded pseudo-locale. */
+    val locale: String,
+    val rightToLeft: Boolean,
+    val textSize: SnapshotTextSize,
+)
+
+/** Every snapshot each component has, in each theme. */
+internal val allSnapshots: List<VisualSnapshot> = listOf(
+${indent(snapshotList.join("\n"), 1)}
+)
+
+/** An example of a component spec: the instances it draws, and its text in each locale. */
+internal data class SpecExample<P>(
+    val id: String,
+    val instances: List<P>,
+    /** The text of the example's content, such as its label: by locale, then content. */
+    val text: Map<String, Map<String, String>>,
+)
+
+${componentBlocks.join("\n\n")}
+`;
 }
