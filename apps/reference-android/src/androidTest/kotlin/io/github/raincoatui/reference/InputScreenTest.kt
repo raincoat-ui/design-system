@@ -98,14 +98,30 @@ class InputScreenTest {
             .flatMap { listOfNotNull(it.text, it.hintText, it.contentDescription, it.stateDescription) }
             .joinToString(" | ")
 
-    /** The item a service is given for the field named [name], and what is said about each item. */
+    /**
+     * The node a service is given for the field labelled [name], and what each node on screen
+     * says, for a failure to show. The label is a node under the field's (see [serviceItems]),
+     * so the field is the label's parent. A disabled field is in the tree too, though a service
+     * does not stop on it.
+     */
     private fun serviceField(name: String): Pair<AccessibilityNodeInfo?, List<String>> {
-        val items = serviceItems()
-        val said = items.map { "${it.className}: ${it.words()}" }
-        // The last item that says the name: a container that holds the field says it too, and
-        // comes before it.
-        return items.lastOrNull { it.words().split(" | ").contains(name) } to said
+        compose.waitForIdle()
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        var nodes = emptyList<AccessibilityNodeInfo>()
+        // The tree follows the screen a moment after it changes, as after scrolling.
+        repeat(50) {
+            nodes = automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
+            val label = nodes.firstOrNull { it.text?.toString() == name }
+            if (label?.parent != null) return label.parent to describe(nodes)
+            Thread.sleep(100)
+        }
+        return null to describe(nodes)
     }
+
+    private fun describe(nodes: List<AccessibilityNodeInfo>): List<String> =
+        nodes.filter { it.childCount > 0 || it.text != null }.map {
+            "${it.className}${if (it.isFocusable) " (focusable)" else ""}: ${it.words()}"
+        }
 
     @Test
     fun everyFieldIsNamedByItsLabelAndTheDescriptionFollows() {
@@ -129,11 +145,15 @@ class InputScreenTest {
     @Test
     fun aDisabledFieldIsUnavailableAndAReadOnlyOneIsNot() {
         field("Company").performScrollTo().assertIsNotEnabled()
-        val (company, said) = serviceField("Company")
-        assertTrue("items: $said", company != null && !company.isEnabled)
-        // A read-only field stays an item a service stops on, and is available.
-        val (account, _) = serviceField("Account number")
-        assertTrue("items: $said", account != null && account.isEnabled && account.isFocusable)
+        val (company, onScreen) = serviceField("Company")
+        assertTrue("nodes: $onScreen", company != null && !company.isEnabled)
+        assertTrue("nodes: $onScreen", company?.words().orEmpty().contains("Harbour Supplies"))
+
+        // A read-only field stays an item a service stops on, and is available, with its value.
+        field("Account number").performScrollTo()
+        val (account, said) = serviceField("Account number")
+        assertTrue("nodes: $said", account != null && account.isEnabled && account.isFocusable)
+        assertTrue("nodes: $said", account?.words().orEmpty().contains("DE89 3704 0044 0532 0130 00"))
     }
 
     @Test
