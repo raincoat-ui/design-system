@@ -138,17 +138,20 @@ final class InputTests: ReferenceAppTestCase {
         }
     }
 
-    /// Taps a point a distance below the top of the visible small field, with the field on the
-    /// screen and without focus, and says whether the field has keyboard focus after it.
+    /// Taps the screen, with the small field on it and without focus, at the height that `y` gives
+    /// from the top and the bottom of the visible field, and says whether the field then has
+    /// keyboard focus.
     @MainActor
-    private func smallFieldIsFocusedByATap(_ distance: CGFloat, fromTop: Bool, in app: XCUIApplication) -> Bool {
+    private func smallFieldIsFocusedByATap(
+        in app: XCUIApplication, at y: (_ top: CGFloat, _ bottom: CGFloat) -> CGFloat
+    ) -> Bool {
         let field = app.textFields["Search the docs"]
         leave(field, in: app)
         scrollOntoTheScreen(field, in: app)
+        XCTAssertFalse(hasKeyboardFocus(field), "the field still has focus before the tap")
         let top = app.staticTexts["small-above"].frame.maxY
         let bottom = app.staticTexts["small-below"].frame.minY
-        let y = fromTop ? top + distance : (top + bottom) / 2
-        app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: field.frame.midX, dy: y)).tap()
+        app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: field.frame.midX, dy: y(top, bottom))).tap()
         return hasKeyboardFocus(field)
     }
 
@@ -171,22 +174,24 @@ final class InputTests: ReferenceAppTestCase {
         XCTAssertEqual(field.frame.height, minimumTarget, accuracy: 0.5)
         XCTAssertEqual(field.frame.midY, (above.maxY + below.minY) / 2, accuracy: 0.5)
 
-        // Which taps reach the field, recorded in the log until this test passes.
-        let diagnostics = [
-            ("1 pt above the visible field", smallFieldIsFocusedByATap(-1, fromTop: true, in: app)),
-            ("1 pt inside the visible field's top", smallFieldIsFocusedByATap(1, fromTop: true, in: app)),
-            ("the visible field's centre", smallFieldIsFocusedByATap(0, fromTop: false, in: app)),
-        ]
-        for (place, focused) in diagnostics {
-            XCTContext.runActivity(named: "Diagnostic: a tap at \(place) focuses the field: \(focused)") { _ in }
-        }
-        leave(field, in: app)
-        scrollOntoTheScreen(field, in: app)
-        XCTAssertFalse(hasKeyboardFocus(field), "The field kept focus, so the last tap shows nothing")
-
-        // A touch inside the target but above the visible field, on the line of text there.
-        field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0)).withOffset(CGVector(dx: 0, dy: 1)).tap()
-        XCTAssertTrue(hasKeyboardFocus(field))
+        // A touch inside the target but above the visible field, on the line of text there, puts
+        // the caret in the field, as a touch on the field does.
+        XCTAssertTrue(
+            smallFieldIsFocusedByATap(in: app) { top, _ in top - 1 },
+            "a tap 1 pt above the visible field focuses the field"
+        )
+        XCTAssertTrue(
+            smallFieldIsFocusedByATap(in: app) { top, bottom in (top + bottom - minimumTarget) / 2 + 1 },
+            "a tap 1 pt inside the top of the touch target focuses the field"
+        )
+        XCTAssertTrue(
+            smallFieldIsFocusedByATap(in: app) { top, _ in top + 1 },
+            "a tap 1 pt inside the visible field's top focuses the field"
+        )
+        XCTAssertTrue(
+            smallFieldIsFocusedByATap(in: app) { top, bottom in (top + bottom) / 2 },
+            "a tap at the visible field's centre focuses the field"
+        )
     }
 
     /// The system's accessibility audit: names, traits, touch targets, contrast, clipped text.
