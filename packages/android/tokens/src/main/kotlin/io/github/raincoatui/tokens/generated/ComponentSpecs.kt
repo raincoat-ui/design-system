@@ -73,3 +73,75 @@ public enum class InputType(public val id: String) {
         public val Standard: InputType = Text
     }
 }
+
+/** Text: The text style. */
+public enum class TextVariant(public val id: String) {
+    /** An introductory paragraph. */
+    BodyLg("body-lg"),
+    /** Running text. The default. */
+    BodyMd("body-md"),
+    /** Secondary running text, such as help text under a field. */
+    BodySm("body-sm"),
+    /** Text beside or in a large control. */
+    LabelLg("label-lg"),
+    /** Text beside or in a medium control. */
+    LabelMd("label-md"),
+    /** Text beside or in a small control. */
+    LabelSm("label-sm"),
+    /** Timestamps, counts, and other short secondary facts. Never prose. */
+    Caption("caption"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: TextVariant = BodyMd
+    }
+}
+
+/** Text: The color of the text, from the theme's text roles. */
+public enum class TextColor(public val id: String) {
+    /** Primary text. */
+    Default("default"),
+    /** Secondary text, such as a caption or help text. */
+    Muted("muted"),
+    /** An error, or text about something destructive. */
+    Danger("danger"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: TextColor = Default
+    }
+}
+
+/** Heading: How the heading looks. It follows the level unless it is given: set it to change the look and keep the level. */
+public enum class HeadingVariant(public val id: String) {
+    /** The title of a screen. Once per screen. */
+    HeadingXl("heading-xl"),
+    /** Section titles on a screen. */
+    HeadingLg("heading-lg"),
+    /** Dialog and sheet titles, and subsection titles. */
+    HeadingMd("heading-md"),
+    /** Card titles and group titles in lists. */
+    HeadingSm("heading-sm"),
+    ;
+
+    public companion object {
+        /** The value used when none is given, for each level. */
+        public val StandardByLevel: Map<Int, HeadingVariant> = mapOf(1 to HeadingXl, 2 to HeadingLg, 3 to HeadingMd, 4 to HeadingSm, 5 to HeadingSm, 6 to HeadingSm)
+    }
+}
+
+/** Heading: The color of the heading, from the theme's text roles. */
+public enum class HeadingColor(public val id: String) {
+    /** Primary text. */
+    Default("default"),
+    /** A heading that steps back, such as a group title in a list. */
+    Muted("muted"),
+    ;
+
+    public companion object {
+        /** The value used when none is given. */
+        public val Standard: HeadingColor = Default
+    }
+}

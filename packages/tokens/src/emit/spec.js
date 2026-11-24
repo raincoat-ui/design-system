@@ -6,7 +6,7 @@
 // It also emits, for each platform's snapshot tests, the visual snapshot matrix and the examples
 // of every spec with their text in each locale.
 import { componentExamples, loadMatrix, resolveSnapshots } from "../snapshots.js";
-import { enumerations, loadSpecs } from "../specs.js";
+import { enumerations, loadSpecs, propertyGroups } from "../specs.js";
 import { camel, indent, pascal } from "./shared.js";
 
 const HEADER =
@@ -18,18 +18,18 @@ const SWIFT_KEYWORDS = new Set(
   ),
 );
 
-/** Every enumeration of every spec: {component, type, description, default, values}. */
+/**
+ * Every enumeration of every spec: {component, type, description, default, defaultBy, values}.
+ * `component` is the component's name, or the part's in a spec with parts.
+ */
 function allEnumerations(root) {
   return loadSpecs(root)
     .filter(({ spec }) => spec)
-    .flatMap(({ spec }) =>
-      enumerations(spec).map((enumeration) => ({
-        ...enumeration,
-        component: spec.name,
-        type: `${spec.name}${pascal(enumeration.name)}`,
-      })),
-    );
+    .flatMap(({ spec }) => enumerations(spec));
 }
+
+/** "Level" for "level": the name of a default's dependency in a declaration. */
+const byName = (enumeration) => pascal(enumeration.defaultBy.property);
 
 /** RaincoatTokens/Generated/ComponentSpecs.swift */
 export function specsSwift(root) {
@@ -40,13 +40,27 @@ export function specsSwift(root) {
       `/// ${description}`,
       camel(value) === value ? `case ${swiftCase(value)}` : `case ${swiftCase(value)} = "${value}"`,
     ]);
+    let standard;
+    if (enumeration.defaultBy) {
+      const { keyType, values } = enumeration.defaultBy;
+      const key = (raw) => (keyType === "integer" ? raw : `.${camel(raw)}`);
+      const entries = Object.entries(values).map(([raw, value]) => `${key(raw)}: .${camel(value)}`);
+      standard = [
+        `    /// The value used when none is given, for each ${enumeration.defaultBy.property}.`,
+        `    public static let standardBy${byName(enumeration)}: [${keyType === "integer" ? "Int" : keyType}: ${enumeration.type}] = [${entries.join(", ")}]`,
+      ];
+    } else {
+      standard = [
+        "    /// The value used when none is given.",
+        `    public static let standard: ${enumeration.type} = .${camel(enumeration.default)}`,
+      ];
+    }
     return [
       `/// ${enumeration.component}: ${enumeration.description}`,
       `public enum ${enumeration.type}: String, CaseIterable, Sendable {`,
       indent(cases.join("\n"), 1),
       "",
-      "    /// The value used when none is given.",
-      `    public static let standard: ${enumeration.type} = .${camel(enumeration.default)}`,
+      ...standard,
       "}",
     ].join("\n");
   });
@@ -58,6 +72,22 @@ export function specsTypeScript(root) {
   const constant = (name) => name.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
   const types = allEnumerations(root).map((enumeration) => {
     const values = enumeration.values.map(({ value }) => `"${value}"`);
+    let standard;
+    if (enumeration.defaultBy) {
+      const { property, keyType, values: map } = enumeration.defaultBy;
+      const keys = Object.keys(map);
+      const key = (raw) => (keyType === "integer" ? raw : `"${raw}"`);
+      const entries = Object.entries(map).map(([raw, value]) => `${key(raw)}: "${value}"`);
+      standard = [
+        `/** The ${enumeration.type} used when none is given, for each ${property}. */`,
+        `export const ${constant(enumeration.type)}_DEFAULT_BY_${constant(byName(enumeration))} = { ${entries.join(", ")} } as const satisfies Readonly<Record<${keyType === "integer" ? keys.join(" | ") : keyType}, ${enumeration.type}>>;`,
+      ];
+    } else {
+      standard = [
+        `/** The ${enumeration.type} used when none is given. */`,
+        `export const ${constant(enumeration.type)}_DEFAULT: ${enumeration.type} = "${enumeration.default}";`,
+      ];
+    }
     return [
       "/**",
       ` * ${enumeration.component}: ${enumeration.description}`,
@@ -68,11 +98,33 @@ export function specsTypeScript(root) {
       `/** Every ${enumeration.type}, in the order the spec lists them. */`,
       `export const ${constant(enumeration.type)}S = [${values.join(", ")}] as const satisfies readonly ${enumeration.type}[];`,
       "",
-      `/** The ${enumeration.type} used when none is given. */`,
-      `export const ${constant(enumeration.type)}_DEFAULT: ${enumeration.type} = "${enumeration.default}";`,
+      ...standard,
     ].join("\n");
   });
-  return `${HEADER}\n\n${types.join("\n\n")}\n`;
+  // A whole number with a range is a fixed set of values too. TypeScript can name them, so
+  // a heading of level 7 does not compile; Swift and Kotlin take an integer and check it.
+  const ranges = loadSpecs(root)
+    .filter(({ spec }) => spec)
+    .flatMap(({ spec }) => propertyGroups(spec))
+    .flatMap(({ name: owner, properties }) =>
+      Object.entries(properties)
+        .filter(([, property]) => property.type === "integer" && property.maximum !== undefined)
+        .map(([name, property]) => {
+          const type = `${owner}${pascal(name)}`;
+          const numbers = Array.from(
+            { length: property.maximum - property.minimum + 1 },
+            (_, index) => property.minimum + index,
+          );
+          return [
+            `/** ${owner}: ${property.description} */`,
+            `export type ${type} = ${numbers.join(" | ")};`,
+            "",
+            `/** Every ${type}, from the lowest. */`,
+            `export const ${constant(type)}S = [${numbers.join(", ")}] as const satisfies readonly ${type}[];`,
+          ].join("\n");
+        }),
+    );
+  return `${HEADER}\n\n${[...types, ...ranges].join("\n\n")}\n`;
 }
 
 /** tokens/.../generated/ComponentSpecs.kt */
@@ -82,6 +134,21 @@ export function specsKotlin(root) {
       `/** ${description} */`,
       `${pascal(value)}("${value}"),`,
     ]);
+    let standard;
+    if (enumeration.defaultBy) {
+      const { property, keyType, values } = enumeration.defaultBy;
+      const key = (raw) => (keyType === "integer" ? raw : `${keyType}.${pascal(raw)}`);
+      const pairs = Object.entries(values).map(([raw, value]) => `${key(raw)} to ${pascal(value)}`);
+      standard = [
+        `        /** The value used when none is given, for each ${property}. */`,
+        `        public val StandardBy${byName(enumeration)}: Map<${keyType === "integer" ? "Int" : keyType}, ${enumeration.type}> = mapOf(${pairs.join(", ")})`,
+      ];
+    } else {
+      standard = [
+        "        /** The value used when none is given. */",
+        `        public val Standard: ${enumeration.type} = ${pascal(enumeration.default)}`,
+      ];
+    }
     return [
       `/** ${enumeration.component}: ${enumeration.description} */`,
       `public enum class ${enumeration.type}(public val id: String) {`,
@@ -89,8 +156,7 @@ export function specsKotlin(root) {
       "    ;",
       "",
       "    public companion object {",
-      "        /** The value used when none is given. */",
-      `        public val Standard: ${enumeration.type} = ${pascal(enumeration.default)}`,
+      ...standard,
       "    }",
       "}",
     ].join("\n");
@@ -119,18 +185,63 @@ function modeCase(mode) {
   return MODE_CASES[mode];
 }
 
+/**
+ * The properties of one instance of an example: one type for a component, or one for each of
+ * its parts. Each field has the property's name in the spec (`key`) and in code (`name`), its
+ * kind ("enum", "boolean", or "integer"), the spec type of an enumeration or of a whole number
+ * with a range (`type`), and whether an instance can leave it out: when its default is not a
+ * value, as for a heading's look, which follows its level, or when it has none and is not
+ * required.
+ */
+function exampleTypes(spec) {
+  return propertyGroups(spec).map(({ part, name: owner, properties }) => ({
+    part,
+    owner,
+    name: `${owner}ExampleProperties`,
+    fields: Object.entries(properties).map(([key, property]) => ({
+      key,
+      name: camel(key),
+      kind: property.values ? "enum" : property.type,
+      type:
+        property.values || (property.type === "integer" && property.maximum !== undefined)
+          ? `${owner}${pascal(key)}`
+          : undefined,
+      optional:
+        !["string", "boolean", "number"].includes(typeof property.default) && !property.required,
+    })),
+  }));
+}
+
 /** The matrix, its snapshots resolved, and the examples of every spec with their text. */
 function snapshotSource(root) {
   const matrix = loadMatrix(root);
   const components = loadSpecs(root)
     .filter(({ spec }) => spec)
-    .map(({ spec }) => ({
-      spec,
-      types: enumerations(spec).map(({ name }) => `${spec.name}${pascal(name)}`),
-      examples: componentExamples(root, spec, matrix),
-    }));
+    .map(({ spec }) => {
+      const groups = exampleTypes(spec);
+      const examples = componentExamples(root, spec, matrix).map((example) => ({
+        ...example,
+        group: groups.find(({ part }) => part === example.part),
+      }));
+      return {
+        spec,
+        types: enumerations(spec).map(({ type }) => type),
+        groups,
+        // The type of an instance: the component's, or for a spec with parts, any part's.
+        instanceType: `${spec.name}ExampleProperties`,
+        examples,
+      };
+    });
   return { matrix, snapshots: resolveSnapshots(matrix), components };
 }
+
+/** The fields an instance sets, in the order of the spec, with their values. */
+const fieldsOf = (group, instance) =>
+  group.fields.map((field) => ({
+    ...field,
+    set: Object.hasOwn(instance, field.key),
+    raw: instance[field.key],
+  }));
 
 /** The text of an example as [locale, [[content, text]]], in the matrix's order of locales. */
 const textEntries = (example) =>
@@ -156,23 +267,45 @@ export function snapshotsTypeScript(root) {
     ].join("\n"),
   );
 
-  const componentBlocks = components.map(({ spec, examples }) => {
-    const type = `${spec.name}ExampleProperties`;
-    const fields = Object.entries(spec.properties).map(
-      ([name, property]) =>
-        `  readonly ${camel(name)}: ${property.values ? `${spec.name}${pascal(name)}` : "boolean"};`,
+  const fieldType = (field) =>
+    field.kind === "boolean"
+      ? "boolean"
+      : (field.type ?? (field.kind === "integer" ? "number" : ""));
+  const componentBlocks = components.map(({ spec, groups, instanceType: type, examples }) => {
+    // One interface for a component, or one for each part, told apart by `part`.
+    const interfaces = groups.map((group) =>
+      [
+        `/** The properties of one ${group.owner} in an example, as the React component names them. */`,
+        `export interface ${group.name} {`,
+        ...(group.part === null ? [] : [`  readonly part: ${string(group.part)};`]),
+        ...group.fields.map(
+          (field) => `  readonly ${field.name}${field.optional ? "?" : ""}: ${fieldType(field)};`,
+        ),
+        "}",
+      ].join("\n"),
     );
-    const instance = (properties) =>
-      `{ ${Object.entries(properties)
-        .map(([name, value]) => `${camel(name)}: ${string(value)}`)
-        .join(", ")} }`;
+    if (spec.parts) {
+      interfaces.push(
+        [
+          `/** The properties of one part of ${spec.name} in an example. */`,
+          `export type ${type} = ${groups.map(({ name }) => name).join(" | ")};`,
+        ].join("\n"),
+      );
+    }
+    const instance = (example, properties) =>
+      `{ ${[
+        ...(example.part === null ? [] : [`part: ${string(example.part)}`]),
+        ...fieldsOf(example.group, properties)
+          .filter(({ set }) => set)
+          .map(({ name, raw }) => `${name}: ${string(raw)}`),
+      ].join(", ")} }`;
     const exampleList = examples.map((example) =>
       [
         "  {",
         `    id: ${string(example.id)},`,
         `    description: ${string(example.description)},`,
         "    instances: [",
-        ...example.instances.map((properties) => `      ${instance(properties)},`),
+        ...example.instances.map((properties) => `      ${instance(example, properties)},`),
         "    ],",
         "    text: {",
         ...textEntries(example).map(
@@ -184,10 +317,7 @@ export function snapshotsTypeScript(root) {
       ].join("\n"),
     );
     return [
-      `/** The properties of one ${spec.name} in an example, as the React component names them. */`,
-      `export interface ${type} {`,
-      ...fields,
-      "}",
+      interfaces.join("\n\n"),
       "",
       `/** The examples of specs/components/${spec.id}/spec.yaml, with their text. */`,
       `export const ${spec.id.replaceAll("-", "_").toUpperCase()}_EXAMPLES: readonly SpecExample<${type}>[] = [`,
@@ -195,10 +325,18 @@ export function snapshotsTypeScript(root) {
       "];",
     ].join("\n");
   });
+  // The spec types the fields use: each enumeration, and each whole number with a range.
+  const imports = [
+    ...new Set(
+      components.flatMap(({ groups }) =>
+        groups.flatMap(({ fields }) => fields.map(({ type }) => type).filter(Boolean)),
+      ),
+    ),
+  ];
 
   return `${SNAPSHOT_HEADER}
 
-import type { ${components.flatMap(({ types }) => types).join(", ")} } from "../../../src/generated/specs.js";
+import type { ${imports.join(", ")} } from "../../../src/generated/specs.js";
 
 /** A snapshot of the matrix: all the examples of a component, drawn together in one theme. */
 export interface Snapshot {
@@ -250,24 +388,48 @@ export function snapshotsSwift(root) {
     `VisualSnapshot(id: ${string(snapshot.id)}, mode: .${modeCase(snapshot.mode)}, locale: ${string(snapshot.locale)}, rightToLeft: ${snapshot.direction === "rtl"}, textSize: .${camel(snapshot.textSize.id)}),`,
   ]);
 
-  const componentBlocks = components.map(({ spec, examples }) => {
-    const type = `${spec.name}ExampleProperties`;
-    const fields = Object.entries(spec.properties).map(
-      ([name, property]) =>
-        `let ${camel(name)}: ${property.values ? `${spec.name}${pascal(name)}` : "Bool"}`,
+  const swiftType = (field) =>
+    `${{ enum: field.type, boolean: "Bool", integer: "Int" }[field.kind]}${field.optional ? "?" : ""}`;
+  const componentBlocks = components.map(({ spec, groups, instanceType: type, examples }) => {
+    // One structure for a component. For a spec with parts, one for each part, and an
+    // enumeration of the parts.
+    const structures = groups.map((group) =>
+      [
+        `/// The properties of one ${group.owner} in an example.`,
+        `struct ${group.name}: Sendable {`,
+        indent(group.fields.map((field) => `let ${field.name}: ${swiftType(field)}`).join("\n"), 1),
+        "}",
+      ].join("\n"),
     );
-    const value = (name, raw) =>
-      spec.properties[name].values ? `.${swiftCase(raw)}` : String(raw);
-    const instance = (properties) =>
-      `${type}(${Object.entries(properties)
-        .map(([name, raw]) => `${camel(name)}: ${value(name, raw)}`)
-        .join(", ")}),`;
+    if (spec.parts) {
+      structures.push(
+        [
+          `/// The properties of one part of ${spec.name} in an example.`,
+          `enum ${type}: Sendable {`,
+          indent(
+            groups.map((group) => `case ${swiftCase(group.part)}(${group.name})`).join("\n"),
+            1,
+          ),
+          "}",
+        ].join("\n"),
+      );
+    }
+    const value = ({ kind, set, raw }) => {
+      if (!set) return "nil";
+      return kind === "enum" ? `.${swiftCase(raw)}` : String(raw);
+    };
+    const instance = (example, properties) => {
+      const made = `${example.group.name}(${fieldsOf(example.group, properties)
+        .map((field) => `${field.name}: ${value(field)}`)
+        .join(", ")})`;
+      return `${example.part === null ? made : `.${swiftCase(example.part)}(${made})`},`;
+    };
     const exampleList = examples.map((example) =>
       [
         "SpecExample(",
         `    id: ${string(example.id)},`,
         "    instances: [",
-        ...example.instances.map((properties) => `        ${instance(properties)}`),
+        ...example.instances.map((properties) => `        ${instance(example, properties)}`),
         "    ],",
         "    text: [",
         ...textEntries(example).map(
@@ -279,10 +441,7 @@ export function snapshotsSwift(root) {
       ].join("\n"),
     );
     return [
-      `/// The properties of one ${spec.name} in an example.`,
-      `struct ${type}: Sendable {`,
-      indent(fields.join("\n"), 1),
-      "}",
+      structures.join("\n\n"),
       "",
       `/// The examples of specs/components/${spec.id}/spec.yaml, with their text.`,
       `let ${camel(spec.id)}Examples: [SpecExample<${type}>] = [`,
@@ -368,24 +527,43 @@ export function snapshotsKotlin(root) {
     `VisualSnapshot(id = ${string(snapshot.id)}, mode = ColorMode.${pascal(modeCase(snapshot.mode))}, locale = ${string(snapshot.locale)}, rightToLeft = ${snapshot.direction === "rtl"}, textSize = SnapshotTextSize.${pascal(snapshot.textSize.id)}),`,
   ]);
 
-  const componentBlocks = components.map(({ spec, examples }) => {
-    const type = `${spec.name}ExampleProperties`;
-    const fields = Object.entries(spec.properties).map(
-      ([name, property]) =>
-        `val ${camel(name)}: ${property.values ? `${spec.name}${pascal(name)}` : "Boolean"},`,
+  const kotlinType = (field) =>
+    `${{ enum: field.type, boolean: "Boolean", integer: "Int" }[field.kind]}${field.optional ? "?" : ""}`;
+  const componentBlocks = components.map(({ spec, groups, instanceType: type, examples }) => {
+    // One class for a component. For a spec with parts, one for each part, of a sealed type.
+    const classes = groups.map((group) =>
+      [
+        `/** The properties of one ${group.owner} in an example. */`,
+        `internal data class ${group.name}(`,
+        indent(
+          group.fields.map((field) => `val ${field.name}: ${kotlinType(field)},`).join("\n"),
+          1,
+        ),
+        spec.parts ? `) : ${type}` : ")",
+      ].join("\n"),
     );
-    const value = (name, raw) =>
-      spec.properties[name].values ? `${spec.name}${pascal(name)}.${pascal(raw)}` : String(raw);
-    const instance = (properties) =>
-      `${type}(${Object.entries(properties)
-        .map(([name, raw]) => `${camel(name)} = ${value(name, raw)}`)
+    if (spec.parts) {
+      classes.unshift(
+        [
+          `/** The properties of one part of ${spec.name} in an example. */`,
+          `internal sealed interface ${type}`,
+        ].join("\n"),
+      );
+    }
+    const value = ({ kind, type: enumType, set, raw }) => {
+      if (!set) return "null";
+      return kind === "enum" ? `${enumType}.${pascal(raw)}` : String(raw);
+    };
+    const instance = (example, properties) =>
+      `${example.group.name}(${fieldsOf(example.group, properties)
+        .map((field) => `${field.name} = ${value(field)}`)
         .join(", ")}),`;
     const exampleList = examples.map((example) =>
       [
         "SpecExample(",
         `    id = ${string(example.id)},`,
         "    instances = listOf(",
-        ...example.instances.map((properties) => `        ${instance(properties)}`),
+        ...example.instances.map((properties) => `        ${instance(example, properties)}`),
         "    ),",
         "    text = mapOf(",
         ...textEntries(example).map(
@@ -397,10 +575,7 @@ export function snapshotsKotlin(root) {
       ].join("\n"),
     );
     return [
-      `/** The properties of one ${spec.name} in an example. */`,
-      `internal data class ${type}(`,
-      indent(fields.join("\n"), 1),
-      ")",
+      classes.join("\n\n"),
       "",
       `/** The examples of specs/components/${spec.id}/spec.yaml, with their text. */`,
       `internal val ${camel(spec.id)}Examples: List<SpecExample<${type}>> = listOf(`,

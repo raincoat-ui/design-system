@@ -25,7 +25,12 @@ test("every component has an entry in shadcn.lock.json, and every entry a compon
 });
 
 test("every upstream copy has an entry, and the upstream license is kept with them", () => {
-  assert.deepEqual(names(".shadcn-upstream", ".tsx"), Object.keys(lock.components).sort());
+  assert.deepEqual(
+    names(".shadcn-upstream", ".tsx"),
+    Object.keys(lock.components)
+      .filter((name) => lock.components[name].upstream !== null)
+      .sort(),
+  );
   assert.match(
     readFileSync(join(root, lock.license), "utf8"),
     /^MIT License\n\nCopyright \(c\) 2023 shadcn/,
@@ -33,6 +38,24 @@ test("every upstream copy has an entry, and the upstream license is kept with th
 });
 
 for (const [name, entry] of Object.entries(lock.components)) {
+  // A component the registry does not have says so, when that was checked, and why.
+  if (entry.upstream === null) {
+    test(`${name}: the entry says the registry has no source for it, and why`, () => {
+      assert.deepEqual(Object.keys(entry).sort(), [
+        "checked",
+        "local",
+        "reason",
+        "registry",
+        "upstream",
+      ]);
+      assert.equal(entry.registry, `https://ui.shadcn.com/r/styles/${lock.style}/${name}.json`);
+      assert.match(entry.checked, /^\d{4}-\d{2}-\d{2}$/);
+      assert.ok(entry.reason.length > 20, "the reason is written out");
+      assert.equal(entry.local, `src/components/ui/${name}.tsx`);
+      assert.ok(existsSync(join(root, entry.local)));
+    });
+    continue;
+  }
   test(`${name}: the upstream copy is unmodified and the entry is complete`, () => {
     const hash = createHash("sha256")
       .update(readFileSync(join(root, entry.upstream)))

@@ -7,8 +7,7 @@ import io.github.raincoatui.ui.RaincoatTheme
 
 /**
  * The Input in the states of its spec, in the theme the app was built with (appTheme, written by
- * the build). Its tests start it directly; by hand,
- * `adb shell am start -n io.github.raincoatui.reference/.InputActivity`.
+ * the build). Its tests open it directly.
  */
 class InputActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

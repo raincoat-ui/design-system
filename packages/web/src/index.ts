@@ -1,17 +1,40 @@
 export { Button, type ButtonProps, buttonVariants } from "./components/ui/button.js";
 export { Input, type InputProps } from "./components/ui/input.js";
 export {
+  Heading,
+  type HeadingProps,
+  headingVariants,
+  Text,
+  type TextElement,
+  type TextProps,
+  textVariants,
+} from "./components/ui/typography.js";
+export {
   BUTTON_SIZE_DEFAULT,
   BUTTON_SIZES,
   BUTTON_VARIANT_DEFAULT,
   BUTTON_VARIANTS,
   type ButtonSize,
   type ButtonVariant,
+  HEADING_COLOR_DEFAULT,
+  HEADING_COLORS,
+  HEADING_LEVELS,
+  HEADING_VARIANT_DEFAULT_BY_LEVEL,
+  HEADING_VARIANTS,
+  type HeadingColor,
+  type HeadingLevel,
+  type HeadingVariant,
   INPUT_SIZE_DEFAULT,
   INPUT_SIZES,
   INPUT_TYPE_DEFAULT,
   INPUT_TYPES,
   type InputSize,
   type InputType,
+  TEXT_COLOR_DEFAULT,
+  TEXT_COLORS,
+  TEXT_VARIANT_DEFAULT,
+  TEXT_VARIANTS,
+  type TextColor,
+  type TextVariant,
 } from "./generated/specs.js";
 export { cn } from "./lib/utils.js";

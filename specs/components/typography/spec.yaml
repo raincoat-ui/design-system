@@ -1,0 +1,219 @@
+# The platform-neutral contract of Typography: Text, for running text and labels, and Heading,
+# for headings. The React, SwiftUI, and Compose implementations all follow it; the variant and
+# color types they use, and each level's heading variant, are generated from this file.
+# Proposed and accepted in rfcs/0003-typography.md.
+id: typography
+name: Typography
+specVersion: 1.0.0
+rfc: 3
+group: Text
+summary: Sets text in the theme's text styles, and marks headings for assistive technology.
+
+# Two parts that an app uses on their own. Their types are named after them: TextVariant,
+# TextColor, HeadingVariant, and HeadingColor.
+parts:
+  text:
+    name: Text
+    summary: Running text and labels, in a body, label, or caption style.
+    properties:
+      variant:
+        description: The text style.
+        default: body-md
+        values:
+          body-lg: An introductory paragraph.
+          body-md: Running text. The default.
+          body-sm: Secondary running text, such as help text under a field.
+          label-lg: Text beside or in a large control.
+          label-md: Text beside or in a medium control.
+          label-sm: Text beside or in a small control.
+          caption: Timestamps, counts, and other short secondary facts. Never prose.
+      color:
+        description: The color of the text, from the theme's text roles.
+        default: default
+        values:
+          default: Primary text.
+          muted: Secondary text, such as a caption or help text.
+          danger: An error, or text about something destructive.
+      max-lines:
+        type: integer
+        minimum: 1
+        description: >-
+          The most lines the text shows. Text beyond them ends in an ellipsis, and assistive
+          technology still reads all of it. Unset, the text wraps onto as many lines as it needs.
+  heading:
+    name: Heading
+    summary: A heading that assistive technology can move to, at a level of the screen's outline.
+    properties:
+      level:
+        type: integer
+        minimum: 1
+        maximum: 6
+        required: true
+        description: >-
+          The heading's place in the outline of the screen, from 1 to 6. Chosen for that place,
+          not for its size.
+      variant:
+        description: >-
+          How the heading looks. It follows the level unless it is given: set it to change the
+          look and keep the level.
+        default:
+          level:
+            1: heading-xl
+            2: heading-lg
+            3: heading-md
+            4: heading-sm
+            5: heading-sm
+            6: heading-sm
+        values:
+          heading-xl: The title of a screen. Once per screen.
+          heading-lg: Section titles on a screen.
+          heading-md: Dialog and sheet titles, and subsection titles.
+          heading-sm: Card titles and group titles in lists.
+      color:
+        description: The color of the heading, from the theme's text roles.
+        default: default
+        values:
+          default: Primary text.
+          muted: A heading that steps back, such as a group title in a list.
+
+content:
+  text:
+    description: >-
+      The text. A heading's text names the section it starts. It comes from the app, and
+      the component changes none of it.
+    required: true
+  name:
+    description: >-
+      A name or a message from a person, inside the text. It can be in any script, so it takes
+      its direction from its own first strong character.
+    required: false
+
+anatomy:
+  text:
+    description: >-
+      The text, set in the variant's text style and the color's text role, and aligned to the
+      start edge. It wraps, and a word longer than the line breaks.
+    tokens:
+      - type.body.*
+      - type.label.*
+      - type.caption
+      - type.heading.*
+      - color.fg.default
+      - color.fg.muted
+      - color.fg.danger
+  ellipsis:
+    description: >-
+      Ends Text that max-lines cuts short. A heading is never cut short, and neither is Text
+      without max-lines.
+
+states:
+  rest:
+    description: Text and headings do not respond to input, so this is their only look.
+  truncated:
+    description: >-
+      Text with max-lines that has more lines than that. It ends in an ellipsis, and assistive
+      technology reads all of it.
+
+accessibility:
+  role: >-
+    Text has no role: assistive technology reads it as text. A Heading is a heading, with its
+    level on the web and on iOS. Android has no heading levels, so there it is a heading
+    without one.
+  name: The text itself. Text cut short by max-lines is read in full.
+  keyboard:
+    - keys: [Tab]
+      action: >-
+        Passes over text and headings: neither takes focus. Screen readers move from heading to
+        heading with their own commands.
+  text-size: >-
+    Text grows with the person's setting: the browser's font size and zoom, Dynamic Type, and
+    Android's font scale. On iOS each style grows with the system text style nearest its role:
+    heading-xl with large title, heading-lg with title 2, heading-md with title 3, heading-sm
+    with headline, body and label styles with body, and caption with caption, so large headings
+    grow less than body text, as the system's own do. Android grows large text less than small
+    text by itself. At twice the default size nothing is clipped or overlaps.
+  contrast: >-
+    Every color has 4.5:1 against the surfaces it is set on in the standard modes, and 7:1 in
+    the high-contrast modes. Headings of 24px and over count as large text, but are held to the
+    text ratio anyway.
+  minimum-size: No text style is smaller than 12px. The token build refuses one that is.
+
+internationalization:
+  right-to-left: >-
+    Text aligns to the start edge, which is the right in right-to-left layouts. Nothing is
+    aligned to the left or the right.
+  direction: >-
+    Text that comes from people, such as names and messages, takes its direction from its first
+    strong character: on the web when the app sets dir="auto", and by default on iOS and
+    Android.
+  long-text: >-
+    Text and headings wrap, and grow taller. Only Text with max-lines is cut short, with an
+    ellipsis.
+  scripts: >-
+    Line height 1.4 for headings and labels, and 1.5 for body text and captions, clears stacked
+    Vietnamese diacritics. Chinese, Japanese, and Korean use system fonts. On the web, lines
+    break by each language's rules, read from lang: strictly for Japanese, and between whole
+    words for Korean.
+  emphasis: >-
+    Emphasis is set in semibold, never in italics: Chinese, Japanese, and Korean faces have no
+    italics.
+
+# Named examples. Stories, tests, and documentation are built from these.
+examples:
+  - id: text-variants
+    part: text
+    description: Every text style, in the default color.
+    matrix:
+      variant: [body-lg, body-md, body-sm, label-lg, label-md, label-sm, caption]
+  - id: text-colors
+    part: text
+    description: Every text color, in the default style.
+    matrix:
+      color: [default, muted, danger]
+  - id: max-lines
+    part: text
+    description: >-
+      A paragraph cut short after two lines. It ends in an ellipsis and is read in full.
+    properties:
+      max-lines: 2
+  - id: person-name
+    part: text
+    description: >-
+      A sentence with a person's name in it, in another script: an Arabic name in English, and
+      an English name in Arabic. The name takes its direction from its first strong character.
+  - id: heading-levels
+    part: heading
+    description: Every level, each in the look its level gives.
+    matrix:
+      level: [1, 2, 3, 4, 5, 6]
+  - id: heading-variant
+    part: heading
+    description: A heading of level 2 that looks like heading-sm, as the title of a card can.
+    properties:
+      level: 2
+      variant: heading-sm
+  - id: heading-muted
+    part: heading
+    description: A muted heading of level 3.
+    properties:
+      level: 3
+      color: muted
+  - id: long-heading
+    part: heading
+    description: A heading too long for one line, which wraps and is never cut short.
+    properties:
+      level: 2
+
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
+implementations:
+  web:
+    file: packages/web/src/components/ui/typography.tsx
+    name: [Text, Heading]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatTypography.swift
+    name: [".raincoatText(_:)", ".raincoatHeading(level:)"]
+  android:
+    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatTypography.kt
+    name: [RaincoatText, RaincoatHeading]

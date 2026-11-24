@@ -84,6 +84,9 @@ Component stops the page from rendering; this app found that bug.
 Add a Client Component for it in `app/`, with one example for each state in its spec, and render
 it from the Server Component too, wherever it can be used there. Add a test file in `tests/`.
 
+A component that holds no state, such as Typography, can have a page of its own that is a Server
+Component alone: `app/typography/page.tsx`, at `/typography`.
+
 ## Licenses
 
 Next.js needs `caniuse-lite`, which is published under CC-BY-4.0. It is excepted for this app

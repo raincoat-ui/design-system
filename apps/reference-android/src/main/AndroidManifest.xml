@@ -14,12 +14,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- One activity per component after the Button. Exported, with no launcher entry, so
-             that adb can start it by name. -->
+        <!-- Each other component's screen, which its test opens. -->
+        <activity
+            android:name=".TypographyActivity"
+            android:exported="false" />
         <activity
             android:name=".InputActivity"
-            android:exported="true"
-            android:label="Input" />
+            android:exported="false" />
     </application>
 
 </manifest>
