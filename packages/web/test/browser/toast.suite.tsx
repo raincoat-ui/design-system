@@ -9,7 +9,7 @@ import { Component, type ReactNode, useEffect } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from "vitest";
-import { cdp, page, userEvent } from "vitest/browser";
+import { cdp, commands, page, server, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import {
   Button,
@@ -59,17 +59,17 @@ async function frames(count = 3) {
   }
 }
 
-/** Moves the pointer off the page, so that it cannot be over a toast by chance. */
-const parkPointer = () =>
-  cdp().send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 0, y: 0 });
+/** Moves the pointer to a corner of the page, so that it cannot be over a toast by chance. */
+const parkPointer = () => commands.movePointerAway();
 
-type MediaFeature = "prefers-reduced-motion" | "prefers-color-scheme";
-async function withMedia(name: MediaFeature, value: string, run: () => Promise<void>) {
-  await cdp().send("Emulation.setEmulatedMedia", { features: [{ name, value }] });
+type Media = Parameters<typeof commands.emulateMedia>[0];
+/** Runs with a system setting emulated, such as `{ reducedMotion: "reduce" }`. */
+async function withMedia(media: Media, run: () => Promise<void>) {
+  await commands.emulateMedia(media);
   try {
     await run();
   } finally {
-    await cdp().send("Emulation.setEmulatedMedia", { features: [] });
+    await commands.emulateMedia(Object.fromEntries(Object.keys(media).map((name) => [name, null])));
   }
 }
 
@@ -528,7 +528,9 @@ export function describeToast(environment: string) {
     });
 
     describe("swipe", () => {
-      test("a swipe down closes the toast, and a short one does not", async () => {
+      test("a swipe down closes the toast, and a short one does not", async (context) => {
+        // Chromium alone can turn a touch screen on in a page that is already open.
+        context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
         // Leave room below the toast to swipe into.
         await render(<Stage bottomInset={240} />);
         const toast = await showAndWait(WITH_UNDO());
@@ -680,6 +682,7 @@ export function describeToast(environment: string) {
       test("above the on-screen keyboard", async () => {
         // A visible part of the page that the keyboard has shortened, as a phone reports it.
         const shown = Object.assign(new EventTarget(), { height: innerHeight, offsetTop: 0 });
+        const original = Object.getOwnPropertyDescriptor(window, "visualViewport");
         Object.defineProperty(window, "visualViewport", { configurable: true, value: shown });
         try {
           await render(<Stage bottomInset={64} />);
@@ -691,7 +694,8 @@ export function describeToast(environment: string) {
           // The keyboard covers the bar, so only the keyboard counts.
           expect(box.bottom).toBeCloseTo(innerHeight - 300 - number("toast.margin"), 0);
         } finally {
-          delete (window as { visualViewport?: unknown }).visualViewport;
+          if (original) Object.defineProperty(window, "visualViewport", original);
+          else delete (window as { visualViewport?: unknown }).visualViewport;
         }
       });
 
@@ -757,7 +761,7 @@ export function describeToast(environment: string) {
       });
 
       test("with reduced motion, it only fades", async () => {
-        await withMedia("prefers-reduced-motion", "reduce", async () => {
+        await withMedia({ reducedMotion: "reduce" }, async () => {
           const screen = await render(<Stage />);
           const toast = await showAndWait(WITH_UNDO());
           expect(computed(toast).animationName).toBe("rc-toast-fade-in");
@@ -826,7 +830,7 @@ export function describeToast(environment: string) {
 
     describe("system preferences", () => {
       test("without a data-theme, the toast follows the system's color scheme", async () => {
-        await withMedia("prefers-color-scheme", "dark", async () => {
+        await withMedia({ colorScheme: "dark" }, async () => {
           await render(
             <ToastProvider label={LABEL}>
               <ShowOnMount toast={ARCHIVED} />
