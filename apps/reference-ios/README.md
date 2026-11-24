@@ -62,6 +62,10 @@ Add a screen for it in `ReferenceApp/`, with one example for each state in its s
 class in `ReferenceAppUITests/` that subclasses `ReferenceAppTestCase`. Both folders are
 synchronized with the project, so new files need no change to the project file.
 
+The app shows one screen: the Button's, unless the launch argument `-screen <name>` names another
+(`ReferenceApp.swift` lists them). A test class opens its component's screen with it, as
+`TypographyTests` does with `-screen typography`.
+
 ## What the audit does not cover
 
 Two kinds of audit finding are ignored, each for a stated reason in `ButtonTests.swift`:

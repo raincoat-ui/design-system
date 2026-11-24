@@ -11,6 +11,6 @@ export {
   loadMatrix,
   resolveSnapshots,
 } from "./snapshots.js";
-export { enumerations, lintSpecs, loadSpecs } from "./specs.js";
+export { enumerations, lintSpecs, loadSpecs, propertyGroups } from "./specs.js";
 export { BASE_ID, baseTheme, loadTheme, loadThemes, THEME_ID, themeDirs } from "./theme.js";
 export { checkValue } from "./values.js";

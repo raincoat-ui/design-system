@@ -191,3 +191,160 @@ let buttonExamples: [SpecExample<ButtonExampleProperties>] = [
         ]
     ),
 ]
+
+/// The properties of one Text in an example.
+struct TextExampleProperties: Sendable {
+    let variant: TextVariant
+    let color: TextColor
+    let maxLines: Int?
+}
+
+/// The properties of one Heading in an example.
+struct HeadingExampleProperties: Sendable {
+    let level: Int
+    let variant: HeadingVariant?
+    let color: HeadingColor
+}
+
+/// The properties of one part of Typography in an example.
+enum TypographyExampleProperties: Sendable {
+    case text(TextExampleProperties)
+    case heading(HeadingExampleProperties)
+}
+
+/// The examples of specs/components/typography/spec.yaml, with their text.
+let typographyExamples: [SpecExample<TypographyExampleProperties>] = [
+    SpecExample(
+        id: "text-variants",
+        instances: [
+            .text(TextExampleProperties(variant: .bodyLg, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .bodyMd, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .bodySm, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .labelLg, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .labelMd, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .labelSm, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .caption, color: .`default`, maxLines: nil)),
+        ],
+        text: [
+            "en": ["text": "Synced 2 minutes ago"],
+            "vi": ["text": "Đã đồng bộ 2 phút trước"],
+            "zh-Hans": ["text": "2 分钟前已同步"],
+            "ja": ["text": "2 分前に同期済み"],
+            "ko": ["text": "2분 전에 동기화됨"],
+            "ar": ["text": "تمت المزامنة قبل دقيقتين"],
+            "en-XA": ["text": "[Šýñçéð 2 ɱîñûţéš åĝö one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "text-colors",
+        instances: [
+            .text(TextExampleProperties(variant: .bodyMd, color: .`default`, maxLines: nil)),
+            .text(TextExampleProperties(variant: .bodyMd, color: .muted, maxLines: nil)),
+            .text(TextExampleProperties(variant: .bodyMd, color: .danger, maxLines: nil)),
+        ],
+        text: [
+            "en": ["text": "This file could not be opened."],
+            "vi": ["text": "Không thể mở tệp này."],
+            "zh-Hans": ["text": "无法打开此文件。"],
+            "ja": ["text": "このファイルを開けませんでした。"],
+            "ko": ["text": "이 파일을 열 수 없습니다."],
+            "ar": ["text": "تعذر فتح هذا الملف."],
+            "en-XA": ["text": "[Ţĥîš ƒîļé çöûļð ñöţ ƀé öþéñéð. one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "max-lines",
+        instances: [
+            .text(TextExampleProperties(variant: .bodyMd, color: .`default`, maxLines: 2)),
+        ],
+        text: [
+            "en": ["text": "Your files are kept on this device and in the cloud. Changes made on one device reach the others the next time they connect, usually within a minute."],
+            "vi": ["text": "Tệp của bạn được lưu trên thiết bị này và trên đám mây. Những thay đổi trên một thiết bị sẽ đến các thiết bị khác vào lần kết nối tiếp theo, thường trong vòng một phút."],
+            "zh-Hans": ["text": "你的文件保存在此设备和云端。在一台设备上所做的更改，会在其他设备下次连接时同步过去，通常在一分钟内完成。"],
+            "ja": ["text": "ファイルはこのデバイスとクラウドに保存されます。あるデバイスでの変更は、ほかのデバイスが次に接続したときに反映されます。通常は 1 分以内です。"],
+            "ko": ["text": "파일은 이 기기와 클라우드에 보관됩니다. 한 기기에서 변경한 내용은 다른 기기가 다음에 연결될 때 반영되며, 보통 1분 안에 반영됩니다."],
+            "ar": ["text": "تُحفظ ملفاتك على هذا الجهاز وفي السحابة. تصل التغييرات التي تجريها على جهاز إلى الأجهزة الأخرى عند اتصالها التالي، عادةً خلال دقيقة."],
+            "en-XA": ["text": "[Ýöûŕ ƒîļéš åŕé ķéþţ öñ ţĥîš ðéṽîçé åñð îñ ţĥé çļöûð. Çĥåñĝéš ɱåðé öñ öñé ðéṽîçé ŕéåçĥ ţĥé öţĥéŕš ţĥé ñéẋţ ţîɱé ţĥéý çöññéçţ, ûšûåļļý ŵîţĥîñ å ɱîñûţé. one two three four five six seven eight nine ten one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "person-name",
+        instances: [
+            .text(TextExampleProperties(variant: .bodyMd, color: .`default`, maxLines: nil)),
+        ],
+        text: [
+            "en": ["text": "Message from {name}, 2 minutes ago", "name": "مريم الحسيني"],
+            "vi": ["text": "Tin nhắn từ {name}, 2 phút trước", "name": "مريم الحسيني"],
+            "zh-Hans": ["text": "来自 {name} 的消息，2 分钟前", "name": "مريم الحسيني"],
+            "ja": ["text": "{name} さんからのメッセージ、2 分前", "name": "مريم الحسيني"],
+            "ko": ["text": "{name} 님의 메시지, 2분 전", "name": "مريم الحسيني"],
+            "ar": ["text": "رسالة من {name} قبل دقيقتين", "name": "Ada Lovelace"],
+            "en-XA": ["text": "[Ṁéššåĝé ƒŕöɱ {ñåɱé}, 2 ɱîñûţéš åĝö one two three]", "name": "[مريم الحسيني one]"],
+        ]
+    ),
+    SpecExample(
+        id: "heading-levels",
+        instances: [
+            .heading(HeadingExampleProperties(level: 1, variant: nil, color: .`default`)),
+            .heading(HeadingExampleProperties(level: 2, variant: nil, color: .`default`)),
+            .heading(HeadingExampleProperties(level: 3, variant: nil, color: .`default`)),
+            .heading(HeadingExampleProperties(level: 4, variant: nil, color: .`default`)),
+            .heading(HeadingExampleProperties(level: 5, variant: nil, color: .`default`)),
+            .heading(HeadingExampleProperties(level: 6, variant: nil, color: .`default`)),
+        ],
+        text: [
+            "en": ["text": "Notifications"],
+            "vi": ["text": "Thông báo"],
+            "zh-Hans": ["text": "通知"],
+            "ja": ["text": "通知"],
+            "ko": ["text": "알림"],
+            "ar": ["text": "الإشعارات"],
+            "en-XA": ["text": "[Ñöţîƒîçåţîöñš one]"],
+        ]
+    ),
+    SpecExample(
+        id: "heading-variant",
+        instances: [
+            .heading(HeadingExampleProperties(level: 2, variant: .headingSm, color: .`default`)),
+        ],
+        text: [
+            "en": ["text": "Recent files"],
+            "vi": ["text": "Tệp gần đây"],
+            "zh-Hans": ["text": "最近的文件"],
+            "ja": ["text": "最近使ったファイル"],
+            "ko": ["text": "최근 파일"],
+            "ar": ["text": "الملفات الأخيرة"],
+            "en-XA": ["text": "[Ŕéçéñţ ƒîļéš one]"],
+        ]
+    ),
+    SpecExample(
+        id: "heading-muted",
+        instances: [
+            .heading(HeadingExampleProperties(level: 3, variant: nil, color: .muted)),
+        ],
+        text: [
+            "en": ["text": "Shared with you"],
+            "vi": ["text": "Được chia sẻ với bạn"],
+            "zh-Hans": ["text": "与你共享"],
+            "ja": ["text": "共有アイテム"],
+            "ko": ["text": "나와 공유됨"],
+            "ar": ["text": "تمت مشاركتها معك"],
+            "en-XA": ["text": "[Šĥåŕéð ŵîţĥ ýöû one]"],
+        ]
+    ),
+    SpecExample(
+        id: "long-heading",
+        instances: [
+            .heading(HeadingExampleProperties(level: 2, variant: nil, color: .`default`)),
+        ],
+        text: [
+            "en": ["text": "Notifications for comments, mentions, and changes to shared documents"],
+            "vi": ["text": "Thông báo về bình luận, lượt nhắc đến và những thay đổi trong tài liệu được chia sẻ"],
+            "zh-Hans": ["text": "关于评论、提及以及共享文档更改的通知"],
+            "ja": ["text": "コメント、メンション、共有ドキュメントの変更に関する通知"],
+            "ko": ["text": "댓글, 멘션 및 공유 문서 변경 사항에 대한 알림"],
+            "ar": ["text": "إشعارات التعليقات والإشارات والتغييرات على المستندات المشتركة"],
+            "en-XA": ["text": "[Ñöţîƒîçåţîöñš ƒöŕ çöɱɱéñţš, ɱéñţîöñš, åñð çĥåñĝéš ţö šĥåŕéð ðöçûɱéñţš one two three four five six]"],
+        ]
+    ),
+]

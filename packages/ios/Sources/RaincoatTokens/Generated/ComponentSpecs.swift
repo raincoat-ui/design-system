@@ -27,3 +27,63 @@ public enum ButtonSize: String, CaseIterable, Sendable {
     /// The value used when none is given.
     public static let standard: ButtonSize = .md
 }
+
+/// Text: The text style.
+public enum TextVariant: String, CaseIterable, Sendable {
+    /// An introductory paragraph.
+    case bodyLg = "body-lg"
+    /// Running text. The default.
+    case bodyMd = "body-md"
+    /// Secondary running text, such as help text under a field.
+    case bodySm = "body-sm"
+    /// Text beside or in a large control.
+    case labelLg = "label-lg"
+    /// Text beside or in a medium control.
+    case labelMd = "label-md"
+    /// Text beside or in a small control.
+    case labelSm = "label-sm"
+    /// Timestamps, counts, and other short secondary facts. Never prose.
+    case caption
+
+    /// The value used when none is given.
+    public static let standard: TextVariant = .bodyMd
+}
+
+/// Text: The color of the text, from the theme's text roles.
+public enum TextColor: String, CaseIterable, Sendable {
+    /// Primary text.
+    case `default`
+    /// Secondary text, such as a caption or help text.
+    case muted
+    /// An error, or text about something destructive.
+    case danger
+
+    /// The value used when none is given.
+    public static let standard: TextColor = .default
+}
+
+/// Heading: How the heading looks. It follows the level unless it is given: set it to change the look and keep the level.
+public enum HeadingVariant: String, CaseIterable, Sendable {
+    /// The title of a screen. Once per screen.
+    case headingXl = "heading-xl"
+    /// Section titles on a screen.
+    case headingLg = "heading-lg"
+    /// Dialog and sheet titles, and subsection titles.
+    case headingMd = "heading-md"
+    /// Card titles and group titles in lists.
+    case headingSm = "heading-sm"
+
+    /// The value used when none is given, for each level.
+    public static let standardByLevel: [Int: HeadingVariant] = [1: .headingXl, 2: .headingLg, 3: .headingMd, 4: .headingSm, 5: .headingSm, 6: .headingSm]
+}
+
+/// Heading: The color of the heading, from the theme's text roles.
+public enum HeadingColor: String, CaseIterable, Sendable {
+    /// Primary text.
+    case `default`
+    /// A heading that steps back, such as a group title in a list.
+    case muted
+
+    /// The value used when none is given.
+    public static let standard: HeadingColor = .default
+}
