@@ -9,8 +9,15 @@ import SwiftUI
 struct ReferenceApp: App {
     var body: some Scene {
         WindowGroup {
-            ButtonScreen()
-                .raincoatTheme(.base)
+            // One screen per component. A test chooses one with a launch argument, such as
+            // `-screen input`; without one, the app shows the Button.
+            Group {
+                switch UserDefaults.standard.string(forKey: "screen") ?? "button" {
+                case "input": InputScreen()
+                default: ButtonScreen()
+                }
+            }
+            .raincoatTheme(.base)
         }
     }
 }

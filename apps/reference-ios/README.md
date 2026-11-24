@@ -60,7 +60,10 @@ version, and a maintainer can for any version: Actions, reference apps, Run work
 
 Add a screen for it in `ReferenceApp/`, with one example for each state in its spec, and a test
 class in `ReferenceAppUITests/` that subclasses `ReferenceAppTestCase`. Both folders are
-synchronized with the project, so new files need no change to the project file.
+synchronized with the project, so new files need no change to the project file. List the screen
+in `ReferenceApp.swift`: a test chooses it with a launch argument, such as `-screen input`, and
+the app shows the Button without one. A test class that reads no token, as `InputTests` does,
+runs unchanged in every theme.
 
 ## What the audit does not cover
 
