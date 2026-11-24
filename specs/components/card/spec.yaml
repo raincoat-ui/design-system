@@ -170,3 +170,10 @@ examples:
     properties:
       interactive: true
 
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
+implementations:
+  web:
+    file: packages/web/src/components/ui/card.tsx
+    name: [Card, CardMedia, CardTitle, CardLink, CardButton, CardBody, CardFooter]

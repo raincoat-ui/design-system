@@ -91,6 +91,7 @@ export default defineConfig({
       "class-variance-authority",
       "clsx",
       "radix-ui",
+      "radix-ui/slot",
       "react",
       "react-dom",
       "react-dom/client",
