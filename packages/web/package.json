@@ -35,6 +35,10 @@
       "types": "./dist/components/ui/button.d.ts",
       "default": "./dist/components/ui/button.js"
     },
+    "./card": {
+      "types": "./dist/components/ui/card.d.ts",
+      "default": "./dist/components/ui/card.js"
+    },
     "./dialog": {
       "types": "./dist/components/ui/dialog.d.ts",
       "default": "./dist/components/ui/dialog.js"

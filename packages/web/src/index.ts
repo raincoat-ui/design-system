@@ -22,6 +22,22 @@ export {
 } from "./components/ui/alert-dialog.js";
 export { Button, type ButtonProps, buttonVariants } from "./components/ui/button.js";
 export {
+  Card,
+  CardBody,
+  type CardBodyProps,
+  CardButton,
+  type CardButtonProps,
+  CardFooter,
+  type CardFooterProps,
+  CardLink,
+  type CardLinkProps,
+  CardMedia,
+  type CardMediaProps,
+  type CardProps,
+  CardTitle,
+  type CardTitleProps,
+} from "./components/ui/card.js";
+export {
   Dialog,
   DialogBody,
   type DialogBodyProps,

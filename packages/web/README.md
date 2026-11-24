@@ -107,6 +107,65 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the SwiftUI and Compose Buttons follow too.
 
+## Card
+
+```tsx
+import {
+  Button, Card, CardBody, CardButton, CardFooter, CardLink, CardMedia, CardTitle, Text,
+} from "@raincoat-ui/react";
+
+// Static: a container, which can hold links and buttons.
+<Card>
+  <CardTitle level={3}>Storage</CardTitle>
+  <CardBody><Text color="muted">4.2 GB of 15 GB used</Text></CardBody>
+  <CardFooter><Button>Manage storage</Button></CardFooter>
+</Card>
+
+// Interactive: the whole card is the link, or the button, in its title.
+<Card>
+  <CardTitle level={3}><CardLink href="/orders/1042">Order 1042</CardLink></CardTitle>
+  <CardMedia><img src={parcel} alt="A parcel at a front door" /></CardMedia>
+  <CardBody><Text color="muted">Delivered on Monday</Text></CardBody>
+</Card>
+<Card>
+  <CardTitle level={3}><CardButton onClick={startReturn}>Start a return</CardButton></CardTitle>
+</Card>
+```
+
+| Part         | Element                    | Notes                                                                                  |
+| ------------ | -------------------------- | -------------------------------------------------------------------------------------- |
+| `Card`       | `div`                      | The surface. It fills the width it is given and has no role of its own                 |
+| `CardTitle`  | `h1` to `h6`               | A `Heading`: `level` is required, and `variant` is `"heading-sm"` unless you set it    |
+| `CardLink`   | `a`                        | In the title: makes the whole card a link. `asChild` takes a router's link             |
+| `CardButton` | `button`, of type `button` | In the title: makes the whole card a button. It has no `disabled`                      |
+| `CardMedia`  | `div` around an image      | Drawn at the top, edge to edge, with the card's corners, wherever it is in the card    |
+| `CardBody`   | `div`                      | Any content, such as `Text`                                                            |
+| `CardFooter` | `div`                      | Buttons at the end edge. They wrap, and stay at the bottom of a card in a row of cards |
+
+Every prop of each element is passed through, including `ref`.
+
+- **One action per interactive card.** A card whose title holds a `CardLink` or a `CardButton`
+  is that link or button as a whole: a click anywhere on it activates it, and its name is the
+  title alone. It holds no other links or buttons. A card that needs a Button stays static, and
+  its title can be a plain link.
+- **States.** An interactive card's outline steps to the strong border color under a pointer,
+  and its fill changes while it is pressed. It draws the focus ring around itself when its link
+  or button has keyboard focus. A static card has none of these states.
+- **Read the title first.** Put `CardMedia` after `CardTitle`: the media is still drawn at the
+  top, and a screen reader reads the title before it. Give the image an `alt` that says what it
+  shows, or an empty one when it only decorates.
+- **Text under an interactive card cannot be selected with a pointer.** The link or button
+  covers the card, so a drag on it is a click. Selecting all and copying still includes it.
+- **Collections.** Put cards in a `ul` or `ol`, so that a screen reader says how many there
+  are. The grid, and the space between cards, are your layout's.
+- **Server Components.** A static card and a link card hold no state, so they render in a React
+  Server Component and work with JavaScript off. A button card needs a Client Component for its
+  `onClick`, as any button does.
+
+The Card follows the
+[Card spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/card/spec.yaml),
+which the SwiftUI and Compose Cards follow too.
+
 ## Text and Heading
 
 ```tsx

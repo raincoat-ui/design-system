@@ -70,7 +70,7 @@ Add a screen for it in `src/`, with one example for each state in its spec, and 
 
 The first page shows the Button. Another component's screen is at a path of its own, which
 `src/main.tsx` maps to it: `/typography` shows Typography, `/dialog` the Dialog, the alert
-dialog, and the Sheet, and `/tabs` the Tabs.
+dialog, and the Sheet, `/tabs` the Tabs, and `/card` the Card.
 
 ## What the tests do not cover
 
