@@ -45,7 +45,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/build.mjs && node --test test/package/package.test.js && vitest run"
+    "test": "node scripts/build.mjs && node --test test/package/package.test.js && vitest run --project \"!*snapshots\"",
+    "test:snapshots": "vitest run --project \"*snapshots\""
   },
   "peerDependencies": {
     "react": "^19.0.0",

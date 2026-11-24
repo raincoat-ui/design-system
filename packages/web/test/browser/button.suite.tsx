@@ -15,7 +15,7 @@ import {
 import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from "vitest";
-import { cdp, page, userEvent } from "vitest/browser";
+import { cdp, commands, page, server, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { BUTTON_SIZES, BUTTON_VARIANTS, Button } from "../../src/index.js";
 
@@ -152,16 +152,16 @@ const settle = (milliseconds: number) =>
   new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 /** Moves the pointer off every button, so one test's hover cannot carry into the next. */
-const parkPointer = () =>
-  cdp().send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 0, y: 0 });
+const parkPointer = () => commands.movePointerAway();
 
-type MediaFeature = "prefers-reduced-motion" | "prefers-color-scheme";
-async function withMedia(name: MediaFeature, value: string, run: () => Promise<void>) {
-  await cdp().send("Emulation.setEmulatedMedia", { features: [{ name, value }] });
+type Media = Parameters<typeof commands.emulateMedia>[0];
+/** Runs with a system setting emulated, such as `{ reducedMotion: "reduce" }`. */
+async function withMedia(media: Media, run: () => Promise<void>) {
+  await commands.emulateMedia(media);
   try {
     await run();
   } finally {
-    await cdp().send("Emulation.setEmulatedMedia", { features: [] });
+    await commands.emulateMedia(Object.fromEntries(Object.keys(media).map((name) => [name, null])));
   }
 }
 
@@ -531,7 +531,7 @@ export function describeButton(environment: string) {
       });
 
       test("with reduced motion, color changes are immediate", async () => {
-        await withMedia("prefers-reduced-motion", "reduce", async () => {
+        await withMedia({ reducedMotion: "reduce" }, async () => {
           const screen = await render(
             <Stage>
               <Button>Save</Button>
@@ -840,7 +840,10 @@ export function describeButton(environment: string) {
         expect(document.elementFromPoint(center(rect).x, rect.top - 2)).not.toBe(button);
       });
 
-      test("on a touch screen, a small button can be hit across the minimum target, and has no hover state", async () => {
+      test("on a touch screen, a small button can be hit across the minimum target, and has no hover state", async (context) => {
+        // Chromium alone can turn a touch screen on in a page that is already open. Firefox and
+        // WebKit take it only when the browser starts, which would make every test a touch test.
+        context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
         await cdp().send("Emulation.setTouchEmulationEnabled", {
           enabled: true,
           maxTouchPoints: 1,
@@ -879,7 +882,7 @@ export function describeButton(environment: string) {
 
     describe("system preferences", () => {
       test("without a data-theme, the button follows the system's color scheme", async () => {
-        await withMedia("prefers-color-scheme", "dark", async () => {
+        await withMedia({ colorScheme: "dark" }, async () => {
           const screen = await render(<Button>Save</Button>);
           const style = computed(screen.getByRole("button").element());
           expect(style.backgroundColor).toBe(color("button.secondary.bg.default", "dark"));

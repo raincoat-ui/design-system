@@ -1,0 +1,89 @@
+# The visual snapshots every component has, on every platform.
+#
+# A snapshot draws all the examples of a component's spec together, as a specimen, in one color
+# mode, locale, and text size. A component has every snapshot below in every theme. They cover
+# each dimension once rather than every combination of them: the four color modes in English,
+# then right-to-left, the largest text size, and each other locale in the light mode.
+#
+# The text the examples show is in specs/components/<id>/strings.yaml. The token build
+# (`pnpm tokens:build`) generates this matrix and that text for each platform's tests. Each
+# platform compares what it draws with baselines recorded in CI. See
+# docs/adr/0019-visual-snapshots.md.
+
+# The locales the examples are drawn in. Each component's strings.yaml has text in every one of
+# them, except a pseudo-locale, which the token build derives from English.
+locales:
+  en:
+    name: English
+  vi:
+    name: Vietnamese
+  zh-Hans:
+    name: Chinese (Simplified)
+  ja:
+    name: Japanese
+  ko:
+    name: Korean
+  ar:
+    name: Arabic
+    direction: rtl
+  # The English text about 40% longer, with every letter accented, in brackets. It shows what
+  # a longer translation does to a layout, and that no text is cut short.
+  en-XA:
+    name: Expanded English
+    pseudo: expanded
+
+# The text sizes, and what each one is on each platform.
+text-sizes:
+  default:
+    description: The size each platform starts with.
+    web: 100%
+    ios: large
+    android: 1
+  largest:
+    description: >-
+      The largest size the snapshots draw: twice the root font size on the web, the largest
+      accessibility size of Dynamic Type on iOS, and the largest font scale on Android.
+    web: 200%
+    ios: accessibility5
+    android: 2
+
+# What a snapshot uses for a dimension it does not name.
+defaults:
+  mode: light
+  locale: en
+  text-size: default
+
+snapshots:
+  - id: light
+    description: The light color mode.
+    mode: light
+  - id: dark
+    description: The dark color mode.
+    mode: dark
+  - id: light-hc
+    description: The light color mode with increased contrast.
+    mode: light-hc
+  - id: dark-hc
+    description: The dark color mode with increased contrast.
+    mode: dark-hc
+  - id: rtl
+    description: Arabic, right to left. What leads in English is on the right.
+    locale: ar
+  - id: largest-text
+    description: The largest text size. Text grows and wraps, and nothing is cut off.
+    text-size: largest
+  - id: vi
+    description: Vietnamese. Letters with two diacritics stacked must not touch the next line.
+    locale: vi
+  - id: zh-hans
+    description: Chinese (Simplified). Lines break between characters, not only at spaces.
+    locale: zh-Hans
+  - id: ja
+    description: Japanese, in kanji and kana.
+    locale: ja
+  - id: ko
+    description: Korean, in Hangul.
+    locale: ko
+  - id: expanded
+    description: English 40% longer, as many translations are.
+    locale: en-XA
