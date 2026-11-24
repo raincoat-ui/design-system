@@ -1,0 +1,247 @@
+# The platform-neutral contract of the Input. The React, SwiftUI, and Compose implementations
+# all follow it; the size and type types they use are generated from this file.
+# Proposed and accepted in rfcs/0004-input.md.
+id: input
+name: Input
+specVersion: 1.0.0
+rfc: 4
+group: Forms
+summary: A text field with its label, an optional description, and an error message.
+
+properties:
+  size:
+    description: The height and text size of the field, the same heights as the Button's.
+    default: md
+    values:
+      sm: For dense layouts such as toolbars and tables. Its text is 14px.
+      md: The default size.
+      lg: For prominent fields, such as the one field of a step.
+  type:
+    description: >-
+      What the field holds. It chooses the keyboard on touch screens and what autofill offers.
+      A multi-line field holds text.
+    default: text
+    values:
+      text: Any text.
+      email: An email address. It stays left-to-right in a right-to-left layout.
+      password: A password. What is typed is not shown.
+      search: A search query.
+      tel: A phone number. It stays left-to-right in a right-to-left layout.
+      url: A web address. It stays left-to-right in a right-to-left layout.
+  multiline:
+    type: boolean
+    default: false
+    description: >-
+      Takes several lines. The field starts as many lines tall as its rows, 3 unless the app
+      gives another number, and grows with its content.
+  required:
+    type: boolean
+    default: false
+    description: >-
+      Tells assistive technology that the field must be filled in, where the platform has that
+      state. The visible marking is the app's text.
+  invalid:
+    type: boolean
+    default: false
+    description: The value is not accepted. The field shows its error message, which it must have.
+  disabled:
+    type: boolean
+    default: false
+    description: Makes the field unavailable. It cannot be focused. Prefer read-only when the value still matters.
+  read-only:
+    type: boolean
+    default: false
+    description: The value can be focused, selected, and copied, but not changed.
+
+content:
+  label:
+    description: >-
+      What the field is for, in sentence case, above the field. It is the field's name for
+      assistive technology. It can be visually hidden when the purpose is plain, as in a search
+      bar.
+    required: true
+  description:
+    description: >-
+      Help that is read before typing, between the label and the field, such as the rule a value
+      must follow.
+    required: false
+  error:
+    description: >-
+      What to do to make the value acceptable, below the field. It is shown only while the field
+      is invalid, and does not replace the description.
+    required: when invalid
+  placeholder:
+    description: >-
+      An example of the format, shown while the field is empty, such as "name@example.com".
+      Never instructions, and never the label.
+    required: false
+  value:
+    description: The text in the field, typed by the person or given by the app.
+    required: false
+  leading-icon:
+    description: An icon at the start of the field. Decorative.
+    required: false
+
+anatomy:
+  label:
+    description: Above the field, aligned to the start edge. It wraps and is never truncated.
+    tokens:
+      - input.label.*
+  description:
+    description: Between the label and the field. It wraps and is never truncated.
+    tokens:
+      - input.description.type
+      - input.description.fg
+  field:
+    description: >-
+      The box that takes text: fill, outline, and padding. Its height is the size's height, and
+      a multi-line field grows from there. The label, the description, the field, and the error
+      are separated by the gap.
+    tokens:
+      - input.radius
+      - input.border-width
+      - input.height.*
+      - input.padding-inline.*
+      - input.gap
+      - input.bg.*
+      - input.border.*
+      - input.target-minimum
+  value:
+    description: >-
+      The text in the field, or the placeholder while it is empty. A long value scrolls inside a
+      one-line field and wraps in a multi-line one.
+    tokens:
+      - input.value.*
+      - input.fg.*
+      - input.placeholder
+  icon:
+    description: An optional leading icon inside the field, separated from the text by the gap.
+    tokens:
+      - input.icon-size.*
+      - input.gap
+  error:
+    description: Below the field, shown only while the field is invalid. It wraps and is never truncated.
+    tokens:
+      - input.error.type
+      - input.error.fg
+  focus-ring:
+    description: Drawn around the field, with a gap, whenever the field has focus.
+    tokens:
+      - input.focus-ring.width
+      - input.focus-ring.offset
+      - input.focus-ring.color
+
+states:
+  rest:
+    description: The control fill, and a 1px outline in the control outline color.
+  hover:
+    description: No change. The text cursor is the cue.
+  focus:
+    description: >-
+      The field has focus. On the web and Android the focus ring is shown whenever it does,
+      since a field has focus only to be typed in. On iOS the system's indicator and the caret.
+  invalid:
+    description: >-
+      The outline is in the danger color, and the error message is shown below the field. The
+      message is the cue that does not depend on color.
+  disabled:
+    description: The disabled fill, outline, and text, as on the Button.
+  read-only:
+    description: A subtle fill and a hairline outline, so that it reads as a value rather than a place to type.
+
+accessibility:
+  role: textbox
+  name: The label, even when it is visually hidden.
+  keyboard:
+    - keys: [Tab]
+      action: Moves focus to and from the field. A disabled field is skipped; a read-only field is not.
+    - keys: [Enter]
+      action: >-
+        In a one-line field, submits the form, as the platform does. Never while an input method
+        is composing: Enter that commits a composition does not submit. In a multi-line field,
+        starts a new line.
+  description: >-
+    Reaches assistive technology with the field. On the web the field is described by the
+    description and then the error message. On iOS the description is the field's accessibility
+    hint; on Android it is part of the field's semantics, read after its name.
+  invalid: >-
+    Exposed as the field's state: aria-invalid on the web and the error semantics on Android,
+    which carry the message. iOS has no such state: the error message follows the label in the
+    field's accessibility label, as a loading Button says "In progress". Errors are not announced
+    as they appear: on submit, focus moves to the first field in error, which then reads its
+    label, its state, and its message.
+  required: >-
+    The required state on the web. iOS and Android have none; the label marks the fields that
+    are optional, for everyone.
+  disabled: Not focusable and not editable. Exempt from contrast requirements.
+  read-only: Focusable and selectable, and stays in the Tab order. Not editable.
+  focus: >-
+    A ring at least 2px wide with 3:1 contrast against the surface behind the field. On the web
+    and on Android the field draws it from the focus ring tokens whenever it has focus. On iOS
+    the system draws its own indicator, which follows the person's Full Keyboard Access
+    settings, and the caret shows where typing goes.
+  target-size: >-
+    The area that takes touches is at least 44pt on iOS, 48dp on Android, and 44px on a touch
+    screen on the web, whatever the field's visible height. The field's layout size is its
+    visible size: around a smaller field the touch area reaches past the outline without taking
+    room.
+  contrast: >-
+    The outline has 3:1 against the surface behind the field, in error too. The label, the
+    description, the error, the value, and the placeholder have 4.5:1, and 7:1 in high-contrast
+    modes.
+
+internationalization:
+  right-to-left: >-
+    Label, description, and error align to the start edge, and the leading icon sits on the
+    right. Email, phone, and web address fields stay left-to-right, because their content is.
+  long-text: >-
+    Label, description, and error wrap and are never truncated. A long value scrolls inside a
+    one-line field and wraps in a multi-line one.
+  input-methods: >-
+    Vietnamese (Telex, VNI) and CJK input methods compose a character before committing it. The
+    field never replaces the value, changes its error state, or submits during composition, and
+    Enter that commits a composition does not submit the form.
+  scripts: >-
+    Line height 1.4 for labels and 1.5 for values clears stacked Vietnamese diacritics. CJK text
+    uses system fonts.
+  character-limit: >-
+    None in v1. HTML counts length in UTF-16 code units, so a decomposed Vietnamese word counts
+    as more characters than it shows.
+
+motion:
+  transitions: None. Outline and fill change at once.
+
+# Named examples. Stories, tests, and documentation are built from these.
+examples:
+  - id: sizes
+    description: Every size, with a label and a value.
+    matrix:
+      size: [sm, md, lg]
+  - id: description
+    description: A field with a description between the label and the field.
+  - id: email
+    description: >-
+      An email field with an example of the format as its placeholder. It stays left-to-right
+      in a right-to-left layout.
+    properties:
+      type: email
+  - id: invalid
+    description: A field in error, with its description and its error message.
+    properties:
+      invalid: true
+  - id: disabled
+    description: A disabled field.
+    properties:
+      disabled: true
+  - id: read-only
+    description: A read-only field, which reads as a value.
+    properties:
+      read-only: true
+  - id: multiline
+    description: A multi-line field, three lines tall, with a value that wraps.
+    properties:
+      multiline: true
+
+# Each platform's component: its source file and what it is called there. The spec linter checks
+# that each file exists and mentions the name. The documentation's parity matrix is built from
+# this list, so a platform is listed here once its component exists.
