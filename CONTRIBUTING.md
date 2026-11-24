@@ -26,6 +26,10 @@ Each platform package has tests of its own:
 | Swift (`packages/ios`)      | `swift test --package-path packages/ios` | Swift 6.2 or later                                |
 | Kotlin (`packages/android`) | `./gradlew test licensee`                | JDK 21 and the Android SDK (platform 37)          |
 
+CI also runs the React tests in Firefox and WebKit, one job each. `RAINCOAT_BROWSER=firefox` or
+`RAINCOAT_BROWSER=webkit` runs them in that browser on your machine, once Playwright has
+installed it.
+
 The reference apps show the components in an app and test them on a simulator
 ([iOS](apps/reference-ios/README.md)), an emulator ([Android](apps/reference-android/README.md)),
 and in Chromium, in a single-page app ([Vite](apps/reference-web-vite/README.md)) and in an app
@@ -48,7 +52,8 @@ rendered on a server ([Next.js](apps/reference-web-next/README.md)), both with
 4. **Keep generated files generated.** Never edit a file marked `GENERATED`. Change its source
    and regenerate; CI compares the two.
 5. **Do not record snapshot baselines locally.** Visual baselines are recorded in CI so that no
-   one's machine influences them.
+   one's machine influences them. See [Visual snapshots](#visual-snapshots) for how to accept
+   them.
 
 ## What CI checks
 
@@ -64,20 +69,59 @@ rendered on a server ([Next.js](apps/reference-web-next/README.md)), both with
 | Secret scan        | A credential in the diff or history                                        |
 | Vulnerability scan | A dependency with a known vulnerability                                    |
 | Workflow lint      | An unsafe or invalid GitHub Actions workflow                               |
+| Visual snapshots   | A snapshot with no baseline, or one that differs from its baseline         |
 
 Two more checks cover the token source: `pnpm tokens:lint` fails on an invalid token, a broken
 reference, or a tier violation, and `pnpm tokens:contrast` fails when any declared color pair
 misses its contrast requirement in any color mode. See
 [docs/contributing/add-a-token.md](docs/contributing/add-a-token.md).
 
-The React components add three more: they are tested in a real browser against the token source
-(colors, sizes, keyboard, focus, and an automated accessibility audit in every color mode); the
-built stylesheet may contain no literal color or size; and every component must have an entry in
-`packages/web/shadcn.lock.json`.
+The React components add three more: they are tested in Chromium, Firefox, and WebKit against
+the token source (colors, sizes, keyboard, focus, and an automated accessibility audit in every
+color mode); the built stylesheet may contain no literal color or size; and every component must
+have an entry in `packages/web/shadcn.lock.json`.
 
 Every component is also tested in the reference apps, on an iOS simulator, an Android emulator,
 and in Chromium: what assistive technology is told, touch targets, and each platform's
 accessibility audit.
+
+## Visual snapshots
+
+Each component is drawn in every snapshot of [`specs/snapshots.yaml`](specs/snapshots.yaml), in
+every theme: all the examples of its spec together, in the four color modes, right to left, at
+the largest text size, and in Vietnamese, Chinese, Japanese, Korean, and expanded English. The
+text the examples show is in the component's `strings.yaml`, beside its spec. CI compares each
+drawing with its baseline, and fails when a baseline is missing or differs.
+
+Baselines are recorded in CI, never on your machine, because your fonts and browser are not the
+runner's. When a change alters how a component looks, or adds one:
+
+1. Push it. The `web snapshots` job fails and uploads what it drew as the run's
+   `web-snapshots` artifact: `actual/` holds the new images, laid out as the baselines are, and
+   `diff/` marks in red where each differs from its baseline.
+2. Download the artifact, from the run's summary page or with the GitHub command line:
+
+   ```sh
+   gh run download <run-id> --name web-snapshots --dir /tmp/web-snapshots
+   ```
+
+3. Look at every image. Accept only the changes you meant.
+4. Copy them over the baselines, commit, and push. The job then passes.
+
+   ```sh
+   cp -R /tmp/web-snapshots/actual/. packages/web/test/snapshots/__screenshots__/
+   git add packages/web/test/snapshots/__screenshots__
+   git commit -s -m "test(web): accept the new snapshots of the button"
+   ```
+
+`pnpm web:snapshots` draws the snapshots on your machine, into
+`packages/web/test-results/snapshots/local/`, for you to look at. It compares nothing and writes
+no baseline; do not copy what it draws into `__screenshots__`.
+
+To give a new component its snapshots, write its `strings.yaml` (`pnpm tokens:lint` says what is
+missing), run `pnpm tokens:build`, and add `packages/web/test/snapshots/<id>.snapshots.test.tsx`,
+which draws one instance of its examples. [Record 0019](docs/adr/0019-visual-snapshots.md)
+describes the matrix, and how iOS and Android draw it.
 
 ## Dependencies
 
