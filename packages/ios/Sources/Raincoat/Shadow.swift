@@ -16,38 +16,32 @@
         /// It draws only the shadow's visible layers, so a shadow of transparent layers, such as
         /// the base theme's `shadow.none`, draws nothing at all: only the fill. The first layer is
         /// drawn on top, and each is moved by its offset, grown by its spread (shrunk, for an inset
-        /// layer), and blurred by half its blur radius, the Gaussian deviation CSS uses.
+        /// layer), and blurred by half its blur radius, the Gaussian deviation CSS uses. Like any
+        /// background, it does not change the size of the view.
         public func raincoatShadow<S: InsettableShape>(
             _ shadow: TokenShadow, in shape: S, fill: Color
         ) -> some View {
-            background { TokenShadowBackground(shadow: shadow, shape: shape, fill: fill) }
-        }
-    }
-
-    /// The fill of a shape with a token shadow's layers around and inside it. See
-    /// `View.raincoatShadow(_:in:fill:)`.
-    private struct TokenShadowBackground<S: InsettableShape>: View {
-        let shadow: TokenShadow
-        let shape: S
-        let fill: Color
-
-        var body: some View {
             // The first layer is on top, so it is drawn last.
-            let layers = Array(shadow.visibleLayers.reversed().enumerated())
-            ZStack {
-                ForEach(layers.filter { !$0.element.inset }, id: \.offset) { _, layer in
-                    shape
-                        .inset(by: -layer.spread)
-                        .fill(Color(layer.color))
-                        .offset(x: layer.offsetX, y: layer.offsetY)
-                        .blur(radius: layer.blur / 2)
-                }
+            let layers = Array(shadow.visibleLayers.reversed())
+            let outer = layers.filter { !$0.inset }
+            let inner = layers.filter(\.inset)
+            return background {
                 shape.fill(fill)
-                ForEach(layers.filter { $0.element.inset }, id: \.offset) { _, layer in
-                    InsetShadowLayer(layer: layer, shape: shape)
+                    .overlay {
+                        ForEach(inner.indices, id: \.self) { index in
+                            InsetShadowLayer(layer: inner[index], shape: shape)
+                        }
+                    }
+            }
+            .background {
+                ForEach(outer.indices, id: \.self) { index in
+                    shape
+                        .inset(by: -outer[index].spread)
+                        .fill(Color(outer[index].color))
+                        .offset(x: outer[index].offsetX, y: outer[index].offsetY)
+                        .blur(radius: outer[index].blur / 2)
                 }
             }
-            .allowsHitTesting(false)
         }
     }
 
@@ -72,6 +66,7 @@
                         .compositingGroup()
                 }
                 .clipShape(shape)
+                .allowsHitTesting(false)
         }
     }
 #endif

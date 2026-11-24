@@ -414,6 +414,60 @@ internal val tabsExamples: List<SpecExample<TabsExampleProperties>> = listOf(
     ),
 )
 
+/** The properties of one Toast in an example. */
+internal data class ToastExampleProperties(
+    val action: Boolean,
+)
+
+/** The examples of specs/components/toast/spec.yaml, with their text. */
+internal val toastExamples: List<SpecExample<ToastExampleProperties>> = listOf(
+    SpecExample(
+        id = "message",
+        instances = listOf(
+            ToastExampleProperties(action = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("message" to "Message archived"),
+            "vi" to mapOf("message" to "Đã lưu trữ thư"),
+            "zh-Hans" to mapOf("message" to "邮件已归档"),
+            "ja" to mapOf("message" to "メッセージをアーカイブしました"),
+            "ko" to mapOf("message" to "메시지를 보관했습니다"),
+            "ar" to mapOf("message" to "تمت أرشفة الرسالة"),
+            "en-XA" to mapOf("message" to "[Ṁéššåĝé åŕçĥîṽéð one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "with-action",
+        instances = listOf(
+            ToastExampleProperties(action = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("message" to "Address deleted", "action-label" to "Undo", "close-label" to "Close"),
+            "vi" to mapOf("message" to "Đã xóa địa chỉ", "action-label" to "Hoàn tác", "close-label" to "Đóng"),
+            "zh-Hans" to mapOf("message" to "地址已删除", "action-label" to "撤销", "close-label" to "关闭"),
+            "ja" to mapOf("message" to "住所を削除しました", "action-label" to "元に戻す", "close-label" to "閉じる"),
+            "ko" to mapOf("message" to "주소를 삭제했습니다", "action-label" to "실행 취소", "close-label" to "닫기"),
+            "ar" to mapOf("message" to "تم حذف العنوان", "action-label" to "تراجع", "close-label" to "إغلاق"),
+            "en-XA" to mapOf("message" to "[Åððŕéšš ðéļéţéð one]", "action-label" to "[Ûñðö]", "close-label" to "[Çļöšé]"),
+        ),
+    ),
+    SpecExample(
+        id = "long-message",
+        instances = listOf(
+            ToastExampleProperties(action = true),
+        ),
+        text = mapOf(
+            "en" to mapOf("message" to "Messages older than one year were moved from Archive to the Deleted folder", "action-label" to "Undo", "close-label" to "Close"),
+            "vi" to mapOf("message" to "Các thư cũ hơn một năm đã được chuyển từ Lưu trữ sang thư mục Đã xóa", "action-label" to "Hoàn tác", "close-label" to "Đóng"),
+            "zh-Hans" to mapOf("message" to "超过一年的邮件已从归档移至“已删除”文件夹", "action-label" to "撤销", "close-label" to "关闭"),
+            "ja" to mapOf("message" to "1年以上前のメッセージをアーカイブから削除済みフォルダに移動しました", "action-label" to "元に戻す", "close-label" to "閉じる"),
+            "ko" to mapOf("message" to "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다", "action-label" to "실행 취소", "close-label" to "닫기"),
+            "ar" to mapOf("message" to "نُقلت الرسائل التي مضى عليها أكثر من عام من الأرشيف إلى مجلد المحذوفات", "action-label" to "تراجع", "close-label" to "إغلاق"),
+            "en-XA" to mapOf("message" to "[Ṁéššåĝéš öļðéŕ ţĥåñ öñé ýéåŕ ŵéŕé ɱöṽéð ƒŕöɱ Åŕçĥîṽé ţö ţĥé Ðéļéţéð ƒöļðéŕ one two three four five six]", "action-label" to "[Ûñðö]", "close-label" to "[Çļöšé]"),
+        ),
+    ),
+)
+
 /** The properties of one part of Typography in an example. */
 internal sealed interface TypographyExampleProperties
 

@@ -51,6 +51,10 @@
       "types": "./dist/components/ui/sheet.d.ts",
       "default": "./dist/components/ui/sheet.js"
     },
+    "./toast": {
+      "types": "./dist/components/ui/toast.d.ts",
+      "default": "./dist/components/ui/toast.js"
+    },
     "./typography": {
       "types": "./dist/components/ui/typography.d.ts",
       "default": "./dist/components/ui/typography.js"

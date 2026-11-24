@@ -91,6 +91,46 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the React and SwiftUI Buttons follow too.
 
+## Toast
+
+Put a toast host over the screen's content, at the bottom, and show toasts from a coroutine:
+
+```kotlin
+val toasts = remember { RaincoatToastHostState() }
+val scope = rememberCoroutineScope()
+
+Box(Modifier.fillMaxSize()) {
+    Inbox(onArchive = {
+        scope.launch {
+            val result = toasts.show("Message archived", actionLabel = "Undo", closeLabel = "Close")
+            if (result == RaincoatToastResult.ActionPerformed) undoArchive()
+        }
+    })
+    RaincoatToastHost(toasts, Modifier.align(Alignment.BottomCenter))
+}
+```
+
+- `show(message)` shows a toast without an action; `show(message, actionLabel, closeLabel)` one
+  with an action, which must have a named close button. Each suspends until its toast closes and
+  says how.
+- One toast is shown at a time; other calls wait, in order.
+- A toast never takes focus. Its message is a polite live region: TalkBack says it after whatever
+  it is saying, and offers to dismiss the toast.
+- Without an action, a toast closes after 6 seconds, or after the person's accessibility timeout
+  ("Time to take action") when that is longer. The time stops while a mouse pointer is over it,
+  while keyboard focus is in it, and while the app is in the background. A toast with an action
+  stays until the action is used or the toast is closed.
+- A swipe down closes a toast.
+- The host keeps its toasts above the on-screen keyboard and the system bars. To keep them above
+  a bar of your own, place the host above the bar.
+- `RaincoatToast(...)` draws a toast on its own, standing still, for previews and tests.
+
+`Modifier.raincoatShadow(shadow, shape, fill)` fills a shape and draws a token shadow, such as
+`toast.shadow`, with it, as CSS draws a `box-shadow`. Use it in place of `background`.
+
+The Toast follows the
+[Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
+
 ## Text and headings
 
 ```kotlin

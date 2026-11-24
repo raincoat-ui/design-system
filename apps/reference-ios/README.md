@@ -64,9 +64,9 @@ synchronized with the project, so new files need no change to the project file.
 
 The app shows one screen: the Button's, unless the launch argument `-screen <name>` names another
 (`ReferenceApp.swift` lists them). A test class opens its component's screen with it, as
-`TypographyTests` does with `-screen typography`, `DialogTests` with `-screen dialog`, and
-`TabsTests` with `-screen tabs`. A test class other than `ButtonTests` imports no theme module,
-because the theme switch links only the theme under test.
+`TypographyTests` does with `-screen typography`, `DialogTests` with `-screen dialog`,
+`TabsTests` with `-screen tabs`, and `ToastTests` with `-screen toast`. A test class other than
+`ButtonTests` imports no theme module, because the theme switch links only the theme under test.
 
 ## What the audit does not cover
 

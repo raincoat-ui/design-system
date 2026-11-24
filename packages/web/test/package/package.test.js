@@ -218,6 +218,8 @@ const NEUTRAL = new Set([
   // actions that wrap at the end edge, below the rest; and a link or button that takes its
   // title's look.
   ...["9999", "block", "max(", "wrap", "flex-end", "inherit"],
+  // A toast: fixed to the bottom of the window, its parts aligned to the top of their row.
+  ...["fixed", "flex-start"],
 ]);
 // The spinner turns once a second. That speed is not a token yet.
 const EXEMPT = new Set([".animate-rc-spin"]);
