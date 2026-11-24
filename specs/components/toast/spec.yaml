@@ -49,6 +49,12 @@ anatomy:
       - toast.padding-block
       - toast.padding-inline
       - toast.gap
+  focus-ring:
+    description: >-
+      On the web, drawn around the container when F8 brings keyboard focus to it: the same ring
+      as a Button's.
+    tokens:
+      - button.focus-ring.*
   message:
     description: >-
       The text, at the start. Its first line is centered on the buttons beside it; further lines
@@ -160,9 +166,3 @@ implementations:
   web:
     file: packages/web/src/components/ui/toast.tsx
     name: [ToastProvider, useToast, Toast]
-  ios:
-    file: packages/ios/Sources/Raincoat/Components/RaincoatToast.swift
-    name: [RaincoatToast, raincoatToastHost, showRaincoatToast]
-  android:
-    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatToastHost.kt
-    name: [RaincoatToastHost, RaincoatToastHostState, RaincoatToast]

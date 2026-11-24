@@ -128,6 +128,8 @@ const NEUTRAL = new Set([
   "#0000",
   // The properties that transition.
   ...["background-color", "border-color", "color"],
+  // Layout keywords.
+  ...["auto", "fixed", "column", "wrap", "flex-start"],
 ]);
 // The spinner turns once a second. That speed is not a token yet.
 const EXEMPT = new Set([".animate-rc-spin"]);
@@ -136,7 +138,10 @@ const EXEMPT = new Set([".animate-rc-spin"]);
 function literals(value) {
   const rest = value
     .replaceAll(/var\(--tw-[a-z-]+(?:, ?var\(--default-[a-z-]+\))?\)/g, " ")
-    .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ");
+    .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ")
+    // The name of an animation: keyframes of the package's own, named rc-*, as the check of
+    // everything else in the stylesheet requires.
+    .replaceAll(/(?<![\w-])rc-[a-z-]+/g, " ");
   const words = rest.match(
     /var\(--[\w-]+|#[0-9a-f]+|[a-z][a-z-]*\(?|\d*\.?\d+[a-z%]*|"[^"]*"|'[^']*'/gi,
   );
@@ -150,6 +155,8 @@ test("a literal color, a literal size, and a custom property that is not a token
     [],
   );
   assert.deepEqual(literals("var(--tw-ease,var(--default-transition-timing-function))"), []);
+  assert.deepEqual(literals("rc-toast-enter var(--rc-toast-enter-duration)"), []);
+  assert.deepEqual(literals("toast-enter 1s"), ["toast-enter", "1s"]);
   assert.deepEqual(literals("#f7d22a"), ["#f7d22a"]);
   assert.deepEqual(literals("red"), ["red"]);
   assert.deepEqual(literals("calc(var(--spacing)*4)"), ["var(--spacing", "4"]);

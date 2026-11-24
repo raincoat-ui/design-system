@@ -1,5 +1,5 @@
 {
-  "$comment": "The shadcn/ui source each component was adapted from. The file named by `upstream` is that source, unmodified, so that a later upstream change can be compared with it and merged by hand. packages/web/test/shadcn.test.js checks this file.",
+  "$comment": "The shadcn/ui source each component was adapted from. The file named by `upstream` is that source, unmodified, so that a later upstream change can be compared with it and merged by hand. A component written without a shadcn/ui source has `upstream: null` and says why under `none`. packages/web/test/shadcn.test.js checks this file.",
   "style": "new-york-v4",
   "base": "radix",
   "license": ".shadcn-upstream/LICENSE.md",
@@ -10,6 +10,13 @@
       "sha256": "79dd6f75f8136394442202d6b8b922fb269eaad0a5dba579397c9d5b41f893bb",
       "fetched": "2026-11-16",
       "local": "src/components/ui/button.tsx"
+    },
+    "toast": {
+      "registry": null,
+      "upstream": null,
+      "none": "The registry has no toast on Radix: https://ui.shadcn.com/r/styles/new-york-v4/toast.json is not found, and its sonner component depends on the sonner and next-themes packages. The Toast is written on Radix's Toast primitive instead (rfcs/0008-toast.md).",
+      "checked": "2026-11-24",
+      "local": "src/components/ui/toast.tsx"
     }
   }
 }
