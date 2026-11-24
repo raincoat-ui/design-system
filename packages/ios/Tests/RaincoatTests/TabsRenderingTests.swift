@@ -193,6 +193,14 @@
         #expect(drawing.columns(with: magenta).count == Int(tabs.iconSize))
     }
 
+    /// XCUITest shows a tab's selected state but not that the row is a tab bar, so the traits
+    /// the tabs give VoiceOver are checked here.
+    @Test func theRowIsATabBarAndOnlyTheSelectedTabIsSelected() {
+        #expect(TabsAccessibility.row == .isTabBar)
+        #expect(TabsAccessibility.tab(isSelected: true) == .isSelected)
+        #expect(TabsAccessibility.tab(isSelected: false).isEmpty)
+    }
+
     @MainActor
     @Test func aTabWithOnlyAnIconIsNamedForAssistiveTechnology() throws {
         let tab = RaincoatTab(icon: marker(magenta), accessibilityLabel: Text("List"), value: 0)

@@ -134,6 +134,17 @@
         }
     }
 
+    /// What VoiceOver is told of the row and of each tab, besides each tab being a button.
+    enum TabsAccessibility {
+        /// The row is a tab bar, so that VoiceOver reads each tab's position, such as "2 of 3".
+        static var row: AccessibilityTraits { .isTabBar }
+
+        /// The selected tab carries the selected trait.
+        static func tab(isSelected: Bool) -> AccessibilityTraits {
+            isSelected ? .isSelected : []
+        }
+    }
+
     /// The row: the tabs in a list that scrolls sideways, over a hairline across the full width.
     private struct TabRow<Value: Hashable>: View {
         let tabs: [RaincoatTab<Value>]
@@ -176,7 +187,7 @@
                     .frame(height: divider.width)
             }
             .accessibilityElement(children: .contain)
-            .accessibilityAddTraits(.isTabBar)
+            .accessibilityAddTraits(TabsAccessibility.row)
         }
     }
 
@@ -209,7 +220,7 @@
                 TabLabel(title: tab.title, icon: tab.icon)
             }
             .buttonStyle(TabButtonStyle(isSelected: isSelected))
-            .accessibilityAddTraits(isSelected ? .isSelected : [])
+            .accessibilityAddTraits(TabsAccessibility.tab(isSelected: isSelected))
 
             if let accessibilityLabel = tab.accessibilityLabel {
                 button.accessibilityLabel(accessibilityLabel)

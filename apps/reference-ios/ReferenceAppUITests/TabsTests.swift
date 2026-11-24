@@ -29,29 +29,35 @@ final class TabsTests: ReferenceAppTestCase {
         app.staticTexts["selected"].label
     }
 
-    /// Each row of tabs is given to VoiceOver as a tab bar, and each tab as a button named by its
-    /// label, with the selected one marked. VoiceOver reads a tab in a tab bar with its position,
-    /// such as "2 of 3".
+    /// Each tab is given to VoiceOver as a button named by its label, with the selected one
+    /// marked, in the order the row shows them. That the row is a tab bar, which makes VoiceOver
+    /// read a tab's position, such as "2 of 3", is a trait XCUITest does not show: it lists no tab
+    /// bar for the row. TabsRenderingTests checks that the row carries the trait, and the manual
+    /// accessibility audit hears what VoiceOver says.
     @MainActor
-    func testEachRowIsATabBarOfTabsNamedByTheirLabelsWithTheSelectedOneMarked() {
+    func testEachTabIsAButtonNamedByItsLabelWithTheSelectedOneMarkedInOrder() {
         let app = launch()
         let rows: [[String]] = [
             ["Details", "Reviews", "Shipping"],
             ["Photos", "Videos", "Files"],
             // An icon alone has no name; these are given by the app.
             ["List", "Grid"],
+            Array(translated.prefix(2)),
         ]
         for row in rows {
-            let bar = app.tabBars.containing(.button, identifier: row[0]).firstMatch
-            XCTAssertTrue(bar.exists, "no tab bar holds \(row[0])")
-            for (index, name) in row.enumerated() {
-                let tab = bar.buttons[name]
-                XCTAssertTrue(tab.exists, name)
+            let tabs = row.map { app.buttons[$0] }
+            for (index, tab) in tabs.enumerated() {
+                XCTAssertTrue(tab.exists, "no button named \(row[index]). The app shows:\n\(app.debugDescription)")
+                XCTAssertEqual(tab.label, row[index])
                 // The first tab of each row is selected, and no other.
-                XCTAssertEqual(tab.isSelected, index == 0, name)
+                XCTAssertEqual(tab.isSelected, index == 0, row[index])
+            }
+            // Side by side on one line, in order.
+            for (first, second) in zip(tabs, tabs.dropFirst()) {
+                XCTAssertLessThanOrEqual(first.frame.maxX, second.frame.minX + 0.5, "\(first.label), \(second.label)")
+                XCTAssertEqual(first.frame.midY, second.frame.midY, accuracy: 0.5, "\(first.label), \(second.label)")
             }
         }
-        XCTAssertTrue(app.tabBars.containing(.button, identifier: translated[0]).firstMatch.exists)
     }
 
     @MainActor
