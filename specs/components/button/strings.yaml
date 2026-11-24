@@ -1,0 +1,56 @@
+# The text the Button's examples show, in every locale of the snapshot matrix
+# (specs/snapshots.yaml): by example id, as in spec.yaml, then by the content the text fills.
+# Every button of an example shows the same label. The expanded pseudo-locale is derived from
+# the English by the token build; it is never written here.
+#
+# The labels are written as an app would ship them: in the sentence case and the words each
+# language uses for these actions, in Unicode's composed form (NFC).
+examples:
+  variants:
+    label:
+      en: Save changes
+      vi: Lưu thay đổi
+      zh-Hans: 保存更改
+      ja: 変更を保存
+      ko: 변경 사항 저장
+      ar: حفظ التغييرات
+  sizes:
+    label:
+      en: Continue
+      vi: Tiếp tục
+      zh-Hans: 继续
+      ja: 続行
+      ko: 계속
+      ar: متابعة
+  disabled:
+    label:
+      en: Hide details
+      vi: Ẩn chi tiết
+      zh-Hans: 隐藏详情
+      ja: 詳細を非表示
+      ko: 세부 정보 숨기기
+      ar: إخفاء التفاصيل
+  loading:
+    label:
+      en: Upload files
+      vi: Tải tệp lên
+      zh-Hans: 上传文件
+      ja: ファイルをアップロード
+      ko: 파일 업로드
+      ar: رفع الملفات
+  full-width:
+    label:
+      en: Create account
+      vi: Tạo tài khoản
+      zh-Hans: 创建账号
+      ja: アカウントを作成
+      ko: 계정 만들기
+      ar: إنشاء حساب
+  long-label:
+    label:
+      en: Save all of these changes and send the updated version to every reviewer
+      vi: Lưu tất cả các thay đổi này và gửi phiên bản đã cập nhật cho mọi người đánh giá
+      zh-Hans: 保存所有这些更改，并将更新后的版本发送给每位审阅者
+      ja: これらの変更をすべて保存し、更新版をすべてのレビュー担当者に送信
+      ko: 변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기
+      ar: حفظ كل هذه التغييرات وإرسال النسخة المحدثة إلى جميع المراجعين
