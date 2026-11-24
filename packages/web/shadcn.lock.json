@@ -31,6 +31,13 @@
       "checked": "2026-11-24",
       "reason": "The registry has no typography item: its address answered 404 when checked. shadcn/ui shows typography as Tailwind classes on its documentation site only. Text and Heading are written in this package (RFC 0003).",
       "local": "src/components/ui/typography.tsx"
+    },
+    "toast": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/toast.json",
+      "upstream": null,
+      "checked": "2026-11-24",
+      "reason": "The registry has no toast item: its address answered 404 when checked. Its sonner item depends on the sonner and next-themes packages. The Toast is written on Radix's Toast primitive, already installed (RFC 0008).",
+      "local": "src/components/ui/toast.tsx"
     }
   }
 }

@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { ButtonScreen } from "./ButtonScreen";
 import { CardScreen } from "./CardScreen";
 import { TabsScreen } from "./TabsScreen";
+import { ToastScreen } from "./ToastScreen";
 import { TypographyScreen } from "./TypographyScreen";
 
 const root = document.getElementById("root");
@@ -14,6 +15,7 @@ const SCREENS: Record<string, () => JSX.Element> = {
   "/typography": TypographyScreen,
   "/card": CardScreen,
   "/tabs": TabsScreen,
+  "/toast": ToastScreen,
 };
 const Screen = SCREENS[location.pathname] ?? ButtonScreen;
 

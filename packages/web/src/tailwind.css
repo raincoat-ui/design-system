@@ -60,3 +60,38 @@
     }
   }
 }
+
+/* A toast entering and leaving. It slides up from as far below as its margin while it fades in,
+   and back down as it fades out; with reduced motion it only fades. */
+@theme inline {
+  --animate-rc-toast-enter: rc-toast-enter var(--rc-toast-enter-duration)
+    var(--rc-toast-enter-easing);
+  --animate-rc-toast-exit: rc-toast-exit var(--rc-toast-exit-duration) var(--rc-toast-exit-easing);
+  --animate-rc-toast-fade-in: rc-toast-fade-in var(--rc-toast-enter-duration)
+    var(--rc-toast-enter-easing);
+  --animate-rc-toast-fade-out: rc-toast-fade-out var(--rc-toast-exit-duration)
+    var(--rc-toast-exit-easing);
+
+  @keyframes rc-toast-enter {
+    from {
+      opacity: 0;
+      transform: translateY(var(--rc-toast-margin));
+    }
+  }
+  @keyframes rc-toast-exit {
+    to {
+      opacity: 0;
+      transform: translateY(var(--rc-toast-margin));
+    }
+  }
+  @keyframes rc-toast-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes rc-toast-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+}
