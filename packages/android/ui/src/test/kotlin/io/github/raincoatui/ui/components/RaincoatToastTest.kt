@@ -53,6 +53,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.swipeDown
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -79,6 +80,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 /**
@@ -530,6 +532,34 @@ class RaincoatToastTest(themeId: String) {
         assertEquals(message.right.value, action.right.value, 1f)
         assertTrue(close.top < message.top + line.dp)
         assertTrue(close.left >= message.right)
+    }
+
+    /** How the text of a message was laid out. */
+    private fun layoutOf(text: String): TextLayoutResult {
+        val results = mutableListOf<TextLayoutResult>()
+        compose.onNodeWithText(text, useUnmergedTree = true)
+            .performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(results) }
+        return results.single()
+    }
+
+    @Test
+    fun `a korean message breaks only between whole words`() {
+        RuntimeEnvironment.setQualifiers("+b+ko")
+        // The long message in Korean, as specs/components/toast/strings.yaml has it.
+        val message = "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다"
+        // At every width, each line ends at a space: no word is split.
+        for (width in 160..400 step 20) {
+            show { Box(Modifier.width(width.dp)) { RaincoatToast(message) } }
+            val layout = layoutOf(message)
+            assertTrue("the message wraps at $width", layout.lineCount > 1)
+            for (line in 0 until layout.lineCount - 1) {
+                val end = layout.getLineEnd(line)
+                assertTrue(
+                    "line ${line + 1} of ${layout.lineCount} at $width ends with \"${message.substring(0, end)}\"",
+                    message[end - 1] == ' ',
+                )
+            }
+        }
     }
 
     @Test
