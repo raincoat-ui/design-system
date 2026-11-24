@@ -54,6 +54,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.raincoatui.ui.LocalRaincoatTokens
+import io.github.raincoatui.ui.rememberComposedForDisplay
 import io.github.raincoatui.ui.toColor
 import io.github.raincoatui.ui.toTextStyle
 import kotlin.math.ceil
@@ -298,7 +299,8 @@ private fun Tab(tab: RaincoatTab<*>, selected: Boolean, onSelect: () -> Unit) {
         }
         tab.text?.let { text ->
             BasicText(
-                text = text,
+                // Composed (NFC), as all read-only text is.
+                text = rememberComposedForDisplay(text),
                 style = measurements.label.toTextStyle(),
                 color = { foreground },
                 // One line, at its full width: the row scrolls instead of wrapping or cutting it.

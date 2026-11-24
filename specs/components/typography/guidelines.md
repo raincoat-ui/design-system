@@ -71,6 +71,10 @@ Names, messages, and other text that people write can be in any language, in eit
 
 - **A whole paragraph** takes its direction from its first strong character. On the web, set
   `dir="auto"` on the Text that holds it. iOS and Android do this by default.
+- **Decomposed text**, such as Hangul spelled as letters rather than syllables (Unicode NFD), can
+  arrive in file names from macOS. On Android, all of Raincoat's read-only text is composed (NFC)
+  before it is laid out, so Korean still breaks only between words; it draws and reads the same.
+  The value of a field is left as the person typed it.
 - **A name inside a sentence** must be isolated by the app. Without that, the punctuation and
   numbers beside it join it: "Message from مريم الحسيني, 2 minutes ago" is drawn as "Message
   from 2 ,مريم الحسيني minutes ago". This happens on every platform, also to a string built from

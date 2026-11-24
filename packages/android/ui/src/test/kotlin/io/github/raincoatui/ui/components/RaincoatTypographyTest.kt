@@ -49,6 +49,7 @@ import io.github.raincoatui.tokens.TokenTextStyle
 import io.github.raincoatui.ui.RaincoatTheme
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
+import java.text.Normalizer
 import kotlin.math.abs
 import kotlin.math.ceil
 import org.junit.Assert.assertEquals
@@ -378,6 +379,26 @@ class RaincoatTypographyTest(themeId: String) {
                     heading[end - 1] == ' ',
                 )
             }
+        }
+    }
+
+    @Test
+    fun `decomposed Korean draws, breaks, and reads as its composed form does`() {
+        RuntimeEnvironment.setQualifiers("+b+ko")
+        val composed = "댓글, 멘션 및 공유 문서 변경 사항에 대한 알림"
+        // As some systems write Hangul, in file names for example: letters, not syllables.
+        val decomposed = Normalizer.normalize(composed, Normalizer.Form.NFD)
+        assertTrue("the heading is decomposed", decomposed != composed)
+        for (width in 120..320 step 50) {
+            val drawn = listOf(composed, decomposed).map { heading ->
+                show { Box(Modifier.width(width.dp)) { RaincoatHeading(heading, level = 2) } }
+                // Assistive technology is given the composed text, which it reads the same.
+                compose.onNode(isHeading).assertTextEquals(composed)
+                compose.onNode(isHeading).pixels()
+            }
+            val (expected, actual) = drawn
+            assertEquals("the size at $width", expected.width to expected.height, actual.width to actual.height)
+            assertTrue("the same lines and pixels at $width", expected.buffer.contentEquals(actual.buffer))
         }
     }
 
