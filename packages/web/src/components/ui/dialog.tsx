@@ -256,6 +256,35 @@ const ModalContext = React.createContext<ModalContextValue>({
   keyboard: false,
 });
 
+type ModalOpen = {
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
+
+/**
+ * Whether a container is open. Its root holds this, rather than leaving it to Radix, so that the
+ * container can close itself on an Escape that Radix does not give it (see useModalFocus). As
+ * with Radix's own, the app controls it with `open` and `onOpenChange`, or leaves it to the root,
+ * which starts from `defaultOpen`.
+ */
+function useModalOpen({ open, defaultOpen = false, onOpenChange }: ModalOpen) {
+  const [own, setOwn] = React.useState(defaultOpen);
+  const current = open ?? own;
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (next === current) return;
+      if (open === undefined) setOwn(next);
+      onOpenChange?.(next);
+    },
+    [current, open, onOpenChange],
+  );
+  return { open: current, setOpen };
+}
+
+/** Opens or closes the container whose root is around it: see useModalOpen. */
+const ModalOpenContext = React.createContext<((open: boolean) => void) | null>(null);
+
 type ModalFocus = {
   /** Where focus goes when the container opens, in place of the title. */
   initialFocus?: React.RefObject<HTMLElement | null>;
@@ -263,6 +292,8 @@ type ModalFocus = {
   returnFocus?: React.RefObject<HTMLElement | null>;
   onOpenAutoFocus?: (event: Event) => void;
   onCloseAutoFocus?: (event: Event) => void;
+  /** Called on an Escape that closes the container. Preventing it keeps the container open. */
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onPointerDown?: React.PointerEventHandler<HTMLDivElement>;
   /**
@@ -273,18 +304,20 @@ type ModalFocus = {
 };
 
 /**
- * Where focus goes as a container opens and closes, and whether focus in it came from the
- * keyboard. Returns the props of the container element and the element itself.
+ * Where focus goes as a container opens and closes, whether focus in it came from the keyboard,
+ * and Escape. Returns the props of the container element and the element itself.
  */
 function useModalFocus({
   initialFocus,
   returnFocus,
   onOpenAutoFocus,
   onCloseAutoFocus,
+  onEscapeKeyDown,
   onKeyDown,
   onPointerDown,
   focusTitle,
 }: ModalFocus) {
+  const setOpen = React.useContext(ModalOpenContext);
   const [element, setElement] = React.useState<HTMLDivElement | null>(null);
   // The element that had focus when the container opened. Read as the container's element is
   // attached, before Radix moves focus into it.
@@ -327,9 +360,30 @@ function useModalFocus({
         if (target.ownerDocument.activeElement === target) return;
       }
     },
+    onEscapeKeyDown,
     onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
       setKeyboard(true);
       onKeyDown?.(event);
+      // Radix gives Escape only to the layer opened last. A toast shown while the container is
+      // open, as from an action in it, is opened after it: Radix gives the toast an Escape
+      // pressed in the container, and the toast lets it go on (see toast.tsx). So the container
+      // takes an Escape pressed in it here, on its way back up, and does what Radix does: it
+      // asks onEscapeKeyDown, then closes. Only an Escape that nothing has prevented is taken.
+      // Radix prevents the Escapes it closes a layer on, this container's own when it is the
+      // layer opened last, so no Escape closes the container twice.
+      const native = event.nativeEvent;
+      if (
+        event.key !== "Escape" ||
+        native.defaultPrevented ||
+        !setOpen ||
+        !(event.target instanceof Node && event.currentTarget.contains(event.target))
+      ) {
+        return;
+      }
+      onEscapeKeyDown?.(native);
+      if (native.defaultPrevented) return;
+      native.preventDefault();
+      setOpen(false);
     },
     onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => {
       setKeyboard(false);
@@ -518,6 +572,7 @@ export {
   ModalContext,
   ModalFooter,
   ModalHeader,
+  ModalOpenContext,
   overlayClasses,
   type TitleProps,
   titleClasses,
@@ -525,6 +580,7 @@ export {
   useKeyboardAttribute,
   useModalFocus,
   useModalLayout,
+  useModalOpen,
 };
 
 // ---------------------------------------------------------------------------------------------
@@ -540,8 +596,13 @@ type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root>;
  * controlled with `open` and `onOpenChange`: to keep it open while it holds unsaved changes,
  * control it and ask before you set `open` to false.
  */
-function Dialog(props: DialogProps) {
-  return <DialogPrimitive.Root {...props} />;
+function Dialog({ open, defaultOpen, onOpenChange, ...props }: DialogProps) {
+  const state = useModalOpen({ open, defaultOpen, onOpenChange });
+  return (
+    <ModalOpenContext value={state.setOpen}>
+      <DialogPrimitive.Root {...props} open={state.open} onOpenChange={state.setOpen} />
+    </ModalOpenContext>
+  );
 }
 
 type DialogTriggerProps = React.ComponentProps<typeof DialogPrimitive.Trigger>;
@@ -588,6 +649,7 @@ function DialogContent({
   returnFocus,
   onOpenAutoFocus,
   onCloseAutoFocus,
+  onEscapeKeyDown,
   onKeyDown,
   onPointerDown,
   className,
@@ -600,6 +662,7 @@ function DialogContent({
     returnFocus,
     onOpenAutoFocus,
     onCloseAutoFocus,
+    onEscapeKeyDown,
     onKeyDown,
     onPointerDown,
     focusTitle: true,
