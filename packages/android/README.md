@@ -131,6 +131,36 @@ Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and SwiftUI versions follow too.
 
+## Tabs
+
+```kotlin
+RaincoatTabs(
+    tabs = listOf(
+        RaincoatTab(Section.Details, "Details"),
+        RaincoatTab(Section.Photos, "Photos", icon = painterResource(R.drawable.photo)),
+        RaincoatTab(Section.List, painterResource(R.drawable.list), contentDescription = "List"),
+    ),
+    selected = section,
+    onSelect = { section = it },
+) { selected -> SectionContent(selected) }
+
+RaincoatTabs(tabs) { selected -> SectionContent(selected) } // keeps its own selection
+```
+
+- The row runs across the full width over a hairline. When the tabs do not fit, it scrolls
+  sideways, and the selected tab is brought into view. Labels stay on one line.
+- Only the selected tab's panel is shown. There are no disabled tabs: leave out a tab that leads
+  nowhere.
+- The row is a selectable group, and each tab is selectable with the tab role, which TalkBack
+  reads with its selected state. A tab with only an icon needs a content description.
+- A keyboard moves focus between the tabs as for any control, and Enter or Space selects. The
+  focused tab shows the theme's focus ring inside its edge.
+- Each tab's touch area is at least 48dp tall; a mouse has to be on the tab itself.
+
+The Tabs follow the
+[Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
+which the React and SwiftUI Tabs follow too.
+
 ## Input
 
 ```kotlin

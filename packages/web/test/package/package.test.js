@@ -159,6 +159,8 @@ const NEUTRAL = new Set([
   ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", "tan(", "atan2(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
   ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  // Layout and overflow keywords, for a row that scrolls sideways.
+  ...["auto", "column", "nowrap"],
   // Text: alignment, wrapping, line breaking by language, and the ellipsis after max-lines.
   ...["start", "balance", "strict", "keep-all", "hidden", "webkit-box", "vertical"],
   // A column of parts, and a multi-line field that grows with its content.

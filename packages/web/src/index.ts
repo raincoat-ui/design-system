@@ -1,6 +1,16 @@
 export { Button, type ButtonProps, buttonVariants } from "./components/ui/button.js";
 export { Input, type InputProps } from "./components/ui/input.js";
 export {
+  Tabs,
+  TabsContent,
+  type TabsContentProps,
+  TabsList,
+  type TabsListProps,
+  type TabsProps,
+  TabsTrigger,
+  type TabsTriggerProps,
+} from "./components/ui/tabs.js";
+export {
   Heading,
   type HeadingProps,
   headingVariants,
@@ -30,6 +40,9 @@ export {
   INPUT_TYPES,
   type InputSize,
   type InputType,
+  TABS_ACTIVATION_MODE_DEFAULT,
+  TABS_ACTIVATION_MODES,
+  type TabsActivationMode,
   TEXT_COLOR_DEFAULT,
   TEXT_COLORS,
   TEXT_VARIANT_DEFAULT,

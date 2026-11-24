@@ -61,6 +61,19 @@ export const INPUT_TYPES = ["text", "email", "password", "search", "tel", "url"]
 export const INPUT_TYPE_DEFAULT: InputType = "text";
 
 /**
+ * Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control.
+ * - `automatic`: The arrow keys select the tab they move to. The panel shows at once.
+ * - `manual`: The arrow keys only move focus, and Enter or Space selects. For panels that are slow to show.
+ */
+export type TabsActivationMode = "automatic" | "manual";
+
+/** Every TabsActivationMode, in the order the spec lists them. */
+export const TABS_ACTIVATION_MODES = ["automatic", "manual"] as const satisfies readonly TabsActivationMode[];
+
+/** The TabsActivationMode used when none is given. */
+export const TABS_ACTIVATION_MODE_DEFAULT: TabsActivationMode = "automatic";
+
+/**
  * Text: The text style.
  * - `body-lg`: An introductory paragraph.
  * - `body-md`: Running text. The default.

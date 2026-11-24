@@ -19,6 +19,9 @@
             android:name=".TypographyActivity"
             android:exported="false" />
         <activity
+            android:name=".TabsActivity"
+            android:exported="false" />
+        <activity
             android:name=".InputActivity"
             android:exported="false" />
     </application>

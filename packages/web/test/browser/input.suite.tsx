@@ -1126,7 +1126,68 @@ export function describeInput(environment: string) {
         // A click anywhere inside the outline reaches the field, the icon's place included.
         expect(document.elementFromPoint(box.left + 3, box.top + box.height / 2)).toBe(control);
       });
+    });
 
+    describe("server-rendered", () => {
+      afterEach(() => {
+        for (const undo of serverRendered.splice(0).reverse()) undo();
+      });
+
+      test("the HTML from a server names and describes the field, and React hydrates it as it is", async () => {
+        const ui = (
+          <Stage>
+            <Input
+              label="Email"
+              type="email"
+              name="email"
+              description="We send the receipt here."
+              invalid
+              error="Enter an email address, like name@example.com"
+              defaultValue="ana"
+            />
+          </Stage>
+        );
+        const { screen, hydrate } = serverRender(ui);
+        const field = screen.getByRole("textbox", { name: "Email" });
+        await expect.element(field).toHaveAttribute("aria-invalid", "true");
+        await expect
+          .element(field)
+          .toHaveAccessibleDescription(
+            "We send the receipt here. Enter an email address, like name@example.com",
+          );
+        // It takes typing before any script runs.
+        await field.click();
+        await userEvent.keyboard("@example.com");
+        await expect.element(field).toHaveValue("ana@example.com");
+
+        const errors = hydrate();
+        await settle(100);
+        expect(errors).toEqual([]);
+        await expect.element(field).toHaveValue("ana@example.com");
+      });
+    });
+
+    describe("system preferences", () => {
+      test("without a data-theme, the field follows the system's color scheme", async () => {
+        await withMedia({ colorScheme: "dark" }, async () => {
+          const screen = await render(<Input label="Email" />);
+          const field = parts(screen.getByRole("textbox").element()).field;
+          expect(computed(field).backgroundColor).toBe(color("input.bg.default", "dark"));
+          expect(computed(field).borderTopColor).toBe(color("input.border.default", "dark"));
+        });
+      });
+    });
+  });
+}
+
+/**
+ * The Input on a touch screen. These tests run in projects of their own, after every other
+ * component test (vitest.config.ts): Chromium does not give a page its mouse back once a touch
+ * screen was turned on in it.
+ */
+export function describeInputOnTouchScreens(environment: string) {
+  describe(`Input, ${environment}`, () => {
+    describe("pointer and touch", () => {
       test("on a touch screen, a small field takes touches across the minimum target, and takes only the room it shows", async (context) => {
         // Chromium alone can turn a touch screen on in a page that is already open.
         context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
@@ -1177,56 +1238,6 @@ export function describeInput(environment: string) {
         } finally {
           await cdp().send("Emulation.setTouchEmulationEnabled", { enabled: false });
         }
-      });
-    });
-
-    describe("server-rendered", () => {
-      afterEach(() => {
-        for (const undo of serverRendered.splice(0).reverse()) undo();
-      });
-
-      test("the HTML from a server names and describes the field, and React hydrates it as it is", async () => {
-        const ui = (
-          <Stage>
-            <Input
-              label="Email"
-              type="email"
-              name="email"
-              description="We send the receipt here."
-              invalid
-              error="Enter an email address, like name@example.com"
-              defaultValue="ana"
-            />
-          </Stage>
-        );
-        const { screen, hydrate } = serverRender(ui);
-        const field = screen.getByRole("textbox", { name: "Email" });
-        await expect.element(field).toHaveAttribute("aria-invalid", "true");
-        await expect
-          .element(field)
-          .toHaveAccessibleDescription(
-            "We send the receipt here. Enter an email address, like name@example.com",
-          );
-        // It takes typing before any script runs.
-        await field.click();
-        await userEvent.keyboard("@example.com");
-        await expect.element(field).toHaveValue("ana@example.com");
-
-        const errors = hydrate();
-        await settle(100);
-        expect(errors).toEqual([]);
-        await expect.element(field).toHaveValue("ana@example.com");
-      });
-    });
-
-    describe("system preferences", () => {
-      test("without a data-theme, the field follows the system's color scheme", async () => {
-        await withMedia({ colorScheme: "dark" }, async () => {
-          const screen = await render(<Input label="Email" />);
-          const field = parts(screen.getByRole("textbox").element()).field;
-          expect(computed(field).backgroundColor).toBe(color("input.bg.default", "dark"));
-          expect(computed(field).borderTopColor).toBe(color("input.border.default", "dark"));
-        });
       });
     });
   });
