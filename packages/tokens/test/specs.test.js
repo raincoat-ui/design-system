@@ -1,9 +1,9 @@
 // Tests the spec linter against copies of the real specs, each broken in one specific way,
 // and the types generated from the specs.
 import assert from "node:assert/strict";
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
@@ -17,12 +17,21 @@ after(() => {
   for (const dir of scratch) rmSync(dir, { recursive: true, force: true });
 });
 
-/** Copies what the spec linter reads to a temp dir, then edits the Button spec. */
+/**
+ * Copies what the spec linter reads to a temp dir, then edits the Button spec. Of the platform
+ * packages, only the files the specs list as implementations are copied.
+ */
 function withSpec(edit, extra = () => {}) {
   const dir = mkdtempSync(join(tmpdir(), "raincoat-specs-"));
   scratch.push(dir);
   for (const part of ["specs", "schemas", "tokens", "rfcs"]) {
     cpSync(join(repoRoot, part), join(dir, part), { recursive: true });
+  }
+  for (const { spec } of loadSpecs(repoRoot)) {
+    for (const { file } of Object.values(spec?.implementations ?? {})) {
+      mkdirSync(dirname(join(dir, file)), { recursive: true });
+      cpSync(join(repoRoot, file), join(dir, file));
+    }
   }
   const spec = parse(readFileSync(join(dir, SPEC), "utf8"));
   edit(spec);
@@ -118,6 +127,43 @@ test("the guidelines and an accepted RFC must exist", () => {
         readFileSync(file, "utf8").replace("- Status: accepted", "- Status: proposed"),
       );
     },
+  );
+});
+
+test("each implementation is an existing file, in its platform's language, naming the component", () => {
+  assertProblem((spec) => {
+    spec.implementations.web.file = "packages/web/src/components/ui/buton.tsx";
+  }, /implementations\.web: packages\/web\/src\/components\/ui\/buton\.tsx does not exist/);
+  assertProblem((spec) => {
+    spec.implementations.ios.file = spec.implementations.android.file;
+  }, /implementations\.ios: .*RaincoatButton\.kt is not a Swift file/);
+  assertProblem((spec) => {
+    spec.implementations.android.file = "../RaincoatButton.kt";
+  }, /implementations\.android: \.\.\/RaincoatButton\.kt is not a path inside the repository/);
+  assertProblem((spec) => {
+    spec.implementations.android.name = ["RaincoatButton", "RaincoatIconButton"];
+  }, /implementations\.android: .*RaincoatButton\.kt does not mention "RaincoatIconButton"/);
+  assertProblem((spec) => {
+    spec.implementations.windows = { ...spec.implementations.web };
+  }, /implementations: must NOT have additional properties "windows"/);
+});
+
+test("a spec with no implementation on some platform, or on any, is valid", () => {
+  assert.deepEqual(
+    lintSpecs(
+      withSpec((spec) => {
+        delete spec.implementations.ios;
+      }),
+    ),
+    [],
+  );
+  assert.deepEqual(
+    lintSpecs(
+      withSpec((spec) => {
+        delete spec.implementations;
+      }),
+    ),
+    [],
   );
 });
 
