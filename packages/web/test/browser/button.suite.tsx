@@ -370,10 +370,11 @@ export function describeButton(environment: string) {
           const locator = screen.getByRole("button", { name: "Save" });
           const button = locator.element() as HTMLElement;
           const fill = () => computed(button).backgroundColor;
+          const rest =
+            variant === "ghost" ? TRANSPARENT : color(`button.${variant}.bg.default`, mode);
+          const pressed = color(`button.${variant}.bg.pressed`, mode);
 
-          expect(fill()).toBe(
-            variant === "ghost" ? TRANSPARENT : color(`button.${variant}.bg.default`, mode),
-          );
+          expect(fill()).toBe(rest);
           expect(computed(button).color).toBe(color(`button.${variant}.fg`, mode));
           expect(computed(button).borderTopColor).toBe(
             variant === "secondary" ? color("button.secondary.border", mode) : TRANSPARENT,
@@ -382,11 +383,18 @@ export function describeButton(environment: string) {
           await locator.hover();
           await expect.poll(fill).toBe(color(`button.${variant}.bg.hover`, mode));
 
-          // Pressed: Space held down, with the pointer elsewhere.
+          // Pressed: the mouse button held down on it. The pressed fill wins over the hover fill.
+          await commands.pressPointer();
+          await expect.poll(fill).toBe(pressed);
+          await commands.releasePointer();
+
+          // Pressed: Space held down, with the pointer elsewhere. The pressed fill selects
+          // :active, which Firefox gives a button only while a pointer presses it, not a key:
+          // there the button keeps its fill at rest.
           await parkPointer();
           button.focus();
           await userEvent.keyboard("[Space>]");
-          await expect.poll(fill).toBe(color(`button.${variant}.bg.pressed`, mode));
+          await expect.poll(fill).toBe(server.browser === "firefox" ? rest : pressed);
           await userEvent.keyboard("[/Space]");
         },
       );

@@ -62,6 +62,14 @@ const outputPath: ResolvePath = ({ arg, ext, root }) => {
 const movePointerAway: BrowserCommand<[]> = async ({ page }) => {
   await page.mouse.move(0, 0);
 };
+/** Holds the main mouse button down where the pointer is. */
+const pressPointer: BrowserCommand<[]> = async ({ page }) => {
+  await page.mouse.down();
+};
+/** Lets the main mouse button go. */
+const releasePointer: BrowserCommand<[]> = async ({ page }) => {
+  await page.mouse.up();
+};
 /** Emulates a system setting, such as reduced motion. A null value stops emulating it. */
 const emulateMedia: BrowserCommand<[Parameters<Page["emulateMedia"]>[0]]> = async (
   { page },
@@ -138,7 +146,7 @@ export default defineConfig({
       headless: true,
       provider: playwright(),
       screenshotFailures: false,
-      commands: { movePointerAway, emulateMedia },
+      commands: { movePointerAway, pressPointer, releasePointer, emulateMedia },
     },
   },
 });

@@ -100,6 +100,10 @@ without testing more of the components.
   the change; a dependency update of Playwright cannot merge without it.
 - The baselines add about 30 KB per image: about 700 KB for the Button's 22 on the web.
 - Until themes ship their fonts, the snapshots show the system's fonts, not each theme's.
+- Firefox gives a button `:active`, which a pressed fill selects, only while a pointer presses
+  it. A button held down with Space keeps its fill at rest there, where Chromium and WebKit show
+  it pressed. The tests press with the pointer in every browser, and check a held key as each
+  browser draws it.
 - A specimen taller than the snapshots' viewport (4096px) fails, since a screenshot shows nothing
   below it.
 

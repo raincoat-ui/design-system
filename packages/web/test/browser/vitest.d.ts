@@ -17,6 +17,10 @@ declare module "vitest/browser" {
   interface BrowserCommands {
     /** Moves the pointer to the top left corner of the page, off every component. */
     movePointerAway: () => Promise<void>;
+    /** Holds the main mouse button down where the pointer is. */
+    pressPointer: () => Promise<void>;
+    /** Lets the main mouse button go. */
+    releasePointer: () => Promise<void>;
     /** Emulates a system setting, such as reduced motion. A null value stops emulating it. */
     emulateMedia: (media: {
       colorScheme?: "light" | "dark" | null;
