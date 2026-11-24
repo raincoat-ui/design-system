@@ -38,7 +38,6 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsFocused
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -68,6 +67,7 @@ import io.github.raincoatui.tokens.TokenFormat
 import io.github.raincoatui.tokens.TokenShadow
 import io.github.raincoatui.tokens.TokenShadowLayer
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.captureRedrawn
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.raincoatShadow
 import io.github.raincoatui.ui.toColor
@@ -436,7 +436,7 @@ class RaincoatToastTest(themeId: String) {
 
     // Colors and measurements, drawn on its own
 
-    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureToImage().toPixelMap()
+    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureRedrawn(compose).toPixelMap()
 
     private fun PixelMap.has(color: TokenColor, x: Int, y: Int): Boolean {
         val pixel = this[x, y]

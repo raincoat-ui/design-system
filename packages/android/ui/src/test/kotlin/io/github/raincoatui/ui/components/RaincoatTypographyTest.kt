@@ -26,7 +26,6 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -47,6 +46,7 @@ import io.github.raincoatui.tokens.TextVariant
 import io.github.raincoatui.tokens.TokenColor
 import io.github.raincoatui.tokens.TokenTextStyle
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.captureRedrawn
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
 import java.text.Normalizer
@@ -124,7 +124,7 @@ class RaincoatTypographyTest(themeId: String) {
     /** The color behind the content of the current scene. */
     private var canvas: TokenColor = tokens().color.bg.canvas
 
-    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureToImage().toPixelMap()
+    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureRedrawn(compose).toPixelMap()
 
     private fun SemanticsNodeInteraction.height(): Int = fetchSemanticsNode().size.height
 
