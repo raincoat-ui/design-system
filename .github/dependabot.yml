@@ -16,6 +16,12 @@ updates:
         patterns: ["*"]
         update-types: [minor, patch]
     ignore:
+      # The repository runs on Node 24 (.node-version), so the Node type definitions stay on 24:
+      # a later major's describe APIs that Node 24 does not have, and code using them would
+      # type-check and then fail at run time. Remove this entry when .node-version moves to a
+      # new major, and update @types/node with it.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
       # Published by hand without a provenance attestation, unlike 2.2.1 and the releases
       # before it, so pnpm's trustPolicy refuses it and every npm update job fails on it.
       # Remove this entry once a later lefthook release is published with provenance again.
