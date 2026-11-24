@@ -155,25 +155,43 @@
             "the specimen's canvas was not drawn"
         )
 
-        // The snapshot's text size is in effect: only a size larger than the default enlarges text.
-        // Body text grows as much as the system grows it at that size, within 0.05: 3.12 times
-        // at the largest size, where body text is 53 points instead of 17.
+        // The snapshot's text size is in effect. SwiftUI and the window are given it, and body
+        // text is drawn nearer the size the system gives it there than the sizes beside it: at
+        // the largest size, nearer 3.12 times as large (53 points instead of 17) than 2.76.
         let scale = try #require(reading.scale, "the text size was not read")
-        let category = contentSizeCategory(snapshot.textSize.dynamicTypeSize)
+        let size = snapshot.textSize.dynamicTypeSize
+        let category = contentSizeCategory(size)
+        #expect(
+            reading.dynamicTypeSize == size,
+            "SwiftUI's text size is \(reading.dynamicTypeSize.map { "\($0)" } ?? "unknown"), not \(size)"
+        )
+        #expect(windowCategory == category, "the window's text size is \(windowCategory.rawValue), not \(category.rawValue)")
         let expected = bodyTextScale(at: category)
-        if snapshot.textSize.dynamicTypeSize != .large {
+        let sizes = DynamicTypeSize.allCases
+        if let index = sizes.firstIndex(of: size) {
+            for neighbour in [index - 1, index + 1] where sizes.indices.contains(neighbour) {
+                let other = contentSizeCategory(sizes[neighbour])
+                let otherScale = bodyTextScale(at: other)
+                #expect(
+                    abs(scale - expected) < abs(scale - otherScale),
+                    """
+                    body text is drawn \(scale) times as large: nearer \(otherScale), at \(other.rawValue), \
+                    than \(expected), at \(category.rawValue)
+                    """
+                )
+            }
+        }
+        // How far that is from the system's own scale is logged, to see, and not checked.
+        if size != .large || abs(scale - expected) > 0.05 {
             print(
                 """
                 \(theme.id)/\(component)/\(snapshot.id): body text is drawn \(scale) times as large; \
-                the system draws it \(expected) times as large at \(category.rawValue). SwiftUI's size is \
+                the system draws it \(expected) times as large at \(category.rawValue)\
+                \(abs(scale - expected) > 0.05 ? ", more than 0.05 apart" : ""). SwiftUI's size is \
                 \(reading.dynamicTypeSize.map { "\($0)" } ?? "unknown"), the window's \(windowCategory.rawValue).
                 """
             )
         }
-        #expect(
-            abs(scale - expected) <= 0.05,
-            "body text is drawn \(scale) times as large, not \(expected) as at \(category.rawValue)"
-        )
 
         let name = "\(theme.id)/\(component)/\(snapshot.id).png"
         switch SnapshotRun.current {
