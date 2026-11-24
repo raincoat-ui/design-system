@@ -73,3 +73,31 @@ p {
   flex-direction: column;
   align-items: flex-start;
 }
+
+/* The card screen: each list of cards is a grid, as wide a column as fits. */
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--rc-size-panel-sm)), 1fr));
+  gap: var(--rc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card-list > li {
+  display: flex;
+}
+
+/* A link in a static card's title, as this app styles its links. */
+.title-link {
+  color: inherit;
+}
+
+/* The pictures that stand for photos. */
+.picture-sky {
+  fill: var(--rc-color-bg-subtle);
+}
+
+.picture-hills {
+  fill: var(--rc-color-accent-default);
+}
