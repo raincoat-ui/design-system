@@ -91,14 +91,24 @@ Each component is drawn in every snapshot of [`specs/snapshots.yaml`](specs/snap
 every theme: all the examples of its spec together, in the four color modes, right to left, at
 the largest text size, and in Vietnamese, Chinese, Japanese, Korean, and expanded English. The
 text the examples show is in the component's `strings.yaml`, beside its spec. CI compares each
-drawing with its baseline, and fails when a baseline is missing or differs.
+drawing with its baseline, and fails when a baseline is missing or differs. Each platform has a
+job of its own:
 
-Baselines are recorded in CI, never on your machine, because your fonts and browser are not the
-runner's. When a change alters how a component looks, or adds one:
+| Platform | Job             | Artifact        | Baselines                                     |
+| -------- | --------------- | --------------- | --------------------------------------------- |
+| Web      | `web snapshots` | `web-snapshots` | `packages/web/test/snapshots/__screenshots__` |
+| iOS      | `ios snapshots` | `ios-snapshots` | `packages/ios/__screenshots__`                |
 
-1. Push it. The `web snapshots` job fails and uploads what it drew as the run's
-   `web-snapshots` artifact: `actual/` holds the new images, laid out as the baselines are, and
-   `diff/` marks in red where each differs from its baseline.
+A drawing differs from its baseline when a single pixel does: on the web, by more than
+pixelmatch's default color threshold; on iOS, when one of the pixel's channels differs by more
+than 8 of 255.
+
+Baselines are recorded in CI, never on your machine, because your fonts, browser, and system are
+not the runner's. When a change alters how a component looks, or adds one:
+
+1. Push it. The platform's job fails and uploads what it drew as the run's artifact: `actual/`
+   holds the new images, laid out as the baselines are, and `diff/` marks in red where each
+   differs from its baseline.
 2. Download the artifact, from the run's summary page or with the GitHub command line:
 
    ```sh
@@ -114,13 +124,28 @@ runner's. When a change alters how a component looks, or adds one:
    git commit -s -m "test(web): accept the new snapshots of the button"
    ```
 
-`pnpm web:snapshots` draws the snapshots on your machine, into
-`packages/web/test-results/snapshots/local/`, for you to look at. It compares nothing and writes
-no baseline; do not copy what it draws into `__screenshots__`.
+   For iOS, download `ios-snapshots` and copy its `actual/` over `packages/ios/__screenshots__/`.
+
+You can also draw the snapshots on your machine, to look at them. That compares nothing and
+writes no baseline; do not copy what it draws over the baselines.
+
+- Web: `pnpm web:snapshots` draws them into `packages/web/test-results/snapshots/local/`.
+- iOS, on a Mac:
+  `RAINCOAT_SNAPSHOTS=1 swift test --package-path packages/ios --filter VisualSnapshots` draws
+  them into `packages/ios/test-results/snapshots/local/`. Without `RAINCOAT_SNAPSHOTS`,
+  `swift test` leaves the snapshots out.
 
 To give a new component its snapshots, write its `strings.yaml` (`pnpm tokens:lint` says what is
-missing), run `pnpm tokens:build`, and add `packages/web/test/snapshots/<id>.snapshots.test.tsx`,
-which draws one instance of its examples. [Record 0019](docs/adr/0019-visual-snapshots.md)
+missing), run `pnpm tokens:build`, and add a test on each platform that draws one instance of its
+examples:
+
+- Web: `packages/web/test/snapshots/<id>.snapshots.test.tsx`.
+- iOS: `packages/ios/Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`, a test in the
+  `VisualSnapshots` suite that passes `<component>Examples` to `expectSnapshot`, as
+  `ButtonSnapshots.swift` does.
+
+The web snapshots fail when a component spec has no snapshot test, and the iOS snapshots when a
+spec that names a SwiftUI implementation has none. [Record 0019](docs/adr/0019-visual-snapshots.md)
 describes the matrix, and how iOS and Android draw it.
 
 ## Dependencies
