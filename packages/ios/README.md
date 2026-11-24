@@ -126,6 +126,34 @@ Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and Compose versions follow too.
 
+## Tabs
+
+```swift
+RaincoatTabs(selection: $section, tabs: [
+    RaincoatTab("Details", value: Section.details),
+    RaincoatTab("Photos", value: .photos, icon: Image(systemName: "photo")),
+    RaincoatTab(icon: Image(systemName: "list.bullet"), accessibilityLabel: Text("List"), value: .list),
+]) { section in
+    SectionView(section)
+}
+
+RaincoatTabs(tabs: tabs) { section in SectionView(section) } // keeps its own selection
+```
+
+- The row runs across the full width over a hairline. When the tabs do not fit, it scrolls
+  sideways, and the selected tab is scrolled into view. Labels stay on one line.
+- Only the selected tab's panel is shown. There are no disabled tabs: leave out a tab that leads
+  nowhere.
+- VoiceOver is told the row is a tab bar, and the selected tab carries the selected trait. A
+  tab with only an icon needs an accessibility label.
+- A keyboard moves focus between the tabs as Full Keyboard Access does for any control, and
+  Space selects.
+- Each tab's touch area is at least 44 points tall.
+
+The Tabs follow the
+[Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
+which the React and Compose Tabs follow too.
+
 ## Working on this package
 
 ```sh

@@ -1,5 +1,15 @@
 export { Button, type ButtonProps, buttonVariants } from "./components/ui/button.js";
 export {
+  Tabs,
+  TabsContent,
+  type TabsContentProps,
+  TabsList,
+  type TabsListProps,
+  type TabsProps,
+  TabsTrigger,
+  type TabsTriggerProps,
+} from "./components/ui/tabs.js";
+export {
   Heading,
   type HeadingProps,
   headingVariants,
@@ -23,6 +33,9 @@ export {
   type HeadingColor,
   type HeadingLevel,
   type HeadingVariant,
+  TABS_ACTIVATION_MODE_DEFAULT,
+  TABS_ACTIVATION_MODES,
+  type TabsActivationMode,
   TEXT_COLOR_DEFAULT,
   TEXT_COLORS,
   TEXT_VARIANT_DEFAULT,

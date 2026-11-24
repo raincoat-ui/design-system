@@ -57,6 +57,16 @@ p {
   gap: var(--rc-space-3);
 }
 
+/* A panel of tabs, spaced from the row above it. */
+.panel {
+  padding-block: var(--rc-space-4);
+}
+
+/* Narrower than the tabs inside it, on any screen. */
+.narrow {
+  max-width: var(--rc-size-panel-sm);
+}
+
 /* The lines above and below the small button touch it, so the room it takes can be measured. */
 .stack {
   display: flex;
