@@ -14,6 +14,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- One activity per component after the Button. Exported, with no launcher entry, so
+             that adb can start it by name. -->
+        <activity
+            android:name=".InputActivity"
+            android:exported="true"
+            android:label="Input" />
     </application>
 
 </manifest>

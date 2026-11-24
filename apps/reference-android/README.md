@@ -36,4 +36,5 @@ expect a phone-sized screen.
 ## Adding a component
 
 Add a screen for it in `src/main/`, with one example for each state in its spec, and a test
-class in `src/androidTest/`.
+class in `src/androidTest/`. The Button's screen is the app's main activity; each other
+component has an activity of its own, such as `InputActivity`, which its tests start directly.
