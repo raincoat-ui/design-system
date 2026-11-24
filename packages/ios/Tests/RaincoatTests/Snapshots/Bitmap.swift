@@ -37,6 +37,12 @@
             self.init(width: width, height: height, pixels: buffer)
         }
 
+        /// The pixel at a point, with the origin at the top left: red, green, blue, alpha.
+        func pixel(_ x: Int, _ y: Int) -> [Int] {
+            let start = (y * width + x) * 4
+            return pixels[start..<start + 4].map(Int.init)
+        }
+
         /// Reads a PNG file, or returns nil when there is none.
         static func read(_ url: URL) throws -> Bitmap? {
             guard FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) else { return nil }

@@ -44,7 +44,7 @@
     /// snapshot isolates it with dir="auto". Without them, iOS draws the comma and the number after
     /// an Arabic name in English as part of the name's right-to-left run: "Message from 2 ,<name>
     /// minutes ago".
-    private func typographyText(of instance: TypographyInstance, _ text: (String) -> String) -> String {
+    private func typographyText(of instance: TypographyInstance, _ text: SnapshotText) -> String {
         let value = instance.decomposed ? text("text").decomposedStringWithCanonicalMapping : text("text")
         guard let open = value.firstIndex(of: "{"), let close = value[open...].firstIndex(of: "}") else {
             return value

@@ -4,6 +4,7 @@
     import Raincoat
     import SwiftUI
     import Testing
+    import UIKit
 
     // The visual snapshots of the SwiftUI components: each snapshot of specs/snapshots.yaml, in
     // every theme. A snapshot draws every example of the component's spec together, as a
@@ -16,8 +17,11 @@
     // one instance of them. ButtonSnapshots.swift is the model.
     //
     // The snapshots are drawn by iOS, in a simulator: SwiftUI on macOS does not enlarge text for
-    // a larger Dynamic Type size. They run only when RAINCOAT_SNAPSHOTS is set, which xcodebuild
-    // passes to the tests from TEST_RUNNER_RAINCOAT_SNAPSHOTS. From packages/ios:
+    // a larger Dynamic Type size. A specimen is shown in a window of its own and the window is
+    // drawn, as the system draws an app, so that the views UIKit provides, such as a text field
+    // and a scroll view, are drawn too; ImageRenderer leaves them out. They run only when
+    // RAINCOAT_SNAPSHOTS is set, which xcodebuild passes to the tests from
+    // TEST_RUNNER_RAINCOAT_SNAPSHOTS. From packages/ios:
     //
     //     TEST_RUNNER_RAINCOAT_SNAPSHOTS=1 xcodebuild test -scheme Raincoat-Package \
     //       -destination 'platform=iOS Simulator,name=iPhone 17' \
@@ -124,14 +128,15 @@
     ///   - component: The id of the component's spec, which names its baselines.
     ///   - examples: The examples generated from the spec, such as `buttonExamples`.
     ///   - draw: Draws one instance of the examples, given its properties and the text of its
-    ///     content in the snapshot's locale: `text("label")`.
+    ///     content in the snapshot's locale: `text("label")`, or `text.optional("error")` for
+    ///     content that only some examples have.
     @MainActor
     func expectSnapshot<Properties: Sendable, Instance: View>(
         of component: String,
         examples: [SpecExample<Properties>],
         theme: RaincoatTheme,
         snapshot: VisualSnapshot,
-        draw: @escaping (_ instance: Properties, _ text: (String) -> String) -> Instance
+        draw: @escaping (_ instance: Properties, _ text: SnapshotText) -> Instance
     ) throws {
         let reading = TextScaleProbe.Reading()
         let drawing = try Bitmap(
@@ -139,6 +144,14 @@
                 Specimen(examples: examples, locale: snapshot.locale, draw: draw),
                 theme: theme, snapshot: snapshot, reading: reading
             )
+        )
+
+        // The window was drawn: its top left corner is the specimen's canvas.
+        let canvas = theme.tokens(mode: snapshot.mode, density: .comfortable).color.bg.canvas
+        let corner = [canvas.red, canvas.green, canvas.blue].map { Int(($0 * 255).rounded()) }
+        #expect(
+            zip(drawing.pixel(1, 1).prefix(3), corner).allSatisfy { abs($0 - $1) <= snapshotTolerance },
+            "the specimen's canvas was not drawn"
         )
 
         // The snapshot's text size is in effect: only a size larger than the default enlarges text.
@@ -177,35 +190,129 @@
         }
     }
 
-    /// Draws a specimen as the snapshot asks, in a theme.
+    /// The text of an example in the snapshot's locale, by the content it fills.
+    struct SnapshotText: Sendable {
+        let example: String
+        let locale: String
+        let values: [String: String]
+
+        /// The text of content the example has: `text("label")`. Text that is missing fails the
+        /// snapshot.
+        func callAsFunction(_ content: String) -> String {
+            guard let value = values[content] else {
+                Issue.record("\(example): no \(content) in \(locale)")
+                return ""
+            }
+            return value
+        }
+
+        /// The text of content that only some examples have, such as an error, or nil.
+        func optional(_ content: String) -> String? {
+            values[content]
+        }
+    }
+
+    /// Draws a specimen as the snapshot asks, in a theme: shown in a window of its own, with the
+    /// snapshot's appearance set as the system sets it, and the window drawn as the system draws
+    /// an app, UIKit's views included.
     @MainActor
     private func drawSpecimen(
         _ specimen: some View, theme: RaincoatTheme, snapshot: VisualSnapshot, reading: TextScaleProbe.Reading
     ) throws -> CGImage {
         // SwiftUI lets a test set the color scheme but not the contrast setting, so a theme that
         // answers every request with the tokens of the snapshot's color mode draws it, as in
-        // ButtonRenderingTests.
+        // ButtonRenderingTests. The window's traits say the same, for UIKit's views.
         let mode = snapshot.mode
-        let scheme: ColorScheme = mode == .dark || mode == .darkHighContrast ? .dark : .light
+        let isDark = mode == .dark || mode == .darkHighContrast
+        let isHighContrast = mode == .lightHighContrast || mode == .darkHighContrast
         let fixed = RaincoatTheme(id: "\(theme.id)-\(mode.rawValue)") { _, density in
             theme.tokens(mode: mode, density: density)
         }
-        let renderer = ImageRenderer(
-            content:
-                specimen
-                .background { TextScaleProbe(reading: reading) }
-                .raincoatTheme(fixed)
-                .environment(\.colorScheme, scheme)
-                .environment(\.layoutDirection, snapshot.layoutDirection)
-                .environment(\.locale, Locale(identifier: snapshot.locale))
-                // Text is set as on a device whose language is the snapshot's, so that line
-                // height, line breaks, and spacing follow its script.
-                .typesettingLanguage(Locale.Language(identifier: snapshot.locale))
-                .dynamicTypeSize(snapshot.textSize.dynamicTypeSize)
+        let canvas = theme.tokens(mode: mode, density: .comfortable).color.bg.canvas
+        let scheme: ColorScheme = isDark ? .dark : .light
+        let root =
+            specimen
+            .background { TextScaleProbe(reading: reading) }
+            .raincoatTheme(fixed)
+            .environment(\.colorScheme, scheme)
+            .environment(\.layoutDirection, snapshot.layoutDirection)
+            .environment(\.locale, Locale(identifier: snapshot.locale))
+            // Text is set as on a device whose language is the snapshot's, so that line
+            // height, line breaks, and spacing follow its script.
+            .typesettingLanguage(Locale.Language(identifier: snapshot.locale))
+            .dynamicTypeSize(snapshot.textSize.dynamicTypeSize)
+            // A snapshot shows views at rest: nothing animates, so a spinner is drawn where it
+            // starts, in every run.
+            .transaction { transaction in
+                transaction.disablesAnimations = true
+                transaction.animation = nil
+            }
+
+        let controller = UIHostingController(rootView: root)
+        controller.safeAreaRegions = []
+        controller.overrideUserInterfaceStyle = isDark ? .dark : .light
+        controller.traitOverrides.accessibilityContrast = isHighContrast ? .high : .normal
+        controller.traitOverrides.preferredContentSizeCategory = contentSizeCategory(
+            snapshot.textSize.dynamicTypeSize
         )
-        renderer.scale = snapshotScale
-        renderer.proposedSize = ProposedViewSize(width: specimenWidth, height: nil)
-        return try #require(renderer.cgImage, "the specimen could not be drawn")
+        controller.traitOverrides.layoutDirection = snapshot.rightToLeft ? .rightToLeft : .leftToRight
+        controller.view.semanticContentAttribute = snapshot.rightToLeft ? .forceRightToLeft : .forceLeftToRight
+        // Shows below a specimen whose height is not a whole number of points.
+        controller.view.backgroundColor = UIColor(
+            red: canvas.red, green: canvas.green, blue: canvas.blue, alpha: canvas.alpha
+        )
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: specimenWidth, height: specimenWidth))
+        window.rootViewController = controller
+        window.isHidden = false
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+        }
+        let size = controller.sizeThatFits(in: CGSize(width: specimenWidth, height: .greatestFiniteMagnitude))
+        window.frame = CGRect(x: 0, y: 0, width: specimenWidth, height: size.height.rounded(.up))
+        // Let the window finish what views do as they appear, such as scrolling a selected tab
+        // into view.
+        for _ in 0..<3 {
+            window.layoutIfNeeded()
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
+        }
+        window.layoutIfNeeded()
+
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = snapshotScale
+        format.opaque = true
+        format.preferredRange = .standard
+        var drewHierarchy = false
+        let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { context in
+            drewHierarchy = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            if !drewHierarchy {
+                window.layer.render(in: context.cgContext)
+            }
+        }
+        if !drewHierarchy {
+            print("\(theme.id)/\(snapshot.id): drawHierarchy drew nothing; the layer tree was drawn instead.")
+        }
+        return try #require(image.cgImage, "the specimen could not be drawn")
+    }
+
+    /// The UIKit text size of a Dynamic Type size.
+    private func contentSizeCategory(_ size: DynamicTypeSize) -> UIContentSizeCategory {
+        switch size {
+        case .xSmall: return .extraSmall
+        case .small: return .small
+        case .medium: return .medium
+        case .large: return .large
+        case .xLarge: return .extraLarge
+        case .xxLarge: return .extraExtraLarge
+        case .xxxLarge: return .extraExtraExtraLarge
+        case .accessibility1: return .accessibilityMedium
+        case .accessibility2: return .accessibilityLarge
+        case .accessibility3: return .accessibilityExtraLarge
+        case .accessibility4: return .accessibilityExtraExtraLarge
+        case .accessibility5: return .accessibilityExtraExtraExtraLarge
+        @unknown default: return .large
+        }
     }
 
     extension VisualSnapshots {

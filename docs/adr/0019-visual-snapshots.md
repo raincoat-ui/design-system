@@ -3,8 +3,9 @@
 - Status: accepted
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
-- Amended: 2026-11-24, iOS draws its snapshots in a simulator, at a scale of 2, in a job of its
-  own, with its baselines in `packages/ios/__screenshots__`
+- Amended: 2026-11-24, iOS draws its snapshots in a simulator, through a window rather than
+  `ImageRenderer`, at a scale of 2, in a job of its own, with its baselines in
+  `packages/ios/__screenshots__`
 
 ## Context
 
@@ -82,13 +83,22 @@ generated `allSnapshots` and `<component>Examples`:
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.
 
-**Amended 2026-11-24: iOS.** Building the iOS snapshots changed four things above and settled
+**Amended 2026-11-24: iOS.** Building the iOS snapshots changed five things above and settled
 what was left open.
 
 - iOS draws the snapshots in an iPhone simulator, with `xcodebuild test`, not on macOS. On
   macOS the components' scaled metrics ignore the Dynamic Type size: there, `accessibility5`
   drew text at its default size, and the check below failed. The simulator draws with iOS and
   its fonts, as an iPhone does. The tests are compiled for iOS only.
+- iOS draws a specimen through a window, not with `ImageRenderer`. `ImageRenderer` draws only
+  the views SwiftUI draws itself, and leaves out those UIKit provides, such as the text field of
+  an Input and the scroll view of the Tabs. The specimen is shown by a `UIHostingController` in a
+  window of its own, 480 points wide, whose traits are the snapshot's: light or dark, the
+  contrast, the text size, and the layout direction. The window is drawn with
+  `drawHierarchy(in:afterScreenUpdates:)`. Nothing in it animates, so a spinner is drawn where it
+  starts.
+- An alert dialog is left out of the iOS snapshots. On iOS it is the system alert, which the
+  platform draws, not Raincoat.
 - iOS draws at a scale of 2, the smaller of an iPhone's two, so a specimen 480 points wide is 960
   pixels wide and its text can be read as a person sees it.
 - The snapshots run in an `ios snapshots` job of their own, as the web's do, which uploads the

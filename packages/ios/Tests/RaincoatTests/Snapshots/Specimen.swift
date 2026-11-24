@@ -1,7 +1,6 @@
 #if os(iOS)
     import Raincoat
     import SwiftUI
-    import Testing
 
     /// A specimen is this wide, in points, as the web's is in CSS pixels, so that long text wraps
     /// at about the same place on both.
@@ -16,14 +15,14 @@
         let examples: [SpecExample<Properties>]
         /// The locale whose text the examples show.
         let locale: String
-        let draw: (Properties, _ text: (String) -> String) -> Instance
+        let draw: (Properties, _ text: SnapshotText) -> Instance
 
         @Tokens private var tokens
 
         init(
             examples: [SpecExample<Properties>],
             locale: String,
-            draw: @escaping (Properties, _ text: (String) -> String) -> Instance
+            draw: @escaping (Properties, _ text: SnapshotText) -> Instance
         ) {
             self.examples = examples
             self.locale = locale
@@ -34,13 +33,7 @@
             VStack(alignment: .leading, spacing: specimenGap) {
                 ForEach(examples.indices, id: \.self) { index in
                     let example = examples[index]
-                    let text = { (content: String) -> String in
-                        guard let value = example.text[locale]?[content] else {
-                            Issue.record("\(example.id): no \(content) in \(locale)")
-                            return ""
-                        }
-                        return value
-                    }
+                    let text = SnapshotText(example: example.id, locale: locale, values: example.text[locale] ?? [:])
                     WrappingRow(spacing: specimenGap) {
                         ForEach(example.instances.indices, id: \.self) { instance in
                             draw(example.instances[instance], text)
