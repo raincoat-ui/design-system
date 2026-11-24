@@ -23,7 +23,9 @@ const buttonVariants = cva(
     "rounded-(--rc-button-radius) border-(length:--rc-button-border-width) border-solid",
     "cursor-pointer text-center no-underline normal-case",
     // Label. It wraps instead of being cut off, and a word longer than the button breaks.
-    "wrap-break-word whitespace-normal",
+    // Lines break by the strict rules, so that no Japanese line starts with a small kana or a
+    // prolonged sound mark, and Korean, which puts spaces between words, breaks only at them.
+    "wrap-break-word whitespace-normal [line-break:strict] [&:lang(ko)]:break-keep",
     // Icons and the spinner.
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
     // Color changes. With reduced motion they are immediate.
@@ -50,23 +52,69 @@ const buttonVariants = cva(
         danger:
           "border-transparent bg-(--rc-button-danger-bg-default) text-(--rc-button-danger-fg) rc-interactive:hover:bg-(--rc-button-danger-bg-hover) rc-interactive:active:bg-(--rc-button-danger-bg-pressed)",
       } satisfies Record<ButtonVariant, string>,
-      // The block padding centers one line of text in the token height, and keeps the same
-      // space above and below when the label wraps onto more lines.
+      // The label grows with the person's text size, and the icons and the spinner grow with
+      // it: their token size times the text scale, which is 1 at the default size. The text
+      // scale is font.size.16 (1rem, which the setting enlarges) over dimension.16 (16px, which
+      // it does not). tan(atan2(a, b)) is a / b as a number: calc() cannot yet divide one
+      // length by another in every browser. The padding is set in compoundVariants below.
       size: {
-        sm: "min-h-(--rc-button-height-sm) min-w-(--rc-button-height-sm) px-(--rc-button-padding-inline-sm) py-[calc((var(--rc-button-height-sm)_-_1lh)_/_2_-_var(--rc-button-border-width))] font-(family-name:--rc-button-label-sm-font-family) text-(length:--rc-button-label-sm-font-size) leading-(--rc-button-label-sm-line-height) font-(--rc-button-label-sm-font-weight) tracking-(--rc-button-label-sm-letter-spacing) [&_svg]:size-(--rc-button-icon-size-sm)",
-        md: "min-h-(--rc-button-height-md) min-w-(--rc-button-height-md) px-(--rc-button-padding-inline-md) py-[calc((var(--rc-button-height-md)_-_1lh)_/_2_-_var(--rc-button-border-width))] font-(family-name:--rc-button-label-md-font-family) text-(length:--rc-button-label-md-font-size) leading-(--rc-button-label-md-line-height) font-(--rc-button-label-md-font-weight) tracking-(--rc-button-label-md-letter-spacing) [&_svg]:size-(--rc-button-icon-size-md)",
-        lg: "min-h-(--rc-button-height-lg) min-w-(--rc-button-height-lg) px-(--rc-button-padding-inline-lg) py-[calc((var(--rc-button-height-lg)_-_1lh)_/_2_-_var(--rc-button-border-width))] font-(family-name:--rc-button-label-lg-font-family) text-(length:--rc-button-label-lg-font-size) leading-(--rc-button-label-lg-line-height) font-(--rc-button-label-lg-font-weight) tracking-(--rc-button-label-lg-letter-spacing) [&_svg]:size-(--rc-button-icon-size-lg)",
+        sm: "min-h-(--rc-button-height-sm) min-w-(--rc-button-height-sm) font-(family-name:--rc-button-label-sm-font-family) text-(length:--rc-button-label-sm-font-size) leading-(--rc-button-label-sm-line-height) font-(--rc-button-label-sm-font-weight) tracking-(--rc-button-label-sm-letter-spacing) [&_svg]:size-[calc(var(--rc-button-icon-size-sm)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))]",
+        md: "min-h-(--rc-button-height-md) min-w-(--rc-button-height-md) font-(family-name:--rc-button-label-md-font-family) text-(length:--rc-button-label-md-font-size) leading-(--rc-button-label-md-line-height) font-(--rc-button-label-md-font-weight) tracking-(--rc-button-label-md-letter-spacing) [&_svg]:size-[calc(var(--rc-button-icon-size-md)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))]",
+        lg: "min-h-(--rc-button-height-lg) min-w-(--rc-button-height-lg) font-(family-name:--rc-button-label-lg-font-family) text-(length:--rc-button-label-lg-font-size) leading-(--rc-button-label-lg-line-height) font-(--rc-button-label-lg-font-weight) tracking-(--rc-button-label-lg-letter-spacing) [&_svg]:size-[calc(var(--rc-button-icon-size-lg)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))]",
       } satisfies Record<ButtonSize, string>,
       fullWidth: {
         true: "flex w-full",
         false: "inline-flex",
       },
-      // With no side padding, the minimum width makes a button that is only an icon square.
       iconOnly: {
-        true: "px-0",
+        true: "",
         false: "",
       },
     },
+    // The padding is what it is at the default text size, whatever the text size, so that
+    // larger text makes the button grow. Around a label, the block padding centers one line of
+    // text in the token height, and keeps the same space above and below when the label wraps
+    // onto more lines: one line at the default size is one line now, divided by the text
+    // scale. Around an icon alone, the padding centers the icon in the token height on every
+    // side, so the button stays square.
+    compoundVariants: [
+      {
+        iconOnly: false,
+        size: "sm",
+        class:
+          "px-(--rc-button-padding-inline-sm) py-[calc((var(--rc-button-height-sm)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-button-border-width))]",
+      },
+      {
+        iconOnly: false,
+        size: "md",
+        class:
+          "px-(--rc-button-padding-inline-md) py-[calc((var(--rc-button-height-md)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-button-border-width))]",
+      },
+      {
+        iconOnly: false,
+        size: "lg",
+        class:
+          "px-(--rc-button-padding-inline-lg) py-[calc((var(--rc-button-height-lg)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-button-border-width))]",
+      },
+      {
+        iconOnly: true,
+        size: "sm",
+        class:
+          "p-[calc((var(--rc-button-height-sm)_-_var(--rc-button-icon-size-sm))_/_2_-_var(--rc-button-border-width))]",
+      },
+      {
+        iconOnly: true,
+        size: "md",
+        class:
+          "p-[calc((var(--rc-button-height-md)_-_var(--rc-button-icon-size-md))_/_2_-_var(--rc-button-border-width))]",
+      },
+      {
+        iconOnly: true,
+        size: "lg",
+        class:
+          "p-[calc((var(--rc-button-height-lg)_-_var(--rc-button-icon-size-lg))_/_2_-_var(--rc-button-border-width))]",
+      },
+    ],
     defaultVariants: {
       variant: BUTTON_VARIANT_DEFAULT,
       size: BUTTON_SIZE_DEFAULT,
