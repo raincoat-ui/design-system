@@ -4,7 +4,7 @@
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
 - Amended: 2026-11-24, iOS draws its snapshots in a simulator, by drawing a window's layers
-  rather than with `ImageRenderer`, at a scale of 2, in a job of its own, with its baselines in
+  rather than with `ImageRenderer`, in a job of its own, with its baselines in
   `packages/ios/__screenshots__`
 
 ## Context
@@ -83,7 +83,7 @@ generated `allSnapshots` and `<component>Examples`:
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.
 
-**Amended 2026-11-24: iOS.** Building the iOS snapshots changed five things above and settled
+**Amended 2026-11-24: iOS.** Building the iOS snapshots changed three things above and settled
 what was left open.
 
 - iOS draws the snapshots in an iPhone simulator, with `xcodebuild test`, not on macOS. On
@@ -94,7 +94,7 @@ what was left open.
   the views SwiftUI draws itself, and leaves out those UIKit provides, such as the text field of
   an Input and the scroll view of the Tabs. The specimen is shown by a `UIHostingController` in a
   window of its own, 480 points wide, whose traits are the snapshot's: light or dark, the
-  contrast, the text size, the layout direction, and a display scale of 2. The window's layers
+  contrast, the text size, the layout direction, and a display scale of 1. The window's layers
   are drawn (`layer.render(in:)`). Every view is a layer, those UIKit provides included, so the
   layers draw a text field's text and a scroll view's content where it is scrolled to; a test of
   the harness checks both. `drawHierarchy(in:afterScreenUpdates:)`, which draws a window as the
@@ -104,8 +104,10 @@ what was left open.
   a spinner is drawn where it starts.
 - An alert dialog is left out of the iOS snapshots. On iOS it is the system alert, which the
   platform draws, not Raincoat.
-- iOS draws at a scale of 2, the smaller of an iPhone's two, so a specimen 480 points wide is 960
-  pixels wide and its text can be read as a person sees it.
+- iOS draws at a scale of 1, as above: a specimen 480 points wide is 480 pixels wide, as on the
+  web and on Android. A scale of 2 was tried: the 44 baselines of the Button and Typography
+  weighed 11 MB, where the web's 66 weigh 2.9 MB, in a repository everyone clones. A scale of 1
+  shows every change of layout, color, text, and direction, which is what the snapshots are for.
 - The snapshots run in an `ios snapshots` job of their own, as the web's do, which uploads the
   `ios-snapshots` artifact. They run only when `RAINCOAT_SNAPSHOTS` is set, which xcodebuild
   passes to the tests from `TEST_RUNNER_RAINCOAT_SNAPSHOTS`. The simulator reads the baselines
@@ -118,14 +120,13 @@ what was left open.
 - The text is set in the snapshot's language (`typesettingLanguage`), as on a device set to that
   language, so that line height, line breaks, and spacing follow its script.
 - Each snapshot checks that its text size is in effect: SwiftUI and the window are given it, and
-  body text is drawn nearer the system's size for it than the sizes beside it. At the largest
-  size, Raincoat's scaled metrics draw body text 3.0 times as large, where the system's body
-  font is 3.12 times as large (53 points instead of 17); the log shows both.
+  body text is drawn nearer the system's size for it than the sizes beside it. The log shows how
+  far Raincoat's scaled metrics are from the system's body font: drawn at a scale of 2, body text
+  was 3.0 times as large at the largest size, where the system's is 3.12 times as large (53
+  points instead of 17).
 - Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
   fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
   belongs to no theme, component, or snapshot.
-- At a scale of 2 an iOS baseline is larger than a web one: 2.9 MB for the Button's 22, and
-  7.9 MB for Typography's, whose largest-text specimen is 7,015 pixels tall.
 
 **Firefox and WebKit.** The React component tests, not the snapshots, also run in Firefox and
 WebKit, in CI, one job per browser, chosen with `RAINCOAT_BROWSER`. What a test asks of the

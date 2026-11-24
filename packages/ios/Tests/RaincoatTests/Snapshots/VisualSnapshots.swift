@@ -53,8 +53,9 @@
         }()
     }
 
-    /// Pixels per point. An iPhone has two or three; at two a specimen is 960 pixels wide.
-    let snapshotScale: CGFloat = 2
+    /// Pixels per point: one, so a specimen is 480 pixels wide, as on the web and on Android. That
+    /// shows every change of layout, color, text, and direction, at a quarter of the weight of two.
+    let snapshotScale: CGFloat = 1
 
     /// A drawn pixel matches its baseline when each of its channels is within this many steps
     /// (of 255) of the baseline's, about 3%. One pixel that does not match fails the snapshot.
@@ -384,9 +385,9 @@
         @MainActor
         @Test func theWindowDrawsATextFieldsText() throws {
             let drawing = try Bitmap(drawInWindow(UIHostingController(rootView: TextFieldCheck())))
-            // White, but for the field's text, which is black.
+            // White, but for the field's text, which is black: hundreds of pixels at any scale.
             let ink = stride(from: 0, to: drawing.pixels.count, by: 4).filter { drawing.pixels[$0] < 128 }
-            #expect(ink.count > 500, "the text field's text was not drawn")
+            #expect(CGFloat(ink.count) > 100 * snapshotScale * snapshotScale, "the text field's text was not drawn")
         }
 
         /// The window draws a scroll view's content where it is scrolled to as it appears, which
