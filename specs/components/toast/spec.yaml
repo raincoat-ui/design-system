@@ -169,3 +169,6 @@ implementations:
   ios:
     file: packages/ios/Sources/Raincoat/Components/RaincoatToast.swift
     name: [RaincoatToast, raincoatToastHost, showRaincoatToast]
+  android:
+    file: packages/android/ui/src/main/kotlin/io/github/raincoatui/ui/components/RaincoatToastHost.kt
+    name: [RaincoatToastHost, RaincoatToastHostState, RaincoatToast]
