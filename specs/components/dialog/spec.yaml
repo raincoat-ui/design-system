@@ -283,3 +283,11 @@ implementations:
   web:
     file: packages/web/src/components/ui/dialog.tsx
     name: [Dialog, AlertDialog, Sheet]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatDialog.swift
+    name:
+      [
+        ".raincoatDialog(isPresented:)",
+        ".raincoatAlertDialog(_:isPresented:)",
+        ".raincoatSheet(isPresented:)",
+      ]

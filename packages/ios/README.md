@@ -123,6 +123,58 @@ Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and Compose versions follow too.
 
+## Dialogs, alert dialogs, and sheets
+
+```swift
+.raincoatDialog(Text("Rename file"), titleLevel: 2, isPresented: $isRenaming,
+                description: Text("Everyone the file is shared with sees the new name.")) {
+    TextField("Name", text: $name)
+} actions: {
+    RaincoatButton("Cancel") { isRenaming = false }
+    RaincoatButton("Rename", variant: .primary) { rename() }
+}
+
+.raincoatSheet(Text("Filters"), titleLevel: 2, isPresented: $isFiltering, closeLabel: Text("Close")) {
+    FilterList()
+}
+
+.raincoatAlertDialog(Text("Delete this address?"), isPresented: $isConfirming,
+                     message: Text("It is removed from your account."),
+                     actionLabel: Text("Delete address"), destructive: true,
+                     cancelLabel: Text("Cancel")) { delete() }
+```
+
+| Parameter            | Type    | Default  | Notes                                                                        |
+| -------------------- | ------- | -------- | ---------------------------------------------------------------------------- |
+| `titleLevel`         | `Int`   | Required | The title's heading level, 1 to 6. The title is set in `.headingMd`          |
+| `description`        | `Text?` | `nil`    | One sentence under the title                                                 |
+| `closeLabel`         | `Text?` | `nil`    | Shows the close button, with this name. Required when there are no `actions` |
+| `isDismissDisabled`  | `Bool`  | `false`  | Refuses a swipe, as while there are unsaved changes                          |
+| `content`, `actions` | views   |          | The body, and the footer's buttons: Cancel first, the primary action last    |
+
+- **The system sheet.** A dialog and a sheet are the system sheet, which is how iOS presents a
+  modal task: from the bottom on iPhone and centered on iPad. It is as tall as its content, and
+  the theme's fill, title, spaces, and buttons are inside it; its corners, shadow, and dimming
+  are the system's. A sheet shows the system's drag indicator. So the web's sizes and edges do
+  not apply on iOS.
+- **The system alert.** An alert dialog is the system alert, which follows the person's text
+  size, bold text, and contrast settings. The theme does not reach it. Cancel has the cancel
+  role, and the confirming button the destructive role when `destructive` is true.
+- **Closing.** A swipe down, VoiceOver's escape gesture, the close button, and Escape on a
+  hardware keyboard close a dialog or a sheet. With `isDismissDisabled`, ask before your own
+  buttons set `isPresented` to false.
+- **Focus.** VoiceOver starts at the title and returns to where it was on close. To start in a
+  field, focus it with `focused(_:)` when it appears.
+- **Scrolling.** The body scrolls between the header and the footer, with a hairline while
+  content is beneath them. When the screen is too short for three lines of it, as at the
+  largest text sizes, the whole dialog scrolls.
+- **The footer's buttons** sit at the trailing edge and stack, the primary action on top, when
+  they do not fit in a row.
+
+They follow the
+[Dialog spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/dialog/spec.yaml),
+which the React and Compose versions follow too.
+
 ## Working on this package
 
 ```sh

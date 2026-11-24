@@ -197,6 +197,7 @@
         @Tokens private var tokens
         @Environment(\.isEnabled) private var isEnabled
         @Environment(\.accessibilityReduceMotion) private var reduceMotion
+        @Environment(\.raincoatButtonFillsWidth) private var fillsWidth
         @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
         @State private var isHovered = false
 
@@ -220,7 +221,7 @@
                 .padding(.vertical, style.isIconOnly ? measurements.paddingAroundIcon : measurements.paddingBlock)
                 .frame(
                     minWidth: measurements.height,
-                    maxWidth: style.isFullWidth ? .infinity : nil,
+                    maxWidth: style.isFullWidth || fillsWidth ? .infinity : nil,
                     minHeight: measurements.height
                 )
                 .background {
@@ -245,6 +246,13 @@
                     value: interaction
                 )
         }
+    }
+
+    extension EnvironmentValues {
+        /// Whether buttons take the width they are offered, as each button of a dialog's footer
+        /// does when the buttons stack. Their own width is still that of their label, so a row
+        /// of them can be measured.
+        @Entry var raincoatButtonFillsWidth = false
     }
 
     /// The area of a button that takes touches: the container, and where the container is
