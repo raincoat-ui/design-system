@@ -2,6 +2,7 @@ import "./app.css";
 import { type JSX, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ButtonScreen } from "./ButtonScreen";
+import { CardScreen } from "./CardScreen";
 import { TabsScreen } from "./TabsScreen";
 import { ToastScreen } from "./ToastScreen";
 import { TypographyScreen } from "./TypographyScreen";
@@ -12,6 +13,7 @@ if (!root) throw new Error("index.html has no #root element");
 // Each component has a screen at a path of its own. The Button's is the first page.
 const SCREENS: Record<string, () => JSX.Element> = {
   "/typography": TypographyScreen,
+  "/card": CardScreen,
   "/tabs": TabsScreen,
   "/toast": ToastScreen,
 };
