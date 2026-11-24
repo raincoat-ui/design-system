@@ -50,6 +50,8 @@ class InputScreenTest {
 
     private val isTextField = SemanticsMatcher.keyIsDefined(SemanticsProperties.EditableText)
 
+    private val editBox = "android.widget.EditText"
+
     /** The text field whose name (its label) is [name]. */
     private fun field(name: String): SemanticsNodeInteraction = compose.onNode(isTextField and hasText(name))
 
@@ -64,27 +66,46 @@ class InputScreenTest {
         compose.waitForIdle()
     }
 
-    /** Every node an accessibility service, such as TalkBack, is given that is an edit box. */
-    private fun serviceEditBoxes(): List<AccessibilityNodeInfo> {
+    /**
+     * Every node an accessibility service, such as TalkBack, is given that it can stop on.
+     *
+     * Compose gives a service a field as a node that takes focus. Its value is the node's text;
+     * the label and the description are nodes under it, which a screen reader reads with it, as
+     * it reads a button's label (ButtonScreenTest).
+     */
+    private fun serviceItems(): List<AccessibilityNodeInfo> {
         compose.waitForIdle()
         val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
         var found = emptyList<AccessibilityNodeInfo>()
         // The tree is built once a service is listening, which takes a moment.
         repeat(50) {
-            found = automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
-                .filter { it.className == "android.widget.EditText" }
-            if (found.isNotEmpty()) return found
+            found = automation.rootInActiveWindow?.let(::withDescendants).orEmpty().filter { it.isFocusable }
+            if (found.any { it.className == editBox }) return found
             Thread.sleep(100)
         }
         return found
     }
 
     private fun withDescendants(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
-        listOf(node) + (0 until node.childCount).mapNotNull(node::getChild).flatMap(::withDescendants)
+        listOf(node) + children(node).flatMap(::withDescendants)
 
-    /** Everything a service is given that names or describes a node. */
+    private fun children(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
+        (0 until node.childCount).mapNotNull(node::getChild)
+
+    /** Everything a service is given that names or describes a node, and the nodes under it. */
     private fun AccessibilityNodeInfo.words(): String =
-        listOfNotNull(text, hintText, contentDescription, stateDescription).joinToString(" | ")
+        withDescendants(this)
+            .flatMap { listOfNotNull(it.text, it.hintText, it.contentDescription, it.stateDescription) }
+            .joinToString(" | ")
+
+    /** The item a service is given for the field named [name], and what is said about each item. */
+    private fun serviceField(name: String): Pair<AccessibilityNodeInfo?, List<String>> {
+        val items = serviceItems()
+        val said = items.map { "${it.className}: ${it.words()}" }
+        // The last item that says the name: a container that holds the field says it too, and
+        // comes before it.
+        return items.lastOrNull { it.words().split(" | ").contains(name) } to said
+    }
 
     @Test
     fun everyFieldIsNamedByItsLabelAndTheDescriptionFollows() {
@@ -97,22 +118,22 @@ class InputScreenTest {
         )
         // A hidden label is still the name.
         assertEquals(listOf("Search the docs"), texts(field("Search the docs")).take(1))
-        // The service is given an edit box for each field, with its label.
-        val boxes = serviceEditBoxes()
-        assertTrue(
-            "edit boxes: ${boxes.map { it.words() }}",
-            boxes.any { it.words().contains("Full name") },
-        )
+        // The service is given an edit box for each field, with its label and description.
+        val (email, said) = serviceField("Email")
+        assertEquals("items: $said", editBox, email?.className?.toString())
+        assertTrue("items: $said", email?.words().orEmpty().contains("We send the receipt here."))
+        val (name, _) = serviceField("Full name")
+        assertEquals("items: $said", editBox, name?.className?.toString())
     }
 
     @Test
     fun aDisabledFieldIsUnavailableAndAReadOnlyOneIsNot() {
         field("Company").performScrollTo().assertIsNotEnabled()
-        val boxes = serviceEditBoxes()
-        val company = boxes.firstOrNull { it.words().contains("Company") }
-        assertTrue("edit boxes: ${boxes.map { it.words() }}", company != null && !company.isEnabled)
-        val account = boxes.firstOrNull { it.words().contains("Account number") || it.text?.contains("DE89") == true }
-        assertTrue("edit boxes: ${boxes.map { it.words() }}", account != null && account.isEnabled)
+        val (company, said) = serviceField("Company")
+        assertTrue("items: $said", company != null && !company.isEnabled)
+        // A read-only field stays an item a service stops on, and is available.
+        val (account, _) = serviceField("Account number")
+        assertTrue("items: $said", account != null && account.isEnabled && account.isFocusable)
     }
 
     @Test
@@ -124,9 +145,13 @@ class InputScreenTest {
         compose.onNodeWithTag("sent").assertTextEquals("Sent: Nothing yet")
 
         // An accessibility service is given the field's error with it.
-        val boxes = serviceEditBoxes()
-        val invalid = boxes.filter { it.isContentInvalid }
-        assertEquals("edit boxes: ${boxes.map { it.words() }}", listOf(NAME_ERROR, EMAIL_ERROR), invalid.map { it.error?.toString() })
+        val items = serviceItems()
+        val invalid = items.filter { it.isContentInvalid }
+        assertEquals(
+            "items: ${items.map { "${it.className}: ${it.words()}" }}",
+            listOf(NAME_ERROR, EMAIL_ERROR),
+            invalid.map { it.error?.toString() },
+        )
 
         // After that, a field is checked as it changes: its error clears as soon as it is fixed.
         name.performTextInput("Ana Lima")
