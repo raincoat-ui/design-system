@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-e5zlmhtl" data-astro-cid-e5zlmhtl><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>RFC 0008: Toast | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/project/rfcs/0008-toast/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="apple-touch-icon" href="/design-system/apple-touch-icon.png"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.12"/><meta name="generator" content="Starlight v0.43.1"/><meta property="og:title" content="RFC 0008: Toast"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/project/rfcs/0008-toast/"/><meta property="og:locale" content="en"/><meta property="og:description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Raincoat: one design-system foundation, compiled to native code for iOS, Android, and the web."/><meta name="twitter:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><script>
+	(() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+	})();
+</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.DsTppTjK.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body data-astro-cid-e5zlmhtl><a class="sl-skip-link" href="#_top" data-astro-cid-gqf5geeq>Skip to content</a><div class="page sl-flex" data-astro-cid-i2x5ll5c><header class="header" data-astro-cid-i2x5ll5c><div class="header" data-astro-cid-ipx4v6nm><div class="title-wrapper sl-flex" data-astro-cid-ipx4v6nm><a href="/design-system/" class="site-title sl-flex" data-astro-cid-jjlhdxu5><img class="light:sl-hidden print:hidden" alt="Raincoat" src="/design-system/_astro/raincoat-logo-dark.CMmnjvhr.svg" width="291" height="64" data-astro-cid-jjlhdxu5><img class="dark:sl-hidden print:block" alt="Raincoat" src="/design-system/_astro/raincoat-logo-light.DEUigS9Z.svg" width="291" height="64" data-astro-cid-jjlhdxu5><span class="sr-only" translate="no" data-astro-cid-jjlhdxu5>Raincoat</span></a></div><div class="sl-flex print:hidden" data-astro-cid-ipx4v6nm><site-search data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}" data-astro-cid-ip2d5p4j="true"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" data-astro-cid-ip2d5p4j><svg data-astro-cid-ip2d5p4j="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block" aria-hidden="true" data-astro-cid-ip2d5p4j>Search</span><kbd class="sl-hidden md:sl-flex" style="display: none" data-astro-cid-ip2d5p4j><kbd data-astro-cid-ip2d5p4j>Ctrl</kbd><kbd data-astro-cid-ip2d5p4j>K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" data-astro-cid-ip2d5p4j><div class="dialog-frame sl-flex" data-astro-cid-ip2d5p4j><button data-close-modal class="sl-flex md:sl-hidden" data-astro-cid-ip2d5p4j>Cancel</button><div class="search-container" data-astro-cid-ip2d5p4j><div id="starlight__search" data-astro-cid-ip2d5p4j></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group" data-astro-cid-ipx4v6nm><div class="sl-flex social-icons" data-astro-cid-ipx4v6nm><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){document.querySelectorAll(`starlight-theme-select select`).forEach(t=>{t.value=e}),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden" aria-label="Main" data-astro-cid-i2x5ll5c><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden" data-astro-cid-jzmkxtxo><svg class="open-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg class="close-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only" data-astro-cid-jzmkxtxo>Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane" data-astro-cid-i2x5ll5c="true"><div class="sidebar-content sl-flex" data-astro-cid-i2x5ll5c><sl-sidebar-state-persist data-hash="10wmdra" data-astro-cid-ziy3hoto="true"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level" data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Start here</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Overview</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/roadmap/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Roadmap</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Foundations</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/color/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Color</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/contrast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Contrast</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/spacing-and-shape/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Spacing and shape</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/motion/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Motion</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Themes</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Components</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/components/button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Button</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Contributing</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/overview/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>How to contribute</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-token/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add or change a token</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-theme/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add a theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/rfcs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Proposing a change (RFCs)</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Project</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/prior-art/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Prior art</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/licenses/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>License allowlist</span></a></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Proposals (RFCs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0001: Foundation tokens and Button</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0002-base-theme-standards-manual/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0002: A quieter, sharper base theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0003-typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0003: Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0004-input/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0004: Input</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0005-card/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0005: Card</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0006-dialog-and-sheet/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0006: Dialog and Sheet</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0007-tabs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0007: Tabs</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0008-toast/" aria-current="page" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0008: Toast</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Decisions (ADRs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0003. Style Dictionary compiles the tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0004-web-stack/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0005-platform-targets/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0005. Minimum OS and browser targets</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0006-github-hosted-ci/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0006. A public GitHub repository with hosted CI runners</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0007-distribution/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0008-lockstep-versioning/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0008. One version for every package</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0009-license-policy/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0010-themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0010. Themes are overlays, shipped one artifact per theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0011-claude-design-output/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0011. The Claude Design output is optional and isolated</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0012-name/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0012. The name Raincoat</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0013-own-token-emitters/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0013. The token build uses its own emitters, not Style Dictionary</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0014-license-gates-per-ecosystem/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0014. One license gate per ecosystem, all reading one allowlist</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0015-web-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0015. Web components: adapted shadcn/ui source, styled only with tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0016-native-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0016. Native components follow the platform where it knows better</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0017-release-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0017. The release pipeline</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0018-theme-directories-and-theme-packs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0018. A theme is a directory the build reads; theme packs use the published build</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex" data-astro-cid-qahywmkh><div class="social-icons" data-astro-cid-qahywmkh><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame" data-astro-cid-i2x5ll5c><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex" data-astro-cid-unqmq2mu><aside class="right-sidebar-container print:hidden" data-astro-cid-unqmq2mu><div class="right-sidebar" data-astro-cid-unqmq2mu><div class="lg:sl-hidden" data-astro-cid-wbevfekt><mobile-starlight-toc data-min-h="2" data-max-h="3" data-astro-cid-ykpjbajl="true"><nav aria-labelledby="starlight__on-this-page--mobile" data-astro-cid-ykpjbajl><details id="starlight__mobile-toc" data-astro-cid-ykpjbajl><summary id="starlight__on-this-page--mobile" class="sl-flex" data-astro-cid-ykpjbajl><span class="toggle sl-flex" data-astro-cid-ykpjbajl>On this page<svg class="caret astro-dtrqdpou" data-astro-cid-ykpjbajl="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current" data-astro-cid-ykpjbajl></span></summary><div class="dropdown" data-astro-cid-ykpjbajl><ul class="isMobile" style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#behaviour" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Behaviour</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block" data-astro-cid-wbevfekt><div class="sl-container" data-astro-cid-wbevfekt><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#behaviour" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Behaviour</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane" data-astro-cid-unqmq2mu><main data-pagefind-body class="astro-e5zlmhtl" lang="en" dir="ltr" data-astro-cid-e5zlmhtl><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="rc-title"><h1 id="_top">RFC 0008: Toast</h1></div></div></div><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="sl-markdown-content"><ul>
+<li>Status: accepted</li>
+<li>Kind: component</li>
+<li>Proposed: 2026-11-24</li>
+<li>Decided: 2026-11-24</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="summary">Summary</h2><a class="sl-anchor-link" href="#summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Summary”</span></a></div>
+<p>Adds Toast: a short message near the bottom of the screen that says something has happened,
+such as “Message sent”, optionally with one action such as Undo. It does not take focus or
+block the screen. It is for any app that needs to confirm an action without interrupting the
+next one.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="problem">Problem</h2><a class="sl-anchor-link" href="#problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Problem”</span></a></div>
+<p>After an action with no visible result on the screen (archiving an item, copying a link, saving
+in the background), people need to know it worked. Apps build their own toasts and get the same
+things wrong: the message is not announced to a screen reader, it disappears before someone
+using one can reach its Undo, a keyboard user has no way to reach it at all, or it covers the
+on-screen keyboard. Each platform also differs: Android has Material’s snackbar, the web has
+nothing built in, and iOS has nothing for this at all.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="proposal">Proposal</h2><a class="sl-anchor-link" href="#proposal"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Proposal”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="anatomy">Anatomy</h3><a class="sl-anchor-link" href="#anatomy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Anatomy”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container</td>
+<td>Yes</td>
+<td>A raised surface with an ink outline, so it stands apart from any content it covers</td>
+</tr>
+<tr>
+<td>Message</td>
+<td>Yes</td>
+<td>One sentence, in <code dir="auto">type.body.md</code>. It wraps; it is never truncated</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>No</td>
+<td>One Button, <code dir="auto">ghost</code> and <code dir="auto">sm</code>. It moves below the message when it does not fit beside it</td>
+</tr>
+<tr>
+<td>Close button</td>
+<td>When the toast has an action</td>
+<td>An icon-only ghost Button at the end. Its name is given by the app</td>
+</tr>
+</tbody>
+</table>
+<p>There is <strong>one look</strong>: no info, success, warning, or error variants. In the base, color is not a
+status and red is kept for danger. A toast reports something that has already happened; a failure
+people must act on belongs next to the thing that failed or in a dialog, where it stays.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="behaviour">Behaviour</h3><a class="sl-anchor-link" href="#behaviour"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Behaviour”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Placement</td>
+<td>Bottom center, above the on-screen keyboard and any bottom bar the app declares. At most <code dir="auto">size.panel.md</code> wide</td>
+</tr>
+<tr>
+<td>Number</td>
+<td>One at a time. Others wait in a queue, in order</td>
+</tr>
+<tr>
+<td>Without action</td>
+<td>Closes after 6 seconds. The timer pauses while a pointer is over it, while it has focus, and while the app is in the background. On Android, the person’s accessibility timeout setting replaces it when longer</td>
+</tr>
+<tr>
+<td>With action</td>
+<td>Stays until the action is used or the toast is closed</td>
+</tr>
+<tr>
+<td>Focus</td>
+<td>Never moved to the toast</td>
+</tr>
+<tr>
+<td>Announcement</td>
+<td>Politely: after what the screen reader is saying, without interrupting it</td>
+</tr>
+<tr>
+<td>Reaching it</td>
+<td>Web: F8 moves focus to the toast, and back. Touch: it is in the reading order like any other element</td>
+</tr>
+<tr>
+<td>Closing</td>
+<td>The close button, Escape while it has focus, or a swipe on touch screens</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="tokens">Tokens</h3><a class="sl-anchor-link" href="#tokens"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Tokens”</span></a></div>
+<p>No new semantic tokens. The toast uses <code dir="auto">color.bg.raised</code> (RFC 0005), <code dir="auto">shadow.overlay</code> and
+<code dir="auto">size.panel.md</code> (RFC 0006).</p>
+<p>Component tokens, <code dir="auto">tokens/component/toast.tokens.json</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">toast.bg</code></td>
+<td><code dir="auto">color.bg.raised</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.border.width</code>, <code dir="auto">.color</code></td>
+<td><code dir="auto">border-width.thin</code>, <code dir="auto">color.border.strong</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.radius</code></td>
+<td><code dir="auto">radius.lg</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.shadow</code></td>
+<td><code dir="auto">shadow.overlay</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.max-width</code></td>
+<td><code dir="auto">size.panel.md</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.margin</code></td>
+<td><code dir="auto">space.4</code>, from the edges of the window and from what it sits above</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.padding-block</code>, <code dir="auto">.padding-inline</code></td>
+<td><code dir="auto">space.3</code>, <code dir="auto">space.4</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.gap</code></td>
+<td><code dir="auto">space.3</code>, between message, action, and close button</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.message</code></td>
+<td><code dir="auto">type.body.md</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.fg</code></td>
+<td><code dir="auto">color.fg.default</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.enter.duration</code>, <code dir="auto">.easing</code></td>
+<td><code dir="auto">motion.duration.normal</code>, <code dir="auto">motion.easing.interactive</code></td>
+</tr>
+<tr>
+<td><code dir="auto">toast.exit.duration</code>, <code dir="auto">.easing</code></td>
+<td><code dir="auto">motion.duration.fast</code>, <code dir="auto">motion.easing.leave</code></td>
+</tr>
+</tbody>
+</table>
+<p>The outline is <code dir="auto">color.border.strong</code>, not the hairline dialogs use: a toast has no scrim behind
+it, so its edge alone separates it from whatever it covers. In the base that is an ink outline,
+3:1 or more against the toast’s own fill in every mode. The toast slides up a short way as it
+fades in; with reduced motion it only fades.</p>
+<p>Usage rules that will go into the guidelines:</p>
+<ul>
+<li>Say what happened in a short sentence: “Address deleted”, not “Success!”.</li>
+<li>Use a toast only for something people can also see or find elsewhere. A toast is gone in
+seconds and cannot be read again.</li>
+<li>Offer an action only to undo or to go to what was made, and label it with one or two words:
+“Undo”, “View”.</li>
+<li>Do not use a toast for errors that need action, for anything that needs a decision, or for a
+message longer than one sentence.</li>
+<li>Do not show a toast for an action whose result is already visible on the screen.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="prior-art">Prior art</h2><a class="sl-anchor-link" href="#prior-art"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Prior art”</span></a></div>
+<p>Read from each system’s public documentation on 2026-11-24. Material is read from the Jetpack
+Compose documentation and Material Components for Android, because m3.material.io shows nothing
+without JavaScript. Fluent 2 (web) and AWS Cloudscape’s Flashbar, a page-level notification
+rather than a toast, were also read and appear below where they differ.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>IBM Carbon</th>
+<th>Adobe Spectrum</th>
+<th>Google Material</th>
+<th>GitLab Pajamas</th>
+<th>Raincoat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts (anatomy)</td>
+<td>Icon, title, body, close button; an actionable toast adds one button</td>
+<td>Icon, text, at most one button, close button</td>
+<td>Supporting text, optional action, optional close button</td>
+<td>Message, an optional single action that is discouraged, Dismiss button</td>
+<td>Message, optional action, close button when there is an action</td>
+</tr>
+<tr>
+<td>Variants and placement</td>
+<td>Info, success, warning, error; top right, newest on top</td>
+<td>Neutral, informative, positive, negative; bottom center; up to three shown</td>
+<td>No statuses; bottom of the screen; one at a time in Compose, the rest queued</td>
+<td>No statuses; bottom center on small screens, bottom left on large</td>
+<td>No statuses; bottom center; one at a time, queued</td>
+</tr>
+<tr>
+<td>Timing</td>
+<td>Persists by default; optional 5-second dismissal; an actionable toast stays</td>
+<td>Closes only with its button by default; at least 5 seconds when it closes itself; an actionable one never does</td>
+<td>Short, long, or indefinite; “snackbars with an action should not timeout”</td>
+<td>5 seconds by default, 1 second at least; pauses on hover</td>
+<td>6 seconds without an action, pausing on hover, focus, and in the background; with an action, stays</td>
+</tr>
+<tr>
+<td>Keyboard behaviour</td>
+<td>Takes no focus and is not in the Tab order; an actionable toast takes and traps focus; Escape closes</td>
+<td>Tab between button and close; Escape closes; React Spectrum reaches toasts with F6</td>
+<td>Not read</td>
+<td>No shortcut; warns that toasts at the end of the page are hard to reach before they go</td>
+<td>Takes no focus; F8 reaches it on the web; Escape closes it</td>
+</tr>
+<tr>
+<td>Screen-reader role, name, and announcements</td>
+<td><code dir="auto">alert</code>, <code dir="auto">log</code>, or <code dir="auto">status</code>; <code dir="auto">alertdialog</code> when actionable; the information must be available elsewhere</td>
+<td><code dir="auto">alert</code> in Spectrum Web Components; a landmark labelled “Notifications” in React Spectrum</td>
+<td>The text is passed to TalkBack; add a dismiss action to an indefinite one</td>
+<td>No messages that need an action or must survive a refresh</td>
+<td>A polite status announcement; a labelled landmark on the web</td>
+</tr>
+<tr>
+<td>Right-to-left and long-text behaviour</td>
+<td>288px wide, two lines at most; longer text goes elsewhere</td>
+<td>Mirrored; under two lines in English; the button drops below the text first</td>
+<td>A long action can go on its own line</td>
+<td>One sentence; wraps at its maximum width</td>
+<td>Mirrored; wraps; the action drops below the message first</td>
+</tr>
+</tbody>
+</table>
+<p>Where the systems disagree, and which way Raincoat goes:</p>
+<ul>
+<li><strong>Lifetime.</strong> Carbon, Spectrum, and Cloudscape keep toasts until closed; Pajamas (5 seconds),
+Fluent (7 seconds), and Compose’s short duration close them. Raincoat closes a toast without
+an action after 6 seconds, the longer of the two minimums Adobe publishes, because a message
+that only confirms should not need tidying away. A toast with an action stays, as Carbon,
+React Spectrum, and Material keep theirs, so that nobody loses an Undo to a timer.</li>
+<li><strong>Urgency.</strong> Spectrum Web Components uses <code dir="auto">alert</code> for every toast, and Fluent is assertive for
+everything but info. Raincoat is always polite: anything urgent enough to interrupt belongs in
+a dialog.</li>
+<li><strong>Focus.</strong> Carbon traps focus in an actionable toast, which makes it a dialog. Raincoat never
+moves focus, and gives keyboard users a shortcut, as React Spectrum and Fluent do.</li>
+<li><strong>Statuses.</strong> Carbon, Spectrum, Fluent, and Cloudscape color toasts by status; Material and
+Pajamas do not. Raincoat does not, for the reasons above.</li>
+<li><strong>Number.</strong> Material shows one, Spectrum three, Fluent four. Raincoat shows one, so a screen
+reader announces them in order and the newest never hides under another.</li>
+<li><strong>Placement.</strong> Carbon puts toasts top right, Pajamas bottom left on large screens, and
+Spectrum and Material at the bottom center. Raincoat uses the bottom center on every screen,
+which needs no mirroring and is where thumbs and eyes already are on a phone.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="accessibility">Accessibility</h2><a class="sl-anchor-link" href="#accessibility"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accessibility”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>How it is tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The message is announced once, politely, without moving focus</td>
+<td>Web: a <code dir="auto">status</code> live region in the accessibility tree. iOS: an announcement in UI tests. Android: a polite live region</td>
+</tr>
+<tr>
+<td>A toast with an action stays until it is used or closed (WCAG 2.2.1)</td>
+<td>Interaction tests with a fake clock on each platform</td>
+</tr>
+<tr>
+<td>Timers pause on hover, on focus, and in the background, and use Android’s accessibility timeout</td>
+<td>Interaction tests with a fake clock</td>
+</tr>
+<tr>
+<td>Keyboard users can reach the toast and return (web: F8), and close it with Escape</td>
+<td>Playwright keyboard tests</td>
+</tr>
+<tr>
+<td>A toast with an action has a close button with a name</td>
+<td>Each platform’s API requires the name; the role-and-name tests read it</td>
+</tr>
+<tr>
+<td>It never covers the on-screen keyboard, focused content, or the app’s bottom bar</td>
+<td>Reference app tests with the keyboard shown</td>
+</tr>
+<tr>
+<td>Reduced motion: it fades and does not move</td>
+<td>Snapshot and motion test with the reduced-motion setting</td>
+</tr>
+</tbody>
+</table>
+<p>On the web, the toast region is a landmark named by the app (“Notifications” in English), so
+it can be found by landmark navigation too. Its name and the F8 hint are the app’s words: the
+package ships no text.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="internationalization">Internationalization</h2><a class="sl-anchor-link" href="#internationalization"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Internationalization”</span></a></div>
+<ul>
+<li><strong>Right-to-left.</strong> The action and close button sit at the end edge, on the left. The toast is
+centered, so its position does not change.</li>
+<li><strong>Long and expanded text.</strong> The message wraps. When the message and action do not fit on one
+line, the action moves below the message, end-aligned. Snapshots cover the expanded
+pseudo-locale.</li>
+<li><strong>Vietnamese and CJK</strong> snapshots show a toast with an action in each locale.</li>
+<li><strong>Timing and length.</strong> A translated message can be longer and take longer to read. The
+6-second minimum and the pause on hover and focus cover a sentence; a message that needs more
+time is too long for a toast.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="platform-notes">Platform notes</h2><a class="sl-anchor-link" href="#platform-notes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Platform notes”</span></a></div>
+<ul>
+<li><strong>Web.</strong> Radix’s Toast primitive, from the <code dir="auto">radix-ui</code> package the components already use. It
+provides the live region, the F8 shortcut, Escape, swipe on touch, and pausing. shadcn/ui’s
+current registry offers a toast only through the <code dir="auto">sonner</code> library, which would be a new
+dependency, so the component is written on Radix without a shadcn/ui source, and the lock file
+records that. A provider and a <code dir="auto">useToast()</code> hook show toasts from anywhere in the app.</li>
+<li><strong>iOS.</strong> A view modifier puts a toast host on a screen, and an environment action shows toasts.
+The message is posted to VoiceOver as an announcement, so a toast without an action never has
+to be reached to be read.</li>
+<li><strong>Android.</strong> <code dir="auto">RaincoatToastHost</code> with a host state whose <code dir="auto">show</code> suspends until the toast
+closes, as Compose’s snackbar host does, built on Compose Foundation. The timer comes from the
+accessibility manager’s recommended timeout, which follows the person’s “time to take action”
+setting.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="migration">Migration</h2><a class="sl-anchor-link" href="#migration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Migration”</span></a></div>
+<p>None. This is a new component.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="alternatives-considered">Alternatives considered</h2><a class="sl-anchor-link" href="#alternatives-considered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Alternatives considered”</span></a></div>
+<ul>
+<li><strong>Status variants.</strong> Most systems have them. In the base, they would need three new color
+roles in four modes each, and the base’s rule is that red means danger. A toast reports
+something done; when it failed, the message belongs where the failure can be fixed.</li>
+<li><strong>Sonner on the web.</strong> Polished and MIT-licensed, and what shadcn/ui now suggests. It would be
+a new dependency for what Radix’s primitive, already installed, provides.</li>
+<li><strong>Several toasts at once.</strong> Spectrum and Fluent stack them. A stack is harder to follow with a
+screen reader and covers more of a phone’s screen.</li>
+<li><strong>Taking focus for a toast with an action,</strong> as Carbon does. That is a dialog, and it
+interrupts the very task the toast was meant to leave alone.</li>
+</ul>
+</div><footer class="sl-flex" data-astro-cid-g3jxymr7><div class="meta sl-flex" data-astro-cid-g3jxymr7></div><div class="pagination-links print:hidden" dir="ltr" data-astro-cid-6o7xkmda><a href="/design-system/project/rfcs/0007-tabs/" rel="prev" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span data-astro-cid-6o7xkmda>Previous<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0007: Tabs</span></span></a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" rel="next" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span data-astro-cid-6o7xkmda>Next<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>0001. One monorepo with pnpm workspaces and Turborepo</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

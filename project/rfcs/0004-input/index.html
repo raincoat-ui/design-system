@@ -1,0 +1,553 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-e5zlmhtl" data-astro-cid-e5zlmhtl><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>RFC 0004: Input | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/project/rfcs/0004-input/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="apple-touch-icon" href="/design-system/apple-touch-icon.png"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.12"/><meta name="generator" content="Starlight v0.43.1"/><meta property="og:title" content="RFC 0004: Input"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/project/rfcs/0004-input/"/><meta property="og:locale" content="en"/><meta property="og:description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Raincoat: one design-system foundation, compiled to native code for iOS, Android, and the web."/><meta name="twitter:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><script>
+	(() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+	})();
+</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.DsTppTjK.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body data-astro-cid-e5zlmhtl><a class="sl-skip-link" href="#_top" data-astro-cid-gqf5geeq>Skip to content</a><div class="page sl-flex" data-astro-cid-i2x5ll5c><header class="header" data-astro-cid-i2x5ll5c><div class="header" data-astro-cid-ipx4v6nm><div class="title-wrapper sl-flex" data-astro-cid-ipx4v6nm><a href="/design-system/" class="site-title sl-flex" data-astro-cid-jjlhdxu5><img class="light:sl-hidden print:hidden" alt="Raincoat" src="/design-system/_astro/raincoat-logo-dark.CMmnjvhr.svg" width="291" height="64" data-astro-cid-jjlhdxu5><img class="dark:sl-hidden print:block" alt="Raincoat" src="/design-system/_astro/raincoat-logo-light.DEUigS9Z.svg" width="291" height="64" data-astro-cid-jjlhdxu5><span class="sr-only" translate="no" data-astro-cid-jjlhdxu5>Raincoat</span></a></div><div class="sl-flex print:hidden" data-astro-cid-ipx4v6nm><site-search data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}" data-astro-cid-ip2d5p4j="true"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" data-astro-cid-ip2d5p4j><svg data-astro-cid-ip2d5p4j="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block" aria-hidden="true" data-astro-cid-ip2d5p4j>Search</span><kbd class="sl-hidden md:sl-flex" style="display: none" data-astro-cid-ip2d5p4j><kbd data-astro-cid-ip2d5p4j>Ctrl</kbd><kbd data-astro-cid-ip2d5p4j>K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" data-astro-cid-ip2d5p4j><div class="dialog-frame sl-flex" data-astro-cid-ip2d5p4j><button data-close-modal class="sl-flex md:sl-hidden" data-astro-cid-ip2d5p4j>Cancel</button><div class="search-container" data-astro-cid-ip2d5p4j><div id="starlight__search" data-astro-cid-ip2d5p4j></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group" data-astro-cid-ipx4v6nm><div class="sl-flex social-icons" data-astro-cid-ipx4v6nm><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){document.querySelectorAll(`starlight-theme-select select`).forEach(t=>{t.value=e}),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden" aria-label="Main" data-astro-cid-i2x5ll5c><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden" data-astro-cid-jzmkxtxo><svg class="open-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg class="close-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only" data-astro-cid-jzmkxtxo>Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane" data-astro-cid-i2x5ll5c="true"><div class="sidebar-content sl-flex" data-astro-cid-i2x5ll5c><sl-sidebar-state-persist data-hash="10wmdra" data-astro-cid-ziy3hoto="true"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level" data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Start here</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Overview</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/roadmap/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Roadmap</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Foundations</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/color/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Color</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/contrast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Contrast</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/spacing-and-shape/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Spacing and shape</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/motion/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Motion</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Themes</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Components</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/components/button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Button</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Contributing</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/overview/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>How to contribute</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-token/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add or change a token</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-theme/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add a theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/rfcs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Proposing a change (RFCs)</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Project</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/prior-art/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Prior art</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/licenses/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>License allowlist</span></a></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Proposals (RFCs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0001: Foundation tokens and Button</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0002-base-theme-standards-manual/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0002: A quieter, sharper base theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0003-typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0003: Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0004-input/" aria-current="page" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0004: Input</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0005-card/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0005: Card</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0006-dialog-and-sheet/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0006: Dialog and Sheet</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0007-tabs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0007: Tabs</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0008-toast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0008: Toast</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Decisions (ADRs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0003. Style Dictionary compiles the tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0004-web-stack/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0005-platform-targets/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0005. Minimum OS and browser targets</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0006-github-hosted-ci/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0006. A public GitHub repository with hosted CI runners</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0007-distribution/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0008-lockstep-versioning/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0008. One version for every package</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0009-license-policy/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0010-themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0010. Themes are overlays, shipped one artifact per theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0011-claude-design-output/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0011. The Claude Design output is optional and isolated</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0012-name/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0012. The name Raincoat</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0013-own-token-emitters/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0013. The token build uses its own emitters, not Style Dictionary</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0014-license-gates-per-ecosystem/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0014. One license gate per ecosystem, all reading one allowlist</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0015-web-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0015. Web components: adapted shadcn/ui source, styled only with tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0016-native-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0016. Native components follow the platform where it knows better</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0017-release-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0017. The release pipeline</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0018-theme-directories-and-theme-packs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0018. A theme is a directory the build reads; theme packs use the published build</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex" data-astro-cid-qahywmkh><div class="social-icons" data-astro-cid-qahywmkh><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame" data-astro-cid-i2x5ll5c><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex" data-astro-cid-unqmq2mu><aside class="right-sidebar-container print:hidden" data-astro-cid-unqmq2mu><div class="right-sidebar" data-astro-cid-unqmq2mu><div class="lg:sl-hidden" data-astro-cid-wbevfekt><mobile-starlight-toc data-min-h="2" data-max-h="3" data-astro-cid-ykpjbajl="true"><nav aria-labelledby="starlight__on-this-page--mobile" data-astro-cid-ykpjbajl><details id="starlight__mobile-toc" data-astro-cid-ykpjbajl><summary id="starlight__on-this-page--mobile" class="sl-flex" data-astro-cid-ykpjbajl><span class="toggle sl-flex" data-astro-cid-ykpjbajl>On this page<svg class="caret astro-dtrqdpou" data-astro-cid-ykpjbajl="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current" data-astro-cid-ykpjbajl></span></summary><div class="dropdown" data-astro-cid-ykpjbajl><ul class="isMobile" style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#properties" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Properties</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#states" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>States</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block" data-astro-cid-wbevfekt><div class="sl-container" data-astro-cid-wbevfekt><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#properties" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Properties</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#states" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>States</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane" data-astro-cid-unqmq2mu><main data-pagefind-body class="astro-e5zlmhtl" lang="en" dir="ltr" data-astro-cid-e5zlmhtl><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="rc-title"><h1 id="_top">RFC 0004: Input</h1></div></div></div><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="sl-markdown-content"><ul>
+<li>Status: accepted</li>
+<li>Kind: component</li>
+<li>Proposed: 2026-11-24</li>
+<li>Decided: 2026-11-24</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="summary">Summary</h2><a class="sl-anchor-link" href="#summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Summary”</span></a></div>
+<p>Adds Input: a text field with its label, an optional description, and an error message, in one
+line or several. It adds two color roles, for the outline of a control that takes input and for
+the outline of a control in error. It is for every app that asks people to type, from a sign-in
+screen to a feedback form.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="problem">Problem</h2><a class="sl-anchor-link" href="#problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Problem”</span></a></div>
+<p>An app that needs a text field today builds its own. Each one decides where the label goes, how
+an error is shown and announced, and what color the outline is. The token source has nothing for
+that outline: <code dir="auto">color.border.default</code> is a hairline exempt from contrast, which is right for a
+divider and wrong for a field, whose edge must reach 3:1 so that people can find it. The error
+state has no outline color either. Typing also has localization traps a field must handle once
+for every app: Vietnamese and CJK input methods compose characters before committing them, and
+email addresses stay left-to-right inside a right-to-left screen.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="proposal">Proposal</h2><a class="sl-anchor-link" href="#proposal"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Proposal”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="anatomy">Anatomy</h3><a class="sl-anchor-link" href="#anatomy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Anatomy”</span></a></div>
+<p>From top to bottom, all aligned to the start edge:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Label</td>
+<td>Yes</td>
+<td>Above the field, never inside it. It can be visually hidden when the purpose is plain, as in a search bar; it is still the name</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>No</td>
+<td>Between the label and the field, so it is read before typing and stays visible above an on-screen keyboard</td>
+</tr>
+<tr>
+<td>Field</td>
+<td>Yes</td>
+<td>The box that takes text. An optional decorative leading icon</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>When <code dir="auto">invalid</code> is true</td>
+<td>Below the field. It does not replace the description, which often states the rule the error refers to</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="properties">Properties</h3><a class="sl-anchor-link" href="#properties"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Properties”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Values</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">size</code></td>
+<td><code dir="auto">sm</code>, <code dir="auto">md</code> (default), <code dir="auto">lg</code></td>
+<td>The same heights as the Button’s sizes, so a field and a button line up in a row</td>
+</tr>
+<tr>
+<td><code dir="auto">type</code></td>
+<td><code dir="auto">text</code> (default), <code dir="auto">email</code>, <code dir="auto">password</code>, <code dir="auto">search</code>, <code dir="auto">tel</code>, <code dir="auto">url</code></td>
+<td>Chooses the keyboard on touch platforms and what autofill offers</td>
+</tr>
+<tr>
+<td><code dir="auto">multiline</code></td>
+<td>Boolean</td>
+<td>Several lines. Starts <code dir="auto">rows</code> lines tall (default 3) and grows with its content</td>
+</tr>
+<tr>
+<td><code dir="auto">required</code></td>
+<td>Boolean</td>
+<td>Sets the required state for assistive technology. The visible marking is the app’s text</td>
+</tr>
+<tr>
+<td><code dir="auto">invalid</code></td>
+<td>Boolean, with an <code dir="auto">error</code> message</td>
+<td>An invalid field must have a message</td>
+</tr>
+<tr>
+<td><code dir="auto">disabled</code></td>
+<td>Boolean</td>
+<td>Not focusable. Prefer <code dir="auto">read-only</code> when the value still matters</td>
+</tr>
+<tr>
+<td><code dir="auto">read-only</code></td>
+<td>Boolean</td>
+<td>Focusable and selectable, not editable</td>
+</tr>
+<tr>
+<td><code dir="auto">placeholder</code></td>
+<td>Text</td>
+<td>Only an example of the format, such as “<a href="mailto:name@example.com">name@example.com</a>”. Never instructions or the label</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="states">States</h3><a class="sl-anchor-link" href="#states"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “States”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Appearance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rest</td>
+<td>Control fill, 1px outline in <code dir="auto">color.border.control</code></td>
+</tr>
+<tr>
+<td>Hover</td>
+<td>No change. The text cursor is the cue</td>
+</tr>
+<tr>
+<td>Focus</td>
+<td>The focus ring, 2px and offset 2px, as on the Button: on the web and Android whenever the field has focus, since it has focus only to be typed in; on iOS, the system’s indicator and the caret</td>
+</tr>
+<tr>
+<td>Invalid</td>
+<td>Outline in <code dir="auto">color.border.danger</code>, and the error message below. The message is the cue that does not depend on color</td>
+</tr>
+<tr>
+<td>Disabled</td>
+<td>Disabled fill, outline, and text, as on the Button</td>
+</tr>
+<tr>
+<td>Read-only</td>
+<td>Subtle fill and a hairline outline, so it reads as a value rather than a place to type</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="tokens">Tokens</h3><a class="sl-anchor-link" href="#tokens"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Tokens”</span></a></div>
+<p>New semantic tokens, overridable by themes, with the contrast they must meet against
+<code dir="auto">color.bg.canvas</code>, <code dir="auto">color.bg.surface</code>, and <code dir="auto">color.bg.subtle</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Holds</th>
+<th>Light</th>
+<th>Dark</th>
+<th>Light HC</th>
+<th>Dark HC</th>
+<th>Contrast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.border.control</code></td>
+<td>The outline of a control that takes input: text fields now; checkboxes, radios, and selects in 1.x</td>
+<td><code dir="auto">neutral.900</code></td>
+<td><code dir="auto">neutral.100</code></td>
+<td><code dir="auto">neutral.900</code></td>
+<td><code dir="auto">neutral.100</code></td>
+<td>3:1 (graphic)</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.danger</code></td>
+<td>The outline of a control in error</td>
+<td><code dir="auto">red.600</code></td>
+<td><code dir="auto">red.400</code></td>
+<td><code dir="auto">red.800</code></td>
+<td><code dir="auto">red.300</code></td>
+<td>3:1 (graphic)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>The base draws fields in ink,</strong> the same value as <code dir="auto">color.border.strong</code>, so a field and a
+secondary button side by side have the same edge. RFC 0002 moved the secondary button’s
+outline from grey to ink because a grey outline read as disabled; a field has the same
+problem. A separate role lets a theme soften field outlines without touching every ink rule.</li>
+<li><strong>The lowest ratios</strong> in the base are 12.28:1 for the control outline (<code dir="auto">neutral.100</code> on
+<code dir="auto">neutral.800</code> in dark mode) and 4.88:1 for the danger outline (<code dir="auto">red.600</code> on <code dir="auto">neutral.100</code>). In dark mode, <code dir="auto">red.600</code> would fall to 2.52:1 on
+the subtle background, so the outline uses <code dir="auto">red.400</code> (4.95:1 there).</li>
+<li><code dir="auto">color.fg.muted</code> adds <code dir="auto">color.control.default</code> to the backgrounds it declares, because the
+placeholder is drawn there.</li>
+<li><strong>Red for errors.</strong> The base’s rule that red means danger (DESIGN.md) grows to cover a field in
+error, the one other place red appears. Carbon draws a field in error with a red border too, and
+the red ramp is already closed to themes.</li>
+</ul>
+<p>Component tokens, <code dir="auto">tokens/component/input.tokens.json</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">input.radius</code></td>
+<td><code dir="auto">radius.md</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.border-width</code></td>
+<td><code dir="auto">border-width.thin</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.height.sm</code>, <code dir="auto">.md</code>, <code dir="auto">.lg</code></td>
+<td><code dir="auto">size.control.sm</code>, <code dir="auto">.md</code>, <code dir="auto">.lg</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.padding-inline.sm</code>, <code dir="auto">.md</code>, <code dir="auto">.lg</code></td>
+<td><code dir="auto">space.2</code>, <code dir="auto">space.3</code>, <code dir="auto">space.4</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.gap</code></td>
+<td><code dir="auto">space.2</code>, between label, description, field, and error</td>
+</tr>
+<tr>
+<td><code dir="auto">input.icon-size.sm</code>, <code dir="auto">.md</code>, <code dir="auto">.lg</code></td>
+<td><code dir="auto">size.icon.sm</code>, <code dir="auto">size.icon.md</code>, <code dir="auto">size.icon.md</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.label.sm</code>, <code dir="auto">.md</code>, <code dir="auto">.lg</code></td>
+<td><code dir="auto">type.label.sm</code>, <code dir="auto">type.label.sm</code>, <code dir="auto">type.label.md</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.value.sm</code>, <code dir="auto">.md</code>, <code dir="auto">.lg</code></td>
+<td><code dir="auto">type.body.sm</code>, <code dir="auto">type.body.md</code>, <code dir="auto">type.body.lg</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.description</code>, <code dir="auto">input.error</code></td>
+<td><code dir="auto">type.body.sm</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.bg.default</code></td>
+<td><code dir="auto">color.control.default</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.bg.read-only</code></td>
+<td><code dir="auto">color.bg.subtle</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.bg.disabled</code></td>
+<td><code dir="auto">color.bg.disabled</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.fg</code>, <code dir="auto">input.label.fg</code></td>
+<td><code dir="auto">color.fg.default</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.placeholder</code>, <code dir="auto">input.description.fg</code></td>
+<td><code dir="auto">color.fg.muted</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.error.fg</code></td>
+<td><code dir="auto">color.fg.danger</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.fg.disabled</code></td>
+<td><code dir="auto">color.fg.disabled</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.default</code></td>
+<td><code dir="auto">color.border.control</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.invalid</code></td>
+<td><code dir="auto">color.border.danger</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.read-only</code></td>
+<td><code dir="auto">color.border.default</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.disabled</code></td>
+<td><code dir="auto">color.border.disabled</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.focus-ring.width</code>, <code dir="auto">.offset</code>, <code dir="auto">.color</code></td>
+<td><code dir="auto">border-width.focus</code>, <code dir="auto">border-width.thick</code>, <code dir="auto">color.border.focus</code></td>
+</tr>
+<tr>
+<td><code dir="auto">input.target-minimum</code></td>
+<td><code dir="auto">size.target.minimum</code></td>
+</tr>
+</tbody>
+</table>
+<p>Usage rules that will go into the guidelines:</p>
+<ul>
+<li>Mark the fields that are optional, in the label: “Phone (optional)”. Most fields in a form are
+required, so marking the few that are not says less.</li>
+<li>Check a field when the form is submitted, and move focus to the first field in error. After
+that, check a field as it changes, so its error clears as soon as it is fixed. Do not show an
+error while someone is typing into a field for the first time.</li>
+<li>Say what to do, not what went wrong: “Enter an email address, like <a href="mailto:name@example.com">name@example.com</a>”, not
+“Invalid input”.</li>
+<li>On the web, use <code dir="auto">md</code> or <code dir="auto">lg</code> on touch layouts: Safari on iPhone zooms into a field whose text
+is smaller than 16px when it takes focus, and <code dir="auto">sm</code> uses 14px text.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="prior-art">Prior art</h2><a class="sl-anchor-link" href="#prior-art"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Prior art”</span></a></div>
+<p>Read from each system’s public documentation on 2026-11-24. Material is read from the Jetpack
+Compose documentation, because m3.material.io shows nothing without JavaScript. GitLab Pajamas
+was also read and appears below where it differs.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>IBM Carbon</th>
+<th>Adobe Spectrum</th>
+<th>Google Material</th>
+<th>AWS Cloudscape</th>
+<th>Raincoat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts (anatomy)</td>
+<td>Label above; helper text below, replaced by an error; placeholder off by default; a password view icon</td>
+<td>Label on top or at the side; help text below, replaced by an error; a character count</td>
+<td>Label inside, in the outline, or above; icons, prefix and suffix; supporting text below</td>
+<td>Label above; description under the label; constraint and error text below</td>
+<td>Label above; description under the label; error below the field, beside the description</td>
+</tr>
+<tr>
+<td>Variants and sizes</td>
+<td>Default and fluid; heights 24, 32, 40, and 48px; text area separate</td>
+<td>Sizes S to XL; text area separate and grows with content</td>
+<td>Filled and outlined; one component for one line or several</td>
+<td>66% or full width</td>
+<td>Three sizes matching the Button; one component for one line or several, growing with content</td>
+</tr>
+<tr>
+<td>States</td>
+<td>Focus is a 2px border; error a 2px red border, icon, and message; warning; no hover; field edge 3:1</td>
+<td>Hover, focus, keyboard focus, disabled, error; no warning; state visuals 3:1</td>
+<td>Read-only stays focusable; disabled is hidden from accessibility services</td>
+<td>Disabled (not focusable), read-only (focusable), invalid, warning</td>
+<td>Focus ring, invalid outline and message, disabled, read-only; no warning; no hover</td>
+</tr>
+<tr>
+<td>Keyboard behaviour</td>
+<td>Tab selects existing text; Enter or Space operates the password toggle</td>
+<td>Tab selects text; Enter submits the form, depending on context</td>
+<td>The input method’s Next and Done keys move focus and close the keyboard</td>
+<td>General guidance only</td>
+<td>Platform behaviour; Enter submits a one-line field, never while an input method is composing</td>
+</tr>
+<tr>
+<td>Screen-reader role, name, and announcements</td>
+<td>Label by <code dir="auto">for</code>; helper by <code dir="auto">aria-describedby</code>; validate as people type or on submit</td>
+<td>Accessible name required; <code dir="auto">aria-describedby</code> and <code dir="auto">aria-errormessage</code>; native errors on blur or submit</td>
+<td>The error is announced to accessibility services</td>
+<td>Description linked automatically; validate on blur and on submit; focus the first error</td>
+<td>Label is the name; description and error are linked; invalid state set; validate on submit</td>
+</tr>
+<tr>
+<td>Right-to-left and long-text behaviour</td>
+<td>A long value scrolls sideways</td>
+<td>Layout mirrors; labels wrap; field text truncates</td>
+<td>One line scrolls; several lines wrap, then scroll</td>
+<td>Leave room for translated text</td>
+<td>Mirrors; email, phone, and web address fields stay left-to-right; labels and messages wrap; a long value scrolls</td>
+</tr>
+</tbody>
+</table>
+<p>Where the systems disagree, and which way Raincoat goes:</p>
+<ul>
+<li><strong>Label position.</strong> Material puts the label inside the field by default, where it shrinks
+when the field has a value. Carbon, Cloudscape, and Pajamas put it above. Raincoat puts it
+above: a label that shrinks to fit a field clips stacked Vietnamese diacritics and long
+translations, and a label above wraps instead.</li>
+<li><strong>Description position.</strong> Carbon, Spectrum, and Material put help text below the field;
+Cloudscape puts the description under the label. Raincoat follows Cloudscape, so the
+description is read before the field in both visual and screen-reader order.</li>
+<li><strong>Help text and error together.</strong> Carbon and Spectrum replace the help text with the error;
+Pajamas shows both. Raincoat shows both, because the help often states the rule the error is
+about.</li>
+<li><strong>Required or optional.</strong> Carbon and Spectrum mark whichever is the minority; Cloudscape and
+Pajamas mark only optional fields. Raincoat marks optional fields, so the rule does not change
+from form to form.</li>
+<li><strong>Placeholder.</strong> Spectrum says not to use it for instructions; Cloudscape and Pajamas allow a
+brief example. Raincoat allows an example of the format only.</li>
+<li><strong>Validation timing.</strong> Compose validates as people type, Cloudscape on blur, and Carbon and
+Pajamas allow either. Raincoat validates on submit, then as the field changes, so nobody is
+told they are wrong before they have finished.</li>
+<li><strong>Warning state.</strong> Only Carbon and Cloudscape have one. Raincoat has no warning color, and a
+warning about a value a person may keep belongs in the description.</li>
+<li><strong>Long values.</strong> Spectrum truncates; Carbon and Compose scroll. Raincoat scrolls: a person
+needs to see what they typed.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="accessibility">Accessibility</h2><a class="sl-anchor-link" href="#accessibility"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accessibility”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>How it is tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name from the visible label, even when the label is hidden</td>
+<td>Web: Testing Library queries by label, and axe. iOS: UI test reads the label. Android: semantics test</td>
+</tr>
+<tr>
+<td>Description and error reach assistive technology with the field</td>
+<td>Web: <code dir="auto">aria-describedby</code> names both, in that order. iOS and Android: see below</td>
+</tr>
+<tr>
+<td>The invalid state is exposed</td>
+<td>Web: <code dir="auto">aria-invalid</code>. Android: error semantics. iOS: see below</td>
+</tr>
+<tr>
+<td>Required state is exposed where the platform has one</td>
+<td>Web: <code dir="auto">required</code>. iOS and Android have none; the label marks optional fields for everyone</td>
+</tr>
+<tr>
+<td>The field’s edge is 3:1 against its background; the error outline too</td>
+<td>Token contrast check</td>
+</tr>
+<tr>
+<td>Focus ring at 3:1 on the web and Android</td>
+<td>Token contrast check; focus snapshots</td>
+</tr>
+<tr>
+<td>The touch area is at least 44pt, 48dp, or 44px, whatever the field’s visible height</td>
+<td>Target-size tests on each platform</td>
+</tr>
+<tr>
+<td>Disabled fields leave the Tab order; read-only fields stay in it</td>
+<td>Web: Playwright keyboard tests. iOS and Android: focus tests</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>iOS</strong> has no invalid state, as it has no busy state. The field says it in words: its
+accessibility label is followed by the error message, as the loading Button’s value says “In
+progress”. The reference app checks what VoiceOver is given in English, Vietnamese, and
+Japanese.</li>
+<li><strong>Android</strong> uses Compose’s error semantics, which TalkBack reads with the field.</li>
+<li><strong>The description</strong> is the field’s accessibility hint on iOS, and part of the field’s
+semantics on Android, read after its name.</li>
+<li>Errors are not announced as they appear. Focus moves to the first field in error on submit,
+and the field then reads its label, its state, and its message.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="internationalization">Internationalization</h2><a class="sl-anchor-link" href="#internationalization"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Internationalization”</span></a></div>
+<ul>
+<li><strong>Right-to-left.</strong> Label, description, and error align to the start edge, and the leading icon
+moves to the right. Email, phone, and web address fields stay left-to-right, because their
+content is; Cloudscape says the same of untranslated text, numbers, and email addresses.</li>
+<li><strong>Input methods.</strong> Vietnamese (Telex, VNI) and CJK input methods compose a character before
+committing it. The component never replaces the value, validates, or submits during
+composition, and Enter that commits a composition does not submit the form. The web tests
+dispatch composition events; the native platforms are checked in the manual audit before a
+minor release.</li>
+<li><strong>Long and expanded text.</strong> Label, description, and error wrap and are never truncated. A long
+value scrolls inside a one-line field. Snapshots cover the expanded pseudo-locale.</li>
+<li><strong>Vietnamese and CJK</strong> snapshots show a label, a description, and a value in each locale, with
+line heights of 1.4 for labels and 1.5 for values.</li>
+<li><strong>No character limit in v1.</strong> HTML counts length in UTF-16 code units, so a decomposed
+Vietnamese word counts as more characters than it shows. A limit that counts what people see
+can come in 1.x.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="platform-notes">Platform notes</h2><a class="sl-anchor-link" href="#platform-notes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Platform notes”</span></a></div>
+<ul>
+<li><strong>Web.</strong> shadcn/ui’s <code dir="auto">input</code>, <code dir="auto">textarea</code>, and <code dir="auto">label</code> sources, adapted as the Button was. A
+native <code dir="auto">&lt;input&gt;</code> or <code dir="auto">&lt;textarea&gt;</code>, so autofill, spelling, and password managers work. Where the
+browser cannot size a field to its content, the person can resize a multi-line field
+vertically.</li>
+<li><strong>iOS.</strong> SwiftUI’s <code dir="auto">TextField</code> (with <code dir="auto">axis: .vertical</code> for several lines) and <code dir="auto">SecureField</code>,
+styled through a <code dir="auto">TextFieldStyle</code> so any <code dir="auto">TextField</code> an app writes can take the look. <code dir="auto">type</code>
+sets the keyboard and text content type.</li>
+<li><strong>Android.</strong> Compose Foundation’s <code dir="auto">BasicTextField</code> with a decoration built from the tokens. No
+Material dependency, as for the Button.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="migration">Migration</h2><a class="sl-anchor-link" href="#migration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Migration”</span></a></div>
+<p>None. This is a new component. <code dir="auto">button.secondary.border</code> stays on <code dir="auto">color.border.strong</code>; moving
+it to <code dir="auto">color.border.control</code> would change what themes have already overridden.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="alternatives-considered">Alternatives considered</h2><a class="sl-anchor-link" href="#alternatives-considered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Alternatives considered”</span></a></div>
+<ul>
+<li><strong>A floating label inside the field.</strong> Saves height, but the shrunken label is too small for
+stacked Vietnamese diacritics and is hard to read in long translations.</li>
+<li><strong>A grey outline at 3:1</strong> (<code dir="auto">neutral.500</code> passes, at 4.30:1 on white). Lighter in a long form,
+but it reads as disabled beside the ink outline of a secondary button, which is why RFC 0002
+moved that outline to ink. A theme can choose it through <code dir="auto">color.border.control</code>.</li>
+<li><strong>A 2px outline for errors,</strong> as Carbon draws. A thicker edge is a second cue beside color, but
+it shifts the text by a pixel; the message is the cue that does not depend on color.</li>
+<li><strong>Password reveal, clear button, prefix and suffix, and a character count.</strong> Each needs an icon
+set or translated words the system does not have yet. They can come in 1.x with a trailing slot
+for actions.</li>
+<li><strong>Separate Input and Textarea components.</strong> Carbon and Spectrum split them. One component with
+<code dir="auto">multiline</code> keeps label, description, and error identical, as Compose does.</li>
+</ul>
+</div><footer class="sl-flex" data-astro-cid-g3jxymr7><div class="meta sl-flex" data-astro-cid-g3jxymr7></div><div class="pagination-links print:hidden" dir="ltr" data-astro-cid-6o7xkmda><a href="/design-system/project/rfcs/0003-typography/" rel="prev" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span data-astro-cid-6o7xkmda>Previous<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0003: Typography</span></span></a><a href="/design-system/project/rfcs/0005-card/" rel="next" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span data-astro-cid-6o7xkmda>Next<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0005: Card</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

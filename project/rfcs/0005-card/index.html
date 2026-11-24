@@ -1,0 +1,410 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-e5zlmhtl" data-astro-cid-e5zlmhtl><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>RFC 0005: Card | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/project/rfcs/0005-card/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="apple-touch-icon" href="/design-system/apple-touch-icon.png"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.12"/><meta name="generator" content="Starlight v0.43.1"/><meta property="og:title" content="RFC 0005: Card"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/project/rfcs/0005-card/"/><meta property="og:locale" content="en"/><meta property="og:description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Raincoat: one design-system foundation, compiled to native code for iOS, Android, and the web."/><meta name="twitter:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><script>
+	(() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+	})();
+</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.DsTppTjK.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body data-astro-cid-e5zlmhtl><a class="sl-skip-link" href="#_top" data-astro-cid-gqf5geeq>Skip to content</a><div class="page sl-flex" data-astro-cid-i2x5ll5c><header class="header" data-astro-cid-i2x5ll5c><div class="header" data-astro-cid-ipx4v6nm><div class="title-wrapper sl-flex" data-astro-cid-ipx4v6nm><a href="/design-system/" class="site-title sl-flex" data-astro-cid-jjlhdxu5><img class="light:sl-hidden print:hidden" alt="Raincoat" src="/design-system/_astro/raincoat-logo-dark.CMmnjvhr.svg" width="291" height="64" data-astro-cid-jjlhdxu5><img class="dark:sl-hidden print:block" alt="Raincoat" src="/design-system/_astro/raincoat-logo-light.DEUigS9Z.svg" width="291" height="64" data-astro-cid-jjlhdxu5><span class="sr-only" translate="no" data-astro-cid-jjlhdxu5>Raincoat</span></a></div><div class="sl-flex print:hidden" data-astro-cid-ipx4v6nm><site-search data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}" data-astro-cid-ip2d5p4j="true"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" data-astro-cid-ip2d5p4j><svg data-astro-cid-ip2d5p4j="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block" aria-hidden="true" data-astro-cid-ip2d5p4j>Search</span><kbd class="sl-hidden md:sl-flex" style="display: none" data-astro-cid-ip2d5p4j><kbd data-astro-cid-ip2d5p4j>Ctrl</kbd><kbd data-astro-cid-ip2d5p4j>K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" data-astro-cid-ip2d5p4j><div class="dialog-frame sl-flex" data-astro-cid-ip2d5p4j><button data-close-modal class="sl-flex md:sl-hidden" data-astro-cid-ip2d5p4j>Cancel</button><div class="search-container" data-astro-cid-ip2d5p4j><div id="starlight__search" data-astro-cid-ip2d5p4j></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group" data-astro-cid-ipx4v6nm><div class="sl-flex social-icons" data-astro-cid-ipx4v6nm><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){document.querySelectorAll(`starlight-theme-select select`).forEach(t=>{t.value=e}),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden" aria-label="Main" data-astro-cid-i2x5ll5c><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden" data-astro-cid-jzmkxtxo><svg class="open-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg class="close-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only" data-astro-cid-jzmkxtxo>Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane" data-astro-cid-i2x5ll5c="true"><div class="sidebar-content sl-flex" data-astro-cid-i2x5ll5c><sl-sidebar-state-persist data-hash="10wmdra" data-astro-cid-ziy3hoto="true"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level" data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Start here</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Overview</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/roadmap/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Roadmap</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Foundations</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/color/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Color</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/contrast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Contrast</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/spacing-and-shape/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Spacing and shape</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/motion/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Motion</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Themes</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Components</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/components/button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Button</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Contributing</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/overview/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>How to contribute</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-token/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add or change a token</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-theme/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add a theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/rfcs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Proposing a change (RFCs)</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Project</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/prior-art/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Prior art</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/licenses/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>License allowlist</span></a></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Proposals (RFCs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0001: Foundation tokens and Button</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0002-base-theme-standards-manual/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0002: A quieter, sharper base theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0003-typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0003: Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0004-input/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0004: Input</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0005-card/" aria-current="page" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0005: Card</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0006-dialog-and-sheet/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0006: Dialog and Sheet</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0007-tabs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0007: Tabs</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0008-toast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0008: Toast</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Decisions (ADRs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0003. Style Dictionary compiles the tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0004-web-stack/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0005-platform-targets/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0005. Minimum OS and browser targets</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0006-github-hosted-ci/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0006. A public GitHub repository with hosted CI runners</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0007-distribution/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0008-lockstep-versioning/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0008. One version for every package</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0009-license-policy/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0010-themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0010. Themes are overlays, shipped one artifact per theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0011-claude-design-output/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0011. The Claude Design output is optional and isolated</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0012-name/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0012. The name Raincoat</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0013-own-token-emitters/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0013. The token build uses its own emitters, not Style Dictionary</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0014-license-gates-per-ecosystem/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0014. One license gate per ecosystem, all reading one allowlist</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0015-web-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0015. Web components: adapted shadcn/ui source, styled only with tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0016-native-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0016. Native components follow the platform where it knows better</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0017-release-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0017. The release pipeline</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0018-theme-directories-and-theme-packs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0018. A theme is a directory the build reads; theme packs use the published build</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex" data-astro-cid-qahywmkh><div class="social-icons" data-astro-cid-qahywmkh><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame" data-astro-cid-i2x5ll5c><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex" data-astro-cid-unqmq2mu><aside class="right-sidebar-container print:hidden" data-astro-cid-unqmq2mu><div class="right-sidebar" data-astro-cid-unqmq2mu><div class="lg:sl-hidden" data-astro-cid-wbevfekt><mobile-starlight-toc data-min-h="2" data-max-h="3" data-astro-cid-ykpjbajl="true"><nav aria-labelledby="starlight__on-this-page--mobile" data-astro-cid-ykpjbajl><details id="starlight__mobile-toc" data-astro-cid-ykpjbajl><summary id="starlight__on-this-page--mobile" class="sl-flex" data-astro-cid-ykpjbajl><span class="toggle sl-flex" data-astro-cid-ykpjbajl>On this page<svg class="caret astro-dtrqdpou" data-astro-cid-ykpjbajl="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current" data-astro-cid-ykpjbajl></span></summary><div class="dropdown" data-astro-cid-ykpjbajl><ul class="isMobile" style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#behaviour" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Behaviour</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block" data-astro-cid-wbevfekt><div class="sl-container" data-astro-cid-wbevfekt><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#anatomy" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Anatomy</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#behaviour" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Behaviour</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#tokens" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Tokens</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane" data-astro-cid-unqmq2mu><main data-pagefind-body class="astro-e5zlmhtl" lang="en" dir="ltr" data-astro-cid-e5zlmhtl><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="rc-title"><h1 id="_top">RFC 0005: Card</h1></div></div></div><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="sl-markdown-content"><ul>
+<li>Status: accepted</li>
+<li>Kind: component</li>
+<li>Proposed: 2026-11-24</li>
+<li>Decided: 2026-11-24</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="summary">Summary</h2><a class="sl-anchor-link" href="#summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Summary”</span></a></div>
+<p>Adds Card: a surface that groups content about one subject, such as an order, a contact, or an
+article, and that can lead somewhere as a whole. It adds a role for surfaces that sit above the
+page and a shadow for them, so that a theme can lift its cards while the base stays flat. It is
+for any app that lists things people choose between.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="problem">Problem</h2><a class="sl-anchor-link" href="#problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Problem”</span></a></div>
+<p>Apps show collections of similar things: orders, products, saved places. Each app draws its own
+box with its own padding, outline, and corners, and each solves the same accessibility problem
+differently: how to make the whole box open the item without hiding the buttons inside it, and
+without a screen reader reading every word of the box as the name of a link.</p>
+<p>There is also no way for a theme to say how raised surfaces look. ADR 0010 lets a theme set
+“shadow style”, but no shadow token exists, so a brand that lifts its cards on a shadow cannot.
+Dialogs, sheets, and toasts (RFCs 0006 and 0008) need the same.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="proposal">Proposal</h2><a class="sl-anchor-link" href="#proposal"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Proposal”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="anatomy">Anatomy</h3><a class="sl-anchor-link" href="#anatomy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Anatomy”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container</td>
+<td>Yes</td>
+<td>The surface. Its outline, fill, and shadow come from the theme</td>
+</tr>
+<tr>
+<td>Media</td>
+<td>No</td>
+<td>An image at the top, edge to edge, its top corners following the card’s. Its text alternative is the app’s</td>
+</tr>
+<tr>
+<td>Title</td>
+<td>Yes</td>
+<td>A Heading (RFC 0003), <code dir="auto">heading-sm</code> by default, at the level the page needs</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>No</td>
+<td>Any content: Text, a list of facts, a status</td>
+</tr>
+<tr>
+<td>Footer</td>
+<td>No</td>
+<td>Actions, as Buttons, at the end of the card</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h3"><h3 id="behaviour">Behaviour</h3><a class="sl-anchor-link" href="#behaviour"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Behaviour”</span></a></div>
+<p>A card is either <strong>static</strong> or <strong>interactive</strong>:</p>
+<ul>
+<li><strong>Static</strong> (the default) is a container. It can hold links and buttons.</li>
+<li><strong>Interactive</strong> leads somewhere or does one thing when any part of it is activated. It is a
+link (it has a destination) or a button (it has an action). <strong>An interactive card holds no
+other controls.</strong> A card that needs several actions is static, and its title can be a link.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>State (interactive only)</th>
+<th>Appearance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rest</td>
+<td>As a static card</td>
+</tr>
+<tr>
+<td>Hover</td>
+<td>The outline steps to <code dir="auto">color.border.strong</code>. Only where there is a pointer</td>
+</tr>
+<tr>
+<td>Focus-visible</td>
+<td>The focus ring around the whole card, offset 2px</td>
+</tr>
+<tr>
+<td>Pressed</td>
+<td>The fill steps to <code dir="auto">color.control.hover</code> and the outline to strong</td>
+</tr>
+</tbody>
+</table>
+<p>There is no disabled or selected card in v1. A selectable card needs the Checkbox (1.x); a card
+that cannot be opened should not look as if it could.</p>
+<p>No variants and no sizes. One look, set by the theme, keeps every card in an app alike. A card
+fills the width it is given; the grid or list around it is the app’s.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="tokens">Tokens</h3><a class="sl-anchor-link" href="#tokens"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Tokens”</span></a></div>
+<p>New semantic tokens, overridable by themes:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Type</th>
+<th>Holds</th>
+<th>Base value, in every mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">color.bg.raised</code></td>
+<td>color</td>
+<td>Surfaces above the page: cards, dialogs, sheets, toasts</td>
+<td>The same as <code dir="auto">color.bg.canvas</code> (<code dir="auto">neutral.0</code>, <code dir="auto">neutral.950</code>, <code dir="auto">neutral.0</code>, <code dir="auto">neutral.1000</code>)</td>
+</tr>
+<tr>
+<td><code dir="auto">shadow.raised</code></td>
+<td>shadow</td>
+<td>The shadow of a card</td>
+<td><code dir="auto">shadow.none</code>, a new primitive: one transparent layer with no offset, blur, or spread</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>The base stays flat.</strong> Its raised surface is the page’s own paper, separated by a hairline;
+the Standards Manual rule is “ruled, not raised”. A theme that lifts its surfaces sets
+<code dir="auto">color.bg.raised</code> lighter than the canvas in dark mode, as elevation is usually shown there,
+and gives <code dir="auto">shadow.raised</code> a value.</li>
+<li><strong>Contrast.</strong> Every text and graphic role that declares <code dir="auto">color.bg.canvas</code> as a background also
+declares <code dir="auto">color.bg.raised</code>, so a theme’s raised color is checked against all of them.
+<code dir="auto">color.fg.muted</code> also declares <code dir="auto">color.control.hover</code>, the pressed fill.</li>
+<li><strong>Shadows on every platform.</strong> The CSS build already writes shadow tokens. The Swift and Kotlin
+builds gain them: a SwiftUI <code dir="auto">shadow</code> modifier per layer, and Compose’s drop shadow modifier, not
+its elevation, which cannot take a color or offset. A transparent shadow draws nothing.</li>
+</ul>
+<p>Component tokens, <code dir="auto">tokens/component/card.tokens.json</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">card.radius</code></td>
+<td><code dir="auto">radius.lg</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.padding</code></td>
+<td><code dir="auto">space.4</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.gap</code></td>
+<td><code dir="auto">space.3</code>, between the parts</td>
+</tr>
+<tr>
+<td><code dir="auto">card.bg.default</code></td>
+<td><code dir="auto">color.bg.raised</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.bg.pressed</code></td>
+<td><code dir="auto">color.control.hover</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.width</code></td>
+<td><code dir="auto">border-width.thin</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.default</code></td>
+<td><code dir="auto">color.border.default</code>. <strong>Overridable</strong>: a theme that wants filled cards with no outline points it at its fill</td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.hover</code></td>
+<td><code dir="auto">color.border.strong</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.shadow</code></td>
+<td><code dir="auto">shadow.raised</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.focus-ring.width</code>, <code dir="auto">.offset</code>, <code dir="auto">.color</code></td>
+<td><code dir="auto">border-width.focus</code>, <code dir="auto">border-width.thick</code>, <code dir="auto">color.border.focus</code></td>
+</tr>
+<tr>
+<td><code dir="auto">card.transition.duration</code>, <code dir="auto">.easing</code></td>
+<td><code dir="auto">motion.duration.fast</code>, <code dir="auto">motion.easing.interactive</code></td>
+</tr>
+</tbody>
+</table>
+<p><code dir="auto">card.border.default</code> is the first component token on the allowlist ADR 0010 provides for. A
+semantic role for it would be used by cards alone.</p>
+<p>Usage rules that will go into the guidelines:</p>
+<ul>
+<li>Put a collection of cards in a list, so a screen reader says how many there are.</li>
+<li>Give every card a title, even when the media seems to say it all.</li>
+<li>Make a card interactive only when the whole card leads to one place. If it needs a button,
+keep it static and make the title the link.</li>
+<li>Let titles wrap. Shorten a description with <code dir="auto">max-lines</code> (RFC 0003) only when the full text is
+one tap away.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="prior-art">Prior art</h2><a class="sl-anchor-link" href="#prior-art"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Prior art”</span></a></div>
+<p>Read from each system’s public documentation on 2026-11-24. Material and AWS Cloudscape were
+also read and appear below where they differ.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>IBM Carbon (Tile)</th>
+<th>Adobe Spectrum</th>
+<th>Fluent 2 (web)</th>
+<th>GitLab Pajamas</th>
+<th>Raincoat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts (anatomy)</td>
+<td>A container with text; “Carbon does not have a card pattern”</td>
+<td>Container, optional checkbox, preview, title, metadata, footer; typed cards for assets, users, products</td>
+<td>Preview, header, footer; every slot optional</td>
+<td>Container, optional header, body, optional footer</td>
+<td>Container, optional media, title, optional body and footer</td>
+</tr>
+<tr>
+<td>Variants and sizes</td>
+<td>Base, clickable, selectable, expandable; no sizes</td>
+<td>Four variants, five sizes, three densities</td>
+<td>Four appearances, three sizes, horizontal or vertical</td>
+<td>None; needing to change the padding means a card may be the wrong component</td>
+<td>None. One look, set by the theme</td>
+</tr>
+<tr>
+<td>States</td>
+<td>Hover, focus, disabled; selected for selectable tiles</td>
+<td>Disabled, selected, skeleton loading; focus indicator at least 3:1</td>
+<td>Hover and focus hint at selection; selected; disabled</td>
+<td>Loading</td>
+<td>Hover, focus, and pressed on interactive cards</td>
+</tr>
+<tr>
+<td>Keyboard behaviour</td>
+<td>A clickable tile is one Tab stop, activated with Enter, and “cannot contain separate internal CTAs”</td>
+<td>Tab between cards; arrows move inside a card; Enter opens; Space selects</td>
+<td><code dir="auto">focusMode</code> chooses whether focus enters the card; Escape leaves</td>
+<td>Not read</td>
+<td>An interactive card is one Tab stop and holds no other controls</td>
+</tr>
+<tr>
+<td>Screen-reader role, name, and announcements</td>
+<td>Interactive tiles take <code dir="auto">aria-label</code> or <code dir="auto">aria-labelledby</code></td>
+<td>A card with <code dir="auto">href</code> is a link</td>
+<td><code dir="auto">role="group"</code> by default; the title is a heading at the level the context needs</td>
+<td>No landmark meaning; heading level fits the page; collections as lists</td>
+<td>No role of its own; the title is a heading; an interactive card is named by its title alone</td>
+</tr>
+<tr>
+<td>Right-to-left and long-text behaviour</td>
+<td>Not read</td>
+<td>Layout and metadata mirror; titles truncate in fixed-height grids and wrap in others</td>
+<td>Not read</td>
+<td>Not read</td>
+<td>Mirrors; titles wrap; cards grow with their content</td>
+</tr>
+</tbody>
+</table>
+<p>Where the systems disagree, and which way Raincoat goes:</p>
+<ul>
+<li><strong>Controls inside an interactive card.</strong> Carbon forbids them, and Cloudscape says not to make
+a whole card clickable when it holds other controls. Spectrum lets a footer button take the
+click instead, and Fluent manages focus inside the card. Raincoat follows Carbon and Cloudscape:
+one card, one action. Nested controls need a focus model of their own, and the three platforms
+each handle a button inside a button differently.</li>
+<li><strong>Variants.</strong> Material and Fluent offer filled, outlined, and elevated cards; Pajamas offers
+none. Raincoat offers none: a theme decides how every card looks, so cards in one app cannot
+disagree.</li>
+<li><strong>Role.</strong> Fluent gives a card <code dir="auto">role="group"</code>; Pajamas says it has no landmark meaning and puts
+collections in lists. Raincoat gives it no role and asks for a list.</li>
+<li><strong>Interaction feedback.</strong> Material changes elevation on hover and press; Carbon changes layer
+and border colors. Raincoat changes the outline and fill, which shows in a flat theme too.</li>
+<li><strong>Long titles.</strong> Only Spectrum says, and it truncates in fixed-height grids. Raincoat has no
+fixed heights, so titles always wrap.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="accessibility">Accessibility</h2><a class="sl-anchor-link" href="#accessibility"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accessibility”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>How it is tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>An interactive card is a link or a button, named by its title, with the rest read after it</td>
+<td>Web: role and name from the accessibility tree, and axe. iOS: UI test. Android: semantics test</td>
+</tr>
+<tr>
+<td>The title is a heading at the level the app gives</td>
+<td>Each platform’s heading test, as for Typography</td>
+</tr>
+<tr>
+<td>Keyboard: an interactive card is one Tab stop and activates with Enter (and Space for a button)</td>
+<td>Web: Playwright keyboard tests. Android: key events. iOS: Full Keyboard Access UI test</td>
+</tr>
+<tr>
+<td>Focus ring at 3:1 around the whole card</td>
+<td>Token contrast check; focus snapshots</td>
+</tr>
+<tr>
+<td>Text on the pressed fill keeps its contrast</td>
+<td>Token contrast check (<code dir="auto">color.fg.default</code> and <code dir="auto">color.fg.muted</code> on <code dir="auto">color.control.hover</code>)</td>
+</tr>
+<tr>
+<td>Reduced motion: outline and fill changes are immediate</td>
+<td>Snapshot with the reduced-motion setting</td>
+</tr>
+</tbody>
+</table>
+<div class="sl-heading-wrapper level-h2"><h2 id="internationalization">Internationalization</h2><a class="sl-anchor-link" href="#internationalization"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Internationalization”</span></a></div>
+<ul>
+<li><strong>Right-to-left.</strong> Every part aligns to the start edge, and footer actions sit at the end, on
+the left. Media does not flip; it is a picture, not a direction.</li>
+<li><strong>Long and expanded text.</strong> The title and body wrap; the card grows. Snapshots in the expanded
+pseudo-locale check that a card in a grid row grows rather than clips.</li>
+<li><strong>Vietnamese and CJK</strong> snapshots show a card with a two-line title in each locale.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="platform-notes">Platform notes</h2><a class="sl-anchor-link" href="#platform-notes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Platform notes”</span></a></div>
+<ul>
+<li><strong>Web.</strong> shadcn/ui’s <code dir="auto">card</code> source, adapted. An interactive card’s title holds the real link or
+button, and a pseudo-element stretches its target over the card, so the accessible name is the
+title alone and text in the card can still be selected. The card shows the focus ring when its
+link has keyboard focus (<code dir="auto">:has(:focus-visible)</code>), which every supported browser has.</li>
+<li><strong>iOS.</strong> <code dir="auto">RaincoatCard</code>. An interactive card is a <code dir="auto">Button</code> or <code dir="auto">NavigationLink</code> with a card
+style, combining its children for VoiceOver so it is read as one element, title first.</li>
+<li><strong>Android.</strong> <code dir="auto">RaincoatCard</code> on Compose Foundation. An interactive card is <code dir="auto">clickable</code> with the
+button role and merged semantics. Compose has no link role, so a card that navigates is a
+button there, as a navigation row in a list is.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="migration">Migration</h2><a class="sl-anchor-link" href="#migration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Migration”</span></a></div>
+<p>None. This is a new component. The token contrast checker gains one background to check, and
+the base’s values pass it, since <code dir="auto">color.bg.raised</code> equals the canvas.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="alternatives-considered">Alternatives considered</h2><a class="sl-anchor-link" href="#alternatives-considered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Alternatives considered”</span></a></div>
+<ul>
+<li><strong>Filled, outlined, and elevated variants.</strong> More ways for cards in one app to disagree, and
+the theme can already make all of them filled or elevated.</li>
+<li><strong>Letting an interactive card hold buttons.</strong> The behaviour differs on every platform, and a
+screen reader reads the card and the button inside it as one control or as two depending on the
+platform. One action per card is predictable.</li>
+<li><strong>A semantic outline role for raised surfaces.</strong> Only cards need an outline a theme may remove;
+dialogs and sheets keep theirs, separated by a scrim. A component token is the smaller change.</li>
+<li><strong>No shadow tokens until a theme asks.</strong> ADR 0010 already promises themes a shadow style, and
+adding the token later would mean a minor release of every package for every theme.</li>
+</ul>
+</div><footer class="sl-flex" data-astro-cid-g3jxymr7><div class="meta sl-flex" data-astro-cid-g3jxymr7></div><div class="pagination-links print:hidden" dir="ltr" data-astro-cid-6o7xkmda><a href="/design-system/project/rfcs/0004-input/" rel="prev" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span data-astro-cid-6o7xkmda>Previous<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0004: Input</span></span></a><a href="/design-system/project/rfcs/0006-dialog-and-sheet/" rel="next" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span data-astro-cid-6o7xkmda>Next<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0006: Dialog and Sheet</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-e5zlmhtl" data-astro-cid-e5zlmhtl><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>RFC 0003: Typography | Raincoat</title><link rel="canonical" href="https://raincoat-ui.github.io/design-system/project/rfcs/0003-typography/"/><link rel="sitemap" href="/design-system/sitemap-index.xml"/><link rel="apple-touch-icon" href="/design-system/apple-touch-icon.png"/><link rel="shortcut icon" href="/design-system/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.4.12"/><meta name="generator" content="Starlight v0.43.1"/><meta property="og:title" content="RFC 0003: Typography"/><meta property="og:type" content="article"/><meta property="og:url" content="https://raincoat-ui.github.io/design-system/project/rfcs/0003-typography/"/><meta property="og:locale" content="en"/><meta property="og:description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:site_name" content="Raincoat"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="One design-system foundation, compiled to SwiftUI, Jetpack Compose, and React, with a theme per app."/><meta property="og:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Raincoat: one design-system foundation, compiled to native code for iOS, Android, and the web."/><meta name="twitter:image" content="https://raincoat-ui.github.io/design-system/social-preview.png"/><script>
+	(() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+	})();
+</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.DsTppTjK.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body data-astro-cid-e5zlmhtl><a class="sl-skip-link" href="#_top" data-astro-cid-gqf5geeq>Skip to content</a><div class="page sl-flex" data-astro-cid-i2x5ll5c><header class="header" data-astro-cid-i2x5ll5c><div class="header" data-astro-cid-ipx4v6nm><div class="title-wrapper sl-flex" data-astro-cid-ipx4v6nm><a href="/design-system/" class="site-title sl-flex" data-astro-cid-jjlhdxu5><img class="light:sl-hidden print:hidden" alt="Raincoat" src="/design-system/_astro/raincoat-logo-dark.CMmnjvhr.svg" width="291" height="64" data-astro-cid-jjlhdxu5><img class="dark:sl-hidden print:block" alt="Raincoat" src="/design-system/_astro/raincoat-logo-light.DEUigS9Z.svg" width="291" height="64" data-astro-cid-jjlhdxu5><span class="sr-only" translate="no" data-astro-cid-jjlhdxu5>Raincoat</span></a></div><div class="sl-flex print:hidden" data-astro-cid-ipx4v6nm><site-search data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}" data-astro-cid-ip2d5p4j="true"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" data-astro-cid-ip2d5p4j><svg data-astro-cid-ip2d5p4j="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block" aria-hidden="true" data-astro-cid-ip2d5p4j>Search</span><kbd class="sl-hidden md:sl-flex" style="display: none" data-astro-cid-ip2d5p4j><kbd data-astro-cid-ip2d5p4j>Ctrl</kbd><kbd data-astro-cid-ip2d5p4j>K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" data-astro-cid-ip2d5p4j><div class="dialog-frame sl-flex" data-astro-cid-ip2d5p4j><button data-close-modal class="sl-flex md:sl-hidden" data-astro-cid-ip2d5p4j>Cancel</button><div class="search-container" data-astro-cid-ip2d5p4j><div id="starlight__search" data-astro-cid-ip2d5p4j></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/design-system/_astro/Search.astro_astro_type_script_index_0_lang.ChTSgH3B.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group" data-astro-cid-ipx4v6nm><div class="sl-flex social-icons" data-astro-cid-ipx4v6nm><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){document.querySelectorAll(`starlight-theme-select select`).forEach(t=>{t.value=e}),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden" aria-label="Main" data-astro-cid-i2x5ll5c><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden" data-astro-cid-jzmkxtxo><svg class="open-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg class="close-menu astro-dtrqdpou" data-astro-cid-jzmkxtxo="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only" data-astro-cid-jzmkxtxo>Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super();let e=matchMedia(`(min-width: 50em)`),t=()=>{this.popover=e.matches?null:`auto`};t(),e.addEventListener(`change`,()=>t()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane" data-astro-cid-i2x5ll5c="true"><div class="sidebar-content sl-flex" data-astro-cid-i2x5ll5c><sl-sidebar-state-persist data-hash="10wmdra" data-astro-cid-ziy3hoto="true"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level" data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Start here</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Overview</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/roadmap/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Roadmap</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Foundations</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/color/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Color</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/contrast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Contrast</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/typography/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/spacing-and-shape/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Spacing and shape</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/motion/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Motion</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/foundations/themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Themes</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Components</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/components/button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Button</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Contributing</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/overview/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>How to contribute</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-token/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add or change a token</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/add-a-theme/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Add a theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/contributing/rfcs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Proposing a change (RFCs)</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Project</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/prior-art/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>Prior art</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/licenses/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>License allowlist</span></a></li><li data-astro-cid-3p2e2a5a><details open data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Proposals (RFCs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0001-foundation-tokens-and-button/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0001: Foundation tokens and Button</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0002-base-theme-standards-manual/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0002: A quieter, sharper base theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0003-typography/" aria-current="page" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0003: Typography</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0004-input/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0004: Input</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0005-card/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0005: Card</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0006-dialog-and-sheet/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0006: Dialog and Sheet</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0007-tabs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0007: Tabs</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/rfcs/0008-toast/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>RFC 0008: Toast</span></a></li></ul></details></li><li data-astro-cid-3p2e2a5a><details data-astro-cid-3p2e2a5a><summary data-astro-cid-3p2e2a5a><span class="group-label" data-astro-cid-3p2e2a5a><span class="large" data-astro-cid-3p2e2a5a>Decisions (ADRs)</span></span><svg class="caret astro-dtrqdpou" data-astro-cid-3p2e2a5a="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul data-astro-cid-3p2e2a5a><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0001-monorepo-pnpm-turborepo/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0001. One monorepo with pnpm workspaces and Turborepo</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0002-dtcg-tokens-no-design-tool/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0002. DTCG 2025.10 JSON is the token source; no design tool is</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0003-style-dictionary-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0003. Style Dictionary compiles the tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0004-web-stack/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0004. Web: React, Tailwind CSS v4, shadcn/ui on Radix</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0005-platform-targets/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0005. Minimum OS and browser targets</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0006-github-hosted-ci/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0006. A public GitHub repository with hosted CI runners</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0007-distribution/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0007. Distribution through npm, a static Maven repository, and a Swift mirror</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0008-lockstep-versioning/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0008. One version for every package</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0009-license-policy/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0009. Apache-2.0, an allowlist, and a blocking license gate</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0010-themes/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0010. Themes are overlays, shipped one artifact per theme</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0011-claude-design-output/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0011. The Claude Design output is optional and isolated</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0012-name/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0012. The name Raincoat</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0013-own-token-emitters/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0013. The token build uses its own emitters, not Style Dictionary</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0014-license-gates-per-ecosystem/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0014. One license gate per ecosystem, all reading one allowlist</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0015-web-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0015. Web components: adapted shadcn/ui source, styled only with tokens</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0016-native-components/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0016. Native components follow the platform where it knows better</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0017-release-pipeline/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0017. The release pipeline</span></a></li><li data-astro-cid-3p2e2a5a><a href="/design-system/project/decisions/0018-theme-directories-and-theme-packs/" data-astro-cid-3p2e2a5a><span data-astro-cid-3p2e2a5a>0018. A theme is a directory the build reads; theme packs use the published build</span></a></li></ul></details></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex" data-astro-cid-qahywmkh><div class="social-icons" data-astro-cid-qahywmkh><a href="https://github.com/raincoat-ui/design-system" rel="me" class="sl-flex" data-astro-cid-epwbhq5r><span class="sr-only" data-astro-cid-epwbhq5r>GitHub</span><svg data-astro-cid-epwbhq5r="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a></div><starlight-theme-select data-astro-cid-cgddidsb="true"><label style="--sl-select-width: 6.25em" data-astro-cid-n3zz6m2m><span class="sr-only" data-astro-cid-n3zz6m2m>Select theme</span><span class="icon label-icon" data-astro-cid-n3zz6m2m><svg class="sl-theme-icon-dark astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg class="sl-theme-icon-light astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg class="sl-theme-icon-auto astro-dtrqdpou" data-astro-cid-cgddidsb="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></span><select autocomplete="off" data-astro-cid-n3zz6m2m><option value="dark" data-astro-cid-n3zz6m2m>Dark</option><option value="light" data-astro-cid-n3zz6m2m>Light</option><option value="auto" selected data-astro-cid-n3zz6m2m>Auto</option></select><svg class="icon caret astro-dtrqdpou" data-astro-cid-n3zz6m2m="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>(() => {
+		const theme = (typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme'));
+		if (theme) document.querySelectorAll('starlight-theme-select select').forEach((s) => { s.value = theme; });
+	})();</script></div></div></div></sl-sidebar-pane></nav><div class="main-frame" data-astro-cid-i2x5ll5c><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex" data-astro-cid-unqmq2mu><aside class="right-sidebar-container print:hidden" data-astro-cid-unqmq2mu><div class="right-sidebar" data-astro-cid-unqmq2mu><div class="lg:sl-hidden" data-astro-cid-wbevfekt><mobile-starlight-toc data-min-h="2" data-max-h="3" data-astro-cid-ykpjbajl="true"><nav aria-labelledby="starlight__on-this-page--mobile" data-astro-cid-ykpjbajl><details id="starlight__mobile-toc" data-astro-cid-ykpjbajl><summary id="starlight__on-this-page--mobile" class="sl-flex" data-astro-cid-ykpjbajl><span class="toggle sl-flex" data-astro-cid-ykpjbajl>On this page<svg class="caret astro-dtrqdpou" data-astro-cid-ykpjbajl="true" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;" data-astro-cid-dtrqdpou><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current" data-astro-cid-ykpjbajl></span></summary><div class="dropdown" data-astro-cid-ykpjbajl><ul class="isMobile" style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul class="isMobile" style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#text-styles" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Text styles</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#component" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Component</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/design-system/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C3fM4Kra.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block" data-astro-cid-wbevfekt><div class="sl-container" data-astro-cid-wbevfekt><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul style="--depth: 0;" data-astro-cid-xiogj3jk><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#_top" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Overview</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#summary" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Summary</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#problem" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Problem</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#proposal" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Proposal</span></a><ul style="--depth: 1;" data-astro-cid-xiogj3jk><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#text-styles" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Text styles</span></a></li><li style="--depth: 1;" data-astro-cid-xiogj3jk><a href="#component" style="--depth: 1;" data-astro-cid-xiogj3jk><span style="--depth: 1;" data-astro-cid-xiogj3jk>Component</span></a></li></ul></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#prior-art" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Prior art</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#accessibility" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Accessibility</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#internationalization" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Internationalization</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#platform-notes" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Platform notes</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#migration" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Migration</span></a></li><li style="--depth: 0;" data-astro-cid-xiogj3jk><a href="#alternatives-considered" style="--depth: 0;" data-astro-cid-xiogj3jk><span style="--depth: 0;" data-astro-cid-xiogj3jk>Alternatives considered</span></a></li></ul></nav></starlight-toc><script type="module" src="/design-system/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BpJaGz7G.js"></script></div></div></div></aside><div class="main-pane" data-astro-cid-unqmq2mu><main data-pagefind-body class="astro-e5zlmhtl" lang="en" dir="ltr" data-astro-cid-e5zlmhtl><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="rc-title"><h1 id="_top">RFC 0003: Typography</h1></div></div></div><div class="content-panel" data-astro-cid-j74zwy2q><div class="sl-container" data-astro-cid-j74zwy2q><div class="sl-markdown-content"><ul>
+<li>Status: accepted</li>
+<li>Kind: component</li>
+<li>Proposed: 2026-11-24</li>
+<li>Decided: 2026-11-24</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="summary">Summary</h2><a class="sl-anchor-link" href="#summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Summary”</span></a></div>
+<p>Adds the text styles an app screen needs beyond labels and body text (four headings, a large
+body, and a caption) and a Typography component that sets text in them. The look of a heading is
+set apart from its level, so an app can build a correct outline without changing how a screen
+looks. It is for every app developer, and it comes first among the milestone 3 components because
+Input, Card, Dialog/Sheet, Tabs, and Toast all set their text in these styles.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="problem">Problem</h2><a class="sl-anchor-link" href="#problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Problem”</span></a></div>
+<p>The token source has five composed text styles: <code dir="auto">type.body.md</code>, <code dir="auto">type.body.sm</code>, and
+<code dir="auto">type.label.sm|md|lg</code>. A screen title, the title of a dialog, and the title of a card have no
+style, so each app picks font sizes and weights by hand. Those are the values a theme should
+control, and the values the Vietnamese and CJK checks should cover. Nor is there a way to mark a
+heading for assistive technology on all three platforms: on the web a developer writes <code dir="auto">&lt;h2&gt;</code>,
+on iOS <code dir="auto">.accessibilityAddTraits(.isHeader)</code>, and on Android <code dir="auto">semantics { heading() }</code>, and
+each is easy to forget.</p>
+<p>A settings screen shows the gap: a 32px screen title, 20px section titles, and a 12px “Last
+synced 2 minutes ago” under a row. Today all three are raw values in the app.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="proposal">Proposal</h2><a class="sl-anchor-link" href="#proposal"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Proposal”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="text-styles">Text styles</h3><a class="sl-anchor-link" href="#text-styles"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Text styles”</span></a></div>
+<p>New semantic tokens, beside the existing ones. All are <code dir="auto">typography</code> tokens built from
+primitives, like <code dir="auto">type.body.md</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Size</th>
+<th>Weight</th>
+<th>Line height</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">type.heading.xl</code></td>
+<td>32 (new)</td>
+<td>semibold</td>
+<td>1.4</td>
+<td>The title of a screen. Once per screen</td>
+</tr>
+<tr>
+<td><code dir="auto">type.heading.lg</code></td>
+<td>24</td>
+<td>semibold</td>
+<td>1.4</td>
+<td>Section titles on a screen</td>
+</tr>
+<tr>
+<td><code dir="auto">type.heading.md</code></td>
+<td>20</td>
+<td>semibold</td>
+<td>1.4</td>
+<td>Dialog and sheet titles, subsection titles</td>
+</tr>
+<tr>
+<td><code dir="auto">type.heading.sm</code></td>
+<td>16</td>
+<td>semibold</td>
+<td>1.4</td>
+<td>Card titles, group titles in lists</td>
+</tr>
+<tr>
+<td><code dir="auto">type.body.lg</code></td>
+<td>18</td>
+<td>regular</td>
+<td>1.5</td>
+<td>An introductory paragraph</td>
+</tr>
+<tr>
+<td><code dir="auto">type.body.md</code></td>
+<td>16</td>
+<td>regular</td>
+<td>1.5</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><code dir="auto">type.body.sm</code></td>
+<td>14</td>
+<td>regular</td>
+<td>1.5</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><code dir="auto">type.label.sm–lg</code></td>
+<td>14–18</td>
+<td>semibold</td>
+<td>1.4</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><code dir="auto">type.caption</code></td>
+<td>12</td>
+<td>regular</td>
+<td>1.5</td>
+<td>Timestamps, counts, and other short secondary facts. Never prose</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>One new primitive</strong>, <code dir="auto">font.size.32</code> (2rem). Primitives need no RFC; it is listed so the scale
+reads whole. 12px stays the smallest size.</li>
+<li><strong>Headings use 1.4</strong>, the value RFC 0001 found to be the lowest that clears stacked Vietnamese
+diacritics (“Ở”, “Ẫ”) in a label. Display type usually sits tighter, but none of the reference
+systems publishes a value for Vietnamese. A tighter heading line height can be proposed once the
+Vietnamese snapshots show that two lines of it do not collide.</li>
+<li><strong>No responsive sizes.</strong> Sizes are fixed and grow with the person’s text size setting on every
+platform. A heading that shrinks at narrow widths in one app and not another is the kind of
+difference a theme should not have to manage.</li>
+<li><strong><code dir="auto">type.heading.sm</code> and <code dir="auto">type.label.md</code> share values in the base.</strong> They are separate roles:
+one is a heading that assistive technology can jump to, the other names a control. A theme
+changes their family and weight together, through the same primitives.</li>
+<li><strong>Themes</strong> keep what they may override today: font families and weights. Sizes and line
+heights stay locked, as <code dir="auto">font.size.*</code> and <code dir="auto">font.line-height.*</code> are now.</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="component">Component</h3><a class="sl-anchor-link" href="#component"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Component”</span></a></div>
+<p>Two parts with one spec: <strong>Text</strong> for running text and labels, and <strong>Heading</strong> for headings.</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Text</th>
+<th>Heading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code dir="auto">variant</code></td>
+<td><code dir="auto">body-lg</code>, <code dir="auto">body-md</code> (default), <code dir="auto">body-sm</code>, <code dir="auto">label-lg</code>, <code dir="auto">label-md</code>, <code dir="auto">label-sm</code>, <code dir="auto">caption</code></td>
+<td><code dir="auto">heading-xl</code>, <code dir="auto">heading-lg</code>, <code dir="auto">heading-md</code>, <code dir="auto">heading-sm</code></td>
+</tr>
+<tr>
+<td><code dir="auto">level</code></td>
+<td>None</td>
+<td>1 to 6. Required</td>
+</tr>
+<tr>
+<td>Default look</td>
+<td><code dir="auto">body-md</code></td>
+<td>Follows the level: 1 is <code dir="auto">heading-xl</code>, 2 <code dir="auto">heading-lg</code>, 3 <code dir="auto">heading-md</code>, 4 to 6 <code dir="auto">heading-sm</code>. Set <code dir="auto">variant</code> to change the look and keep the level</td>
+</tr>
+<tr>
+<td><code dir="auto">color</code></td>
+<td><code dir="auto">default</code>, <code dir="auto">muted</code>, <code dir="auto">danger</code></td>
+<td><code dir="auto">default</code>, <code dir="auto">muted</code></td>
+</tr>
+<tr>
+<td><code dir="auto">max-lines</code></td>
+<td>Optional. Text beyond it ends in an ellipsis</td>
+<td>Not offered: a heading wraps</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>The level is required and the look is not.</strong> An outline is wrong when a heading’s level is
+chosen for its size. Asking for the level makes the author decide it, and the look follows
+unless they say otherwise.</li>
+<li><strong>Color</strong> uses the text roles that exist: <code dir="auto">color.fg.default</code>, <code dir="auto">color.fg.muted</code>, and
+<code dir="auto">color.fg.danger</code>. Accent text and colored headings are left out; in the base the accent is a
+signal, not a text color.</li>
+<li><strong>Truncation</strong> keeps the whole text available to assistive technology on every platform, and
+each platform’s tests check that it does.</li>
+<li><strong>No component tokens.</strong> The component’s only values are the text styles, so a component tier
+would repeat them.</li>
+</ul>
+<p>Usage rules that will go into the guidelines:</p>
+<ul>
+<li>Choose a heading’s level for its place in the outline, then its look if the default does not
+fit. Do not skip levels.</li>
+<li>Set emphasis in semibold, not italics: Chinese, Japanese, and Korean faces have no italics.</li>
+<li>Keep running text under about 70 characters a line.</li>
+<li>Do not truncate headings, labels, or anything a person must read to decide. Truncate only text
+repeated elsewhere, such as a preview of a message.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="prior-art">Prior art</h2><a class="sl-anchor-link" href="#prior-art"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Prior art”</span></a></div>
+<p>Read from each system’s public documentation on 2026-11-24. Material is read from the Jetpack
+Compose and Material Web documentation, because m3.material.io shows nothing without
+JavaScript.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>IBM Carbon</th>
+<th>Adobe Spectrum</th>
+<th>Google Material</th>
+<th>AWS Cloudscape</th>
+<th>Raincoat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parts (anatomy)</td>
+<td>Tokens for code, label, helper text, body, headings 01 to 07, and fluid headings and displays</td>
+<td>Heading, title, body, detail, code, and more, in t-shirt sizes; 18 font sizes from 10 to 73px</td>
+<td>15 styles: display, headline, title, body, and label, each large, medium, and small</td>
+<td>11 styles: headings from 24/30 to 14/18, body 14/20 and 12/16, code, and display 42/48</td>
+<td>Four headings, three body sizes, three labels, and a caption</td>
+</tr>
+<tr>
+<td>Variants and sizes</td>
+<td>A productive set (14px base) and an expressive set (16px base); fluid styles change at breakpoints</td>
+<td><code dir="auto">Heading</code> takes <code dir="auto">level</code> 1 to 6, default 3, and is styled by its container</td>
+<td>The look is a style passed to <code dir="auto">Text</code>; heading meaning is a separate modifier</td>
+<td><code dir="auto">Box</code> sets tag and style together; <code dir="auto">tagOverride</code> and <code dir="auto">headingTagOverride</code> separate them</td>
+<td><code dir="auto">level</code> required, <code dir="auto">variant</code> defaults from it and can be changed</td>
+</tr>
+<tr>
+<td>States</td>
+<td>Light, regular, and semibold; semibold not for long text</td>
+<td>Weights per role; emphasis is italic, or heavier in CJK</td>
+<td><code dir="auto">maxLines</code> with an ellipsis</td>
+<td>Color roles for label, secondary body, and status text</td>
+<td>Default, muted, and danger color; <code dir="auto">max-lines</code> on Text only</td>
+</tr>
+<tr>
+<td>Keyboard behaviour</td>
+<td>Not applicable</td>
+<td>Not applicable</td>
+<td>Not applicable</td>
+<td>Not applicable</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Screen-reader role, name, and announcements</td>
+<td>Headings are one of the most common ways to move through a page</td>
+<td><code dir="auto">level</code> renders <code dir="auto">h1</code> to <code dir="auto">h6</code></td>
+<td><code dir="auto">semantics { heading() }</code>, with no level</td>
+<td>Use headings for hierarchy, not appearance; one <code dir="auto">h1</code> per page</td>
+<td>Heading level on the web and iOS; heading, without level, on Android</td>
+</tr>
+<tr>
+<td>Right-to-left and long-text behaviour</td>
+<td><code dir="auto">Text</code> sets <code dir="auto">dir</code>, default <code dir="auto">auto</code></td>
+<td>CJK line height 150%, 170% for body; supports Dynamic Type and Android <code dir="auto">sp</code>; lines about 70 characters</td>
+<td>Alignment follows the script; CJK line-breaking options; font scaling is non-linear</td>
+<td>Do not mirror untranslated text, code, numbers, or email addresses; nothing under 12px</td>
+<td>Start alignment; CJK line breaking per language; 12px minimum; scaling on every platform</td>
+</tr>
+</tbody>
+</table>
+<p>Where the systems disagree, and which way Raincoat goes:</p>
+<ul>
+<li><strong>Level and look.</strong> Cloudscape ties the tag to the style with overrides, Carbon derives the
+level from nesting, React Spectrum takes a level and styles it by context, and Compose has no
+levels at all. Raincoat asks for the level and derives the look, which keeps the outline
+correct by default while leaving the look free.</li>
+<li><strong>Responsive sizes.</strong> Carbon’s fluid sets change at breakpoints, and Carbon itself says not to
+use them inside a container. Material and Spectrum vary some sizes by device. Raincoat keeps
+sizes fixed and lets the text size setting do the scaling, as Fluent and Cloudscape show.</li>
+<li><strong>Smallest size.</strong> Spectrum has 10px and 11px sizes, Material 11, and Carbon and Cloudscape
+stop at 12; Cloudscape forbids anything smaller. Raincoat stops at 12.</li>
+<li><strong>Emphasis.</strong> Carbon and Spectrum use italics, with Spectrum switching to weight for CJK.
+Raincoat uses weight in every script, so emphasis does not change with the language.</li>
+<li><strong>Scripts.</strong> Only Spectrum gives CJK line heights, and none of the systems read covers
+Vietnamese. Raincoat’s 1.5 for body text matches Spectrum’s CJK default, and its 1.4 floor
+comes from its own Vietnamese finding.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="accessibility">Accessibility</h2><a class="sl-anchor-link" href="#accessibility"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Accessibility”</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>How it is tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A Heading is a heading to assistive technology, with its level where the platform has levels</td>
+<td>Web: the element is <code dir="auto">h1</code> to <code dir="auto">h6</code> and axe passes. iOS: header trait and heading level in UI tests. Android: heading semantics</td>
+</tr>
+<tr>
+<td>Text contrast: 4.5:1 for every color in standard modes, 7:1 in high contrast; headings of 24px and over count as large text but are held to the text ratio anyway</td>
+<td>Token contrast check</td>
+</tr>
+<tr>
+<td>Text grows with the person’s setting: browser font size and zoom, Dynamic Type, Android font scale</td>
+<td>Web: 200% browser font size. iOS: the largest accessibility size. Android: font scale 2.0. Each checks that nothing is clipped or overlaps</td>
+</tr>
+<tr>
+<td>Truncated text is read in full</td>
+<td>Web: the accessible name holds the full string. iOS and Android: the accessibility label or text holds it</td>
+</tr>
+<tr>
+<td>No text below 12px</td>
+<td>A linter rule, added with this RFC, refuses a text style smaller than <code dir="auto">font.size.12</code></td>
+</tr>
+</tbody>
+</table>
+<p>On iOS, each style grows with the system text style nearest its role (<code dir="auto">heading-xl</code> with <code dir="auto">.largeTitle</code>,
+<code dir="auto">heading-lg</code> with <code dir="auto">.title2</code>, <code dir="auto">heading-md</code> with <code dir="auto">.title3</code>, <code dir="auto">heading-sm</code> with <code dir="auto">.headline</code>, body
+and labels with <code dir="auto">.body</code>, and <code dir="auto">caption</code> with <code dir="auto">.caption</code>), so large headings grow less than body text, as
+the system’s own do. Android’s non-linear font scaling does the same.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="internationalization">Internationalization</h2><a class="sl-anchor-link" href="#internationalization"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Internationalization”</span></a></div>
+<ul>
+<li><strong>Alignment.</strong> Text aligns to the start edge. Nothing uses left or right.</li>
+<li><strong>Direction of people’s text.</strong> Text that comes from people, such as names and messages, takes
+its direction from its first strong character: <code dir="auto">dir="auto"</code> on the web, and the platforms’
+default paragraph direction on iOS and Android. The spec examples include an Arabic name in an
+English sentence.</li>
+<li><strong>Vietnamese.</strong> Be Vietnam Pro covers it. Snapshots set two-line headings and body text with
+stacked diacritics, in both precomposed (NFC) and decomposed (NFD) form, because input methods
+produce both.</li>
+<li><strong>Chinese, Japanese, and Korean</strong> use system fonts. Lines break by each language’s rules:
+strict breaking for Japanese, and whole words for Korean, which separates words with spaces.
+Each locale has a snapshot.</li>
+<li><strong>Expansion.</strong> Snapshots include a pseudo-locale about 40% longer, to show that nothing is
+truncated that should wrap.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="platform-notes">Platform notes</h2><a class="sl-anchor-link" href="#platform-notes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Platform notes”</span></a></div>
+<ul>
+<li><strong>Web.</strong> <code dir="auto">Text</code> renders <code dir="auto">p</code> by default and takes <code dir="auto">as</code> for <code dir="auto">span</code>, <code dir="auto">div</code>, or <code dir="auto">label</code>. <code dir="auto">Heading</code>
+renders <code dir="auto">h1</code> to <code dir="auto">h6</code> from <code dir="auto">level</code>. Both are Server Components: they hold no state. Headings use
+<code dir="auto">text-wrap: balance</code> where the browser supports it.</li>
+<li><strong>iOS.</strong> A view modifier, <code dir="auto">.raincoatText(_:)</code>, applies a style to any <code dir="auto">Text</code>, <code dir="auto">Label</code>, or
+<code dir="auto">TextField</code>, through the same line-height handling as the Button’s label
+(<code dir="auto">Typography.swift</code>). <code dir="auto">.raincoatHeading(level:)</code> applies a heading style and adds the header
+trait and <code dir="auto">accessibilityHeading</code> level.</li>
+<li><strong>Android.</strong> <code dir="auto">RaincoatText</code> and <code dir="auto">RaincoatHeading</code>, built on Compose Foundation’s <code dir="auto">BasicText</code>.
+Android has no heading levels: <code dir="auto">RaincoatHeading</code> takes <code dir="auto">level</code> so that code reads the same on
+every platform, and sets <code dir="auto">heading()</code> semantics.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="migration">Migration</h2><a class="sl-anchor-link" href="#migration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Migration”</span></a></div>
+<p>None. The existing text styles keep their names and values.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="alternatives-considered">Alternatives considered</h2><a class="sl-anchor-link" href="#alternatives-considered"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Alternatives considered”</span></a></div>
+<ul>
+<li><strong>Material’s 15 styles.</strong> Covers marketing displays an app screen rarely needs. Four heading
+sizes are enough for a screen, a section, a dialog, and a card.</li>
+<li><strong>Tighter heading line heights now.</strong> Looks better in Latin, and may collide in Vietnamese.
+The snapshots will say, and a later RFC can tighten them.</li>
+<li><strong>A bold weight for headings.</strong> A theme can already make semibold heavier. A separate weight
+would let headings and labels differ, which no theme has asked for yet.</li>
+<li><strong>A code style.</strong> <code dir="auto">font.family.mono</code> exists, but no v1 component shows code. It can arrive with
+one that does.</li>
+<li><strong>Deriving the level from nesting, as Carbon does.</strong> Works on the web, but SwiftUI and Compose
+have no equivalent of nested sections, so the three platforms would behave differently.</li>
+</ul>
+</div><footer class="sl-flex" data-astro-cid-g3jxymr7><div class="meta sl-flex" data-astro-cid-g3jxymr7></div><div class="pagination-links print:hidden" dir="ltr" data-astro-cid-6o7xkmda><a href="/design-system/project/rfcs/0002-base-theme-standards-manual/" rel="prev" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span data-astro-cid-6o7xkmda>Previous<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0002: A quieter, sharper base theme</span></span></a><a href="/design-system/project/rfcs/0004-input/" rel="next" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span data-astro-cid-6o7xkmda>Next<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>RFC 0004: Input</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
