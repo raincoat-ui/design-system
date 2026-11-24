@@ -1,0 +1,102 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.raincoat-ui",
+    "module": "tokens",
+    "version": "0.1.0-next.5",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.9.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tokens-0.1.0-next.5.jar",
+          "url": "tokens-0.1.0-next.5.jar",
+          "size": 212988,
+          "sha512": "8c5cdb037d25349c3b0ba6eba437e7ba14bd74cedbe10a354541e2180275c2d68fc1b3ff0b631dbe0f8d0f28da9d58bffaca36ca2c49c5c05e18f856beb52a06",
+          "sha256": "f5e364cfaa02cf8357ca1e02c55aedb8374a9b47c96631cb55628211ac95ec4b",
+          "sha1": "86e4be281d15e2c91fa8b6625667552e2d6202a3",
+          "md5": "507bdf2569315ede9663ab609b0de166"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tokens-0.1.0-next.5.jar",
+          "url": "tokens-0.1.0-next.5.jar",
+          "size": 212988,
+          "sha512": "8c5cdb037d25349c3b0ba6eba437e7ba14bd74cedbe10a354541e2180275c2d68fc1b3ff0b631dbe0f8d0f28da9d58bffaca36ca2c49c5c05e18f856beb52a06",
+          "sha256": "f5e364cfaa02cf8357ca1e02c55aedb8374a9b47c96631cb55628211ac95ec4b",
+          "sha1": "86e4be281d15e2c91fa8b6625667552e2d6202a3",
+          "md5": "507bdf2569315ede9663ab609b0de166"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "tokens-0.1.0-next.5-sources.jar",
+          "url": "tokens-0.1.0-next.5-sources.jar",
+          "size": 15599,
+          "sha512": "5aa37c748130833b33f6c81fad6aa06f3af7b79b821735aa09fc8dadba3be480da0d6764157bdddee095dd4208d9951b0c143e8ad1e5b9520b0967a09a029ed9",
+          "sha256": "d9244d36b0faf3a58d6118ee6d4c4b4207bb8828d0097ca7cb38f59ee5125d32",
+          "sha1": "49688d34331e60a4768a037e84cdc917372bf300",
+          "md5": "090775c759687e858f7d1485530fc6dc"
+        }
+      ]
+    }
+  ]
+}

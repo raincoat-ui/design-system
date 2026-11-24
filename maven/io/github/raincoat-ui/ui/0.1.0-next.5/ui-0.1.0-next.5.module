@@ -1,0 +1,154 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.raincoat-ui",
+    "module": "ui",
+    "version": "0.1.0-next.5",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.9.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.github.raincoat-ui",
+          "module": "tokens",
+          "version": {
+            "requires": "0.1.0-next.5"
+          }
+        },
+        {
+          "group": "io.github.raincoat-ui",
+          "module": "theme-base",
+          "version": {
+            "requires": "0.1.0-next.5"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ui-0.1.0-next.5.aar",
+          "url": "ui-0.1.0-next.5.aar",
+          "size": 280148,
+          "sha512": "96b48c2122215cbdf1fcd2be250063b317025a68eaa93c2c0c609c2aba8084ed21ebb58828af250c751e028e170b1804bee04107af5764499edaed4fddeab3fb",
+          "sha256": "15f02b87bd5f2a3de4ea58d5f32d3dc238b516dce7f677ad2c4562ac2d9ca19a",
+          "sha1": "3da6c34d4de85fa057889722195daf67bbb6d49b",
+          "md5": "fb9ca2f4947c7b9aba573abdac83a3fc"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2026.09.00"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation"
+        },
+        {
+          "group": "io.github.raincoat-ui",
+          "module": "tokens",
+          "version": {
+            "requires": "0.1.0-next.5"
+          }
+        },
+        {
+          "group": "io.github.raincoat-ui",
+          "module": "theme-base",
+          "version": {
+            "requires": "0.1.0-next.5"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ui-0.1.0-next.5.aar",
+          "url": "ui-0.1.0-next.5.aar",
+          "size": 280148,
+          "sha512": "96b48c2122215cbdf1fcd2be250063b317025a68eaa93c2c0c609c2aba8084ed21ebb58828af250c751e028e170b1804bee04107af5764499edaed4fddeab3fb",
+          "sha256": "15f02b87bd5f2a3de4ea58d5f32d3dc238b516dce7f677ad2c4562ac2d9ca19a",
+          "sha1": "3da6c34d4de85fa057889722195daf67bbb6d49b",
+          "md5": "fb9ca2f4947c7b9aba573abdac83a3fc"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "ui-0.1.0-next.5-sources.jar",
+          "url": "ui-0.1.0-next.5-sources.jar",
+          "size": 47187,
+          "sha512": "2438906924a44b05941fdeac1fe298a1985538c72e1213b5b990dce37e856a909230e0a671434686bcb2e46cb15aac7b326b0f3e98983e604827ed3d856ea2cb",
+          "sha256": "fc773e2d1a5fddcda6121d52c98a2e6d9bcc62681b4ba073adcee459e4c86467",
+          "sha1": "b98172dc0332ed36ec31f52fbe4f670d14a0762c",
+          "md5": "9fcb8a0741600444d1c4b18981a5dc66"
+        }
+      ]
+    }
+  ]
+}
