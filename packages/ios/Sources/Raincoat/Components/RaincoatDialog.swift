@@ -237,43 +237,50 @@
                     bodyLine: look.description.lineHeight * look.description.size * Double(textScale),
                     bodySpace: sections.bodySpace(look)
                 )
-                Group {
-                    switch scrolling {
-                    case .body:
-                        // The header and the footer stay in place, and the body scrolls between
-                        // them, with a hairline at an edge while content is beneath it.
-                        let dividers = DialogDividers(
-                            offset: Double(offset), viewport: Double(viewport), content: Double(bodyHeight)
-                        )
-                        VStack(spacing: 0) {
-                            sections.headerSection(look, divider: dividers.underHeader)
-                                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
-                            if sections.hasBody {
-                                ScrollView {
-                                    sections.bodySection(look)
-                                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { bodyHeight = $0 }
-                                        .onGeometryChange(for: CGFloat.self) {
-                                            -$0.frame(in: .named(dialogBodySpace)).minY
-                                        } action: { offset = $0 }
-                                }
-                                .coordinateSpace(.named(dialogBodySpace))
-                                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { viewport = $0 }
-                            }
-                            sections.footerSection(look, divider: dividers.overFooter)
-                                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
-                        }
-                    case .whole:
-                        // A screen too short for three lines of the body: everything scrolls.
+                let wholeScrolls = scrolling == .whole
+                // While the body scrolls, the header and the footer stay in place, with a hairline
+                // at an edge while content is beneath it. On a screen too short for three lines of
+                // the body, everything scrolls, and they move into the scrolling area.
+                let dividers =
+                    wholeScrolls
+                    ? DialogDividers.none
+                    : DialogDividers(offset: Double(offset), viewport: Double(viewport), content: Double(bodyHeight))
+                // One arrangement for both, in which the body keeps its place: switching between
+                // them, as when the keyboard shows at a large text size, keeps the app's content,
+                // with its state and its focus, instead of making it anew.
+                VStack(spacing: 0) {
+                    if !wholeScrolls {
+                        sections.headerSection(look, divider: dividers.underHeader)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+                    }
+                    if sections.hasBody || wholeScrolls {
                         ScrollView {
                             VStack(spacing: 0) {
-                                sections.headerSection(look, divider: false)
-                                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+                                if wholeScrolls {
+                                    sections.headerSection(look, divider: false)
+                                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
+                                            headerHeight = $0
+                                        }
+                                }
                                 sections.bodySection(look)
                                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { bodyHeight = $0 }
-                                sections.footerSection(look, divider: false)
-                                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
+                                    .onGeometryChange(for: CGFloat.self) {
+                                        -$0.frame(in: .named(dialogBodySpace)).minY
+                                    } action: { offset = $0 }
+                                if wholeScrolls {
+                                    sections.footerSection(look, divider: false)
+                                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
+                                            footerHeight = $0
+                                        }
+                                }
                             }
                         }
+                        .coordinateSpace(.named(dialogBodySpace))
+                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { viewport = $0 }
+                    }
+                    if !wholeScrolls {
+                        sections.footerSection(look, divider: dividers.overFooter)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
                     }
                 }
                 .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
