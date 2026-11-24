@@ -117,12 +117,15 @@ what was left open.
   baseline's. One pixel that does not match fails the snapshot.
 - The text is set in the snapshot's language (`typesettingLanguage`), as on a device set to that
   language, so that line height, line breaks, and spacing follow its script.
-- Each snapshot checks that its text size is in effect: the largest one enlarges text.
+- Each snapshot checks that its text size is in effect: SwiftUI and the window are given it, and
+  body text is drawn nearer the system's size for it than the sizes beside it. At the largest
+  size, Raincoat's scaled metrics draw body text 3.0 times as large, where the system's body
+  font is 3.12 times as large (53 points instead of 17); the log shows both.
 - Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
   fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
   belongs to no theme, component, or snapshot.
-- At a scale of 2 an iOS baseline is larger than a web one: 2.1 MB for the Button's 22, and
-  5.1 MB for Typography's, whose largest-text specimen is 7,015 pixels tall.
+- At a scale of 2 an iOS baseline is larger than a web one: 2.9 MB for the Button's 22, and
+  7.9 MB for Typography's, whose largest-text specimen is 7,015 pixels tall.
 
 **Firefox and WebKit.** The React component tests, not the snapshots, also run in Firefox and
 WebKit, in CI, one job per browser, chosen with `RAINCOAT_BROWSER`. What a test asks of the
