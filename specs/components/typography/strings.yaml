@@ -1,0 +1,83 @@
+# The text Typography's examples show, in every locale of the snapshot matrix
+# (specs/snapshots.yaml): by example id, as in spec.yaml, then by the content the text fills.
+# Every instance of an example shows the same text. The expanded pseudo-locale is derived from
+# the English by the token build; it is never written here.
+#
+# The text is written as an app would ship it, in Unicode's composed form (NFC). The long
+# heading is long enough to wrap in every locale, and in Vietnamese it stacks diacritics on two
+# lines; the web snapshots also draw it decomposed (NFD), as some input methods write it.
+#
+# In person-name, {name} marks where the name goes. The name is in another script than the
+# sentence: Arabic in every locale but Arabic, and English in Arabic.
+examples:
+  text-variants:
+    text:
+      en: Synced 2 minutes ago
+      vi: Đã đồng bộ 2 phút trước
+      zh-Hans: 2 分钟前已同步
+      ja: 2 分前に同期済み
+      ko: 2분 전에 동기화됨
+      ar: تمت المزامنة قبل دقيقتين
+  text-colors:
+    text:
+      en: This file could not be opened.
+      vi: Không thể mở tệp này.
+      zh-Hans: 无法打开此文件。
+      ja: このファイルを開けませんでした。
+      ko: 이 파일을 열 수 없습니다.
+      ar: تعذر فتح هذا الملف.
+  max-lines:
+    text:
+      en: Your files are kept on this device and in the cloud. Changes made on one device reach the others the next time they connect, usually within a minute.
+      vi: Tệp của bạn được lưu trên thiết bị này và trên đám mây. Những thay đổi trên một thiết bị sẽ đến các thiết bị khác vào lần kết nối tiếp theo, thường trong vòng một phút.
+      zh-Hans: 你的文件保存在此设备和云端。在一台设备上所做的更改，会在其他设备下次连接时同步过去，通常在一分钟内完成。
+      ja: ファイルはこのデバイスとクラウドに保存されます。あるデバイスでの変更は、ほかのデバイスが次に接続したときに反映されます。通常は 1 分以内です。
+      ko: 파일은 이 기기와 클라우드에 보관됩니다. 한 기기에서 변경한 내용은 다른 기기가 다음에 연결될 때 반영되며, 보통 1분 안에 반영됩니다.
+      ar: تُحفظ ملفاتك على هذا الجهاز وفي السحابة. تصل التغييرات التي تجريها على جهاز إلى الأجهزة الأخرى عند اتصالها التالي، عادةً خلال دقيقة.
+  person-name:
+    text:
+      en: Message from {name}, 2 minutes ago
+      vi: Tin nhắn từ {name}, 2 phút trước
+      zh-Hans: 来自 {name} 的消息，2 分钟前
+      ja: "{name} さんからのメッセージ、2 分前"
+      ko: "{name} 님의 메시지, 2분 전"
+      ar: رسالة من {name} قبل دقيقتين
+    name:
+      en: مريم الحسيني
+      vi: مريم الحسيني
+      zh-Hans: مريم الحسيني
+      ja: مريم الحسيني
+      ko: مريم الحسيني
+      ar: Ada Lovelace
+  heading-levels:
+    text:
+      en: Notifications
+      vi: Thông báo
+      zh-Hans: 通知
+      ja: 通知
+      ko: 알림
+      ar: الإشعارات
+  heading-variant:
+    text:
+      en: Recent files
+      vi: Tệp gần đây
+      zh-Hans: 最近的文件
+      ja: 最近使ったファイル
+      ko: 최근 파일
+      ar: الملفات الأخيرة
+  heading-muted:
+    text:
+      en: Shared with you
+      vi: Được chia sẻ với bạn
+      zh-Hans: 与你共享
+      ja: 共有アイテム
+      ko: 나와 공유됨
+      ar: تمت مشاركتها معك
+  long-heading:
+    text:
+      en: Notifications for comments, mentions, and changes to shared documents
+      vi: Thông báo về bình luận, lượt nhắc đến và những thay đổi trong tài liệu được chia sẻ
+      zh-Hans: 关于评论、提及以及共享文档更改的通知
+      ja: コメント、メンション、共有ドキュメントの変更に関する通知
+      ko: 댓글, 멘션 및 공유 문서 변경 사항에 대한 알림
+      ar: إشعارات التعليقات والإشارات والتغييرات على المستندات المشتركة

@@ -68,6 +68,9 @@ can for any version: Actions, reference apps, Run workflow.
 Add a screen for it in `src/`, with one example for each state in its spec, and a test file in
 `tests/`.
 
+The first page shows the Button. Another component's screen is at a path of its own, which
+`src/main.tsx` maps to it: `/typography` shows Typography.
+
 ## What the tests do not cover
 
 - A tap cannot show where a touch target ends: Chromium moves a tap that lands near a target

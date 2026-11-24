@@ -8,6 +8,10 @@ package io.github.raincoatui.ui.generated
 import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.ColorMode
+import io.github.raincoatui.tokens.HeadingColor
+import io.github.raincoatui.tokens.HeadingVariant
+import io.github.raincoatui.tokens.TextColor
+import io.github.raincoatui.tokens.TextVariant
 
 /** A text size of the snapshot matrix, and the font scale that gives it. */
 internal enum class SnapshotTextSize(val fontScale: Float) {
@@ -166,6 +170,160 @@ internal val buttonExamples: List<SpecExample<ButtonExampleProperties>> = listOf
             "ko" to mapOf("label" to "변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기"),
             "ar" to mapOf("label" to "حفظ كل هذه التغييرات وإرسال النسخة المحدثة إلى جميع المراجعين"),
             "en-XA" to mapOf("label" to "[Šåṽé åļļ öƒ ţĥéšé çĥåñĝéš åñð šéñð ţĥé ûþðåţéð ṽéŕšîöñ ţö éṽéŕý ŕéṽîéŵéŕ one two three four five six]"),
+        ),
+    ),
+)
+
+/** The properties of one part of Typography in an example. */
+internal sealed interface TypographyExampleProperties
+
+/** The properties of one Text in an example. */
+internal data class TextExampleProperties(
+    val variant: TextVariant,
+    val color: TextColor,
+    val maxLines: Int?,
+) : TypographyExampleProperties
+
+/** The properties of one Heading in an example. */
+internal data class HeadingExampleProperties(
+    val level: Int,
+    val variant: HeadingVariant?,
+    val color: HeadingColor,
+) : TypographyExampleProperties
+
+/** The examples of specs/components/typography/spec.yaml, with their text. */
+internal val typographyExamples: List<SpecExample<TypographyExampleProperties>> = listOf(
+    SpecExample(
+        id = "text-variants",
+        instances = listOf(
+            TextExampleProperties(variant = TextVariant.BodyLg, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.BodyMd, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.BodySm, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.LabelLg, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.LabelMd, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.LabelSm, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.Caption, color = TextColor.Default, maxLines = null),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Synced 2 minutes ago"),
+            "vi" to mapOf("text" to "Đã đồng bộ 2 phút trước"),
+            "zh-Hans" to mapOf("text" to "2 分钟前已同步"),
+            "ja" to mapOf("text" to "2 分前に同期済み"),
+            "ko" to mapOf("text" to "2분 전에 동기화됨"),
+            "ar" to mapOf("text" to "تمت المزامنة قبل دقيقتين"),
+            "en-XA" to mapOf("text" to "[Šýñçéð 2 ɱîñûţéš åĝö one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "text-colors",
+        instances = listOf(
+            TextExampleProperties(variant = TextVariant.BodyMd, color = TextColor.Default, maxLines = null),
+            TextExampleProperties(variant = TextVariant.BodyMd, color = TextColor.Muted, maxLines = null),
+            TextExampleProperties(variant = TextVariant.BodyMd, color = TextColor.Danger, maxLines = null),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "This file could not be opened."),
+            "vi" to mapOf("text" to "Không thể mở tệp này."),
+            "zh-Hans" to mapOf("text" to "无法打开此文件。"),
+            "ja" to mapOf("text" to "このファイルを開けませんでした。"),
+            "ko" to mapOf("text" to "이 파일을 열 수 없습니다."),
+            "ar" to mapOf("text" to "تعذر فتح هذا الملف."),
+            "en-XA" to mapOf("text" to "[Ţĥîš ƒîļé çöûļð ñöţ ƀé öþéñéð. one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "max-lines",
+        instances = listOf(
+            TextExampleProperties(variant = TextVariant.BodyMd, color = TextColor.Default, maxLines = 2),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Your files are kept on this device and in the cloud. Changes made on one device reach the others the next time they connect, usually within a minute."),
+            "vi" to mapOf("text" to "Tệp của bạn được lưu trên thiết bị này và trên đám mây. Những thay đổi trên một thiết bị sẽ đến các thiết bị khác vào lần kết nối tiếp theo, thường trong vòng một phút."),
+            "zh-Hans" to mapOf("text" to "你的文件保存在此设备和云端。在一台设备上所做的更改，会在其他设备下次连接时同步过去，通常在一分钟内完成。"),
+            "ja" to mapOf("text" to "ファイルはこのデバイスとクラウドに保存されます。あるデバイスでの変更は、ほかのデバイスが次に接続したときに反映されます。通常は 1 分以内です。"),
+            "ko" to mapOf("text" to "파일은 이 기기와 클라우드에 보관됩니다. 한 기기에서 변경한 내용은 다른 기기가 다음에 연결될 때 반영되며, 보통 1분 안에 반영됩니다."),
+            "ar" to mapOf("text" to "تُحفظ ملفاتك على هذا الجهاز وفي السحابة. تصل التغييرات التي تجريها على جهاز إلى الأجهزة الأخرى عند اتصالها التالي، عادةً خلال دقيقة."),
+            "en-XA" to mapOf("text" to "[Ýöûŕ ƒîļéš åŕé ķéþţ öñ ţĥîš ðéṽîçé åñð îñ ţĥé çļöûð. Çĥåñĝéš ɱåðé öñ öñé ðéṽîçé ŕéåçĥ ţĥé öţĥéŕš ţĥé ñéẋţ ţîɱé ţĥéý çöññéçţ, ûšûåļļý ŵîţĥîñ å ɱîñûţé. one two three four five six seven eight nine ten one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "person-name",
+        instances = listOf(
+            TextExampleProperties(variant = TextVariant.BodyMd, color = TextColor.Default, maxLines = null),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Message from {name}, 2 minutes ago", "name" to "مريم الحسيني"),
+            "vi" to mapOf("text" to "Tin nhắn từ {name}, 2 phút trước", "name" to "مريم الحسيني"),
+            "zh-Hans" to mapOf("text" to "来自 {name} 的消息，2 分钟前", "name" to "مريم الحسيني"),
+            "ja" to mapOf("text" to "{name} さんからのメッセージ、2 分前", "name" to "مريم الحسيني"),
+            "ko" to mapOf("text" to "{name} 님의 메시지, 2분 전", "name" to "مريم الحسيني"),
+            "ar" to mapOf("text" to "رسالة من {name} قبل دقيقتين", "name" to "Ada Lovelace"),
+            "en-XA" to mapOf("text" to "[Ṁéššåĝé ƒŕöɱ {ñåɱé}, 2 ɱîñûţéš åĝö one two three]", "name" to "[مريم الحسيني one]"),
+        ),
+    ),
+    SpecExample(
+        id = "heading-levels",
+        instances = listOf(
+            HeadingExampleProperties(level = 1, variant = null, color = HeadingColor.Default),
+            HeadingExampleProperties(level = 2, variant = null, color = HeadingColor.Default),
+            HeadingExampleProperties(level = 3, variant = null, color = HeadingColor.Default),
+            HeadingExampleProperties(level = 4, variant = null, color = HeadingColor.Default),
+            HeadingExampleProperties(level = 5, variant = null, color = HeadingColor.Default),
+            HeadingExampleProperties(level = 6, variant = null, color = HeadingColor.Default),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Notifications"),
+            "vi" to mapOf("text" to "Thông báo"),
+            "zh-Hans" to mapOf("text" to "通知"),
+            "ja" to mapOf("text" to "通知"),
+            "ko" to mapOf("text" to "알림"),
+            "ar" to mapOf("text" to "الإشعارات"),
+            "en-XA" to mapOf("text" to "[Ñöţîƒîçåţîöñš one]"),
+        ),
+    ),
+    SpecExample(
+        id = "heading-variant",
+        instances = listOf(
+            HeadingExampleProperties(level = 2, variant = HeadingVariant.HeadingSm, color = HeadingColor.Default),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Recent files"),
+            "vi" to mapOf("text" to "Tệp gần đây"),
+            "zh-Hans" to mapOf("text" to "最近的文件"),
+            "ja" to mapOf("text" to "最近使ったファイル"),
+            "ko" to mapOf("text" to "최근 파일"),
+            "ar" to mapOf("text" to "الملفات الأخيرة"),
+            "en-XA" to mapOf("text" to "[Ŕéçéñţ ƒîļéš one]"),
+        ),
+    ),
+    SpecExample(
+        id = "heading-muted",
+        instances = listOf(
+            HeadingExampleProperties(level = 3, variant = null, color = HeadingColor.Muted),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Shared with you"),
+            "vi" to mapOf("text" to "Được chia sẻ với bạn"),
+            "zh-Hans" to mapOf("text" to "与你共享"),
+            "ja" to mapOf("text" to "共有アイテム"),
+            "ko" to mapOf("text" to "나와 공유됨"),
+            "ar" to mapOf("text" to "تمت مشاركتها معك"),
+            "en-XA" to mapOf("text" to "[Šĥåŕéð ŵîţĥ ýöû one]"),
+        ),
+    ),
+    SpecExample(
+        id = "long-heading",
+        instances = listOf(
+            HeadingExampleProperties(level = 2, variant = null, color = HeadingColor.Default),
+        ),
+        text = mapOf(
+            "en" to mapOf("text" to "Notifications for comments, mentions, and changes to shared documents"),
+            "vi" to mapOf("text" to "Thông báo về bình luận, lượt nhắc đến và những thay đổi trong tài liệu được chia sẻ"),
+            "zh-Hans" to mapOf("text" to "关于评论、提及以及共享文档更改的通知"),
+            "ja" to mapOf("text" to "コメント、メンション、共有ドキュメントの変更に関する通知"),
+            "ko" to mapOf("text" to "댓글, 멘션 및 공유 문서 변경 사항에 대한 알림"),
+            "ar" to mapOf("text" to "إشعارات التعليقات والإشارات والتغييرات على المستندات المشتركة"),
+            "en-XA" to mapOf("text" to "[Ñöţîƒîçåţîöñš ƒöŕ çöɱɱéñţš, ɱéñţîöñš, åñð çĥåñĝéš ţö šĥåŕéð ðöçûɱéñţš one two three four five six]"),
         ),
     ),
 )
