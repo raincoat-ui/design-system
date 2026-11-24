@@ -81,7 +81,9 @@ Add a Client Component for it in `app/`, with one example for each state in its 
 it from the Server Component too, wherever it can be used there. Add a test file in `tests/`.
 
 A component that holds no state, such as Typography, can have a page of its own that is a Server
-Component alone: `app/typography/page.tsx`, at `/typography`.
+Component alone: `app/typography/page.tsx`, at `/typography`. One that opens on the person's
+action, such as the Dialog, has a Server Component page that renders a Client Component:
+`app/dialog/page.tsx`, at `/dialog`.
 
 ## Licenses
 
