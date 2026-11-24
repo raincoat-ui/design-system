@@ -279,4 +279,161 @@ rehearsal builds a fictional pack (<code dir="auto">tools/release/consumers/them
 command line from outside the checkout, and tests the Swift package and the Gradle build it
 produces against the staged Swift mirror and Maven repository.</li>
 </ul>
+<p>M3 was completed on 2026-11-24. Evidence for each exit criterion:</p>
+<ul>
+<li><strong>Each has an accepted RFC.</strong>
+<a href="https://github.com/raincoat-ui/design-system/pull/52">Pull request 52</a> accepted an RFC for
+each of the six new components on 2026-11-24: <a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0004-input.md">0004 Input</a>,
+<a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0005-card.md">0005 Card</a>, <a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0006-dialog-and-sheet.md">0006 Dialog and Sheet</a>,
+<a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0007-tabs.md">0007 Tabs</a>, <a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0008-toast.md">0008 Toast</a>, and
+<a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0003-typography.md">0003 Typography</a>. The Button’s,
+<a href="https://github.com/raincoat-ui/design-system/blob/main/rfcs/0001-foundation-tokens-and-button.md">RFC 0001</a>, was accepted in M1. No accepted RFC
+was edited afterwards. Where a component departs from its RFC, its pull request says so under
+“Deviations from the RFC”.</li>
+<li><strong>The Definition of Done is green for all seven on three platforms.</strong> Each new component was
+built on the web, iOS, and Android in one pull request. Each pull request goes through the
+<a href="https://github.com/raincoat-ui/design-system/blob/main/.github/PULL_REQUEST_TEMPLATE/new-component.md">Definition of Done</a> item by item and says
+what was checked locally and what only CI checks:
+<a href="https://github.com/raincoat-ui/design-system/pull/56">Input</a>,
+<a href="https://github.com/raincoat-ui/design-system/pull/64">Card</a>,
+<a href="https://github.com/raincoat-ui/design-system/pull/65">Dialog and Sheet</a>,
+<a href="https://github.com/raincoat-ui/design-system/pull/60">Tabs</a>,
+<a href="https://github.com/raincoat-ui/design-system/pull/57">Toast</a>, and
+<a href="https://github.com/raincoat-ui/design-system/pull/59">Typography</a>. Each merged after
+<code dir="auto">ci-gate</code> passed on its last commit:
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45435733852">Input</a>,
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45414062611">Card</a>,
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45449162621">Dialog and Sheet</a>,
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45390323072">Tabs</a>,
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45424532437">Toast</a>, and
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45379418148">Typography</a>. In each
+of those runs every job passed: the React components in Chromium, Firefox, and WebKit, the
+Swift package on Linux and macOS, the Compose components under Robolectric, the web snapshots,
+and a reference app job for each platform and theme. The reference apps run every component on
+a simulator, on an emulator, and in Chromium, with each platform’s accessibility audit. The
+Button was built in M1. Its web snapshots came with pull request 55, and
+<a href="https://github.com/raincoat-ui/design-system/pull/62">pull request 62</a> fixed the two faults
+they showed (below). The iOS and Android snapshots of all seven came last, in pull requests 61
+and 63. The one item no pull request ticks, the performance budget, applies from M4. The
+<a href="https://raincoat-ui.github.io/design-system/components/parity-matrix/">parity matrix</a>, which
+the documentation build reads from the specs and the source files, shows all seven on all
+three platforms. After the last code change merged,
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45490009218">CI on <code dir="auto">main</code></a> passed
+in full.
+<a href="https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.5">0.1.0-next.5</a>, the
+first prerelease with all seven, was published on 2026-11-24 from
+<a href="https://github.com/raincoat-ui/design-system/pull/70">pull request 70</a>.
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45495374127">Its release run</a>
+published it to npm, the Maven repository, and the Swift mirror, with provenance, the tag, and
+the GitHub release, each on the first attempt. Its <code dir="auto">install the published release</code> job failed
+once, because Gradle could not download the Kotlin Compose plugin from the plugin
+repositories; run again, it passed. The reference apps then installed the release from npm,
+the Maven repository, and the Swift mirror and passed their tests: web, Android, and iOS, in
+both themes.</li>
+<li><strong>Vietnamese, CJK, right-to-left, and text-expansion snapshots are in place.</strong>
+<a href="https://github.com/raincoat-ui/design-system/blob/main/docs/adr/0019-visual-snapshots.md">ADR 0019</a> defines one matrix for every platform,
+<code dir="auto">specs/snapshots.yaml</code>: 11 snapshots for each component and theme. They are the four color
+modes in English, then, in the light mode, Arabic right to left, the largest text size, and
+Vietnamese, Chinese (Simplified), Japanese, Korean, and expanded English, about 40% longer. Each
+component’s <code dir="auto">strings.yaml</code> gives its examples’ text in every locale, and the token build
+generates each platform’s examples from it.
+<a href="https://github.com/raincoat-ui/design-system/pull/55">Pull request 55</a> drew the matrix on the
+web, <a href="https://github.com/raincoat-ui/design-system/pull/61">pull request 61</a> in the iOS
+simulator, and <a href="https://github.com/raincoat-ui/design-system/pull/63">pull request 63</a> under
+Robolectric for Android. Each platform has 154 baselines, one for each component, theme, and
+snapshot. Each was recorded in CI and reviewed before it was committed. On every platform, CI
+fails on a snapshot that has no baseline or differs from it, on a baseline that belongs to no
+snapshot, and on a component with no snapshot test. The jobs that compare them, <code dir="auto">web snapshots</code>,
+<code dir="auto">ios snapshots</code>, and <code dir="auto">android modules</code>, are all required by <code dir="auto">ci-gate</code>, which passed on the last
+commit of
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45480949499">pull request 61</a> and
+<a href="https://github.com/raincoat-ui/design-system/actions/runs/45466552397">pull request 63</a>. On
+pull request 61, the iOS reference app job in Ink was run a second time, after the runner
+cancelled it for lack of capacity.</li>
+</ul>
+<p>What M3 built, six components beside the Button, on three platforms:</p>
+<ul>
+<li><strong>Six components</strong> on the web (<code dir="auto">@raincoat-ui/react</code>), iOS (the <code dir="auto">Raincoat</code> product), and
+Android (<code dir="auto">io.github.raincoat-ui:ui</code>), each from a spec and guidelines, styled only through
+tokens, and shown in each of the four reference apps: Typography’s <code dir="auto">Text</code> and <code dir="auto">Heading</code>
+(<a href="https://github.com/raincoat-ui/design-system/pull/59">pull request 59</a>), Input
+(<a href="https://github.com/raincoat-ui/design-system/pull/56">56</a>), Card
+(<a href="https://github.com/raincoat-ui/design-system/pull/64">64</a>), the dialog, alert dialog, and
+sheet (<a href="https://github.com/raincoat-ui/design-system/pull/65">65</a>), Tabs
+(<a href="https://github.com/raincoat-ui/design-system/pull/60">60</a>), and Toast
+(<a href="https://github.com/raincoat-ui/design-system/pull/57">57</a>). On iOS a dialog or sheet is the
+system sheet, and an alert dialog the system alert.</li>
+<li><strong>Their tokens</strong> (<a href="https://github.com/raincoat-ui/design-system/pull/54">pull request 54</a>):
+four heading styles, a large body, and a caption; a raised background, a scrim, and outlines
+for controls, errors, and the selected tab; shadows and panel widths; and the tokens each
+component owns. Shadows have types in Swift and Kotlin, and one helper on each platform draws
+them. <code dir="auto">card.border.default</code> is the first component token a theme may override.</li>
+<li><strong>Specs that describe more.</strong> A spec can have parts, each with its own properties and types,
+as Typography’s Text and Heading and the dialog’s three kinds do. A property can be a whole
+number, and a default can follow another property. A spec names each platform’s
+implementation, and the linter checks that the file exists and mentions it.</li>
+<li><strong>Documentation from the specs</strong>
+(<a href="https://github.com/raincoat-ui/design-system/pull/53">pull request 53</a>): a page for every
+component, with renditions drawn from the tokens, and the parity matrix. Foundations shows
+translucent colors, shadows, and panel widths
+(<a href="https://github.com/raincoat-ui/design-system/pull/58">pull request 58</a>).</li>
+<li><strong>The snapshot matrix on every platform</strong>, as above, and the React component tests in Firefox
+and WebKit as well as Chromium
+(<a href="https://github.com/raincoat-ui/design-system/pull/55">pull request 55</a>).</li>
+<li><strong>What the new tests found, and what was fixed:</strong>
+<ul>
+<li>The web Button’s label lost its padding at the largest text size, and Japanese labels broke
+before a small kana. The web Button now keeps the space around its label and grows taller,
+as the native Buttons do, and Japanese labels break by the strict rules
+(<a href="https://github.com/raincoat-ui/design-system/pull/62">pull request 62</a>).</li>
+<li>On Android, Korean broke inside words. Under a Korean locale, text now breaks by phrase,
+which keeps Korean words whole, on Android 13 and later
+(<a href="https://github.com/raincoat-ui/design-system/pull/66">pull request 66</a>). Android does so
+only between composed syllables, so the components now compose decomposed (NFD) text, such
+as a file name from macOS, before they draw it. An Input’s value is left as typed
+(<a href="https://github.com/raincoat-ui/design-system/pull/63">pull request 63</a>).</li>
+<li>On iOS, text grew about 4% less than the system’s at the largest text size: 3.0 times its
+default size, where the system’s body text grows 3.118 times. The components took the scale
+from <code dir="auto">@ScaledMetric</code>, which scales by a factor of its own, 2.818 at the largest size, and
+rounded a scaled 1 to 3. Each text style now grows by the system font’s ratio for that
+style. A test checks it against <code dir="auto">UIFont</code> at all 12 Dynamic Type sizes, and each largest-text
+snapshot measures the body text it draws at 3.118 times
+(<a href="https://github.com/raincoat-ui/design-system/pull/61">pull request 61</a>). At the two
+largest sizes, heading-xl was also drawn smaller than heading-lg. Each heading now grows to
+at least the size of the one below it
+(<a href="https://github.com/raincoat-ui/design-system/pull/66">pull request 66</a>).</li>
+<li>The correct text size showed a fault in the iOS Dialog. At the largest size, with the
+keyboard up, the dialog filled the sheet under the keyboard, so the field and the footer
+slid behind it. The dialog now keeps to what shows above the keyboard. The Dialog’s audit at
+the largest size runs with the keyboard put away, because the system audit misread black
+text on white while scrolling with the keyboard up; the keyboard-up state is audited at the
+default size (<a href="https://github.com/raincoat-ui/design-system/pull/61">pull request 61</a>).</li>
+<li>On the web, Escape pressed in a dialog closed a toast shown from that dialog, and the dialog
+stayed open. A toast now closes on Escape only while it has focus, and the dialog takes the
+Escape. A Tab pressed right after an arrow key selected a tab could also focus the tab panel
+instead of the link in it. The panel now leaves the Tab order before the browser handles
+another event (<a href="https://github.com/raincoat-ui/design-system/pull/67">pull request 67</a>).</li>
+<li>The iOS accessibility audit reports all text in a sheet shorter than the screen as possibly
+clipped at larger text sizes, the system’s own text included. The Dialog’s UI tests ignore
+that report only inside the open dialog’s sheet, and a test of their own checks that each
+dialog’s text grows with the text size and lies wholly inside the sheet
+(<a href="https://github.com/raincoat-ui/design-system/pull/65">pull request 65</a>).</li>
+<li>Under Robolectric, the first frame Compose asks for after its content is set can be skipped,
+so a pixel capture could show only the window’s background, and one Android test failed
+now and then. Every capture now redraws the window first
+(<a href="https://github.com/raincoat-ui/design-system/pull/63">pull request 63</a>).</li>
+</ul>
+</li>
+<li><strong>Two known limitations, not fixed in M3:</strong>
+<ul>
+<li>On the web, a toast shown while a dialog or sheet is open appears above it. On iOS and
+Android it appears on the screen behind, where the dialog covers it. The Toast guidelines
+say how to avoid it, and the fix, with an amendment to RFC 0008, is planned for M4
+(<a href="https://github.com/raincoat-ui/design-system/issues/68">issue 68</a>).</li>
+<li>On iOS, a one-line Input whose value wraps, as at the largest text size, draws its lines
+with no space between them and almost none above and below
+(<a href="https://github.com/raincoat-ui/design-system/issues/69">issue 69</a>).</li>
+</ul>
+</li>
+</ul>
 </div><footer class="sl-flex" data-astro-cid-g3jxymr7><div class="meta sl-flex" data-astro-cid-g3jxymr7></div><div class="pagination-links print:hidden" dir="ltr" data-astro-cid-6o7xkmda><a href="/design-system/" rel="prev" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span data-astro-cid-6o7xkmda>Previous<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>Overview</span></span></a><a href="/design-system/foundations/color/" rel="next" data-astro-cid-6o7xkmda><svg data-astro-cid-6o7xkmda="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;" data-astro-cid-dtrqdpou><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span data-astro-cid-6o7xkmda>Next<br data-astro-cid-6o7xkmda><span class="link-title" data-astro-cid-6o7xkmda>Color</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
