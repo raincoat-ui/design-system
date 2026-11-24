@@ -109,11 +109,14 @@
         }
 
         let reading: Reading
-        @TextScale(relativeTo: .body) private var scale
+        @TextScale private var scale: CGFloat
         @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-        init(reading: Reading) {
+        /// - Parameter textStyle: The system text style whose scale is read: body text, as most
+        ///   of the components' text follows.
+        init(reading: Reading, textStyle: Font.TextStyle = .body) {
             self.reading = reading
+            _scale = TextScale(relativeTo: textStyle)
         }
 
         var body: some View {

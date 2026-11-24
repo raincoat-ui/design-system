@@ -124,8 +124,10 @@ what was left open.
 - Each snapshot checks that its text size is in effect: SwiftUI and the window are given it, and
   body text grows as much as the system's body text there, within 1%: 3.12 times as large at
   the largest size (53 points instead of 17). The check found the components' text growing 3.0
-  times: they multiplied token sizes by a scaled metric of 1, which `@ScaledMetric` rounds.
-  They now divide back a large scaled value instead.
+  times: they multiplied token sizes by a scaled metric of 1. `@ScaledMetric` follows the
+  system's sizes for a text style, not a proportion of the value (it scales 1000 to 2818), so
+  the components now scale the style's own size at the default setting, such as 17 points for
+  body text, and divide it back. A test checks every style they follow at every size.
 - Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
   fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
   belongs to no theme, component, or snapshot.

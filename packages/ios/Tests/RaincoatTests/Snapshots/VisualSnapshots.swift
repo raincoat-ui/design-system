@@ -360,12 +360,45 @@
     /// How many times as large the system draws body text at a text size as at the default size.
     @MainActor
     private func bodyTextScale(at category: UIContentSizeCategory) -> CGFloat {
+        textScale(of: .body, at: category)
+    }
+
+    /// How many times as large the system draws a text style at a text size as at the default.
+    @MainActor
+    private func textScale(of textStyle: UIFont.TextStyle, at category: UIContentSizeCategory) -> CGFloat {
         let size = { (category: UIContentSizeCategory) in
             UIFont.preferredFont(
-                forTextStyle: .body, compatibleWith: UITraitCollection(preferredContentSizeCategory: category)
+                forTextStyle: textStyle, compatibleWith: UITraitCollection(preferredContentSizeCategory: category)
             ).pointSize
         }
         return size(category) / size(.large)
+    }
+
+    /// The system text styles the components' text follows, in SwiftUI and in UIKit.
+    enum FollowedTextStyle: String, CaseIterable, Sendable {
+        case largeTitle, title2, title3, headline, body, caption
+
+        var swiftUI: Font.TextStyle {
+            switch self {
+            case .largeTitle: .largeTitle
+            case .title2: .title2
+            case .title3: .title3
+            case .headline: .headline
+            case .body: .body
+            case .caption: .caption
+            }
+        }
+
+        var uiKit: UIFont.TextStyle {
+            switch self {
+            case .largeTitle: .largeTitle
+            case .title2: .title2
+            case .title3: .title3
+            case .headline: .headline
+            case .body: .body
+            case .caption: .caption1
+            }
+        }
     }
 
     /// The UIKit text size of a Dynamic Type size.
@@ -407,6 +440,28 @@
             let scale = try #require(reading.scale, "the text size was not read")
             let expected = bodyTextScale(at: category)
             #expect(abs(scale / expected - 1) < 0.01, "\(size): \(scale) times as large, where the system's is \(expected)")
+        }
+
+        /// Each system text style the components follow grows as the system grows it, within 1%,
+        /// at every Dynamic Type size: headings follow the title styles, captions the caption.
+        @MainActor
+        @Test(arguments: FollowedTextStyle.allCases, DynamicTypeSize.allCases)
+        func eachTextStyleGrowsAsTheSystemsDoes(style: FollowedTextStyle, size: DynamicTypeSize) throws {
+            let reading = TextScaleProbe.Reading()
+            let category = contentSizeCategory(size)
+            let controller = UIHostingController(
+                rootView: TextScaleProbe(reading: reading, textStyle: style.swiftUI)
+                    .frame(width: 10, height: 10)
+                    .dynamicTypeSize(size)
+            )
+            controller.traitOverrides.preferredContentSizeCategory = category
+            _ = try drawInWindow(controller)
+            let scale = try #require(reading.scale, "the text size was not read")
+            let expected = textScale(of: style.uiKit, at: category)
+            #expect(
+                abs(scale / expected - 1) < 0.01,
+                "\(style) at \(size): \(scale) times as large, where the system's is \(expected)"
+            )
         }
 
         /// The window draws the text of a text field, which UIKit provides: an Input shows one.

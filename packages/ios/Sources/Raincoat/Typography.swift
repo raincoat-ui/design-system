@@ -7,21 +7,41 @@
     /// setting over its size at the default, such as 53 / 17 for body text at the largest
     /// accessibility size.
     ///
-    /// `@ScaledMetric` rounds the value it scales, so a scale read as the scaled value of 1 is
-    /// off: at the largest accessibility size it is 3, where body text is 3.12 times as large,
-    /// and token sizes multiplied by it came out 4% small. A large value scaled and divided
-    /// back keeps the ratio to within a thousandth.
+    /// `@ScaledMetric` does not scale a value in proportion: it follows the system's sizes for
+    /// the text style, which are set for the style's own size. At the largest accessibility size
+    /// it scales 1 to 3 and 1000 to 2818, where body text is 3.12 times as large. So the scale is
+    /// the style's own size at the default setting, 17 points for body text, scaled and divided
+    /// back: the system's ratio for the style. A Mac has no Dynamic Type, and the scale is 1.
     @propertyWrapper
     struct TextScale: DynamicProperty {
-        private static let base: CGFloat = 1000
-
+        /// The text style's size at the default text size setting.
+        private let base: CGFloat
         @ScaledMetric private var scaled: CGFloat
 
         init(relativeTo textStyle: Font.TextStyle) {
-            _scaled = ScaledMetric(wrappedValue: Self.base, relativeTo: textStyle)
+            let base = Self.defaultSize(of: textStyle)
+            self.base = base
+            _scaled = ScaledMetric(wrappedValue: base, relativeTo: textStyle)
         }
 
-        var wrappedValue: CGFloat { scaled / Self.base }
+        var wrappedValue: CGFloat { scaled / base }
+
+        /// The size of a system text style at the default text size setting, Large, in points.
+        private static func defaultSize(of textStyle: Font.TextStyle) -> CGFloat {
+            switch textStyle {
+            case .largeTitle: 34
+            case .title: 28
+            case .title2: 22
+            case .title3: 20
+            case .headline: 17
+            case .subheadline: 15
+            case .callout: 16
+            case .footnote: 13
+            case .caption: 12
+            case .caption2: 11
+            default: 17
+            }
+        }
     }
 
     /// A token text style made ready for SwiftUI.
