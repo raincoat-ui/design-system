@@ -106,7 +106,8 @@ what was left open.
 - Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
   fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
   belongs to no theme, component, or snapshot.
-- At a scale of 2 an iOS baseline is larger than a web one: 2.1 MB for the Button's 22.
+- At a scale of 2 an iOS baseline is larger than a web one: 2.1 MB for the Button's 22, and
+  5.1 MB for Typography's, whose largest-text specimen is 7,015 pixels tall.
 
 **Firefox and WebKit.** The React component tests, not the snapshots, also run in Firefox and
 WebKit, in CI, one job per browser, chosen with `RAINCOAT_BROWSER`. What a test asks of the
