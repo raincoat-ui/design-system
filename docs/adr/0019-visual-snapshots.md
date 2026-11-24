@@ -73,7 +73,9 @@ generated `allSnapshots` and `<component>Examples`:
   locale, in its color mode, with `\.layoutDirection`, `\.locale`, and `dynamicTypeSize` from the
   snapshot. It encodes the image as PNG and compares it with a baseline in a `__screenshots__`
   directory of the same layout. The `swift package (macos)` job runs it and uploads what it drew;
-  Linux has no SwiftUI and skips it.
+  Linux has no SwiftUI and skips it. A component that uses `accessibilityFocused`, such as the
+  Toast, is drawn in an `NSHostingView` in a window instead, through AppKit's display cache:
+  `ImageRenderer` on macOS measures such a view as if it had no content.
 - Android draws with Robolectric's native graphics and `captureToImage` at one pixel per dp, as
   `RaincoatButtonTest` does: the same examples on a stage 480dp wide, with `LocalLayoutDirection`,
   and the snapshot's locale and font scale set in the system's configuration, before anything is

@@ -75,7 +75,8 @@ function entries(id, type, value) {
 }
 
 export default function setup(project) {
-  const id = project.name;
+  // The theme the project provides: a theme's touch project is named after it, not as it.
+  const id = project.config.provide.theme;
   const theme = openProject(repoRoot).themes.find((candidate) => candidate.id === id);
   if (!theme) throw new Error(`no theme "${id}" in the token source`);
   const source = theme.files;

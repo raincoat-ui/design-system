@@ -1,5 +1,7 @@
 package io.github.raincoatui.ui.components
 
+import android.content.res.Configuration
+import android.text.BidiFormatter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.PixelMap
 import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsActions
@@ -30,6 +33,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.ResolvedTextDirection
+import androidx.compose.ui.unit.Density as ComposeDensity
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -321,5 +325,84 @@ class RaincoatTypographyTest(themeId: String) {
             ResolvedTextDirection.Ltr,
             layoutOf("Message from $name").getParagraphDirection(0),
         )
+    }
+
+    @Test
+    fun `a name inside a sentence keeps its own direction only when the app isolates it`() {
+        val name = "مريم الحسيني"
+        // As an app builds it with stringResource(R.string.message_from, name), and with the name
+        // between U+2068 FIRST STRONG ISOLATE and U+2069 POP DIRECTIONAL ISOLATE, as the
+        // guidelines ask.
+        val joined = "Message from $name, 2 minutes ago"
+        val isolated = "Message from ⁨$name⁩, 2 minutes ago"
+        val wrapped = "Message from ${BidiFormatter.getInstance().unicodeWrap(name)}, 2 minutes ago"
+        show {
+            Column {
+                RaincoatText(joined)
+                RaincoatText(isolated)
+                RaincoatText(wrapped)
+            }
+        }
+        /** Where the name and the number after it are drawn, from the left. */
+        fun positions(text: String): Pair<ClosedFloatingPointRange<Float>, Float> {
+            val layout = layoutOf(text)
+            val start = text.indexOf(name)
+            val boxes = (start until start + name.length).map(layout::getBoundingBox)
+            val number = layout.getBoundingBox(text.indexOf('2'))
+            return boxes.minOf { it.left }..boxes.maxOf { it.right } to number.left
+        }
+        // Joined, the comma and the number take the direction of the name before them, and the
+        // number is drawn on the name's left: "Message from 2 ,<name> minutes ago".
+        val (joinedName, joinedNumber) = positions(joined)
+        assertTrue("joined: the 2 at $joinedNumber, the name at $joinedName", joinedNumber < joinedName.start)
+        // Isolated, or wrapped by BidiFormatter, the sentence reads in order.
+        for ((how, text) in listOf("isolated" to isolated, "wrapped" to wrapped)) {
+            val (namePosition, number) = positions(text)
+            assertTrue("$how: the 2 at $number, the name at $namePosition", number > namePosition.endInclusive)
+        }
+    }
+
+    @Test
+    fun `a Korean heading breaks only between whole words`() {
+        RuntimeEnvironment.setQualifiers("+b+ko")
+        val heading = "댓글, 멘션 및 공유 문서 변경 사항에 대한 알림"
+        // At every width, each line ends at a space: no word is split.
+        for (width in 120..320 step 25) {
+            show { Box(Modifier.width(width.dp)) { RaincoatHeading(heading, level = 2) } }
+            val layout = layoutOf(heading)
+            assertTrue("the heading wraps at $width", layout.lineCount > 1)
+            for (line in 0 until layout.lineCount - 1) {
+                val end = layout.getLineEnd(line)
+                assertTrue(
+                    "line ${line + 1} of ${layout.lineCount} at $width ends with \"${heading.substring(0, end)}\"",
+                    heading[end - 1] == ' ',
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `a heading is never smaller than the heading one level below it, at any font scale`() {
+        // Android enlarges large text less than small text, on a curve of its own. Each font
+        // scale is drawn with the density a device at that setting has, curve included.
+        val context = RuntimeEnvironment.getApplication()
+        for (scale in listOf(1f, 1.15f, 1.3f, 1.5f, 1.8f, 2f)) {
+            val configuration = Configuration(context.resources.configuration).apply { fontScale = scale }
+            val density = ComposeDensity(context.createConfigurationContext(configuration))
+            show {
+                CompositionLocalProvider(LocalDensity provides density) {
+                    Column {
+                        for (level in 1..4) RaincoatHeading("Aa", level = level, modifier = Modifier.testTag("level $level"))
+                    }
+                }
+            }
+            val heights = (1..4).map { compose.onNodeWithTag("level $it").height() }
+            for ((index, pair) in heights.zipWithNext().withIndex()) {
+                assertTrue(
+                    "at font scale $scale, level ${index + 1} and ${index + 2} are ${pair.first} and ${pair.second} high",
+                    pair.first >= pair.second,
+                )
+            }
+        }
     }
 }

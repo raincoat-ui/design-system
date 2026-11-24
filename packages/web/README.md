@@ -107,6 +107,111 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the SwiftUI and Compose Buttons follow too.
 
+## Card
+
+```tsx
+import {
+  Button, Card, CardBody, CardButton, CardFooter, CardLink, CardMedia, CardTitle, Text,
+} from "@raincoat-ui/react";
+
+// Static: a container, which can hold links and buttons.
+<Card>
+  <CardTitle level={3}>Storage</CardTitle>
+  <CardBody><Text color="muted">4.2 GB of 15 GB used</Text></CardBody>
+  <CardFooter><Button>Manage storage</Button></CardFooter>
+</Card>
+
+// Interactive: the whole card is the link, or the button, in its title.
+<Card>
+  <CardTitle level={3}><CardLink href="/orders/1042">Order 1042</CardLink></CardTitle>
+  <CardMedia><img src={parcel} alt="A parcel at a front door" /></CardMedia>
+  <CardBody><Text color="muted">Delivered on Monday</Text></CardBody>
+</Card>
+<Card>
+  <CardTitle level={3}><CardButton onClick={startReturn}>Start a return</CardButton></CardTitle>
+</Card>
+```
+
+| Part         | Element                    | Notes                                                                                  |
+| ------------ | -------------------------- | -------------------------------------------------------------------------------------- |
+| `Card`       | `div`                      | The surface. It fills the width it is given and has no role of its own                 |
+| `CardTitle`  | `h1` to `h6`               | A `Heading`: `level` is required, and `variant` is `"heading-sm"` unless you set it    |
+| `CardLink`   | `a`                        | In the title: makes the whole card a link. `asChild` takes a router's link             |
+| `CardButton` | `button`, of type `button` | In the title: makes the whole card a button. It has no `disabled`                      |
+| `CardMedia`  | `div` around an image      | Drawn at the top, edge to edge, with the card's corners, wherever it is in the card    |
+| `CardBody`   | `div`                      | Any content, such as `Text`                                                            |
+| `CardFooter` | `div`                      | Buttons at the end edge. They wrap, and stay at the bottom of a card in a row of cards |
+
+Every prop of each element is passed through, including `ref`.
+
+- **One action per interactive card.** A card whose title holds a `CardLink` or a `CardButton`
+  is that link or button as a whole: a click anywhere on it activates it, and its name is the
+  title alone. It holds no other links or buttons. A card that needs a Button stays static, and
+  its title can be a plain link.
+- **States.** An interactive card's outline steps to the strong border color under a pointer,
+  and its fill changes while it is pressed. It draws the focus ring around itself when its link
+  or button has keyboard focus. A static card has none of these states.
+- **Read the title first.** Put `CardMedia` after `CardTitle`: the media is still drawn at the
+  top, and a screen reader reads the title before it. Give the image an `alt` that says what it
+  shows, or an empty one when it only decorates.
+- **Text under an interactive card cannot be selected with a pointer.** The link or button
+  covers the card, so a drag on it is a click. Selecting all and copying still includes it.
+- **Collections.** Put cards in a `ul` or `ol`, so that a screen reader says how many there
+  are. The grid, and the space between cards, are your layout's.
+- **Server Components.** A static card and a link card hold no state, so they render in a React
+  Server Component and work with JavaScript off. A button card needs a Client Component for its
+  `onClick`, as any button does.
+
+The Card follows the
+[Card spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/card/spec.yaml),
+which the SwiftUI and Compose Cards follow too.
+
+## Toast
+
+Put `ToastProvider` around the app once, and show toasts from anywhere inside it:
+
+```tsx
+import { ToastProvider, useToast } from "@raincoat-ui/react";
+
+<ToastProvider label="Notifications">
+  <App />
+</ToastProvider>;
+
+const toast = useToast();
+toast.show({ message: "Message archived" });
+toast.show({
+  message: "Message archived",
+  action: { label: "Undo", onClick: undoArchive },
+  closeLabel: "Close",
+});
+```
+
+| Prop          | Type               | Default | Notes                                                                  |
+| ------------- | ------------------ | ------- | ---------------------------------------------------------------------- |
+| `label`       | `string`           |         | The name of the region that holds the toasts, such as "Notifications"  |
+| `bottomInset` | `number \| string` | `0`     | Room below the toasts for a bar of your own: pixels, or any CSS length |
+
+- **Every word comes from your app.** The region's name, the message, the action's label, and
+  the close button's name. A toast with an action must have a named close button; TypeScript
+  reports one without.
+- **One at a time.** Toasts appear at the bottom center of the window, one at a time, in the
+  order they were shown.
+- **Never takes focus.** The message is announced politely, through a status region, after
+  whatever the screen reader is saying. F8 moves focus to the toast, and F8 again moves it back.
+  Escape closes it.
+- **Timing.** Without an action, a toast closes after 6 seconds. The time stops while a pointer
+  is over it, while it has focus, and while the page is hidden. A toast with an action stays
+  until the action is used or the toast is closed.
+- **Touch.** A swipe down closes a toast. The toasts sit above the on-screen keyboard.
+- **Client Components.** The provider and `useToast` need a Client Component; the provider can
+  be rendered by a Server Component layout and holds the app's server-rendered content.
+
+`Toast` draws a toast standing still, with the same props as `show`, for documentation and
+tests.
+
+The Toast follows the
+[Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
+
 ## Text and Heading
 
 ```tsx
@@ -144,7 +249,9 @@ Every other prop of the element is passed through, including `ref`.
   have. Text cut short is still read in full by assistive technology. Headings balance their
   lines where the browser can.
 - **Text from people.** Set `dir="auto"` on the Text that holds a name or a message, so that its
-  direction comes from its first strong character.
+  direction comes from its first strong character. Inside a sentence, put the name in a
+  `<Text as="span" dir="auto">`: that also isolates it, so the punctuation and numbers beside it
+  do not join it.
 - **Languages.** Text aligns to the start edge. Lines break strictly in Japanese and between
   whole words in Korean, read from the `lang` attribute of the text or of any element around it.
 - **Margins.** Neither has a margin: spacing between paragraphs and headings is your layout's.
@@ -154,6 +261,112 @@ Every other prop of the element is passed through, including `ref`.
 Text and Heading follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the SwiftUI and Compose versions follow too.
+
+## Tabs
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@raincoat-ui/react";
+
+<Tabs defaultValue="details">
+  <TabsList aria-label="Product">
+    <TabsTrigger value="details">Details</TabsTrigger>
+    <TabsTrigger value="reviews">Reviews</TabsTrigger>
+    <TabsTrigger value="list" aria-label="List" leadingIcon={<ListIcon />} />
+  </TabsList>
+  <TabsContent value="details">…</TabsContent>
+  <TabsContent value="reviews">…</TabsContent>
+  <TabsContent value="list">…</TabsContent>
+</Tabs>;
+```
+
+| Part          | Prop                     | Default       | Notes                                                                                 |
+| ------------- | ------------------------ | ------------- | ------------------------------------------------------------------------------------- |
+| `Tabs`        | `defaultValue`           |               | The tab selected first, when the tabs keep their own selection                        |
+| `Tabs`        | `value`, `onValueChange` |               | The selection, when the app controls it                                               |
+| `Tabs`        | `activationMode`         | `"automatic"` | `"manual"`: the arrow keys only move focus, and Enter or Space selects                |
+| `Tabs`        | `dir`                    |               | Only to give the tabs a direction other than the page's                               |
+| `TabsTrigger` | `value`                  |               | The value it selects                                                                  |
+| `TabsTrigger` | `leadingIcon`            |               | An SVG before the label. Pass the icon of an icon-only tab here, with an `aria-label` |
+| `TabsContent` | `value`                  |               | The tab whose panel it is                                                             |
+| `TabsContent` | `keepMounted`            | `false`       | Keeps the panel's content in the page, hidden, while its tab is not selected          |
+
+Every other prop of the element each part renders is passed through, including `ref`.
+
+- **A tab needs a name.** Give it a label, or `aria-label` when an icon is all it shows.
+  TypeScript reports a tab with neither. There are no disabled tabs: leave out a tab that leads
+  nowhere.
+- **Labels stay on one line.** When the tabs do not fit, the list scrolls sideways. Moving focus
+  to a tab, or selecting it from the app, scrolls it into view. A mouse also gets previous and
+  next buttons at the ends of the list; they are hidden from assistive technology and are not in
+  the Tab order.
+- **Keyboard.** The arrow keys move between the tabs and select, wrapping at the ends; Home and
+  End go to the first and last. Right to left, the arrow keys swap. Tab moves on to the panel: to
+  its first control, or to the panel itself when it has nothing focusable.
+- **Direction.** The tabs follow the page's direction, read from the page when focus first
+  enters them, so a right-to-left page needs nothing more.
+- **Panels.** Only the selected tab's panel has content. The others are empty and hidden, so
+  that each tab can point at its panel. Give the panel its own spacing.
+- **Server Components.** Tabs are Client Components. A Server Component can render them with
+  text and markup inside; the server sends the selected panel, and React hydrates the rest.
+
+The Tabs follow the
+[Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
+which the SwiftUI and Compose Tabs follow too.
+
+## Input
+
+```tsx
+import { Input } from "@raincoat-ui/react";
+
+<Input label="Full name" name="name" autoComplete="name" />
+<Input label="Email" type="email" description="We send the receipt here." placeholder="name@example.com" />
+<Input label="Email" type="email" invalid={!valid} error="Enter an email address, like name@example.com" />
+<Input label="Search the docs" labelHidden type="search" leadingIcon={<SearchIcon />} />
+<Input label="Message" multiline rows={4} />
+```
+
+| Prop          | Type                                                            | Default  | Notes                                                                       |
+| ------------- | --------------------------------------------------------------- | -------- | --------------------------------------------------------------------------- |
+| `label`       | `ReactNode`                                                     |          | Required. Above the field; the field's name                                 |
+| `labelHidden` | `boolean`                                                       | `false`  | Hides the label from view. It is still the name                             |
+| `description` | `ReactNode`                                                     |          | Between the label and the field                                             |
+| `invalid`     | `boolean`                                                       | `false`  | Needs `error`. Sets `aria-invalid` and shows the error below the field      |
+| `error`       | `ReactNode`                                                     |          | Shown only while `invalid`. It does not replace the description             |
+| `size`        | `"sm" \| "md" \| "lg"`                                          | `"md"`   | The same heights as the Button's sizes                                      |
+| `type`        | `"text" \| "email" \| "password" \| "search" \| "tel" \| "url"` | `"text"` | Chooses the keyboard and what autofill offers                               |
+| `multiline`   | `boolean`                                                       | `false`  | A `<textarea>` that starts `rows` lines tall (3) and grows with its content |
+| `leadingIcon` | `ReactNode`                                                     |          | A decorative SVG at the start of the field                                  |
+| `className`   | `string`                                                        |          | Classes for the whole: label, description, field, and error                 |
+
+Every other prop goes to the native `<input>`, or to the `<textarea>` of a multi-line field,
+including `ref`, `value`, `defaultValue`, `onChange`, `name`, `required`, `disabled`, `readOnly`,
+`placeholder`, and `autoComplete`.
+
+- **A field needs a label,** and an invalid one an error message. TypeScript reports either one
+  missing.
+- **Description and error.** The field is described by the description, then the error. Errors
+  are not announced as they appear: when a form is submitted, move focus to the first field in
+  error, which then reads its label, its state, and its message.
+- **Required.** `required` sets the field's required state, and with it the browser's own check
+  when the form is submitted. If your app checks fields itself, add `noValidate` to the form.
+- **Input methods.** While a Vietnamese or CJK input method composes a character, the field
+  keeps the error state it had, and Enter that commits the character does not submit the form.
+  The value is always what the input method wrote.
+- **Focus.** The focus ring is drawn whenever the field has focus.
+- **Touch.** On a touch screen a small field can still be touched across the theme's minimum
+  target size. The extra area takes no room in the layout.
+- **Text size.** The value, the label, and the leading icon grow with the person's text size.
+  The space above and below the value stays as it is, so the field grows taller.
+- **Left to right.** Email, phone, and web address fields stay left-to-right in a right-to-left
+  layout, their icon included.
+- **Multi-line.** Where the browser can size a field to its content (Chrome and Edge), it grows
+  as text is added. Elsewhere it can be made taller by hand.
+- **A Client Component.** The Input marks itself `"use client"`. A Server Component can render
+  it, and its HTML works before any script runs, in a form that posts to a Server Action too.
+
+The Input follows the
+[Input spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/input/spec.yaml),
+which the SwiftUI and Compose Inputs follow too.
 
 ## Browsers
 

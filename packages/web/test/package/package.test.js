@@ -84,6 +84,46 @@ test("Text and Heading render where React has no client hooks, as in a Server Co
   ]);
 });
 
+test("a static card and a link card render where React has no client hooks, as in a Server Component", () => {
+  // Their parts hold no state and use no hook, and give their elements no function.
+  const script = `
+    const React = await import("react");
+    const card = await import("./dist/components/ui/card.js");
+    const elements = [
+      card.Card({ children: "Order 1042" }),
+      card.CardMedia({ children: "picture" }),
+      card.CardTitle({ level: 3, children: "Order 1042" }),
+      card.CardLink({ href: "/orders/1042", children: "Order 1042" }),
+      card.CardBody({ children: "Delivered on Monday" }),
+      card.CardFooter({ children: "Track" }),
+    ];
+    console.log(JSON.stringify([
+      typeof React.useState,
+      elements.map(({ type, props }) => ({
+        type: typeof type === "string" ? type : type.name,
+        slot: props["data-slot"],
+        functions: Object.keys(props).filter((name) => typeof props[name] === "function"),
+      })),
+    ]));
+  `;
+  const output = execFileSync(
+    process.execPath,
+    ["--conditions=react-server", "--input-type=module", "--eval", script],
+    { cwd: root, encoding: "utf8" },
+  );
+  assert.deepEqual(JSON.parse(output), [
+    "undefined",
+    [
+      { type: "div", slot: "card", functions: [] },
+      { type: "div", slot: "card-media", functions: [] },
+      { type: "Heading", slot: "card-title", functions: [] },
+      { type: "a", slot: "card-target", functions: [] },
+      { type: "div", slot: "card-body", functions: [] },
+      { type: "div", slot: "card-footer", functions: [] },
+    ],
+  ]);
+});
+
 test("until hydrated, a busy or disabled Button gives its element no function", () => {
   // A Server Component may not pass a function to an element: React refuses to render it. Such
   // a Button is never hydrated, and until a Button is, the browser refuses activation for it,
@@ -159,21 +199,36 @@ const NEUTRAL = new Set([
   ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", "tan(", "atan2(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
   ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  // Layout and overflow keywords, for a row that scrolls sideways.
+  ...["auto", "column", "nowrap"],
   // Text: alignment, wrapping, line breaking by language, and the ellipsis after max-lines.
   ...["start", "balance", "strict", "keep-all", "hidden", "webkit-box", "vertical"],
+  // A column of parts, and a multi-line field that grows with its content.
+  ...["column", "content"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
   ...["background-color", "border-color", "color"],
+  // A card: its media first in the flex order, as a block, with corners no less than square;
+  // actions that wrap at the end edge, below the rest; and a link or button that takes its
+  // title's look.
+  ...["9999", "block", "max(", "wrap", "flex-end", "inherit"],
+  // A toast: fixed to the bottom of the window, its parts aligned to the top of their row.
+  ...["fixed", "flex-start"],
 ]);
-// The spinner turns once a second. That speed is not a token yet.
-const EXEMPT = new Set([".animate-rc-spin"]);
+// The spinner turns once a second. That speed is not a token yet. Visually hidden text, such as
+// a hidden label, is drawn by a fixed rule. A placeholder is drawn opaque, which Firefox does not
+// do by default.
+const EXEMPT = new Set([".animate-rc-spin", ".sr-only", ".placeholder\\:opacity-100::placeholder"]);
 
 /** The parts of a declaration's value that are neither a Raincoat token nor neutral. */
 function literals(value) {
   const rest = value
     .replaceAll(/var\(--tw-[a-z-]+(?:, ?var\(--default-[a-z-]+\))?\)/g, " ")
-    .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ");
+    .replaceAll(/var\(--rc-[a-z0-9-]+\)/g, " ")
+    // The name of an animation: keyframes of the package's own, named rc-*, as the check of
+    // everything else in the stylesheet requires.
+    .replaceAll(/(?<![\w-])rc-[a-z-]+/g, " ");
   const words = rest.match(
     /var\(--[\w-]+|#[0-9a-f]+|[a-z][a-z0-9-]*\(?|\d*\.?\d+[a-z%]*|"[^"]*"|'[^']*'/gi,
   );
@@ -194,6 +249,8 @@ test("a literal color, a literal size, and a custom property that is not a token
   );
   assert.deepEqual(literals("calc(var(--rc-size-icon-md)*1.5)"), ["1.5"]);
   assert.deepEqual(literals("var(--tw-ease,var(--default-transition-timing-function))"), []);
+  assert.deepEqual(literals("rc-toast-enter var(--rc-toast-enter-duration)"), []);
+  assert.deepEqual(literals("toast-enter 1s"), ["toast-enter", "1s"]);
   assert.deepEqual(literals("#f7d22a"), ["#f7d22a"]);
   assert.deepEqual(literals("red"), ["red"]);
   assert.deepEqual(literals("calc(var(--spacing)*4)"), ["var(--spacing", "4"]);
@@ -234,12 +291,12 @@ test("the precompiled stylesheet changes nothing but Raincoat components", () =>
       leadingClass(selector) && context.some((rule) => rule.startsWith("@layer")),
   );
   assert.deepEqual(layered, []);
-  // Around component rules, only media queries.
+  // Around component rules, only media and feature queries.
   const contexts = rules(stylesheet)
     .filter(({ selector }) => leadingClass(selector))
     .flatMap(({ context }) => context);
   assert.deepEqual(
-    [...new Set(contexts)].filter((rule) => !rule.startsWith("@media ")),
+    [...new Set(contexts)].filter((rule) => !/^@(media|supports) /.test(rule)),
     [],
   );
 });

@@ -1,0 +1,84 @@
+# The text the Card's examples show, in every locale of the snapshot matrix
+# (specs/snapshots.yaml): by example id, as in spec.yaml, then by the content the text fills.
+# The expanded pseudo-locale is derived from the English by the token build; it is never written
+# here.
+#
+# The text is written as an app would ship it, in Unicode's composed form (NFC). The long title
+# takes two lines in every locale, and in Vietnamese stacks diacritics on both. In
+# media-and-footer, media is the image's text alternative, which is read but not shown, and
+# footer is the label of the footer's Button.
+examples:
+  static:
+    title:
+      en: Storage
+      vi: Dung lượng lưu trữ
+      zh-Hans: 存储空间
+      ja: ストレージ
+      ko: 저장 공간
+      ar: مساحة التخزين
+    body:
+      en: 4.2 GB of 15 GB used
+      vi: Đã dùng 4,2 GB trong tổng số 15 GB
+      zh-Hans: 已使用 4.2 GB，共 15 GB
+      ja: 15 GB 中 4.2 GB を使用中
+      ko: 15GB 중 4.2GB 사용 중
+      ar: تم استخدام 4.2 غيغابايت من 15 غيغابايت
+  interactive:
+    title:
+      en: Order 1042
+      vi: Đơn hàng 1042
+      zh-Hans: 订单 1042
+      ja: 注文 1042
+      ko: 주문 1042
+      ar: الطلب 1042
+    body:
+      en: Delivered on Monday
+      vi: Đã giao vào thứ Hai
+      zh-Hans: 已于周一送达
+      ja: 月曜日に配達済み
+      ko: 월요일에 배송됨
+      ar: تم التوصيل يوم الاثنين
+  media-and-footer:
+    title:
+      en: Summer trip
+      vi: Chuyến đi mùa hè
+      zh-Hans: 夏日旅行
+      ja: 夏の旅行
+      ko: 여름 여행
+      ar: رحلة الصيف
+    body:
+      en: 48 photos, shared with 3 people
+      vi: 48 ảnh, được chia sẻ với 3 người
+      zh-Hans: 48 张照片，已与 3 人共享
+      ja: 写真 48 枚、3 人と共有中
+      ko: 사진 48장, 3명과 공유됨
+      ar: 48 صورة، تمت مشاركتها مع 3 أشخاص
+    media:
+      en: A lake between hills covered in pine trees
+      vi: Một hồ nước giữa những ngọn đồi phủ đầy rừng thông
+      zh-Hans: 群山环抱的湖泊，山上长满松树
+      ja: 松林に覆われた丘に囲まれた湖
+      ko: 소나무 숲으로 덮인 언덕 사이의 호수
+      ar: بحيرة بين تلال مغطاة بأشجار الصنوبر
+    footer:
+      en: Open album
+      vi: Mở album
+      zh-Hans: 打开相册
+      ja: アルバムを開く
+      ko: 앨범 열기
+      ar: فتح الألبوم
+  long-title:
+    title:
+      en: Your order of three linen shirts and a wool scarf is on its way
+      vi: Đơn hàng gồm ba áo sơ mi vải lanh và một chiếc khăn len của bạn đang được giao
+      zh-Hans: 你订购的三件亚麻衬衫和一条羊毛围巾已经发货，正在送往你的地址
+      ja: ご注文のリネンシャツ 3 枚とウールのマフラー 1 本は、現在お届けに向かっています
+      ko: 주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다
+      ar: طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك
+    body:
+      en: Arrives on Thursday
+      vi: Dự kiến đến vào thứ Năm
+      zh-Hans: 预计周四送达
+      ja: 木曜日にお届け予定
+      ko: 목요일 도착 예정
+      ar: يصل يوم الخميس

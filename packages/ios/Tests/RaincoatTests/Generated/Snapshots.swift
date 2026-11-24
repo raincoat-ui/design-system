@@ -192,6 +192,321 @@ let buttonExamples: [SpecExample<ButtonExampleProperties>] = [
     ),
 ]
 
+/// The properties of one Card in an example.
+struct CardExampleProperties: Sendable {
+    let interactive: Bool
+}
+
+/// The examples of specs/components/card/spec.yaml, with their text.
+let cardExamples: [SpecExample<CardExampleProperties>] = [
+    SpecExample(
+        id: "static",
+        instances: [
+            CardExampleProperties(interactive: false),
+        ],
+        text: [
+            "en": ["title": "Storage", "body": "4.2 GB of 15 GB used"],
+            "vi": ["title": "Dung lượng lưu trữ", "body": "Đã dùng 4,2 GB trong tổng số 15 GB"],
+            "zh-Hans": ["title": "存储空间", "body": "已使用 4.2 GB，共 15 GB"],
+            "ja": ["title": "ストレージ", "body": "15 GB 中 4.2 GB を使用中"],
+            "ko": ["title": "저장 공간", "body": "15GB 중 4.2GB 사용 중"],
+            "ar": ["title": "مساحة التخزين", "body": "تم استخدام 4.2 غيغابايت من 15 غيغابايت"],
+            "en-XA": ["title": "[Šţöŕåĝé one]", "body": "[4.2 ĜƁ öƒ 15 ĜƁ ûšéð one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "interactive",
+        instances: [
+            CardExampleProperties(interactive: true),
+        ],
+        text: [
+            "en": ["title": "Order 1042", "body": "Delivered on Monday"],
+            "vi": ["title": "Đơn hàng 1042", "body": "Đã giao vào thứ Hai"],
+            "zh-Hans": ["title": "订单 1042", "body": "已于周一送达"],
+            "ja": ["title": "注文 1042", "body": "月曜日に配達済み"],
+            "ko": ["title": "주문 1042", "body": "월요일에 배송됨"],
+            "ar": ["title": "الطلب 1042", "body": "تم التوصيل يوم الاثنين"],
+            "en-XA": ["title": "[Öŕðéŕ 1042 one]", "body": "[Ðéļîṽéŕéð öñ Ṁöñðåý one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "media-and-footer",
+        instances: [
+            CardExampleProperties(interactive: false),
+        ],
+        text: [
+            "en": ["title": "Summer trip", "body": "48 photos, shared with 3 people", "media": "A lake between hills covered in pine trees", "footer": "Open album"],
+            "vi": ["title": "Chuyến đi mùa hè", "body": "48 ảnh, được chia sẻ với 3 người", "media": "Một hồ nước giữa những ngọn đồi phủ đầy rừng thông", "footer": "Mở album"],
+            "zh-Hans": ["title": "夏日旅行", "body": "48 张照片，已与 3 人共享", "media": "群山环抱的湖泊，山上长满松树", "footer": "打开相册"],
+            "ja": ["title": "夏の旅行", "body": "写真 48 枚、3 人と共有中", "media": "松林に覆われた丘に囲まれた湖", "footer": "アルバムを開く"],
+            "ko": ["title": "여름 여행", "body": "사진 48장, 3명과 공유됨", "media": "소나무 숲으로 덮인 언덕 사이의 호수", "footer": "앨범 열기"],
+            "ar": ["title": "رحلة الصيف", "body": "48 صورة، تمت مشاركتها مع 3 أشخاص", "media": "بحيرة بين تلال مغطاة بأشجار الصنوبر", "footer": "فتح الألبوم"],
+            "en-XA": ["title": "[Šûɱɱéŕ ţŕîþ one]", "body": "[48 þĥöţöš, šĥåŕéð ŵîţĥ 3 þéöþļé one two three]", "media": "[Å ļåķé ƀéţŵééñ ĥîļļš çöṽéŕéð îñ þîñé ţŕééš one two three four]", "footer": "[Öþéñ åļƀûɱ one]"],
+        ]
+    ),
+    SpecExample(
+        id: "long-title",
+        instances: [
+            CardExampleProperties(interactive: true),
+        ],
+        text: [
+            "en": ["title": "Your order of three linen shirts and a wool scarf is on its way", "body": "Arrives on Thursday"],
+            "vi": ["title": "Đơn hàng gồm ba áo sơ mi vải lanh và một chiếc khăn len của bạn đang được giao", "body": "Dự kiến đến vào thứ Năm"],
+            "zh-Hans": ["title": "你订购的三件亚麻衬衫和一条羊毛围巾已经发货，正在送往你的地址", "body": "预计周四送达"],
+            "ja": ["title": "ご注文のリネンシャツ 3 枚とウールのマフラー 1 本は、現在お届けに向かっています", "body": "木曜日にお届け予定"],
+            "ko": ["title": "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다", "body": "목요일 도착 예정"],
+            "ar": ["title": "طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك", "body": "يصل يوم الخميس"],
+            "en-XA": ["title": "[Ýöûŕ öŕðéŕ öƒ ţĥŕéé ļîñéñ šĥîŕţš åñð å ŵööļ šçåŕƒ îš öñ îţš ŵåý one two three four five]", "body": "[Åŕŕîṽéš öñ Ţĥûŕšðåý one two]"],
+        ]
+    ),
+]
+
+/// The properties of one Input in an example.
+struct InputExampleProperties: Sendable {
+    let size: InputSize
+    let type: InputType
+    let multiline: Bool
+    let required: Bool
+    let invalid: Bool
+    let disabled: Bool
+    let readOnly: Bool
+}
+
+/// The examples of specs/components/input/spec.yaml, with their text.
+let inputExamples: [SpecExample<InputExampleProperties>] = [
+    SpecExample(
+        id: "sizes",
+        instances: [
+            InputExampleProperties(size: .sm, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+            InputExampleProperties(size: .lg, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Full name", "value": "Ana Lima"],
+            "vi": ["label": "Họ và tên", "value": "Nguyễn Thị Hương"],
+            "zh-Hans": ["label": "姓名", "value": "王小明"],
+            "ja": ["label": "氏名", "value": "山田 花子"],
+            "ko": ["label": "이름", "value": "김민준"],
+            "ar": ["label": "الاسم الكامل", "value": "ليلى حسن"],
+            "en-XA": ["label": "[Ƒûļļ ñåɱé one]", "value": "[Åñå Ļîɱå one]"],
+        ]
+    ),
+    SpecExample(
+        id: "description",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Delivery address", "description": "Include the floor and the name of the building.", "value": "12 Harbour Street"],
+            "vi": ["label": "Địa chỉ giao hàng", "description": "Ghi rõ số tầng và tên tòa nhà.", "value": "12 Phố Hàng Bạc"],
+            "zh-Hans": ["label": "收货地址", "description": "请写明楼层和楼名。", "value": "建国路 88 号"],
+            "ja": ["label": "配送先住所", "description": "階数と建物名も入力してください。", "value": "丸の内 1-1"],
+            "ko": ["label": "배송 주소", "description": "층수와 건물 이름을 포함하세요.", "value": "세종대로 110"],
+            "ar": ["label": "عنوان التوصيل", "description": "اذكر الطابق واسم المبنى.", "value": "١٢ شارع الميناء"],
+            "en-XA": ["label": "[Ðéļîṽéŕý åððŕéšš one two]", "description": "[Îñçļûðé ţĥé ƒļööŕ åñð ţĥé ñåɱé öƒ ţĥé ƀûîļðîñĝ. one two three four]", "value": "[12 Ĥåŕƀöûŕ Šţŕééţ one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "email",
+        instances: [
+            InputExampleProperties(size: .md, type: .email, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Email address", "placeholder": "name@example.com"],
+            "vi": ["label": "Địa chỉ email", "placeholder": "name@example.com"],
+            "zh-Hans": ["label": "电子邮箱", "placeholder": "name@example.com"],
+            "ja": ["label": "メールアドレス", "placeholder": "name@example.com"],
+            "ko": ["label": "이메일 주소", "placeholder": "name@example.com"],
+            "ar": ["label": "البريد الإلكتروني", "placeholder": "name@example.com"],
+            "en-XA": ["label": "[Éɱåîļ åððŕéšš one]", "placeholder": "[ñåɱé@éẋåɱþļé.çöɱ one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "invalid",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: true, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Username", "description": "Letters, numbers, and dots, with no spaces.", "value": "ana lima", "error": "Remove the space, for example: ana.lima"],
+            "vi": ["label": "Tên người dùng", "description": "Chữ cái, chữ số và dấu chấm, không có khoảng trắng.", "value": "ana lima", "error": "Xóa khoảng trắng, ví dụ: ana.lima"],
+            "zh-Hans": ["label": "用户名", "description": "仅限字母、数字和句点，不能有空格。", "value": "ana lima", "error": "请删除空格，例如：ana.lima"],
+            "ja": ["label": "ユーザー名", "description": "英字、数字、ピリオドのみ。スペースは使えません。", "value": "ana lima", "error": "スペースを削除してください（例：ana.lima）"],
+            "ko": ["label": "사용자 이름", "description": "영문자, 숫자, 마침표만 쓰고 공백은 넣지 마세요.", "value": "ana lima", "error": "공백을 삭제하세요. 예: ana.lima"],
+            "ar": ["label": "اسم المستخدم", "description": "أحرف وأرقام ونقاط فقط، بدون مسافات.", "value": "ana lima", "error": "احذف المسافة، مثل: ana.lima"],
+            "en-XA": ["label": "[Ûšéŕñåɱé one]", "description": "[Ļéţţéŕš, ñûɱƀéŕš, åñð ðöţš, ŵîţĥ ñö šþåçéš. one two three four]", "value": "[åñå ļîɱå one]", "error": "[Ŕéɱöṽé ţĥé šþåçé, ƒöŕ éẋåɱþļé: åñå.ļîɱå one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "disabled",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: true, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Company", "value": "Harbour Supplies"],
+            "vi": ["label": "Công ty", "value": "Công ty Bình Minh"],
+            "zh-Hans": ["label": "公司", "value": "晨光贸易"],
+            "ja": ["label": "会社名", "value": "朝日商事"],
+            "ko": ["label": "회사", "value": "한빛상사"],
+            "ar": ["label": "الشركة", "value": "شركة الفجر"],
+            "en-XA": ["label": "[Çöɱþåñý one]", "value": "[Ĥåŕƀöûŕ Šûþþļîéš one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "read-only",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: true),
+        ],
+        text: [
+            "en": ["label": "Account number", "value": "DE89 3704 0044 0532 0130 00"],
+            "vi": ["label": "Số tài khoản", "value": "DE89 3704 0044 0532 0130 00"],
+            "zh-Hans": ["label": "账号", "value": "DE89 3704 0044 0532 0130 00"],
+            "ja": ["label": "口座番号", "value": "DE89 3704 0044 0532 0130 00"],
+            "ko": ["label": "계좌 번호", "value": "DE89 3704 0044 0532 0130 00"],
+            "ar": ["label": "رقم الحساب", "value": "DE89 3704 0044 0532 0130 00"],
+            "en-XA": ["label": "[Åççöûñţ ñûɱƀéŕ one]", "value": "[ÐÉ89 3704 0044 0532 0130 00 one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "multiline",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: true, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Message", "value": "Please leave the parcel with the neighbour at number 14 if nobody answers the door."],
+            "vi": ["label": "Lời nhắn", "value": "Nếu không có ai mở cửa, vui lòng gửi bưu kiện cho hàng xóm ở số nhà 14."],
+            "zh-Hans": ["label": "留言", "value": "如果没人开门，请把包裹交给 14 号的邻居。"],
+            "ja": ["label": "メッセージ", "value": "誰も出ない場合は、14 番地の隣人に荷物を預けてください。"],
+            "ko": ["label": "메시지", "value": "아무도 문을 열지 않으면 14번지 이웃에게 택배를 맡겨 주세요."],
+            "ar": ["label": "الرسالة", "value": "إذا لم يفتح أحد الباب، يرجى ترك الطرد عند الجار في المنزل رقم 14."],
+            "en-XA": ["label": "[Ṁéššåĝé one]", "value": "[Þļéåšé ļéåṽé ţĥé þåŕçéļ ŵîţĥ ţĥé ñéîĝĥƀöûŕ åţ ñûɱƀéŕ 14 îƒ ñöƀöðý åñšŵéŕš ţĥé ðööŕ. one two three four five six seven]"],
+        ]
+    ),
+]
+
+/// The properties of one Tabs in an example.
+struct TabsExampleProperties: Sendable {
+    let activationMode: TabsActivationMode
+    let keepMounted: Bool
+}
+
+/// The examples of specs/components/tabs/spec.yaml, with their text.
+let tabsExamples: [SpecExample<TabsExampleProperties>] = [
+    SpecExample(
+        id: "labels",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["label": "Details\nReviews\nShipping", "panel": "Made of waxed cotton, with taped seams."],
+            "vi": ["label": "Chi tiết\nĐánh giá\nVận chuyển", "panel": "Làm từ vải cotton phủ sáp, các đường may được dán kín."],
+            "zh-Hans": ["label": "详情\n评价\n配送", "panel": "采用上蜡棉布制成，接缝处经过压胶处理。"],
+            "ja": ["label": "詳細\nレビュー\n配送", "panel": "ワックスコットン製で、縫い目はテープで防水加工されています。"],
+            "ko": ["label": "상세 정보\n리뷰\n배송", "panel": "왁스 코튼으로 만들었으며 솔기는 테이프로 마감했습니다."],
+            "ar": ["label": "التفاصيل\nالمراجعات\nالشحن", "panel": "مصنوع من القطن المشمّع، مع درزات ملصوقة."],
+            "en-XA": ["label": "[Ðéţåîļš\nŔéṽîéŵš\nŠĥîþþîñĝ one two]", "panel": "[Ṁåðé öƒ ŵåẋéð çöţţöñ, ŵîţĥ ţåþéð šéåɱš. one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "icons",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["label": "Photos\nVideos\nFiles"],
+            "vi": ["label": "Ảnh\nVideo\nTệp"],
+            "zh-Hans": ["label": "照片\n视频\n文件"],
+            "ja": ["label": "写真\n動画\nファイル"],
+            "ko": ["label": "사진\n동영상\n파일"],
+            "ar": ["label": "الصور\nالفيديوهات\nالملفات"],
+            "en-XA": ["label": "[Þĥöţöš\nṼîðéöš\nƑîļéš one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "icon-only",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["accessible-name": "List\nGrid"],
+            "vi": ["accessible-name": "Danh sách\nLưới"],
+            "zh-Hans": ["accessible-name": "列表\n网格"],
+            "ja": ["accessible-name": "リスト\nグリッド"],
+            "ko": ["accessible-name": "목록\n그리드"],
+            "ar": ["accessible-name": "قائمة\nشبكة"],
+            "en-XA": ["accessible-name": "[Ļîšţ\nĜŕîð one]"],
+        ]
+    ),
+    SpecExample(
+        id: "overflow",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["label": "Overview\nSpecifications\nReviews\nQuestions\nShipping\nReturns"],
+            "vi": ["label": "Tổng quan\nThông số\nĐánh giá\nCâu hỏi\nVận chuyển\nĐổi trả"],
+            "zh-Hans": ["label": "概览\n规格\n评价\n问答\n配送\n退货"],
+            "ja": ["label": "概要\n仕様\nレビュー\n質問\n配送\n返品"],
+            "ko": ["label": "개요\n사양\n리뷰\n질문\n배송\n반품"],
+            "ar": ["label": "نظرة عامة\nالمواصفات\nالمراجعات\nالأسئلة\nالشحن\nالإرجاع"],
+            "en-XA": ["label": "[Öṽéŕṽîéŵ\nŠþéçîƒîçåţîöñš\nŔéṽîéŵš\nǪûéšţîöñš\nŠĥîþþîñĝ\nŔéţûŕñš one two three four five]"],
+        ]
+    ),
+]
+
+/// The properties of one Toast in an example.
+struct ToastExampleProperties: Sendable {
+    let action: Bool
+}
+
+/// The examples of specs/components/toast/spec.yaml, with their text.
+let toastExamples: [SpecExample<ToastExampleProperties>] = [
+    SpecExample(
+        id: "message",
+        instances: [
+            ToastExampleProperties(action: false),
+        ],
+        text: [
+            "en": ["message": "Message archived"],
+            "vi": ["message": "Đã lưu trữ thư"],
+            "zh-Hans": ["message": "邮件已归档"],
+            "ja": ["message": "メッセージをアーカイブしました"],
+            "ko": ["message": "메시지를 보관했습니다"],
+            "ar": ["message": "تمت أرشفة الرسالة"],
+            "en-XA": ["message": "[Ṁéššåĝé åŕçĥîṽéð one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "with-action",
+        instances: [
+            ToastExampleProperties(action: true),
+        ],
+        text: [
+            "en": ["message": "Address deleted", "action-label": "Undo", "close-label": "Close"],
+            "vi": ["message": "Đã xóa địa chỉ", "action-label": "Hoàn tác", "close-label": "Đóng"],
+            "zh-Hans": ["message": "地址已删除", "action-label": "撤销", "close-label": "关闭"],
+            "ja": ["message": "住所を削除しました", "action-label": "元に戻す", "close-label": "閉じる"],
+            "ko": ["message": "주소를 삭제했습니다", "action-label": "실행 취소", "close-label": "닫기"],
+            "ar": ["message": "تم حذف العنوان", "action-label": "تراجع", "close-label": "إغلاق"],
+            "en-XA": ["message": "[Åððŕéšš ðéļéţéð one]", "action-label": "[Ûñðö]", "close-label": "[Çļöšé]"],
+        ]
+    ),
+    SpecExample(
+        id: "long-message",
+        instances: [
+            ToastExampleProperties(action: true),
+        ],
+        text: [
+            "en": ["message": "Messages older than one year were moved from Archive to the Deleted folder", "action-label": "Undo", "close-label": "Close"],
+            "vi": ["message": "Các thư cũ hơn một năm đã được chuyển từ Lưu trữ sang thư mục Đã xóa", "action-label": "Hoàn tác", "close-label": "Đóng"],
+            "zh-Hans": ["message": "超过一年的邮件已从归档移至“已删除”文件夹", "action-label": "撤销", "close-label": "关闭"],
+            "ja": ["message": "1年以上前のメッセージをアーカイブから削除済みフォルダに移動しました", "action-label": "元に戻す", "close-label": "閉じる"],
+            "ko": ["message": "1년이 지난 메시지를 보관함에서 휴지통 폴더로 옮겼습니다", "action-label": "실행 취소", "close-label": "닫기"],
+            "ar": ["message": "نُقلت الرسائل التي مضى عليها أكثر من عام من الأرشيف إلى مجلد المحذوفات", "action-label": "تراجع", "close-label": "إغلاق"],
+            "en-XA": ["message": "[Ṁéššåĝéš öļðéŕ ţĥåñ öñé ýéåŕ ŵéŕé ɱöṽéð ƒŕöɱ Åŕçĥîṽé ţö ţĥé Ðéļéţéð ƒöļðéŕ one two three four five six]", "action-label": "[Ûñðö]", "close-label": "[Çļöšé]"],
+        ]
+    ),
+]
+
 /// The properties of one Text in an example.
 struct TextExampleProperties: Sendable {
     let variant: TextVariant

@@ -1,6 +1,7 @@
 package io.github.raincoatui.reference
 
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
@@ -13,7 +14,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.tryPerformAccessibilityChecks
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertFalse
@@ -75,6 +78,23 @@ class TypographyScreenTest {
         compose.onNodeWithText("Settings").performScrollTo()
         assertTrue("Settings is a heading to a service", serviceNode("Settings").isHeading)
         assertFalse("running text is not a heading", serviceNode("Your files are up to date.").isHeading)
+    }
+
+    @Test
+    fun aNameInASentenceIsDrawnInOrder() {
+        val node = compose.onNodeWithTag("message").performScrollTo()
+        val layouts = mutableListOf<TextLayoutResult>()
+        node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(layouts) }
+        val layout = layouts.single()
+        // The name, isolated, is drawn right to left, and the "2" after it to its right, in the
+        // order of the sentence: not "Message from 2 ,<name> minutes ago".
+        val start = MESSAGE.indexOf(NAME)
+        val name = (start until start + NAME.length).map(layout::getBoundingBox)
+        val number = layout.getBoundingBox(MESSAGE.indexOf('2'))
+        val nameRight = name.maxOf { it.right }
+        assertTrue("the 2 at ${number.left}, the name up to $nameRight", number.left > nameRight)
+        // A service is given the sentence in order.
+        assertTrue("the message is on screen", serviceNode(MESSAGE).isVisibleToUser)
     }
 
     @Test

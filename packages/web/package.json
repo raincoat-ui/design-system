@@ -35,9 +35,25 @@
       "types": "./dist/components/ui/button.d.ts",
       "default": "./dist/components/ui/button.js"
     },
+    "./card": {
+      "types": "./dist/components/ui/card.d.ts",
+      "default": "./dist/components/ui/card.js"
+    },
+    "./input": {
+      "types": "./dist/components/ui/input.d.ts",
+      "default": "./dist/components/ui/input.js"
+    },
+    "./toast": {
+      "types": "./dist/components/ui/toast.d.ts",
+      "default": "./dist/components/ui/toast.js"
+    },
     "./typography": {
       "types": "./dist/components/ui/typography.d.ts",
       "default": "./dist/components/ui/typography.js"
+    },
+    "./tabs": {
+      "types": "./dist/components/ui/tabs.d.ts",
+      "default": "./dist/components/ui/tabs.js"
     },
     "./tailwind.css": "./dist/tailwind.css",
     "./ui.css": "./dist/ui.css"

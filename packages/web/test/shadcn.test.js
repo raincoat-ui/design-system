@@ -15,8 +15,13 @@ const names = (dir, extension) =>
     .map((name) => name.slice(0, -extension.length))
     .sort();
 
+// A component can be adapted from several sources: the Input from shadcn/ui's input, textarea,
+// and label. Each source has an entry, and the entries name the component's file.
+const local = (name) => `src/components/ui/${name}.tsx`;
+
 test("every component has an entry in shadcn.lock.json, and every entry a component", () => {
-  assert.deepEqual(names("src/components/ui", ".tsx"), Object.keys(lock.components).sort());
+  const components = new Set(Object.values(lock.components).map((entry) => entry.local));
+  assert.deepEqual(names("src/components/ui", ".tsx").map(local), [...components].sort());
 });
 
 test("every upstream copy has an entry, and the upstream license is kept with them", () => {
@@ -57,7 +62,7 @@ for (const [name, entry] of Object.entries(lock.components)) {
       .digest("hex");
     assert.equal(hash, entry.sha256, `${entry.upstream} has changed since it was fetched`);
     assert.equal(entry.upstream, `.shadcn-upstream/${name}.tsx`);
-    assert.equal(entry.local, `src/components/ui/${name}.tsx`);
+    assert.match(entry.local, /^src\/components\/ui\/[a-z-]+\.tsx$/);
     assert.ok(existsSync(join(root, entry.local)));
     assert.equal(entry.registry, `https://ui.shadcn.com/r/styles/${lock.style}/${name}.json`);
     assert.match(entry.fetched, /^\d{4}-\d{2}-\d{2}$/);

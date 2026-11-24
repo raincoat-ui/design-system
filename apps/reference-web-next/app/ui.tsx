@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 // The app's layout, shared by its Server and Client Components. Every value is a theme token or
 // a shadcn/ui color name that the theme maps.
@@ -20,17 +20,4 @@ export function Row({ children }: { children: ReactNode }) {
 
 export function Column({ children }: { children: ReactNode }) {
   return <div className="flex flex-col items-start gap-(--rc-space-3)">{children}</div>;
-}
-
-/** A labelled text field. Raincoat has no Input yet (milestone 3), so this one is plain. */
-export function Field({ label, ...input }: { label: string } & ComponentProps<"input">) {
-  return (
-    <label className="flex flex-col gap-(--rc-space-1)">
-      {label}
-      <input
-        className="min-h-(--rc-button-height-md) rounded-md border border-input bg-background px-(--rc-space-3) text-foreground"
-        {...input}
-      />
-    </label>
-  );
 }

@@ -18,6 +18,10 @@ The page (`app/page.tsx`) is a Server Component. It shows the Button in two ways
 - **From the Server Component itself**, in forms that post to Server Actions (`app/actions.ts`).
   These Buttons reach the browser as HTML and are never hydrated.
 
+The Input's page (`app/input/page.tsx`) is a Server Component too. Its form posts to a Server
+Action that checks the email address and, when it is not one, shows the page again with the
+field in error, with JavaScript on and off. The forms of the Button's page use the Input as well.
+
 The tests run the production build, served by `next start`, in Chromium, with Playwright, and
 check what the [Vite app](../reference-web-vite/README.md) cannot:
 
@@ -79,9 +83,14 @@ Component stops the page from rendering; this app found that bug.
 
 Add a Client Component for it in `app/`, with one example for each state in its spec, and render
 it from the Server Component too, wherever it can be used there. Add a test file in `tests/`.
+A component can have a page of its own: the Toast's is `app/toast/page.tsx`, a Server Component
+that renders the `ToastProvider` around the page, as an app's layout does.
 
 A component that holds no state, such as Typography, can have a page of its own that is a Server
-Component alone: `app/typography/page.tsx`, at `/typography`.
+Component alone: `app/typography/page.tsx`, at `/typography`. The Tabs, Client Components, have
+a page that a Server Component renders: `app/tabs/page.tsx`, at `/tabs`.
+The Card's page, `app/card/page.tsx` at `/card`, is a Server Component with one Client
+Component inside it: the card that is a button, whose click handler is a function.
 
 ## Licenses
 
