@@ -214,7 +214,7 @@
         let actions: Actions
 
         @Tokens private var tokens
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
         // The heights of the sections, each with its space, as last laid out.
         @State private var headerHeight: CGFloat = 0
         @State private var bodyHeight: CGFloat = 0
@@ -400,7 +400,7 @@
         let isLast: Bool
         let content: Content
 
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
 
         var body: some View {
             let text = look.description.resolved(scale: textScale)
