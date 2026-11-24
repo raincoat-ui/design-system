@@ -40,7 +40,6 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertWidthIsEqualTo
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasClickAction
@@ -63,6 +62,7 @@ import io.github.raincoatui.tokens.RaincoatTokenSet
 import io.github.raincoatui.tokens.TokenColor
 import io.github.raincoatui.tokens.TokenFormat
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.captureRedrawn
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
 import kotlin.math.abs
@@ -147,7 +147,7 @@ class RaincoatCardTest(themeId: String) {
     /** The color behind the content of the current scene. */
     private var canvas: TokenColor = tokens().color.bg.canvas
 
-    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureToImage().toPixelMap()
+    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureRedrawn(compose).toPixelMap()
 
     private fun PixelMap.has(color: TokenColor, x: Int, y: Int): Boolean {
         val pixel = this[x, y]

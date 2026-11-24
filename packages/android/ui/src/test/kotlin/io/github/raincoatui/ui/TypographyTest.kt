@@ -5,7 +5,10 @@ import androidx.compose.ui.text.style.LineBreak
 import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.Density
 import io.github.raincoatui.ui.generated.allThemes
+import java.text.Normalizer
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertSame
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -55,5 +58,14 @@ class TypographyTest {
             assertEquals("\"$language\"", LineBreak.WordBreak.Default, lineBreak.wordBreak)
             assertEquals("\"$language\"", LineBreak.Strictness.Strict, lineBreak.strictness)
         }
+    }
+
+    @Test
+    fun `text to display is composed, and composed text is returned as it is`() {
+        val composed = "대한 알림, Tiếp tục"
+        assertSame(composed, composedForDisplay(composed))
+        val decomposed = Normalizer.normalize(composed, Normalizer.Form.NFD)
+        assertNotEquals(composed, decomposed)
+        assertEquals(composed, composedForDisplay(decomposed))
     }
 }
