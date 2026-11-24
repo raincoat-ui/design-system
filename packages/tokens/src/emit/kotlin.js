@@ -9,6 +9,7 @@ import {
   HEADER,
   hexParts,
   indent,
+  layers,
   milliseconds,
   pascal,
   permutations,
@@ -32,6 +33,7 @@ const KOTLIN = {
   fontFamily: { type: "List<String>", format: "families" },
   cubicBezier: { type: "TokenEasing", format: "easing" },
   typography: { type: "TokenTextStyle", format: "textStyle" },
+  shadow: { type: "TokenShadow", format: "shadow" },
 };
 
 // Kotlin's hard keywords need backticks when used as a name.
@@ -95,6 +97,13 @@ function literal(type, value) {
       return `TokenEasing(${value.map(double).join(", ")})`;
     case "typography":
       return `TokenTextStyle(families = ${strings(value.fontFamily)}, size = ${double(points(value.fontSize))}, weight = ${weight(value.fontWeight)}, letterSpacing = ${double(points(value.letterSpacing))}, lineHeight = ${double(value.lineHeight)})`;
+    case "shadow":
+      return `TokenShadow(layers = listOf(${layers(value)
+        .map(
+          (layer) =>
+            `TokenShadowLayer(color = ${literal("color", layer.color)}, offsetX = ${double(points(layer.offsetX))}, offsetY = ${double(points(layer.offsetY))}, blur = ${double(points(layer.blur))}, spread = ${double(points(layer.spread))}, inset = ${layer.inset ?? false})`,
+        )
+        .join(", ")}))`;
     default:
       throw new Error(`the Kotlin emitter does not support the type "${type}" yet`);
   }
@@ -187,6 +196,8 @@ import ${TOKENS_PACKAGE}.RaincoatTheme
 import ${TOKENS_PACKAGE}.RaincoatTokenSet
 import ${TOKENS_PACKAGE}.TokenColor
 import ${TOKENS_PACKAGE}.TokenEasing
+import ${TOKENS_PACKAGE}.TokenShadow
+import ${TOKENS_PACKAGE}.TokenShadowLayer
 import ${TOKENS_PACKAGE}.TokenTextStyle
 
 /** The "${themeId}" theme. */

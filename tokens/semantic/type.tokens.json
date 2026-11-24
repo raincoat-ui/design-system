@@ -3,7 +3,59 @@
   "type": {
     "$type": "typography",
     "$description": "Composed text styles. Components set text with these, never with raw font values.",
+    "heading": {
+      "xl": {
+        "$value": {
+          "fontFamily": "{font.family.sans}",
+          "fontSize": "{font.size.32}",
+          "fontWeight": "{font.weight.semibold}",
+          "letterSpacing": "{font.letter-spacing.none}",
+          "lineHeight": "{font.line-height.snug}"
+        },
+        "$description": "The title of a screen. Once per screen."
+      },
+      "lg": {
+        "$value": {
+          "fontFamily": "{font.family.sans}",
+          "fontSize": "{font.size.24}",
+          "fontWeight": "{font.weight.semibold}",
+          "letterSpacing": "{font.letter-spacing.none}",
+          "lineHeight": "{font.line-height.snug}"
+        },
+        "$description": "Section titles on a screen."
+      },
+      "md": {
+        "$value": {
+          "fontFamily": "{font.family.sans}",
+          "fontSize": "{font.size.20}",
+          "fontWeight": "{font.weight.semibold}",
+          "letterSpacing": "{font.letter-spacing.none}",
+          "lineHeight": "{font.line-height.snug}"
+        },
+        "$description": "Dialog and sheet titles, and subsection titles."
+      },
+      "sm": {
+        "$value": {
+          "fontFamily": "{font.family.sans}",
+          "fontSize": "{font.size.16}",
+          "fontWeight": "{font.weight.semibold}",
+          "letterSpacing": "{font.letter-spacing.none}",
+          "lineHeight": "{font.line-height.snug}"
+        },
+        "$description": "Card titles and group titles in lists."
+      }
+    },
     "body": {
+      "lg": {
+        "$value": {
+          "fontFamily": "{font.family.sans}",
+          "fontSize": "{font.size.18}",
+          "fontWeight": "{font.weight.regular}",
+          "letterSpacing": "{font.letter-spacing.none}",
+          "lineHeight": "{font.line-height.normal}"
+        },
+        "$description": "An introductory paragraph."
+      },
       "md": {
         "$value": {
           "fontFamily": "{font.family.sans}",
@@ -56,6 +108,16 @@
         },
         "$description": "Labels on large controls."
       }
+    },
+    "caption": {
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "{font.size.12}",
+        "fontWeight": "{font.weight.regular}",
+        "letterSpacing": "{font.letter-spacing.none}",
+        "lineHeight": "{font.line-height.normal}"
+      },
+      "$description": "Timestamps, counts, and other short secondary facts. Never prose."
     }
   }
 }

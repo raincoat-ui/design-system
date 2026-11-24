@@ -47,6 +47,8 @@ contrast declarations stay the base's.
 | Font families and weights               | `tokens/primitive/font.tokens.json`        |
 | The color each role takes, in each mode | `tokens/semantic/color.<mode>.tokens.json` |
 | Radii                                   | `tokens/semantic/shape.tokens.json`        |
+| The shadows of raised surfaces          | `tokens/semantic/shadow.tokens.json`       |
+| The outline of a card                   | `tokens/component/card.tokens.json`        |
 
 Only tokens the base marks `overridable` can change. Spacing, sizes, border widths, touch
 targets, focus rules, and the red ramp used for danger are locked, and a theme can neither add

@@ -1,0 +1,158 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "dialog": {
+    "$description": "Tokens of the Dialog and the Sheet, which share them. See rfcs/0006-dialog-and-sheet.md.",
+    "scrim": {
+      "$type": "color",
+      "$value": "{color.bg.scrim}",
+      "$description": "The veil over the screen behind a dialog or a sheet."
+    },
+    "bg": {
+      "$type": "color",
+      "$value": "{color.bg.raised}",
+      "$description": "Fill of a dialog or a sheet."
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.thin}",
+        "$description": "Outline width of a dialog or a sheet."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.default}",
+        "$description": "The hairline outline of a dialog or a sheet.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Decorative: the scrim already sets the dialog apart from the screen behind."
+          }
+        }
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{radius.lg}",
+      "$description": "Corner radius of a dialog, and of the open corners of a sheet."
+    },
+    "shadow": {
+      "$type": "shadow",
+      "$value": "{shadow.overlay}",
+      "$description": "Shadow of a dialog or a sheet."
+    },
+    "width": {
+      "$type": "dimension",
+      "sm": { "$value": "{size.panel.sm}", "$description": "Width of the small dialog." },
+      "md": { "$value": "{size.panel.md}", "$description": "Width of the medium dialog." },
+      "lg": { "$value": "{size.panel.lg}", "$description": "Width of the large dialog." }
+    },
+    "margin": {
+      "$type": "dimension",
+      "$value": "{space.4}",
+      "$description": "The least space between a dialog and the edge of the window."
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{space.6}",
+      "$description": "Space between the edge of a dialog or a sheet and its content."
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.4}",
+      "$description": "Space between the header, the body, and the footer."
+    },
+    "footer": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{space.2}",
+        "$description": "Space between the buttons in the footer."
+      }
+    },
+    "title": {
+      "$type": "typography",
+      "$value": "{type.heading.md}",
+      "$description": "Text style of the title."
+    },
+    "description": {
+      "$type": "typography",
+      "$value": "{type.body.md}",
+      "$description": "Text style of the description under the title."
+    },
+    "fg": {
+      "$type": "color",
+      "$value": "{color.fg.default}",
+      "$description": "Color of the title and the description.",
+      "$extensions": {
+        "raincoat": {
+          "on": ["dialog.bg"],
+          "contrast": "text"
+        }
+      }
+    },
+    "divider": {
+      "$type": "color",
+      "$value": "{color.border.default}",
+      "$description": "The hairline under the header once the body has scrolled under it.",
+      "$extensions": {
+        "raincoat": {
+          "contrast": "exempt",
+          "contrast-note": "Decorative: no information is lost if it is not perceived."
+        }
+      }
+    },
+    "enter": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.normal}",
+        "$description": "Duration of a dialog or a sheet appearing."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.interactive}",
+        "$description": "Easing of a dialog or a sheet appearing."
+      }
+    },
+    "exit": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.fast}",
+        "$description": "Duration of a dialog or a sheet leaving."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.leave}",
+        "$description": "Easing of a dialog or a sheet leaving."
+      }
+    }
+  },
+  "sheet": {
+    "$description": "Tokens of the Sheet alone. It takes every other value from the dialog tokens.",
+    "width": {
+      "end": {
+        "$type": "dimension",
+        "$value": "{size.panel.sm}",
+        "$description": "Width of a sheet at the end edge of the window."
+      }
+    },
+    "max-width": {
+      "bottom": {
+        "$type": "dimension",
+        "$value": "{size.panel.md}",
+        "$description": "The widest a sheet at the bottom edge grows. On wider windows it is centered."
+      }
+    },
+    "handle": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.strong}",
+        "$description": "Color of the handle at the top of a bottom sheet.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["dialog.bg"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    }
+  }
+}

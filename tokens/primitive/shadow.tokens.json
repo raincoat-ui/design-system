@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "shadow": {
+    "$type": "shadow",
+    "$description": "Raw shadows. A shadow is one or more layers, each a color, an offset, a blur, and a spread.",
+    "none": {
+      "$value": {
+        "color": {
+          "colorSpace": "oklch",
+          "components": [0, 0, 0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": { "value": 0, "unit": "px" },
+        "offsetY": { "value": 0, "unit": "px" },
+        "blur": { "value": 0, "unit": "px" },
+        "spread": { "value": 0, "unit": "px" }
+      },
+      "$description": "No shadow: one transparent layer with no offset, blur, or spread. It draws nothing."
+    }
+  }
+}

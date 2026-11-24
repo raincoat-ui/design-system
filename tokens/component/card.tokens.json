@@ -1,0 +1,99 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "card": {
+    "$description": "Tokens of the Card component. See rfcs/0005-card.md.",
+    "radius": {
+      "$type": "dimension",
+      "$value": "{radius.lg}",
+      "$description": "Corner radius of the card."
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": "{space.4}",
+      "$description": "Space between the card's edge and its content."
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.3}",
+      "$description": "Space between the parts of the card."
+    },
+    "bg": {
+      "$type": "color",
+      "default": { "$value": "{color.bg.raised}", "$description": "Fill of the card." },
+      "pressed": {
+        "$value": "{color.control.hover}",
+        "$description": "Fill of an interactive card when pressed."
+      }
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.thin}",
+        "$description": "Outline width of the card."
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.border.default}",
+        "$description": "Outline of the card. A theme that draws filled cards with no outline points it at its fill.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "contrast": "exempt",
+            "contrast-note": "Decorative: the outline groups the card's content, which identifies it."
+          }
+        }
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.border.strong}",
+        "$description": "Outline of an interactive card under a pointer.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "$type": "shadow",
+      "$value": "{shadow.raised}",
+      "$description": "Shadow of the card."
+    },
+    "focus-ring": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.focus}",
+        "$description": "Width of the focus ring of an interactive card."
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{border-width.thick}",
+        "$description": "Gap between the card's edge and its focus ring."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.focus}",
+        "$description": "Color of the focus ring, drawn on the surface behind the card.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "transition": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.fast}",
+        "$description": "Duration of hover and press changes on an interactive card."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.interactive}",
+        "$description": "Easing of hover and press changes on an interactive card."
+      }
+    }
+  }
+}

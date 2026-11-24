@@ -54,6 +54,20 @@
         "$value": "{dimension.20}",
         "$description": "Icons inside medium and large controls."
       }
+    },
+    "panel": {
+      "sm": {
+        "$value": "{dimension.400}",
+        "$description": "Width of a small panel above the page, such as an alert dialog or a sheet at the end edge."
+      },
+      "md": {
+        "$value": "{dimension.560}",
+        "$description": "Width of a medium panel above the page, such as a dialog or a toast at its widest."
+      },
+      "lg": {
+        "$value": "{dimension.800}",
+        "$description": "Width of a large panel above the page, such as a large dialog."
+      }
     }
   }
 }

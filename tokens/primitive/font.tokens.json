@@ -59,6 +59,10 @@
       "24": {
         "$value": { "value": 1.5, "unit": "rem" },
         "$description": "24px equivalent: headings. Counts as large text for contrast."
+      },
+      "32": {
+        "$value": { "value": 2, "unit": "rem" },
+        "$description": "32px equivalent: the title of a screen."
       }
     },
     "line-height": {

@@ -23,10 +23,30 @@ const seconds = ({ value, unit }) => (unit === "ms" ? value / 1000 : value);
 
 function rgb(value) {
   const hex = hexOf(value);
-  if (hex.length !== 7) throw new Error(`the tests expect opaque colors, got ${hex}`);
   const channel = (at) => Number.parseInt(hex.slice(at, at + 2), 16);
-  return `rgb(${channel(1)}, ${channel(3)}, ${channel(5)})`;
+  const channels = `${channel(1)}, ${channel(3)}, ${channel(5)}`;
+  // The stylesheet writes alpha as a byte. The browser reports the shortest decimal, of two or
+  // three places, that gives back the same byte.
+  const alpha = Math.round((value.alpha ?? 1) * 255);
+  if (alpha === 255) return `rgb(${channels})`;
+  const short = Math.round((alpha / 255) * 100) / 100;
+  const decimal =
+    Math.round(short * 255) === alpha ? short : Math.round((alpha / 255) * 1000) / 1000;
+  return `rgba(${channels}, ${decimal})`;
 }
+
+/** A shadow as the browser reports a computed box-shadow: color first, inset last. */
+const shadow = (value) =>
+  []
+    .concat(value)
+    .map((layer) =>
+      [
+        rgb(layer.color),
+        ...["offsetX", "offsetY", "blur", "spread"].map((field) => `${px(layer[field])}px`),
+        ...(layer.inset ? ["inset"] : []),
+      ].join(" "),
+    )
+    .join(", ");
 
 /** The entries one token contributes: a typography token becomes one entry per field. */
 function entries(id, type, value) {
@@ -39,6 +59,8 @@ function entries(id, type, value) {
       return [[id, seconds(value)]];
     case "cubicBezier":
       return [[id, `cubic-bezier(${value.join(", ")})`]];
+    case "shadow":
+      return [[id, shadow(value)]];
     case "typography":
       return [
         [`${id}.font-family`, [].concat(value.fontFamily)[0]],
