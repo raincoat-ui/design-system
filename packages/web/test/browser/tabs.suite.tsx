@@ -7,8 +7,17 @@ import axe from "axe-core";
 import { createRef, type ReactElement, type ReactNode, useState } from "react";
 import { hydrateRoot, type Root } from "react-dom/client";
 import { renderToString } from "react-dom/server";
-import { afterEach, beforeEach, describe, expect, inject, test, vi } from "vitest";
-import { cdp, type Locator, page, userEvent } from "vitest/browser";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  inject,
+  type TestContext,
+  test,
+  vi,
+} from "vitest";
+import { cdp, commands, type Locator, page, server, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import {
   TABS_ACTIVATION_MODES,
@@ -217,20 +226,26 @@ const settle = (milliseconds: number) =>
 const rect = (locator: Locator) => locator.element().getBoundingClientRect();
 
 /** Moves the pointer off every tab, so one test's hover cannot carry into the next. */
-const parkPointer = () =>
-  cdp().send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 0, y: 0 });
+const parkPointer = () => commands.movePointerAway();
 
-type MediaFeature = "prefers-reduced-motion" | "prefers-color-scheme";
-async function withMedia(name: MediaFeature, value: string, run: () => Promise<void>) {
-  await cdp().send("Emulation.setEmulatedMedia", { features: [{ name, value }] });
+type Media = Parameters<typeof commands.emulateMedia>[0];
+/** Runs with a system setting emulated, such as `{ reducedMotion: "reduce" }`. */
+async function withMedia(media: Media, run: () => Promise<void>) {
+  await commands.emulateMedia(media);
   try {
     await run();
   } finally {
-    await cdp().send("Emulation.setEmulatedMedia", { features: [] });
+    await commands.emulateMedia(Object.fromEntries(Object.keys(media).map((name) => [name, null])));
   }
 }
 
-async function withTouch(run: () => Promise<void>) {
+/**
+ * Runs with a touch screen. Chromium alone can turn one on in a page that is already open;
+ * Firefox and WebKit take it only when the browser starts, which would make every test a touch
+ * test, so the test is skipped there.
+ */
+async function withTouch(context: TestContext, run: () => Promise<void>) {
+  context.skip(server.browser !== "chromium", "touch emulation needs Chromium");
   await cdp().send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });
   try {
     expect(matchMedia("(pointer: coarse)").matches).toBe(true);
@@ -557,7 +572,7 @@ export function describeTabs(environment: string) {
     });
 
     describe.each(MODES)("colors in %s mode", (mode) => {
-      test("a tab at rest, hovered, pressed, and selected", async () => {
+      test("a tab at rest, pressed, and selected", async () => {
         const screen = await render(
           <Stage mode={mode}>
             <Product />
@@ -573,33 +588,49 @@ export function describeTabs(environment: string) {
         expect(label()).toBe(color("tabs.fg.default", mode));
         expect(indicator()).toBe(TRANSPARENT);
 
-        // Test files run side by side and share one mouse, so the pointer is put back over the
-        // tab until the colors are read.
-        expect([
-          matchMedia("(hover: hover)").matches,
-          matchMedia("(pointer: fine)").matches,
-        ]).toEqual([true, true]);
-        const hovered = async () => {
-          await locator.hover();
-          return [fill(), label()];
-        };
-        await expect
-          .poll(hovered, { timeout: 5000 })
-          .toEqual([color("tabs.bg.hover", mode), color("tabs.fg.hover", mode)]);
-
-        // Pressed: Space held down, with the pointer elsewhere. Focus selects the tab.
-        await parkPointer();
-        tab.focus();
-        await userEvent.keyboard("[Space>]");
+        // Pressed: the mouse button held down on it, which also selects it.
+        await locator.hover();
+        await commands.pressPointer();
         await expect.poll(fill).toBe(color("tabs.bg.pressed", mode));
         await expect.poll(label).toBe(color("tabs.fg.hover", mode));
-        await userEvent.keyboard("[/Space]");
+        await commands.releasePointer();
 
         // Selected: the label in the selected color, over the indicator.
+        await parkPointer();
         await expect.element(locator).toHaveAttribute("aria-selected", "true");
         await expect.poll(fill).toBe(TRANSPARENT);
         await expect.poll(label).toBe(color("tabs.fg.selected", mode));
         await expect.poll(indicator).toBe(color("tabs.indicator.color", mode));
+
+        // Pressed: Space held down. The pressed fill selects :active, which Firefox gives only
+        // while a pointer presses: there the tab keeps its fill at rest.
+        const shipping = screen.getByRole("tab", { name: "Shipping" }).element() as HTMLElement;
+        shipping.focus();
+        await userEvent.keyboard("[Space>]");
+        await expect
+          .poll(() => computed(shipping).backgroundColor)
+          .toBe(server.browser === "firefox" ? TRANSPARENT : color("tabs.bg.pressed", mode));
+        await userEvent.keyboard("[/Space]");
+      });
+
+      test("a tab under a hovering pointer", async (context) => {
+        // Chromium does not give a page its mouse back after a touch screen was turned on and
+        // off in it, and test files take turns in the same pages. In a page an earlier file
+        // left so, nothing can hover.
+        context.skip(
+          !matchMedia("(hover: hover)").matches,
+          "an earlier test file left this page without a pointer that hovers",
+        );
+        const screen = await render(
+          <Stage mode={mode}>
+            <Product />
+          </Stage>,
+        );
+        const locator = screen.getByRole("tab", { name: "Reviews" });
+        const tab = locator.element() as HTMLElement;
+        await locator.hover();
+        await expect.poll(() => computed(tab).backgroundColor).toBe(color("tabs.bg.hover", mode));
+        await expect.poll(() => computed(tab).color).toBe(color("tabs.fg.hover", mode));
       });
 
       test("the hairline runs under the whole list, and the indicator covers it under the selected tab", async () => {
@@ -772,7 +803,7 @@ export function describeTabs(environment: string) {
       });
 
       test("with reduced motion, color changes are immediate", async () => {
-        await withMedia("prefers-reduced-motion", "reduce", async () => {
+        await withMedia({ reducedMotion: "reduce" }, async () => {
           const screen = await render(
             <Stage>
               <Product />
@@ -930,69 +961,6 @@ export function describeTabs(environment: string) {
       );
     });
 
-    describe("pointer and touch", () => {
-      test("with a mouse, only the visible tab can be hit", async () => {
-        const screen = await render(
-          <Stage density="compact">
-            <Product />
-          </Stage>,
-        );
-        const tab = screen.getByRole("tab", { name: "Reviews" }).element();
-        const box = tab.getBoundingClientRect();
-        expect(matchMedia("(pointer: coarse)").matches).toBe(false);
-        expect(document.elementFromPoint(box.left + box.width / 2, box.top - 2)).not.toBe(tab);
-      });
-
-      test("on a touch screen, a tab shorter than the minimum can be hit across it, the list takes no more room, and there is no hover", async () => {
-        await withTouch(async () => {
-          const screen = await render(
-            <Stage density="compact">
-              <p style={{ margin: 0 }} data-testid="above">
-                Above
-              </p>
-              <Product />
-            </Stage>,
-          );
-          const locator = screen.getByRole("tab", { name: "Reviews" });
-          const tab = locator.element();
-          const box = tab.getBoundingClientRect();
-          const x = box.left + box.width / 2;
-          const reach = (number("tabs.target-minimum") - box.height) / 2;
-          expect(box.height).toBeCloseTo(number("tabs.height", "compact"), 2);
-          expect(reach).toBeGreaterThan(0);
-
-          expect(document.elementFromPoint(x, box.top - reach + 1)).toBe(tab);
-          expect(document.elementFromPoint(x, box.bottom + reach - 1)).toBe(tab);
-          expect(document.elementFromPoint(x, box.top - reach - 1)).not.toBe(tab);
-          // The line above touches the list: the target takes no room.
-          const above = rect(screen.getByTestId("above"));
-          expect(above.bottom).toBeCloseTo(box.top, 1);
-
-          await locator.hover();
-          await settle(250);
-          expect(computed(tab).backgroundColor).toBe(TRANSPARENT);
-        });
-      });
-
-      test("on a touch screen, an overflowing list has no scroll buttons: a swipe scrolls it", async () => {
-        await withTouch(async () => {
-          const screen = await render(
-            <Stage width={NARROW}>
-              <Many />
-            </Stage>,
-          );
-          await settle(100);
-          for (const button of screen.container.querySelectorAll(
-            '[data-slot="tabs-scroll-button"]',
-          )) {
-            expect(computed(button).display).toBe("none");
-          }
-          const list = screen.getByRole("tablist").element() as HTMLElement;
-          expect(computed(list).overflowX).toBe("auto");
-        });
-      });
-    });
-
     describe("server-rendered", () => {
       afterEach(() => {
         for (const undo of serverRendered.splice(0).reverse()) undo();
@@ -1039,10 +1007,75 @@ export function describeTabs(environment: string) {
 
     describe("system preferences", () => {
       test("without a data-theme, the tabs follow the system's color scheme", async () => {
-        await withMedia("prefers-color-scheme", "dark", async () => {
+        await withMedia({ colorScheme: "dark" }, async () => {
           const screen = await render(<Product />);
           const style = computed(screen.getByRole("tab", { name: "Reviews" }).element());
           expect(style.color).toBe(color("tabs.fg.default", "dark"));
+        });
+      });
+    });
+
+    // Last, because Chromium does not give a page its mouse back after a touch screen was
+    // turned on in it.
+    describe("pointer and touch", () => {
+      test("with a mouse, only the visible tab can be hit", async () => {
+        const screen = await render(
+          <Stage density="compact">
+            <Product />
+          </Stage>,
+        );
+        const tab = screen.getByRole("tab", { name: "Reviews" }).element();
+        const box = tab.getBoundingClientRect();
+        expect(matchMedia("(pointer: coarse)").matches).toBe(false);
+        expect(document.elementFromPoint(box.left + box.width / 2, box.top - 2)).not.toBe(tab);
+      });
+
+      test("on a touch screen, a tab shorter than the minimum can be hit across it, the list takes no more room, and there is no hover", async (context) => {
+        await withTouch(context, async () => {
+          const screen = await render(
+            <Stage density="compact">
+              <p style={{ margin: 0 }} data-testid="above">
+                Above
+              </p>
+              <Product />
+            </Stage>,
+          );
+          const locator = screen.getByRole("tab", { name: "Reviews" });
+          const tab = locator.element();
+          const box = tab.getBoundingClientRect();
+          const x = box.left + box.width / 2;
+          const reach = (number("tabs.target-minimum") - box.height) / 2;
+          expect(box.height).toBeCloseTo(number("tabs.height", "compact"), 2);
+          expect(reach).toBeGreaterThan(0);
+
+          expect(document.elementFromPoint(x, box.top - reach + 1)).toBe(tab);
+          expect(document.elementFromPoint(x, box.bottom + reach - 1)).toBe(tab);
+          expect(document.elementFromPoint(x, box.top - reach - 1)).not.toBe(tab);
+          // The line above touches the list: the target takes no room.
+          const above = rect(screen.getByTestId("above"));
+          expect(above.bottom).toBeCloseTo(box.top, 1);
+
+          await locator.hover();
+          await settle(250);
+          expect(computed(tab).backgroundColor).toBe(TRANSPARENT);
+        });
+      });
+
+      test("on a touch screen, an overflowing list has no scroll buttons: a swipe scrolls it", async (context) => {
+        await withTouch(context, async () => {
+          const screen = await render(
+            <Stage width={NARROW}>
+              <Many />
+            </Stage>,
+          );
+          await settle(100);
+          for (const button of screen.container.querySelectorAll(
+            '[data-slot="tabs-scroll-button"]',
+          )) {
+            expect(computed(button).display).toBe("none");
+          }
+          const list = screen.getByRole("tablist").element() as HTMLElement;
+          expect(computed(list).overflowX).toBe("auto");
         });
       });
     });
