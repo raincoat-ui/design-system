@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -55,6 +56,8 @@ import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -567,6 +570,53 @@ class RaincoatButtonTest(themeId: String) {
         // The icon grows with the text.
         assertTrue(scaledIcon > button.iconSize.md)
         assertEquals(scaledIcon, pixels.columnsFilledWith(button.primary.fg, rows = scaledIcon).size)
+    }
+
+    @Test
+    fun `an icon-only button grows with the font size setting, stays square, and keeps the space around its icon`() {
+        val button = tokens().button
+        RuntimeEnvironment.setFontScale(2f)
+        show {
+            RaincoatButton(icon = Block, contentDescription = "Delete page", onClick = {}, variant = ButtonVariant.Primary)
+        }
+        val pixels = compose.onNodeWithContentDescription("Delete page").pixels()
+        val scaledIcon = with(compose.density) { button.iconSize.md.sp.roundToPx() }
+        // What centers the icon in the height at the default font size.
+        val space = (button.height.md.toInt() - button.iconSize.md.toInt()) / 2
+        assertTrue(scaledIcon > button.iconSize.md)
+        assertEquals(scaledIcon, pixels.columnsFilledWith(button.primary.fg, rows = scaledIcon).size)
+        assertEquals(scaledIcon + 2 * space, pixels.width)
+        assertEquals(scaledIcon + 2 * space, pixels.height)
+    }
+
+    /** How a text was laid out, as the text's own node reports it. */
+    private fun textLayout(text: String): TextLayoutResult {
+        val results = mutableListOf<TextLayoutResult>()
+        compose.onNodeWithText(text, useUnmergedTree = true)
+            .fetchSemanticsNode()
+            .config[SemanticsActions.GetTextLayoutResult]
+            .action
+            ?.invoke(results)
+        return results.single()
+    }
+
+    @Test
+    fun `a Japanese label never starts a line with a small kana or a prolonged sound mark`() {
+        // The long label of the spec's examples, in Japanese.
+        val label = "これらの変更をすべて保存し、更新版をすべてのレビュー担当者に送信"
+        val noLineStart = "ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶー、。"
+        val later = mutableListOf<String>()
+        // At widths a few pixels apart, so that a line ends at every place it can.
+        for (width in 120..400 step 4) {
+            show {
+                Box(Modifier.width(width.dp)) { RaincoatButton(label, onClick = {}, variant = ButtonVariant.Primary) }
+            }
+            val layout = textLayout(label)
+            assertEquals(LineBreak.Strictness.Strict, layout.layoutInput.style.lineBreak.strictness)
+            for (line in 1 until layout.lineCount) later += label.substring(layout.getLineStart(line))
+        }
+        assertTrue("the label wraps", later.isNotEmpty())
+        assertEquals(emptyList<String>(), later.filter { it.first() in noLineStart })
     }
 
     @Test
