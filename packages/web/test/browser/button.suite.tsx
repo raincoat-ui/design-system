@@ -26,6 +26,12 @@ type Density = (typeof DENSITIES)[number];
 
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
 const LONG_LABEL = "Save all of these changes and send the updated version to every reviewer";
+// The long label in Japanese and in Korean, as specs/components/button/strings.yaml has it.
+const LONG_LABEL_JA = "これらの変更をすべて保存し、更新版をすべてのレビュー担当者に送信";
+const LONG_LABEL_KO = "변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기";
+// What may not start a line of Japanese: small kana and the prolonged sound mark, which strict
+// line breaking keeps on the line before, and the closing comma and full stop.
+const NO_LINE_START_JA = /[ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿー、。]/u;
 const STAGE_PADDING = 24;
 
 const expected = inject("tokens");
@@ -45,12 +51,14 @@ function Stage({
   mode = "light",
   density,
   dir,
+  lang,
   width,
   children,
 }: {
   mode?: Mode;
   density?: Density;
   dir?: "ltr" | "rtl";
+  lang?: string;
   width?: number;
   children: ReactNode;
 }) {
@@ -60,6 +68,7 @@ function Stage({
       data-theme={mode}
       data-density={density}
       dir={dir}
+      lang={lang}
       style={{
         background: "var(--rc-color-bg-canvas)",
         boxSizing: "border-box",
@@ -153,6 +162,46 @@ const settle = (milliseconds: number) =>
 
 /** Moves the pointer off every button, so one test's hover cannot carry into the next. */
 const parkPointer = () => commands.movePointerAway();
+
+/**
+ * Runs with the text size enlarged by `scale`: a larger root font size, as a browser's text
+ * size setting sets. The snapshots draw the largest text size the same way.
+ */
+async function withTextSize(scale: number, run: () => Promise<void>) {
+  document.documentElement.style.fontSize = `${scale * 100}%`;
+  try {
+    await run();
+  } finally {
+    document.documentElement.style.fontSize = "";
+  }
+}
+
+/**
+ * The lines the browser broke an element's text into, read from where each character is drawn.
+ * A space stays at the end of the line it ends.
+ */
+function lines(element: Element) {
+  const lineHeight = pixels(computed(element).lineHeight);
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  const found: string[] = [];
+  let top = Number.NEGATIVE_INFINITY;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const text = node as Text;
+    for (let index = 0; index < text.length; index++) {
+      const character = text.data.charAt(index);
+      range.setStart(text, index);
+      range.setEnd(text, index + 1);
+      const rect = range.getBoundingClientRect();
+      if (found.length === 0 || (character.trim() !== "" && rect.top > top + lineHeight / 2)) {
+        found.push("");
+        top = rect.top;
+      }
+      found[found.length - 1] += character;
+    }
+  }
+  return found;
+}
 
 type Media = Parameters<typeof commands.emulateMedia>[0];
 /** Runs with a system setting emulated, such as `{ reducedMotion: "reduce" }`. */
@@ -530,6 +579,83 @@ export function describeButton(environment: string) {
       });
     });
 
+    describe("at twice the text size", () => {
+      test.each(BUTTON_SIZES)(
+        "the %s label, icon, and spinner are twice as large, and the space above and below the label stays",
+        async (size) => {
+          await withTextSize(2, async () => {
+            const screen = await render(
+              <Stage>
+                <Button size={size} leadingIcon={<Dot id="icon" />}>
+                  Save
+                </Button>
+                <Button size={size} loading>
+                  Send
+                </Button>
+              </Stage>,
+            );
+            const button = screen.getByRole("button", { name: "Save" }).element();
+            const style = computed(button);
+            const height = number(`button.height.${size}`);
+            const lineHeight = number(`button.label.${size}.line-height`);
+            const iconSize = number(`button.icon-size.${size}`);
+            // What it is at the default text size.
+            const padding = (height - lineHeight) / 2 - number("button.border-width");
+
+            expect(pixels(style.fontSize)).toBeCloseTo(
+              2 * number(`button.label.${size}.font-size`),
+              2,
+            );
+            expect(pixels(style.lineHeight)).toBeCloseTo(2 * lineHeight, 2);
+            expect(pixels(style.paddingTop)).toBeCloseTo(padding, 2);
+            expect(pixels(style.paddingBottom)).toBeCloseTo(padding, 2);
+            expect(pixels(style.paddingInlineStart)).toBe(number(`button.padding-inline.${size}`));
+            // So the button is taller by what the line grew.
+            expect(button.getBoundingClientRect().height).toBeCloseTo(
+              height - lineHeight + 2 * Math.max(lineHeight, iconSize),
+              1,
+            );
+
+            const icon = screen.getByTestId("icon").element().getBoundingClientRect();
+            expect(icon.width).toBeCloseTo(2 * iconSize, 2);
+            expect(icon.height).toBeCloseTo(2 * iconSize, 2);
+            const spinner = screen.container
+              .querySelector('[data-slot="button-spinner"]')
+              ?.getBoundingClientRect();
+            expect(spinner?.width).toBeCloseTo(2 * iconSize, 2);
+            expect(spinner?.height).toBeCloseTo(2 * iconSize, 2);
+          });
+        },
+      );
+
+      test.each(BUTTON_SIZES)(
+        "an icon-only %s button stays square, with the space around its icon unchanged",
+        async (size) => {
+          await withTextSize(2, async () => {
+            const screen = await render(
+              <Stage>
+                <Button size={size} aria-label="Delete page" leadingIcon={<Dot id="icon" />} />
+              </Stage>,
+            );
+            const rect = screen
+              .getByRole("button", { name: "Delete page" })
+              .element()
+              .getBoundingClientRect();
+            const iconSize = number(`button.icon-size.${size}`);
+            // The space around the icon is what centers it in the token height at the default
+            // size, and the icon is twice as large.
+            const side = number(`button.height.${size}`) + iconSize;
+            expect(rect.height).toBeCloseTo(side, 1);
+            expect(rect.width).toBeCloseTo(side, 1);
+            const icon = screen.getByTestId("icon").element().getBoundingClientRect();
+            expect(icon.width).toBeCloseTo(2 * iconSize, 2);
+            expect(icon.top - rect.top).toBeCloseTo(rect.bottom - icon.bottom, 1);
+            expect(icon.left - rect.left).toBeCloseTo(rect.right - icon.right, 1);
+          });
+        },
+      );
+    });
+
     describe("motion", () => {
       test("color changes use the transition tokens", async () => {
         const screen = await render(
@@ -581,6 +707,45 @@ export function describeButton(environment: string) {
           (number("button.height.md") - lineHeight) / 2 - number("button.border-width");
         expect(pixels(style.paddingTop)).toBeCloseTo(padding, 2);
         expect(pixels(style.paddingBottom)).toBeCloseTo(padding, 2);
+      });
+
+      /**
+       * The lines of a long label at every width from one that fits its longest word to the
+       * width of a snapshot, a few pixels apart, so that a line ends at every place it can.
+       */
+      async function linesAtEveryWidth(lang: string, label: string) {
+        const screen = await render(
+          <Stage lang={lang}>
+            <Button variant="primary">{label}</Button>
+          </Stage>,
+        );
+        const stage = screen.getByTestId("stage").element() as HTMLElement;
+        const button = screen.getByRole("button", { name: label }).element();
+        const found: string[][] = [];
+        for (let width = 200; width <= 480; width += 4) {
+          stage.style.width = `${width}px`;
+          found.push(lines(button));
+        }
+        // Guard against a run that broke no line.
+        expect(found.filter((each) => each.length > 1).length).toBeGreaterThan(found.length / 2);
+        expect(found.every((each) => each.join("") === label)).toBe(true);
+        return { style: computed(button), found };
+      }
+
+      test("a Japanese label never starts a line with a small kana or a prolonged sound mark", async () => {
+        const { style, found } = await linesAtEveryWidth("ja", LONG_LABEL_JA);
+        const later = found.flatMap((each) => each.slice(1));
+        expect(later.filter((line) => NO_LINE_START_JA.test(line.charAt(0)))).toEqual([]);
+        expect(style.lineBreak).toBe("strict");
+        // Japanese has no spaces, so its lines still break between characters.
+        expect(style.wordBreak).toBe("normal");
+      });
+
+      test("a Korean label breaks only between words", async () => {
+        const { style, found } = await linesAtEveryWidth("ko", LONG_LABEL_KO);
+        const ended = found.flatMap((each) => each.slice(0, -1));
+        expect(ended.filter((line) => !line.endsWith(" "))).toEqual([]);
+        expect(style.wordBreak).toBe("keep-all");
       });
 
       test("fullWidth stretches the button to its container", async () => {
