@@ -111,6 +111,7 @@ final class TabsTests: ReferenceAppTestCase {
     @MainActor
     func testTheScreenPassesTheAccessibilityAudit() throws {
         let app = launch()
+        let rowLabels = translated
         var problems: [String] = []
         try app.performAccessibilityAudit { issue in
             // The audit takes any font that was not made from a text style to be fixed in size.
@@ -118,7 +119,7 @@ final class TabsTests: ReferenceAppTestCase {
             if issue.auditType == .dynamicType { return true }
             // A tab that the overflowing row has scrolled partly out of view is cut off by the
             // edge of the row on purpose: a swipe brings it in whole.
-            if issue.auditType == .textClipped, let label = issue.element?.label, self.translated.contains(label) {
+            if issue.auditType == .textClipped, let label = issue.element?.label, rowLabels.contains(label) {
                 return true
             }
             problems.append("\(issue.compactDescription): \(issue.element?.label ?? "no element")")
