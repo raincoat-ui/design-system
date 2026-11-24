@@ -57,6 +57,7 @@ import io.github.raincoatui.tokens.TokenFormat
 import io.github.raincoatui.ui.RaincoatTheme
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
+import kotlin.math.ceil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -145,6 +146,7 @@ class RaincoatInputTest(themeId: String) {
         size: InputSize = InputSize.Md,
         description: String? = null,
         invalid: Boolean = false,
+        error: String = this.error,
         multiline: Boolean = false,
         enabled: Boolean = true,
         readOnly: Boolean = false,
@@ -254,7 +256,13 @@ class RaincoatInputTest(themeId: String) {
         show { Field(enabled = false, initial = "ana") }
         val node = field().assertIsNotEnabled()
         node.performClick()
-        node.assertIsNotFocused()
+        // A disabled field is not focusable at all, so it has no focus state to report, as a
+        // disabled button has none.
+        assertNull(
+            "a disabled field reports a focus state",
+            node.fetchSemanticsNode().config.getOrNull(SemanticsProperties.Focused),
+        )
+        node.assert(hasText("ana"))
     }
 
     @Test
@@ -323,15 +331,15 @@ class RaincoatInputTest(themeId: String) {
         val width = input.focusRing.width.toInt()
 
         val before = compose.onNodeWithTag(stage).pixels()
-        assertTrue(before.isClear(left - gap - 1, middle))
+        assertTrue("no ring before focus, at x ${left - gap - 1}", before.isClear(left - gap - 1, middle))
 
         // A touch focuses a field, and the ring is drawn: the field has focus only to be typed in.
         field().performClick().assertIsFocused()
         val focused = compose.onNodeWithTag(stage).pixels()
-        assertTrue(focused.isClear(left - 1, middle))
-        assertTrue(focused.has(input.focusRing.color, left - gap - 1, middle))
-        assertTrue(focused.has(input.focusRing.color, left - gap - width, middle))
-        assertTrue(focused.isClear(left - gap - width - 1, middle))
+        assertTrue("the gap, at x ${left - 1}", focused.isClear(left - 1, middle))
+        assertPainted("the ring's inner edge", input.focusRing.color, focused, left - gap - 1, middle)
+        assertPainted("the ring's outer edge", input.focusRing.color, focused, left - gap - width, middle)
+        assertTrue("past the ring, at x ${left - gap - width - 1}", focused.isClear(left - gap - width - 1, middle))
     }
 
     // Measurements
@@ -351,12 +359,22 @@ class RaincoatInputTest(themeId: String) {
     @Test
     fun `the label, the description, the field, and the error are stacked the gap apart`() {
         val input = tokens().input
-        show { Field(description = "We send the receipt here.", invalid = true) }
+        // Texts short enough for one line each in the stage.
+        show { Field(description = "We send the receipt.", invalid = true, error = "Enter an email") }
         val total = field().pixels().height
-        val label = input.label.md.lineHeight * input.label.md.size
-        val small = input.description.type.lineHeight * input.description.type.size
-        val expected = label + small + input.height.md + small + 3 * input.gap
-        assertTrue("height $total, expected $expected", kotlin.math.abs(total - expected) <= 2)
+        // A line of text is as tall as its line height, rounded up to a whole pixel, as the
+        // Button's tests measure it.
+        fun line(style: io.github.raincoatui.tokens.TokenTextStyle) = ceil(style.lineHeight * style.size).toInt()
+        val label = line(input.label.md)
+        val description = line(input.description.type)
+        val error = line(input.error.type)
+        val gap = input.gap.toInt()
+        val box = height(input, InputSize.Md)
+        assertEquals(
+            "label $label, description $description, field $box, error $error, and 3 gaps of $gap",
+            label + gap + description + gap + box + gap + error,
+            total,
+        )
     }
 
     // Touch target
@@ -399,9 +417,9 @@ class RaincoatInputTest(themeId: String) {
             val where = "$type in $direction"
             assertEquals(where, icon, columns.size)
             if (onTheLeft) {
-                assertTrue(where, columns.last() < pixels.width / 2)
+                assertTrue("$where: the icon is in columns $columns of ${pixels.width}", columns.last() < pixels.width / 2)
             } else {
-                assertTrue(where, columns.first() > pixels.width / 2)
+                assertTrue("$where: the icon is in columns $columns of ${pixels.width}", columns.first() > pixels.width / 2)
             }
         }
     }
