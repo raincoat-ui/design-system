@@ -7,11 +7,18 @@ public data class RaincoatTokenSet(
     public val color: ColorTokens,
     public val size: SizeTokens,
     public val motion: MotionTokens,
+    public val shadow: ShadowTokens,
     public val radius: RadiusTokens,
     public val borderWidth: BorderWidthTokens,
     public val space: SpaceTokens,
     public val type: TypeTokens,
     public val button: ButtonTokens,
+    public val card: CardTokens,
+    public val dialog: DialogTokens,
+    public val sheet: SheetTokens,
+    public val input: InputTokens,
+    public val tabs: TabsTokens,
+    public val toast: ToastTokens,
 ) {
     public data class ColorTokens(
         public val bg: ColorBgTokens,
@@ -27,12 +34,16 @@ public data class RaincoatTokenSet(
         public val canvas: TokenColor,
         /** Background of cards, sheets, and other raised surfaces. */
         public val surface: TokenColor,
+        /** Surfaces above the page: cards, dialogs, sheets, and toasts. */
+        public val raised: TokenColor,
         /** A quiet fill for grouping content, such as a table header. */
         public val subtle: TokenColor,
         /** A surface in the opposite scheme, such as a toast. */
         public val inverse: TokenColor,
         /** Fill of a disabled control. */
         public val disabled: TokenColor,
+        /** The veil over the screen behind a modal surface, such as a dialog. */
+        public val scrim: TokenColor,
     )
 
     public data class ColorFgTokens(
@@ -59,6 +70,12 @@ public data class RaincoatTokenSet(
         public val default: TokenColor,
         /** The outline of interactive controls. */
         public val strong: TokenColor,
+        /** The outline of a control that takes input, such as a text field. */
+        public val control: TokenColor,
+        /** The outline of a control in error. */
+        public val danger: TokenColor,
+        /** The mark of the selected item in a set, such as the selected tab. */
+        public val selected: TokenColor,
         /** The focus ring. */
         public val focus: TokenColor,
         /** The outline of a disabled control. */
@@ -96,6 +113,7 @@ public data class RaincoatTokenSet(
         public val control: SizeControlTokens,
         public val target: SizeTargetTokens,
         public val icon: SizeIconTokens,
+        public val panel: SizePanelTokens,
     )
 
     public data class SizeControlTokens(
@@ -119,6 +137,15 @@ public data class RaincoatTokenSet(
         public val md: Double,
     )
 
+    public data class SizePanelTokens(
+        /** Width of a small panel above the page, such as an alert dialog or a sheet at the end edge. */
+        public val sm: Double,
+        /** Width of a medium panel above the page, such as a dialog or a toast at its widest. */
+        public val md: Double,
+        /** Width of a large panel above the page, such as a large dialog. */
+        public val lg: Double,
+    )
+
     public data class MotionTokens(
         public val duration: MotionDurationTokens,
         public val easing: MotionEasingTokens,
@@ -138,6 +165,13 @@ public data class RaincoatTokenSet(
         public val interactive: TokenEasing,
         /** The curve for elements leaving the screen. */
         public val leave: TokenEasing,
+    )
+
+    public data class ShadowTokens(
+        /** The shadow of a card. */
+        public val raised: TokenShadow,
+        /** The shadow of dialogs, sheets, and toasts. */
+        public val overlay: TokenShadow,
     )
 
     public data class RadiusTokens(
@@ -188,11 +222,27 @@ public data class RaincoatTokenSet(
     )
 
     public data class TypeTokens(
+        public val heading: TypeHeadingTokens,
         public val body: TypeBodyTokens,
         public val label: TypeLabelTokens,
+        /** Timestamps, counts, and other short secondary facts. Never prose. */
+        public val caption: TokenTextStyle,
+    )
+
+    public data class TypeHeadingTokens(
+        /** The title of a screen. Once per screen. */
+        public val xl: TokenTextStyle,
+        /** Section titles on a screen. */
+        public val lg: TokenTextStyle,
+        /** Dialog and sheet titles, and subsection titles. */
+        public val md: TokenTextStyle,
+        /** Card titles and group titles in lists. */
+        public val sm: TokenTextStyle,
     )
 
     public data class TypeBodyTokens(
+        /** An introductory paragraph. */
+        public val lg: TokenTextStyle,
         /** Default body text. */
         public val md: TokenTextStyle,
         /** Secondary body text, such as help text under a field. */
@@ -351,13 +401,381 @@ public data class RaincoatTokenSet(
         public val border: TokenColor,
     )
 
+    public data class CardTokens(
+        public val bg: CardBgTokens,
+        public val border: CardBorderTokens,
+        public val focusRing: CardFocusRingTokens,
+        public val transition: CardTransitionTokens,
+        /** Corner radius of the card. */
+        public val radius: Double,
+        /** Space between the card's edge and its content. */
+        public val padding: Double,
+        /** Space between the parts of the card. */
+        public val gap: Double,
+        /** Shadow of the card. */
+        public val shadow: TokenShadow,
+    )
+
+    public data class CardBgTokens(
+        /** Fill of the card. */
+        public val default: TokenColor,
+        /** Fill of an interactive card when pressed. */
+        public val pressed: TokenColor,
+    )
+
+    public data class CardBorderTokens(
+        /** Outline width of the card. */
+        public val width: Double,
+        /** Outline of the card. A theme that draws filled cards with no outline points it at its fill. */
+        public val default: TokenColor,
+        /** Outline of an interactive card under a pointer. */
+        public val hover: TokenColor,
+    )
+
+    public data class CardFocusRingTokens(
+        /** Width of the focus ring of an interactive card. */
+        public val width: Double,
+        /** Gap between the card's edge and its focus ring. */
+        public val offset: Double,
+        /** Color of the focus ring, drawn on the surface behind the card. */
+        public val color: TokenColor,
+    )
+
+    public data class CardTransitionTokens(
+        /** Duration of hover and press changes on an interactive card. */
+        public val duration: Int,
+        /** Easing of hover and press changes on an interactive card. */
+        public val easing: TokenEasing,
+    )
+
+    public data class DialogTokens(
+        public val border: DialogBorderTokens,
+        public val width: DialogWidthTokens,
+        public val footer: DialogFooterTokens,
+        public val enter: DialogEnterTokens,
+        public val exit: DialogExitTokens,
+        /** The veil over the screen behind a dialog or a sheet. */
+        public val scrim: TokenColor,
+        /** Fill of a dialog or a sheet. */
+        public val bg: TokenColor,
+        /** Corner radius of a dialog, and of the open corners of a sheet. */
+        public val radius: Double,
+        /** Shadow of a dialog or a sheet. */
+        public val shadow: TokenShadow,
+        /** The least space between a dialog and the edge of the window. */
+        public val margin: Double,
+        /** Space between the edge of a dialog or a sheet and its content. */
+        public val padding: Double,
+        /** Space between the header, the body, and the footer. */
+        public val gap: Double,
+        /** Text style of the title. */
+        public val title: TokenTextStyle,
+        /** Text style of the description under the title. */
+        public val description: TokenTextStyle,
+        /** Color of the title and the description. */
+        public val fg: TokenColor,
+        /** The hairline under the header once the body has scrolled under it. */
+        public val divider: TokenColor,
+    )
+
+    public data class DialogBorderTokens(
+        /** Outline width of a dialog or a sheet. */
+        public val width: Double,
+        /** The hairline outline of a dialog or a sheet. */
+        public val color: TokenColor,
+    )
+
+    public data class DialogWidthTokens(
+        /** Width of the small dialog. */
+        public val sm: Double,
+        /** Width of the medium dialog. */
+        public val md: Double,
+        /** Width of the large dialog. */
+        public val lg: Double,
+    )
+
+    public data class DialogFooterTokens(
+        /** Space between the buttons in the footer. */
+        public val gap: Double,
+    )
+
+    public data class DialogEnterTokens(
+        /** Duration of a dialog or a sheet appearing. */
+        public val duration: Int,
+        /** Easing of a dialog or a sheet appearing. */
+        public val easing: TokenEasing,
+    )
+
+    public data class DialogExitTokens(
+        /** Duration of a dialog or a sheet leaving. */
+        public val duration: Int,
+        /** Easing of a dialog or a sheet leaving. */
+        public val easing: TokenEasing,
+    )
+
+    public data class SheetTokens(
+        public val width: SheetWidthTokens,
+        public val maxWidth: SheetMaxWidthTokens,
+        public val handle: SheetHandleTokens,
+    )
+
+    public data class SheetWidthTokens(
+        /** Width of a sheet at the end edge of the window. */
+        public val end: Double,
+    )
+
+    public data class SheetMaxWidthTokens(
+        /** The widest a sheet at the bottom edge grows. On wider windows it is centered. */
+        public val bottom: Double,
+    )
+
+    public data class SheetHandleTokens(
+        /** Color of the handle at the top of a bottom sheet. */
+        public val color: TokenColor,
+    )
+
+    public data class InputTokens(
+        public val height: InputHeightTokens,
+        public val paddingInline: InputPaddingInlineTokens,
+        public val iconSize: InputIconSizeTokens,
+        public val label: InputLabelTokens,
+        public val value: InputValueTokens,
+        public val description: InputDescriptionTokens,
+        public val error: InputErrorTokens,
+        public val bg: InputBgTokens,
+        public val fg: InputFgTokens,
+        public val border: InputBorderTokens,
+        public val focusRing: InputFocusRingTokens,
+        /** Corner radius of the field. */
+        public val radius: Double,
+        /** Outline width of the field. */
+        public val borderWidth: Double,
+        /** Space between the label, the description, the field, and the error. */
+        public val gap: Double,
+        /** Color of the placeholder, an example of the format shown while the field is empty. */
+        public val placeholder: TokenColor,
+        /** Smallest touch target of any field, whatever its visible height. */
+        public val targetMinimum: Double,
+    )
+
+    public data class InputHeightTokens(
+        /** Height of the small field. */
+        public val sm: Double,
+        /** Height of the medium field. */
+        public val md: Double,
+        /** Height of the large field. */
+        public val lg: Double,
+    )
+
+    public data class InputPaddingInlineTokens(
+        /** Side padding of the small field. */
+        public val sm: Double,
+        /** Side padding of the medium field. */
+        public val md: Double,
+        /** Side padding of the large field. */
+        public val lg: Double,
+    )
+
+    public data class InputIconSizeTokens(
+        /** Icon size in the small field. */
+        public val sm: Double,
+        /** Icon size in the medium field. */
+        public val md: Double,
+        /** Icon size in the large field. */
+        public val lg: Double,
+    )
+
+    public data class InputLabelTokens(
+        /** Text style of the label of the small field. */
+        public val sm: TokenTextStyle,
+        /** Text style of the label of the medium field. */
+        public val md: TokenTextStyle,
+        /** Text style of the label of the large field. */
+        public val lg: TokenTextStyle,
+        /** Color of the label. */
+        public val fg: TokenColor,
+    )
+
+    public data class InputValueTokens(
+        /** Text style of the small field's value. */
+        public val sm: TokenTextStyle,
+        /** Text style of the medium field's value. */
+        public val md: TokenTextStyle,
+        /** Text style of the large field's value. */
+        public val lg: TokenTextStyle,
+    )
+
+    public data class InputDescriptionTokens(
+        /** Text style of the description, between the label and the field. */
+        public val type: TokenTextStyle,
+        /** Color of the description. */
+        public val fg: TokenColor,
+    )
+
+    public data class InputErrorTokens(
+        /** Text style of the error message, below the field. */
+        public val type: TokenTextStyle,
+        /** Color of the error message. */
+        public val fg: TokenColor,
+    )
+
+    public data class InputBgTokens(
+        /** Fill of the field. */
+        public val default: TokenColor,
+        /** Fill of a read-only field. */
+        public val readOnly: TokenColor,
+        /** Fill of a disabled field. */
+        public val disabled: TokenColor,
+    )
+
+    public data class InputFgTokens(
+        /** Color of the value and the leading icon. */
+        public val default: TokenColor,
+        /** Color of the value and the leading icon of a disabled field. */
+        public val disabled: TokenColor,
+    )
+
+    public data class InputBorderTokens(
+        /** Outline of the field. It is what identifies the field against the surface. */
+        public val default: TokenColor,
+        /** Outline of a field in error. */
+        public val invalid: TokenColor,
+        /** The hairline outline of a read-only field. */
+        public val readOnly: TokenColor,
+        /** Outline of a disabled field. */
+        public val disabled: TokenColor,
+    )
+
+    public data class InputFocusRingTokens(
+        /** Width of the focus ring. */
+        public val width: Double,
+        /** Gap between the field's edge and its focus ring. */
+        public val offset: Double,
+        /** Color of the focus ring, drawn on the surface behind the field. */
+        public val color: TokenColor,
+    )
+
+    public data class TabsTokens(
+        public val fg: TabsFgTokens,
+        public val bg: TabsBgTokens,
+        public val indicator: TabsIndicatorTokens,
+        public val divider: TabsDividerTokens,
+        public val focusRing: TabsFocusRingTokens,
+        public val transition: TabsTransitionTokens,
+        /** Height of a tab. */
+        public val height: Double,
+        /** Side padding of a tab. */
+        public val paddingInline: Double,
+        /** Space between a tab's icon and its label. */
+        public val gap: Double,
+        /** Text style of a tab's label. */
+        public val label: TokenTextStyle,
+        /** Icon size in a tab. */
+        public val iconSize: Double,
+        /** Smallest touch target of a tab, whatever its visible height. */
+        public val targetMinimum: Double,
+    )
+
+    public data class TabsFgTokens(
+        /** Label and icon color of a tab that is not selected. */
+        public val default: TokenColor,
+        /** Label and icon color of the selected tab. */
+        public val selected: TokenColor,
+        /** Label and icon color of a tab when hovered or pressed. */
+        public val hover: TokenColor,
+    )
+
+    public data class TabsBgTokens(
+        /** Fill of a tab when hovered. */
+        public val hover: TokenColor,
+        /** Fill of a tab when pressed. */
+        public val pressed: TokenColor,
+    )
+
+    public data class TabsIndicatorTokens(
+        /** The rule under the selected tab. It marks which tab is selected. */
+        public val color: TokenColor,
+        /** Thickness of the rule under the selected tab. */
+        public val width: Double,
+    )
+
+    public data class TabsDividerTokens(
+        /** The hairline under the row of tabs. */
+        public val color: TokenColor,
+        /** Thickness of the hairline under the row of tabs. */
+        public val width: Double,
+    )
+
+    public data class TabsFocusRingTokens(
+        /** Width of the focus ring. */
+        public val width: Double,
+        /** Color of the focus ring, drawn on the surface behind the tab. */
+        public val color: TokenColor,
+    )
+
+    public data class TabsTransitionTokens(
+        /** Duration of hover, press, and selection changes. */
+        public val duration: Int,
+        /** Easing of hover, press, and selection changes. */
+        public val easing: TokenEasing,
+    )
+
+    public data class ToastTokens(
+        public val border: ToastBorderTokens,
+        public val enter: ToastEnterTokens,
+        public val exit: ToastExitTokens,
+        /** Fill of a toast. */
+        public val bg: TokenColor,
+        /** Corner radius of a toast. */
+        public val radius: Double,
+        /** Shadow of a toast. */
+        public val shadow: TokenShadow,
+        /** The widest a toast grows. */
+        public val maxWidth: Double,
+        /** Space between a toast and the edges of the window, and what it sits above. */
+        public val margin: Double,
+        /** Space above and below a toast's content. */
+        public val paddingBlock: Double,
+        /** Space at the start and end of a toast's content. */
+        public val paddingInline: Double,
+        /** Space between the message, the action, and the close button. */
+        public val gap: Double,
+        /** Text style of the message. */
+        public val message: TokenTextStyle,
+        /** Color of the message and the close button. */
+        public val fg: TokenColor,
+    )
+
+    public data class ToastBorderTokens(
+        /** Outline width of a toast. */
+        public val width: Double,
+        /** Outline of a toast. With no scrim behind it, its edge alone sets it apart from what it covers. */
+        public val color: TokenColor,
+    )
+
+    public data class ToastEnterTokens(
+        /** Duration of a toast appearing. */
+        public val duration: Int,
+        /** Easing of a toast appearing. */
+        public val easing: TokenEasing,
+    )
+
+    public data class ToastExitTokens(
+        /** Duration of a toast leaving. */
+        public val duration: Int,
+        /** Easing of a toast leaving. */
+        public val easing: TokenEasing,
+    )
+
     /** Every token as text, keyed by its id in the token source. Used by the contract tests. */
     public fun flattened(): Map<String, String> = mapOf(
         "color.bg.canvas" to TokenFormat.color(color.bg.canvas),
         "color.bg.surface" to TokenFormat.color(color.bg.surface),
+        "color.bg.raised" to TokenFormat.color(color.bg.raised),
         "color.bg.subtle" to TokenFormat.color(color.bg.subtle),
         "color.bg.inverse" to TokenFormat.color(color.bg.inverse),
         "color.bg.disabled" to TokenFormat.color(color.bg.disabled),
+        "color.bg.scrim" to TokenFormat.color(color.bg.scrim),
         "color.fg.default" to TokenFormat.color(color.fg.default),
         "color.fg.muted" to TokenFormat.color(color.fg.muted),
         "color.fg.inverse" to TokenFormat.color(color.fg.inverse),
@@ -368,6 +786,9 @@ public data class RaincoatTokenSet(
         "color.fg.disabled" to TokenFormat.color(color.fg.disabled),
         "color.border.default" to TokenFormat.color(color.border.default),
         "color.border.strong" to TokenFormat.color(color.border.strong),
+        "color.border.control" to TokenFormat.color(color.border.control),
+        "color.border.danger" to TokenFormat.color(color.border.danger),
+        "color.border.selected" to TokenFormat.color(color.border.selected),
         "color.border.focus" to TokenFormat.color(color.border.focus),
         "color.border.disabled" to TokenFormat.color(color.border.disabled),
         "color.accent.default" to TokenFormat.color(color.accent.default),
@@ -385,11 +806,16 @@ public data class RaincoatTokenSet(
         "size.target.minimum" to TokenFormat.number(size.target.minimum),
         "size.icon.sm" to TokenFormat.number(size.icon.sm),
         "size.icon.md" to TokenFormat.number(size.icon.md),
+        "size.panel.sm" to TokenFormat.number(size.panel.sm),
+        "size.panel.md" to TokenFormat.number(size.panel.md),
+        "size.panel.lg" to TokenFormat.number(size.panel.lg),
         "motion.duration.fast" to TokenFormat.milliseconds(motion.duration.fast),
         "motion.duration.normal" to TokenFormat.milliseconds(motion.duration.normal),
         "motion.duration.slow" to TokenFormat.milliseconds(motion.duration.slow),
         "motion.easing.interactive" to TokenFormat.easing(motion.easing.interactive),
         "motion.easing.leave" to TokenFormat.easing(motion.easing.leave),
+        "shadow.raised" to TokenFormat.shadow(shadow.raised),
+        "shadow.overlay" to TokenFormat.shadow(shadow.overlay),
         "radius.none" to TokenFormat.number(radius.none),
         "radius.sm" to TokenFormat.number(radius.sm),
         "radius.md" to TokenFormat.number(radius.md),
@@ -409,6 +835,12 @@ public data class RaincoatTokenSet(
         "space.10" to TokenFormat.number(space._10),
         "space.12" to TokenFormat.number(space._12),
         "space.16" to TokenFormat.number(space._16),
+        "type.caption" to TokenFormat.textStyle(type.caption),
+        "type.heading.xl" to TokenFormat.textStyle(type.heading.xl),
+        "type.heading.lg" to TokenFormat.textStyle(type.heading.lg),
+        "type.heading.md" to TokenFormat.textStyle(type.heading.md),
+        "type.heading.sm" to TokenFormat.textStyle(type.heading.sm),
+        "type.body.lg" to TokenFormat.textStyle(type.body.lg),
         "type.body.md" to TokenFormat.textStyle(type.body.md),
         "type.body.sm" to TokenFormat.textStyle(type.body.sm),
         "type.label.sm" to TokenFormat.textStyle(type.label.sm),
@@ -454,5 +886,115 @@ public data class RaincoatTokenSet(
         "button.disabled.bg" to TokenFormat.color(button.disabled.bg),
         "button.disabled.fg" to TokenFormat.color(button.disabled.fg),
         "button.disabled.border" to TokenFormat.color(button.disabled.border),
+        "card.radius" to TokenFormat.number(card.radius),
+        "card.padding" to TokenFormat.number(card.padding),
+        "card.gap" to TokenFormat.number(card.gap),
+        "card.shadow" to TokenFormat.shadow(card.shadow),
+        "card.bg.default" to TokenFormat.color(card.bg.default),
+        "card.bg.pressed" to TokenFormat.color(card.bg.pressed),
+        "card.border.width" to TokenFormat.number(card.border.width),
+        "card.border.default" to TokenFormat.color(card.border.default),
+        "card.border.hover" to TokenFormat.color(card.border.hover),
+        "card.focus-ring.width" to TokenFormat.number(card.focusRing.width),
+        "card.focus-ring.offset" to TokenFormat.number(card.focusRing.offset),
+        "card.focus-ring.color" to TokenFormat.color(card.focusRing.color),
+        "card.transition.duration" to TokenFormat.milliseconds(card.transition.duration),
+        "card.transition.easing" to TokenFormat.easing(card.transition.easing),
+        "dialog.scrim" to TokenFormat.color(dialog.scrim),
+        "dialog.bg" to TokenFormat.color(dialog.bg),
+        "dialog.radius" to TokenFormat.number(dialog.radius),
+        "dialog.shadow" to TokenFormat.shadow(dialog.shadow),
+        "dialog.margin" to TokenFormat.number(dialog.margin),
+        "dialog.padding" to TokenFormat.number(dialog.padding),
+        "dialog.gap" to TokenFormat.number(dialog.gap),
+        "dialog.title" to TokenFormat.textStyle(dialog.title),
+        "dialog.description" to TokenFormat.textStyle(dialog.description),
+        "dialog.fg" to TokenFormat.color(dialog.fg),
+        "dialog.divider" to TokenFormat.color(dialog.divider),
+        "dialog.border.width" to TokenFormat.number(dialog.border.width),
+        "dialog.border.color" to TokenFormat.color(dialog.border.color),
+        "dialog.width.sm" to TokenFormat.number(dialog.width.sm),
+        "dialog.width.md" to TokenFormat.number(dialog.width.md),
+        "dialog.width.lg" to TokenFormat.number(dialog.width.lg),
+        "dialog.footer.gap" to TokenFormat.number(dialog.footer.gap),
+        "dialog.enter.duration" to TokenFormat.milliseconds(dialog.enter.duration),
+        "dialog.enter.easing" to TokenFormat.easing(dialog.enter.easing),
+        "dialog.exit.duration" to TokenFormat.milliseconds(dialog.exit.duration),
+        "dialog.exit.easing" to TokenFormat.easing(dialog.exit.easing),
+        "sheet.width.end" to TokenFormat.number(sheet.width.end),
+        "sheet.max-width.bottom" to TokenFormat.number(sheet.maxWidth.bottom),
+        "sheet.handle.color" to TokenFormat.color(sheet.handle.color),
+        "input.radius" to TokenFormat.number(input.radius),
+        "input.border-width" to TokenFormat.number(input.borderWidth),
+        "input.gap" to TokenFormat.number(input.gap),
+        "input.placeholder" to TokenFormat.color(input.placeholder),
+        "input.target-minimum" to TokenFormat.number(input.targetMinimum),
+        "input.height.sm" to TokenFormat.number(input.height.sm),
+        "input.height.md" to TokenFormat.number(input.height.md),
+        "input.height.lg" to TokenFormat.number(input.height.lg),
+        "input.padding-inline.sm" to TokenFormat.number(input.paddingInline.sm),
+        "input.padding-inline.md" to TokenFormat.number(input.paddingInline.md),
+        "input.padding-inline.lg" to TokenFormat.number(input.paddingInline.lg),
+        "input.icon-size.sm" to TokenFormat.number(input.iconSize.sm),
+        "input.icon-size.md" to TokenFormat.number(input.iconSize.md),
+        "input.icon-size.lg" to TokenFormat.number(input.iconSize.lg),
+        "input.label.sm" to TokenFormat.textStyle(input.label.sm),
+        "input.label.md" to TokenFormat.textStyle(input.label.md),
+        "input.label.lg" to TokenFormat.textStyle(input.label.lg),
+        "input.label.fg" to TokenFormat.color(input.label.fg),
+        "input.value.sm" to TokenFormat.textStyle(input.value.sm),
+        "input.value.md" to TokenFormat.textStyle(input.value.md),
+        "input.value.lg" to TokenFormat.textStyle(input.value.lg),
+        "input.description.type" to TokenFormat.textStyle(input.description.type),
+        "input.description.fg" to TokenFormat.color(input.description.fg),
+        "input.error.type" to TokenFormat.textStyle(input.error.type),
+        "input.error.fg" to TokenFormat.color(input.error.fg),
+        "input.bg.default" to TokenFormat.color(input.bg.default),
+        "input.bg.read-only" to TokenFormat.color(input.bg.readOnly),
+        "input.bg.disabled" to TokenFormat.color(input.bg.disabled),
+        "input.fg.default" to TokenFormat.color(input.fg.default),
+        "input.fg.disabled" to TokenFormat.color(input.fg.disabled),
+        "input.border.default" to TokenFormat.color(input.border.default),
+        "input.border.invalid" to TokenFormat.color(input.border.invalid),
+        "input.border.read-only" to TokenFormat.color(input.border.readOnly),
+        "input.border.disabled" to TokenFormat.color(input.border.disabled),
+        "input.focus-ring.width" to TokenFormat.number(input.focusRing.width),
+        "input.focus-ring.offset" to TokenFormat.number(input.focusRing.offset),
+        "input.focus-ring.color" to TokenFormat.color(input.focusRing.color),
+        "tabs.height" to TokenFormat.number(tabs.height),
+        "tabs.padding-inline" to TokenFormat.number(tabs.paddingInline),
+        "tabs.gap" to TokenFormat.number(tabs.gap),
+        "tabs.label" to TokenFormat.textStyle(tabs.label),
+        "tabs.icon-size" to TokenFormat.number(tabs.iconSize),
+        "tabs.target-minimum" to TokenFormat.number(tabs.targetMinimum),
+        "tabs.fg.default" to TokenFormat.color(tabs.fg.default),
+        "tabs.fg.selected" to TokenFormat.color(tabs.fg.selected),
+        "tabs.fg.hover" to TokenFormat.color(tabs.fg.hover),
+        "tabs.bg.hover" to TokenFormat.color(tabs.bg.hover),
+        "tabs.bg.pressed" to TokenFormat.color(tabs.bg.pressed),
+        "tabs.indicator.color" to TokenFormat.color(tabs.indicator.color),
+        "tabs.indicator.width" to TokenFormat.number(tabs.indicator.width),
+        "tabs.divider.color" to TokenFormat.color(tabs.divider.color),
+        "tabs.divider.width" to TokenFormat.number(tabs.divider.width),
+        "tabs.focus-ring.width" to TokenFormat.number(tabs.focusRing.width),
+        "tabs.focus-ring.color" to TokenFormat.color(tabs.focusRing.color),
+        "tabs.transition.duration" to TokenFormat.milliseconds(tabs.transition.duration),
+        "tabs.transition.easing" to TokenFormat.easing(tabs.transition.easing),
+        "toast.bg" to TokenFormat.color(toast.bg),
+        "toast.radius" to TokenFormat.number(toast.radius),
+        "toast.shadow" to TokenFormat.shadow(toast.shadow),
+        "toast.max-width" to TokenFormat.number(toast.maxWidth),
+        "toast.margin" to TokenFormat.number(toast.margin),
+        "toast.padding-block" to TokenFormat.number(toast.paddingBlock),
+        "toast.padding-inline" to TokenFormat.number(toast.paddingInline),
+        "toast.gap" to TokenFormat.number(toast.gap),
+        "toast.message" to TokenFormat.textStyle(toast.message),
+        "toast.fg" to TokenFormat.color(toast.fg),
+        "toast.border.width" to TokenFormat.number(toast.border.width),
+        "toast.border.color" to TokenFormat.color(toast.border.color),
+        "toast.enter.duration" to TokenFormat.milliseconds(toast.enter.duration),
+        "toast.enter.easing" to TokenFormat.easing(toast.enter.easing),
+        "toast.exit.duration" to TokenFormat.milliseconds(toast.exit.duration),
+        "toast.exit.easing" to TokenFormat.easing(toast.exit.easing),
     )
 }

@@ -1,0 +1,232 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "input": {
+    "$description": "Tokens of the Input component. See rfcs/0004-input.md.",
+    "radius": {
+      "$type": "dimension",
+      "$value": "{radius.md}",
+      "$description": "Corner radius of the field."
+    },
+    "border-width": {
+      "$type": "dimension",
+      "$value": "{border-width.thin}",
+      "$description": "Outline width of the field."
+    },
+    "height": {
+      "$type": "dimension",
+      "sm": { "$value": "{size.control.sm}", "$description": "Height of the small field." },
+      "md": { "$value": "{size.control.md}", "$description": "Height of the medium field." },
+      "lg": { "$value": "{size.control.lg}", "$description": "Height of the large field." }
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "sm": { "$value": "{space.2}", "$description": "Side padding of the small field." },
+      "md": { "$value": "{space.3}", "$description": "Side padding of the medium field." },
+      "lg": { "$value": "{space.4}", "$description": "Side padding of the large field." }
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.2}",
+      "$description": "Space between the label, the description, the field, and the error."
+    },
+    "icon-size": {
+      "$type": "dimension",
+      "sm": { "$value": "{size.icon.sm}", "$description": "Icon size in the small field." },
+      "md": { "$value": "{size.icon.md}", "$description": "Icon size in the medium field." },
+      "lg": { "$value": "{size.icon.md}", "$description": "Icon size in the large field." }
+    },
+    "label": {
+      "sm": {
+        "$type": "typography",
+        "$value": "{type.label.sm}",
+        "$description": "Text style of the label of the small field."
+      },
+      "md": {
+        "$type": "typography",
+        "$value": "{type.label.sm}",
+        "$description": "Text style of the label of the medium field."
+      },
+      "lg": {
+        "$type": "typography",
+        "$value": "{type.label.md}",
+        "$description": "Text style of the label of the large field."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{color.fg.default}",
+        "$description": "Color of the label.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "value": {
+      "$type": "typography",
+      "sm": {
+        "$value": "{type.body.sm}",
+        "$description": "Text style of the small field's value."
+      },
+      "md": {
+        "$value": "{type.body.md}",
+        "$description": "Text style of the medium field's value."
+      },
+      "lg": { "$value": "{type.body.lg}", "$description": "Text style of the large field's value." }
+    },
+    "description": {
+      "type": {
+        "$type": "typography",
+        "$value": "{type.body.sm}",
+        "$description": "Text style of the description, between the label and the field."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{color.fg.muted}",
+        "$description": "Color of the description.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "error": {
+      "type": {
+        "$type": "typography",
+        "$value": "{type.body.sm}",
+        "$description": "Text style of the error message, below the field."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{color.fg.danger}",
+        "$description": "Color of the error message.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "default": {
+        "$value": "{color.control.default}",
+        "$description": "Fill of the field."
+      },
+      "read-only": {
+        "$value": "{color.bg.subtle}",
+        "$description": "Fill of a read-only field."
+      },
+      "disabled": { "$value": "{color.bg.disabled}", "$description": "Fill of a disabled field." }
+    },
+    "fg": {
+      "$type": "color",
+      "default": {
+        "$value": "{color.fg.default}",
+        "$description": "Color of the value and the leading icon.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["input.bg.default", "input.bg.read-only"],
+            "contrast": "text"
+          }
+        }
+      },
+      "disabled": {
+        "$value": "{color.fg.disabled}",
+        "$description": "Color of the value and the leading icon of a disabled field.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Disabled content is exempt from contrast requirements (WCAG 1.4.3)."
+          }
+        }
+      }
+    },
+    "placeholder": {
+      "$type": "color",
+      "$value": "{color.fg.muted}",
+      "$description": "Color of the placeholder, an example of the format shown while the field is empty.",
+      "$extensions": {
+        "raincoat": {
+          "on": ["input.bg.default"],
+          "contrast": "text"
+        }
+      }
+    },
+    "border": {
+      "$type": "color",
+      "default": {
+        "$value": "{color.border.control}",
+        "$description": "Outline of the field. It is what identifies the field against the surface.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "invalid": {
+        "$value": "{color.border.danger}",
+        "$description": "Outline of a field in error.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "read-only": {
+        "$value": "{color.border.default}",
+        "$description": "The hairline outline of a read-only field.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Decorative: a read-only field takes no input, and its label and value identify it."
+          }
+        }
+      },
+      "disabled": {
+        "$value": "{color.border.disabled}",
+        "$description": "Outline of a disabled field.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Disabled controls are exempt from contrast requirements (WCAG 1.4.11)."
+          }
+        }
+      }
+    },
+    "focus-ring": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.focus}",
+        "$description": "Width of the focus ring."
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{border-width.thick}",
+        "$description": "Gap between the field's edge and its focus ring."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.focus}",
+        "$description": "Color of the focus ring, drawn on the surface behind the field.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "target-minimum": {
+      "$type": "dimension",
+      "$value": "{size.target.minimum}",
+      "$description": "Smallest touch target of any field, whatever its visible height."
+    }
+  }
+}

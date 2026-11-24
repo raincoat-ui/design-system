@@ -23,6 +23,15 @@
           }
         }
       },
+      "raised": {
+        "$value": "{color.neutral.0}",
+        "$description": "Surfaces above the page: cards, dialogs, sheets, and toasts.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
+      },
       "subtle": {
         "$value": "{color.neutral.100}",
         "$description": "A quiet fill for grouping content, such as a table header.",
@@ -49,6 +58,15 @@
             "overridable": true
           }
         }
+      },
+      "scrim": {
+        "$value": "{color.scrim.40}",
+        "$description": "The veil over the screen behind a modal surface, such as a dialog.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true
+          }
+        }
       }
     },
     "fg": {
@@ -63,6 +81,7 @@
               "color.bg.canvas",
               "color.bg.surface",
               "color.bg.subtle",
+              "color.bg.raised",
               "color.control.default",
               "color.control.hover",
               "color.control.pressed"
@@ -77,7 +96,14 @@
         "$extensions": {
           "raincoat": {
             "overridable": true,
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": [
+              "color.bg.canvas",
+              "color.bg.surface",
+              "color.bg.subtle",
+              "color.bg.raised",
+              "color.control.default",
+              "color.control.hover"
+            ],
             "contrast": "text"
           }
         }
@@ -99,7 +125,7 @@
         "$extensions": {
           "raincoat": {
             "overridable": true,
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
             "contrast": "text"
           }
         }
@@ -110,7 +136,7 @@
         "$extensions": {
           "raincoat": {
             "overridable": true,
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
             "contrast": "text"
           }
         }
@@ -168,7 +194,40 @@
         "$extensions": {
           "raincoat": {
             "overridable": true,
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "control": {
+        "$value": "{color.neutral.900}",
+        "$description": "The outline of a control that takes input, such as a text field.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "danger": {
+        "$value": "{color.red.600}",
+        "$description": "The outline of a control in error.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "selected": {
+        "$value": "{color.neutral.900}",
+        "$description": "The mark of the selected item in a set, such as the selected tab.",
+        "$extensions": {
+          "raincoat": {
+            "overridable": true,
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
             "contrast": "graphic"
           }
         }
@@ -179,7 +238,7 @@
         "$extensions": {
           "raincoat": {
             "overridable": true,
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
             "contrast": "graphic"
           }
         }

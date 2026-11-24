@@ -35,6 +35,8 @@ test("each token type is written with its own formatter", () => {
     schema,
     /"motion\.easing\.interactive" to TokenFormat\.easing\(motion\.easing\.interactive\)/,
   );
+  assert.match(schema, /"card\.shadow" to TokenFormat\.shadow\(card\.shadow\)/);
+  assert.match(schema, /public val raised: TokenShadow,/);
 });
 
 test("names and types are valid Kotlin", () => {
@@ -55,6 +57,13 @@ test("values are written as Kotlin literals of the right type", () => {
     theme,
     /TokenTextStyle\(families = listOf\("Be Vietnam Pro", "system-ui", "sans-serif"\), size = 16\.0, weight = 600, letterSpacing = 0\.0, lineHeight = 1\.4\)/,
   );
+  // Translucent colors carry their alpha in the top byte.
+  assert.match(theme, /scrim = TokenColor\(0x66000000\)/);
+  assert.match(
+    theme,
+    /raised = TokenShadow\(layers = listOf\(TokenShadowLayer\(color = TokenColor\(0x00000000\), offsetX = 0\.0, offsetY = 0\.0, blur = 0\.0, spread = 0\.0, inset = false\)\)\)/,
+  );
+  assert.match(theme, /^import io\.github\.raincoatui\.tokens\.TokenShadowLayer$/m);
 });
 
 test("a theme provides a lazily built token set for every mode and density", () => {

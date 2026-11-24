@@ -30,6 +30,32 @@ public data class TokenEasing(
     public val y2: Double,
 )
 
+/** One layer of a shadow. Offsets, blur, and spread are in dp. */
+public data class TokenShadowLayer(
+    public val color: TokenColor,
+    public val offsetX: Double,
+    public val offsetY: Double,
+    /** The blur radius, as CSS defines it for `box-shadow`. */
+    public val blur: Double,
+    public val spread: Double,
+    /** Whether the shadow falls inside the shape instead of behind it. */
+    public val inset: Boolean,
+) {
+    /** Whether the layer paints anything. A transparent layer does not, whatever its size. */
+    public val isVisible: Boolean get() = color.alpha > 0
+}
+
+/** A shadow of one or more layers. The first layer is drawn on top, as in CSS. */
+public data class TokenShadow(
+    public val layers: List<TokenShadowLayer>,
+) {
+    /**
+     * The layers that paint anything. A component draws only these, so a shadow of transparent
+     * layers, such as the base's `shadow.none`, draws nothing at all.
+     */
+    public val visibleLayers: List<TokenShadowLayer> get() = layers.filter { it.isVisible }
+}
+
 /** The four color modes every theme provides. */
 public enum class ColorMode(public val id: String) {
     Light("light"),
@@ -98,4 +124,15 @@ public object TokenFormat {
         number(value.letterSpacing),
         number(value.lineHeight),
     ).joinToString("|")
+
+    public fun shadow(value: TokenShadow): String = value.layers.joinToString(", ") { layer ->
+        listOf(
+            color(layer.color),
+            number(layer.offsetX),
+            number(layer.offsetY),
+            number(layer.blur),
+            number(layer.spread),
+            layer.inset.toString(),
+        ).joinToString("|")
+    }
 }

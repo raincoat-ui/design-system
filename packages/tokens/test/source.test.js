@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { checkContrast, lint } from "../src/index.js";
+import { checkContrast, lint, loadSource } from "../src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
 const scratch = [];
@@ -34,6 +34,13 @@ function sourceWith(edits = {}) {
   }
   return dir;
 }
+
+/** The ids of the tokens whose value is a reference to `id`. */
+const followersOf = (id, dir) =>
+  loadSource(dir)
+    .flatMap((entry) => entry.tokens)
+    .filter((token) => token.value === `{${id}}`)
+    .map((token) => token.id);
 
 const messages = (edits) => lint(sourceWith(edits)).map((problem) => problem.message);
 const assertProblem = (edits, pattern) => {
@@ -139,6 +146,39 @@ test("dimension units are restricted to px and rem", () => {
   );
 });
 
+test("a text style smaller than font.size.12 is rejected", () => {
+  const edits = {
+    "tokens/primitive/font.tokens.json": (json) => {
+      json.font.size["11"] = {
+        $value: { value: 0.6875, unit: "rem" },
+        $description: "11px equivalent, below the smallest size.",
+      };
+    },
+    "tokens/semantic/type.tokens.json": (json) =>
+      (json.type.caption.$value.fontSize = "{font.size.11}"),
+  };
+  assertProblem(
+    edits,
+    /type\.caption: its font size, 11px, is below \{font\.size\.12\} \(12px\), the smallest size text may have/,
+  );
+  // A component style that refers to it is too small as well.
+  assertProblem(
+    {
+      ...edits,
+      [button]: (json) => (json.button.label.sm.$value = "{type.caption}"),
+    },
+    /button\.label\.sm: its font size, 11px, is below/,
+  );
+  // The smallest size itself is allowed.
+  assert.deepEqual(
+    messages({
+      "tokens/semantic/type.tokens.json": (json) =>
+        (json.type.body.sm.$value.fontSize = "{font.size.12}"),
+    }),
+    [],
+  );
+});
+
 test("a token may not reference a token of another type", () => {
   assertProblem(
     { [light]: (json) => (json.color.bg.canvas.$value = "{dimension.16}") },
@@ -217,7 +257,10 @@ test("a pair below its contrast requirement fails, in the mode where it is too l
   assert.deepEqual(lint(dir), []);
   const failures = checkContrast(dir).filter((row) => !row.pass);
   assert.ok(failures.length > 0);
-  assert.ok(failures.every((row) => row.mode === "light" && row.token === "color.fg.muted"));
+  // The role fails, and so does every component token that takes its value.
+  const muted = ["color.fg.muted", ...followersOf("color.fg.muted", dir)];
+  assert.ok(failures.some((row) => row.token === "color.fg.muted"));
+  assert.ok(failures.every((row) => row.mode === "light" && muted.includes(row.token)));
   assert.ok(failures.every((row) => row.ratio < 4.5 && row.required === 4.5));
 });
 

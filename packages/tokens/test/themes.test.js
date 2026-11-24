@@ -9,6 +9,7 @@ import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { build, orphans } from "../src/emit/index.js";
 import {
+  buildThemeCss,
   checkContrast,
   compose,
   hexOf,
@@ -220,7 +221,77 @@ test("contrast is checked on the theme's own colors", () => {
   );
   const failures = checkContrast(theme.files).filter((row) => !row.pass);
   assert.ok(failures.length > 0);
-  assert.ok(failures.every((row) => row.token === "color.fg.muted" && row.mode === "light"));
+  // The role fails, and so does every component token that takes its value.
+  const muted = theme.files
+    .flatMap((entry) => entry.tokens)
+    .filter((token) => token.id === "color.fg.muted" || token.value === "{color.fg.muted}")
+    .map((token) => token.id);
+  assert.ok(failures.some((row) => row.token === "color.fg.muted"));
+  assert.ok(failures.every((row) => muted.includes(row.token) && row.mode === "light"));
+});
+
+test("a theme lifts its raised surfaces with a shadow composed of primitives", () => {
+  const dir = repoWith((files) => {
+    files["tokens/semantic/shadow.tokens.json"] = {
+      shadow: {
+        raised: {
+          $value: {
+            color: "{color.scrim.40}",
+            offsetX: "{dimension.0}",
+            offsetY: "{dimension.2}",
+            blur: "{dimension.8}",
+            spread: "{dimension.0}",
+          },
+        },
+      },
+    };
+  });
+  const { project, theme } = themeOf(dir);
+  assert.deepEqual(lintTheme(theme, { schemaDir: project.schemaDir }), []);
+  const css = buildThemeCss(theme.files);
+  assert.match(css, /--rc-shadow-raised: 0px 2px 8px 0px #00000066;/);
+  assert.match(css, /--rc-card-shadow: var\(--rc-shadow-raised\);/);
+  // The overlay shadow stays the base's.
+  assert.match(css, /--rc-shadow-overlay: var\(--rc-shadow-none\);/);
+});
+
+test("a theme may override a component token the base marks overridable, and no other", () => {
+  const dir = repoWith((files) => {
+    // Filled cards with no outline: the outline takes the card's own fill.
+    files["tokens/component/card.tokens.json"] = {
+      card: { border: { default: { $value: "{color.bg.raised}" } } },
+    };
+  });
+  const { project, theme } = themeOf(dir);
+  assert.deepEqual(lintTheme(theme, { schemaDir: project.schemaDir }), []);
+  for (const mode of MODES) {
+    const tokens = compose(theme.files, { mode, density: "comfortable" }).tokens;
+    assert.ok(tokens.get("card.border.default").overridden);
+    assert.deepEqual(
+      resolveToken("card.border.default", tokens),
+      resolveToken("color.bg.raised", tokens),
+      mode,
+    );
+  }
+  assert.match(
+    buildThemeCss(theme.files),
+    /--rc-card-border-default: var\(--rc-color-bg-raised\);/,
+  );
+
+  assertProblem((files) => {
+    files["tokens/component/card.tokens.json"] = { card: { radius: { $value: "{radius.none}" } } };
+  }, /card\.tokens\.json: card\.radius: is locked; a theme may only override tokens the base marks overridable/);
+  assertProblem((files) => {
+    files["tokens/component/button.tokens.json"] = {
+      button: { primary: { bg: { default: { $value: "{color.control.default}" } } } },
+    };
+  }, /button\.primary\.bg\.default: is locked/);
+  // An override of a component token still references the tier below it.
+  assertProblem((files) => {
+    files["tokens/component/card.tokens.json"] = {
+      card: { border: { default: { $value: "{color.neutral.0}" } } },
+    };
+  }, /card\.border\.default: a component token may only reference semantic tokens/);
 });
 
 test("the build generates every platform's files for a new theme, with no other edit", async () => {

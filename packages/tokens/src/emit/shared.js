@@ -49,6 +49,8 @@ export const seconds = ({ value, unit }) => (unit === "ms" ? value / 1000 : valu
 export const milliseconds = ({ value, unit }) => (unit === "s" ? value * 1000 : value);
 export const weight = (value) => FONT_WEIGHTS[value] ?? value;
 export const families = (value) => [].concat(value);
+/** A shadow's layers: the source may give one layer or a list. */
+export const layers = (value) => [].concat(value);
 
 /** A color as hex digits: {rgb: "f7d22a", alpha: 1, alphaByte: "ff"}. */
 export function hexParts(value) {
@@ -92,6 +94,19 @@ export function canonical(type, value) {
         fixed(points(value.letterSpacing)),
         fixed(value.lineHeight),
       ].join("|");
+    case "shadow":
+      return layers(value)
+        .map((layer) =>
+          [
+            canonical("color", layer.color),
+            fixed(points(layer.offsetX)),
+            fixed(points(layer.offsetY)),
+            fixed(points(layer.blur)),
+            fixed(points(layer.spread)),
+            String(layer.inset ?? false),
+          ].join("|"),
+        )
+        .join(", ");
     default:
       throw new Error(`native emitters do not support the type "${type}" yet`);
   }

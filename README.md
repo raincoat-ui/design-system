@@ -13,7 +13,8 @@ on top.
 
 **Documentation: <https://raincoat-ui.github.io/design-system/>**
 
-> **Status: milestone 2 complete; milestone 3, the v1 components, next.** One token source
+> **Status: milestone 2 complete; milestone 3, the v1 components, in progress.** The proposals
+> for its six new components, [RFCs 0003 to 0008](rfcs/), are accepted. One token source
 > drives a Button on the web, iOS, and Android, in two themes, published as prereleases to npm,
 > the Maven repository, and the Swift mirror. The
 > [releases page](https://github.com/raincoat-ui/design-system/releases) says which registries

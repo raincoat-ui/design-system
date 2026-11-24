@@ -2,9 +2,9 @@
 // real files each broken in one specific way; the expanded pseudo-locale; and what the token
 // build generates from them for each platform's snapshot tests.
 import assert from "node:assert/strict";
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
@@ -20,12 +20,21 @@ after(() => {
   for (const dir of scratch) rmSync(dir, { recursive: true, force: true });
 });
 
-/** Copies what the spec linter reads to a temp dir, then edits one YAML file in it. */
+/**
+ * Copies what the spec linter reads to a temp dir, then edits one YAML file in it. Of the
+ * platform packages, only the files the specs list as implementations are copied.
+ */
 function withEdit(file, edit, extra = () => {}) {
   const dir = mkdtempSync(join(tmpdir(), "raincoat-snapshots-"));
   scratch.push(dir);
   for (const part of ["specs", "schemas", "tokens", "rfcs"]) {
     cpSync(join(repoRoot, part), join(dir, part), { recursive: true });
+  }
+  for (const { spec } of loadSpecs(repoRoot)) {
+    for (const { file: source } of Object.values(spec?.implementations ?? {})) {
+      mkdirSync(dirname(join(dir, source)), { recursive: true });
+      cpSync(join(repoRoot, source), join(dir, source));
+    }
   }
   const data = parse(readFileSync(join(dir, file), "utf8"));
   edit(data);
