@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Generates the site's content from the repository: token reference pages from the token
-// source, and copies of the repository's own documents. Everything it writes is git-ignored;
-// the only hand-written page is src/content/docs/index.mdx.
+// source, a page for each component spec and the parity matrix, and copies of the repository's
+// own documents. Everything it writes is git-ignored; the only hand-written page is
+// src/content/docs/index.mdx.
 import {
   cpSync,
   existsSync,
@@ -12,11 +13,12 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, join, posix, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   buildThemeCss,
   checkContrast,
   compose,
+  enumerations,
   hexOf,
   loadSource,
   loadSpecs,
@@ -25,23 +27,41 @@ import {
   resolvedType,
   resolveToken,
 } from "@raincoat-ui/tokens";
+import { code, dimension, list, MODE_LABEL, readable, swatch, table } from "./markdown.mjs";
+import { buttonRow } from "./renditions/button.mjs";
 
-const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const scriptsDir = dirname(fileURLToPath(import.meta.url));
+const appRoot = resolve(scriptsDir, "..");
 const repoRoot = resolve(appRoot, "../..");
 const contentDir = join(appRoot, "src/content/docs");
 const REPO_URL = "https://github.com/raincoat-ui/design-system";
-const MODE_LABEL = {
-  light: "Light",
-  dark: "Dark",
-  "light-hc": "Light, high contrast",
-  "dark-hc": "Dark, high contrast",
-};
 
 // ---------------------------------------------------------------------------------------------
 // Helpers
 
 for (const generated of ["foundations", "components", "contributing", "project"]) {
   rmSync(join(contentDir, generated), { recursive: true, force: true });
+}
+
+/** Links between repository files point at GitHub, where every one of them resolves. */
+function repositoryLinks(text, source) {
+  return text.replace(/\]\((?!https?:|mailto:|#|\/)([^)\s]+)\)/g, (_, target) => {
+    const [path, anchor] = target.split("#");
+    const resolved = posix.normalize(posix.join(posix.dirname(source), path));
+    return `](${REPO_URL}/blob/main/${resolved}${anchor ? `#${anchor}` : ""})`;
+  });
+}
+
+/** Moves every heading outside fenced code one level down, so a document's ## becomes ###. */
+function demoteHeadings(text) {
+  let fenced = false;
+  return text
+    .split("\n")
+    .map((line) => {
+      if (/^(```|~~~)/.test(line)) fenced = !fenced;
+      return fenced ? line : line.replace(/^(#{2,5}) /, "#$1 ");
+    })
+    .join("\n");
 }
 
 function page(path, { title, description, order }, body) {
@@ -56,15 +76,6 @@ function page(path, { title, description, order }, body) {
   ].filter(Boolean);
   writeFileSync(file, `${frontmatter.join("\n")}\n\n${body.trim()}\n`);
 }
-
-const swatch = (hex) => `<span class="rc-swatch" style="background:${hex}"></span>`;
-const code = (text) => `\`${text}\``;
-const table = (head, rows) =>
-  [`| ${head.join(" | ")} |`, `| ${head.map(() => "---").join(" | ")} |`]
-    .concat(rows.map((row) => `| ${row.join(" | ")} |`))
-    .join("\n");
-const dimension = ({ value, unit }) =>
-  unit === "rem" ? `${value}rem (${value * 16}px)` : `${value}${unit}`;
 
 const files = loadSource(repoRoot);
 const composed = Object.fromEntries(
@@ -336,7 +347,6 @@ const pascalCase = (id) =>
     .split("-")
     .map((part) => part[0].toUpperCase() + part.slice(1))
     .join("");
-const THEME_VARIANTS = ["primary", "secondary", "ghost", "danger", "disabled"];
 const THEME_LABELS = {
   primary: "Lock until 11:30",
   secondary: "Edit schedule",
@@ -344,9 +354,7 @@ const THEME_LABELS = {
   danger: "End early",
   disabled: "Unavailable",
 };
-const themeButtons = THEME_VARIANTS.map(
-  (variant) => `<span class="rc-button" data-variant="${variant}">${THEME_LABELS[variant]}</span>`,
-).join("");
+const themeButtons = buttonRow((variant) => THEME_LABELS[variant]);
 const themes = openProject(repoRoot).themes;
 // A theme may carry the web fonts it names, with their @font-face rules, in themes/<id>/fonts/.
 // They are copied into the site, and the rules point at the copies.
@@ -442,137 +450,292 @@ ${themeSections.join("\n\n")}
 );
 
 // ---------------------------------------------------------------------------------------------
-// Components: Button (static renditions from tokens)
+// Components: a page for each spec in specs/components/, then the parity matrix
 
-// The renditions carry no colors of their own. Each panel sets data-theme (or data-density),
-// and site.css styles the buttons with the custom properties from the theme stylesheet, so
-// this page also shows that a color mode works on a nested element.
-const VARIANTS = ["primary", "secondary", "ghost", "danger", "disabled"];
-const buttons = VARIANTS.map(
-  (variant) =>
-    `<span class="rc-button" data-variant="${variant}">${variant[0].toUpperCase()}${variant.slice(1)}</span>`,
-).join("");
-const stages = MODES.map(
-  (mode) =>
-    `### ${MODE_LABEL[mode]}\n\n<div class="rc-stage" data-theme="${mode}">${buttons}</div>`,
-)
-  .concat(
-    `### Compact density\n\n<div class="rc-stage" data-theme="light" data-density="compact">${buttons}</div>`,
-  )
-  .join("\n\n");
-const buttonTokens = tokensWhere((t) => t.tier === "component" && t.path[0] === "button").map(
-  (t) => {
-    const type = resolvedType(t.id, base);
-    const value =
-      type === "color"
-        ? `${swatch(colorIn("light", t.id))}${code(colorIn("light", t.id))}`
-        : type === "dimension"
-          ? dimension(resolveToken(t.id, base))
-          : code(String(t.value));
-    return [`${code(t.id)}<br>${code(String(t.value))}`, value, t.description];
-  },
-);
+const PLATFORMS = [
+  { id: "web", label: "Web (React)", framework: "React" },
+  { id: "ios", label: "iOS (SwiftUI)", framework: "SwiftUI" },
+  { id: "android", label: "Android (Compose)", framework: "Compose" },
+];
+const PARITY_PAGE = "/design-system/components/parity-matrix/";
 
-const { spec: buttonSpec } = loadSpecs(repoRoot).find((entry) => entry.id === "button");
-const readable = (key) => `${key[0].toUpperCase()}${key.slice(1).replaceAll("-", " ")}`;
-const propertyRows = Object.entries(buttonSpec.properties).map(([name, property]) => [
-  code(name),
-  property.values ? Object.keys(property.values).map(code).join(", ") : "true, false",
-  code(String(property.default)),
-  property.description,
-]);
-const valueTables = Object.entries(buttonSpec.properties)
-  .filter(([, property]) => property.values)
-  .map(
-    ([name, property]) =>
-      `### ${readable(name)}\n\n${table(
-        ["Value", "Use"],
-        Object.entries(property.values).map(([value, use]) => [code(value), use]),
+// Pages are ordered by the spec's group, then by its name, after which the parity matrix comes
+// last. The Button, in Actions, stays 3.1.
+const specs = loadSpecs(repoRoot)
+  .map(({ file, spec, error }) => {
+    if (error) throw new Error(`${file} is not valid YAML: ${error}`);
+    return spec;
+  })
+  .sort(
+    (a, b) =>
+      String(a.group).localeCompare(String(b.group), "en") ||
+      String(a.name).localeCompare(String(b.name), "en"),
+  );
+
+// A page may also show static renditions of its component, drawn from tokens, from
+// renditions/<id>.mjs: its default export is called with { spec } and returns
+// { note?, sections, styles? }, as renditions/button.mjs describes. A renditions file needs a
+// spec of the same id.
+const renditionsDir = join(scriptsDir, "renditions");
+const renditionFiles = readdirSync(renditionsDir).filter((name) => name.endsWith(".mjs"));
+for (const name of renditionFiles) {
+  if (!specs.some((spec) => `${spec.id}.mjs` === name)) {
+    throw new Error(`renditions/${name} has no spec in specs/components/${name.slice(0, -4)}/`);
+  }
+}
+async function renditionsOf(spec) {
+  if (!renditionFiles.includes(`${spec.id}.mjs`)) return undefined;
+  const module = await import(pathToFileURL(join(renditionsDir, `${spec.id}.mjs`)).href);
+  return module.default({ spec });
+}
+
+// The package a platform's source file ships in: the npm package whose package.json is
+// nearest, the Swift target under Sources/, or the Gradle module that holds src/.
+function packageOf(platform, file) {
+  const parts = file.split("/");
+  if (platform === "ios") {
+    const at = parts.indexOf("Sources");
+    return at === -1 ? undefined : parts[at + 1];
+  }
+  if (platform === "android") {
+    const at = parts.indexOf("src");
+    const build = at > 0 ? join(repoRoot, ...parts.slice(0, at), "build.gradle.kts") : "";
+    const group = existsSync(build) && /^group = "([^"]+)"/m.exec(readFileSync(build, "utf8"));
+    return group ? `${group[1]}:${parts[at - 1]}` : undefined;
+  }
+  for (let at = parts.length - 1; at > 0; at -= 1) {
+    const manifest = join(repoRoot, ...parts.slice(0, at), "package.json");
+    if (existsSync(manifest)) return JSON.parse(readFileSync(manifest, "utf8")).name;
+  }
+  return undefined;
+}
+
+/**
+ * A component on one platform, as the repository has it: the file the spec lists under
+ * `implementations`, whether that file exists, its package, and the names, each linked to the
+ * source. Nothing here is claimed by hand.
+ */
+function implementationOf(spec, platform) {
+  const entry = spec.implementations?.[platform];
+  if (!entry) return undefined;
+  const source = `${REPO_URL}/blob/main/${entry.file}`;
+  return {
+    file: entry.file,
+    exists: existsSync(join(repoRoot, entry.file)),
+    package: packageOf(platform, entry.file),
+    names: list([entry.name].flat().map((name) => `[${code(name)}](${source})`)),
+  };
+}
+
+function implementedIn(spec) {
+  const found = PLATFORMS.map((platform) => [platform, implementationOf(spec, platform.id)]);
+  const done = found
+    .filter(([, implementation]) => implementation?.exists)
+    .map(
+      ([platform, { names, package: shipsIn }]) =>
+        `${platform.framework} (${names}${shipsIn ? ` in ${code(shipsIn)}` : ""})`,
+    );
+  const missing = found
+    .filter(([, implementation]) => !implementation?.exists)
+    .map(([platform]) => platform.framework);
+  if (done.length === 0) return "Not implemented on any platform yet.";
+  return missing.length === 0
+    ? `Implemented in ${list(done)}.`
+    : `Implemented in ${list(done)}; not yet in ${list(missing, "or")}.`;
+}
+
+/** The tokens a component owns, then any other token its anatomy names. */
+function tokensOf(spec) {
+  const ids = [...base.keys()];
+  const own = ids.filter(
+    (id) => base.get(id).tier === "component" && base.get(id).path[0] === spec.id,
+  );
+  const named = Object.values(spec.anatomy)
+    .flatMap(({ tokens = [] }) => tokens)
+    .flatMap((reference) =>
+      reference.endsWith(".*")
+        ? ids.filter((id) => id.startsWith(reference.slice(0, -1)))
+        : [reference],
+    );
+  return [...new Set([...own, ...named])].filter((id) => base.has(id)).map((id) => base.get(id));
+}
+
+/** A token's value in the light mode at comfortable density. */
+function tokenValue(id) {
+  const value = resolveToken(id, base);
+  switch (resolvedType(id, base)) {
+    case "color":
+      return `${swatch(colorIn("light", id))}${code(colorIn("light", id))}`;
+    case "dimension":
+      return dimension(value);
+    case "duration":
+      return `${value.value}${value.unit}`;
+    case "cubicBezier":
+      return code(`cubic-bezier(${value.join(", ")})`);
+    case "typography":
+      return `${dimension(value.fontSize)}, weight ${value.fontWeight}, line height ${value.lineHeight}`;
+    case "fontFamily":
+      return [].concat(value).join(", ");
+    default:
+      return code(String(value));
+  }
+}
+
+const rfcFiles = readdirSync(join(repoRoot, "rfcs"));
+
+async function componentPage(spec, order) {
+  const number = String(spec.rfc).padStart(4, "0");
+  const rfc = rfcFiles.find((name) => name.startsWith(`${number}-`) && name.endsWith(".md"));
+  const proposedIn = rfc
+    ? `[RFC ${number}](/design-system/project/rfcs/${rfc.replace(/\.md$/, "")}/)`
+    : `RFC ${number}`;
+  const types = enumerations(spec).map(({ name }) => readable(name).toLowerCase());
+  const generated =
+    types.length === 0
+      ? ""
+      : types.length === 1
+        ? ` The ${types[0]} type used by every platform's implementation is generated from this spec.`
+        : ` The ${list(types)} types used by every platform's implementation are generated from this spec.`;
+  const renditions = await renditionsOf(spec);
+
+  const propertyRows = Object.entries(spec.properties).map(([name, property]) => [
+    code(name),
+    property.values ? Object.keys(property.values).map(code).join(", ") : "true, false",
+    code(String(property.default)),
+    property.description,
+  ]);
+  const valueTables = Object.entries(spec.properties)
+    .filter(([, property]) => property.values)
+    .map(
+      ([name, property]) =>
+        `### ${readable(name)}\n\n${table(
+          ["Value", "Use"],
+          Object.entries(property.values).map(([value, use]) => [code(value), use]),
+        )}`,
+    );
+  const required = (value) =>
+    value === true ? "Yes" : value === false ? "No" : `${value[0].toUpperCase()}${value.slice(1)}`;
+  const contentRows = Object.entries(spec.content ?? {}).map(([part, detail]) => [
+    readable(part),
+    detail.description,
+    required(detail.required),
+  ]);
+  const stateRows = Object.entries(spec.states).map(([name, state]) => [
+    readable(name),
+    state.description,
+  ]);
+  const anatomyRows = Object.entries(spec.anatomy).map(([part, detail]) => [
+    readable(part),
+    detail.description,
+    (detail.tokens ?? []).map(code).join("<br>"),
+  ]);
+  const accessibilityRows = Object.entries(spec.accessibility)
+    .filter(([key]) => key !== "keyboard")
+    .map(([key, value]) => [readable(key), value]);
+  const keyboardRows = spec.accessibility.keyboard.map(({ keys, action }) => [
+    keys.map((key) => `<kbd>${key}</kbd>`).join(" or "),
+    action,
+  ]);
+  const concerns = (section) =>
+    table(
+      ["Concern", "Behavior"],
+      Object.entries(section).map(([key, value]) => [readable(key), value]),
+    );
+  const guidelinesFile = `specs/components/${spec.id}/guidelines.md`;
+  const guidelines = existsSync(join(repoRoot, guidelinesFile))
+    ? demoteHeadings(
+        repositoryLinks(
+          readFileSync(join(repoRoot, guidelinesFile), "utf8").replace(/^# .+\n+/, ""),
+          guidelinesFile,
+        ),
+      )
+    : undefined;
+  const tokenRows = tokensOf(spec).map((t) => [
+    typeof t.value === "string" && t.value.startsWith("{")
+      ? `${code(t.id)}<br>${code(t.value)}`
+      : code(t.id),
+    tokenValue(t.id),
+    t.description,
+  ]);
+
+  const sections = [
+    `## Properties\n\n${table(["Property", "Values", "Default", "Description"], propertyRows)}`,
+    ...valueTables,
+    contentRows.length > 0 &&
+      `## Content\n\n${table(["Content", "Description", "Required"], contentRows)}`,
+    ...(renditions?.sections ?? []).map(({ heading, body }) => `## ${heading}\n\n${body.trim()}`),
+    `## States\n\n${table(["State", "Description"], stateRows)}`,
+    `## Anatomy\n\n${table(["Part", "Description", "Tokens"], anatomyRows)}`,
+    `## Accessibility\n\n${table(["Requirement", "Detail"], accessibilityRows)}`,
+    `### Keyboard\n\n${table(["Keys", "Action"], keyboardRows)}`,
+    `## Internationalization\n\n${concerns(spec.internationalization)}`,
+    spec.motion && `## Motion\n\n${concerns(spec.motion)}`,
+    guidelines && `## Guidelines\n\n${guidelines.trim()}`,
+    tokenRows.length > 0 &&
+      `## Tokens\n\nValues shown are for the light mode at comfortable density.\n\n${table(
+        ["Token, and what it points to", "Value", "Use"],
+        tokenRows,
       )}`,
-  )
-  .join("\n\n");
-const stateRows = Object.entries(buttonSpec.states).map(([name, state]) => [
-  readable(name),
-  state.description,
+  ].filter(Boolean);
+  const note = renditions?.note && `:::note[About the renditions]\n${renditions.note.trim()}\n:::`;
+  const styles = renditions?.styles && `<style>\n${renditions.styles.trim()}\n</style>`;
+
+  page(
+    `components/${spec.id}.md`,
+    { title: spec.name, description: spec.summary, order },
+    [
+      spec.summary,
+      `Spec version ${spec.specVersion}, proposed in ${proposedIn}.${generated}`,
+      `${implementedIn(spec)} The [parity matrix](${PARITY_PAGE}) shows every component on every platform.`,
+      note,
+      styles,
+      ...sections,
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
+  );
+}
+
+for (const [index, spec] of specs.entries()) await componentPage(spec, index + 1);
+
+const parityRows = specs.map((spec) => [
+  `[${spec.name}](/design-system/components/${spec.id}/)`,
+  spec.group,
+  ...PLATFORMS.map(({ id }) => {
+    const implementation = implementationOf(spec, id);
+    if (!implementation) return "Not yet";
+    return implementation.exists
+      ? implementation.names
+      : `Listed, but ${code(implementation.file)} is missing`;
+  }),
 ]);
-const anatomyRows = Object.entries(buttonSpec.anatomy).map(([part, detail]) => [
-  readable(part),
-  detail.description,
-  (detail.tokens ?? []).map(code).join("<br>"),
-]);
-const keyboardRows = buttonSpec.accessibility.keyboard.map(({ keys, action }) => [
-  keys.map((key) => `<kbd>${key}</kbd>`).join(" or "),
-  action,
-]);
-const accessibilityRows = Object.entries(buttonSpec.accessibility)
-  .filter(([key]) => key !== "keyboard")
-  .map(([key, value]) => [readable(key), value]);
-const internationalizationRows = Object.entries(buttonSpec.internationalization).map(
-  ([key, value]) => [readable(key), value],
-);
-const guidelines = readFileSync(join(repoRoot, "specs/components/button/guidelines.md"), "utf8")
-  .replace(/^# .+\n+/, "")
-  .replace(/^## /gm, "### ");
+const complete = specs.filter((spec) =>
+  PLATFORMS.every(({ id }) => implementationOf(spec, id)?.exists),
+).length;
 
 page(
-  "components/button.md",
+  "components/parity-matrix.md",
   {
-    title: "Button",
-    description: buttonSpec.summary,
-    order: 1,
+    title: "Parity matrix",
+    description: "Every component against the web, iOS, and Android, read from the repository.",
+    order: specs.length + 1,
   },
   `
-${buttonSpec.summary}
+Every component spec against the web, iOS, and Android. Each cell is read from the repository
+when the site is built, never written by hand.
 
-Spec version ${buttonSpec.specVersion}, proposed in
-[RFC 0001](/design-system/project/rfcs/0001-foundation-tokens-and-button/). The variant and size
-types used by every platform's implementation are generated from this spec.
+${complete} of ${specs.length} ${specs.length === 1 ? "component" : "components"} ${complete === 1 ? "is" : "are"} implemented on all three platforms.
 
-:::note[About the renditions]
-The Button is implemented in React (${code("@raincoat-ui/react")}), SwiftUI (${code("RaincoatButton")}),
-and Compose (${code("RaincoatButton")} in ${code("io.github.raincoat-ui:ui")}), and ships in the
-prereleases. The panels under "In every color mode" are static renditions, not the component.
-They are styled only with the custom properties of the generated theme stylesheet, and each panel
-selects its mode with a ${code("data-theme")} attribute.
-:::
+${table(["Component", "Group", ...PLATFORMS.map(({ label }) => label)], parityRows)}
 
-## Properties
+A cell names the component as that platform's code calls it, and links to its source file. It
+does so when the spec lists the file under ${code("implementations")} and the file exists;
+otherwise it reads "Not yet". The spec linter fails when a listed file does not exist or does
+not mention the name. Components are listed by group, then by name, as in the contents.
 
-${table(["Property", "Values", "Default", "Description"], propertyRows)}
-
-${valueTables}
-
-## In every color mode
-
-${stages}
-
-## States
-
-${table(["State", "Description"], stateRows)}
-
-## Anatomy
-
-${table(["Part", "Description", "Tokens"], anatomyRows)}
-
-## Accessibility
-
-${table(["Keys", "Action"], keyboardRows)}
-
-${table(["Requirement", "Detail"], accessibilityRows)}
-
-## Internationalization
-
-${table(["Concern", "Behavior"], internationalizationRows)}
-
-## Guidelines
-
-${guidelines}
-
-## Tokens
-
-Values shown are for the light mode at comfortable density.
-
-${table(["Token, and what it points to", "Value", "Use"], buttonTokens)}
+The matrix reads the repository at the commit the site was built from, which can be ahead of
+the latest prerelease. The [releases page](${REPO_URL}/releases) says what each release
+carries.
 `,
 );
 
@@ -584,13 +747,11 @@ function importDocument(source, destination, { order, title } = {}) {
   text = text.replace(/^<!--[\s\S]*?-->\s*/, "");
   const heading = /^# (.+)$/m.exec(text);
   text = text.replace(/^# .+\n+/m, "");
-  // Links between repository files point at GitHub, where every one of them resolves.
-  text = text.replace(/\]\((?!https?:|mailto:|#|\/)([^)\s]+)\)/g, (_, target) => {
-    const [path, anchor] = target.split("#");
-    const resolved = posix.normalize(posix.join(posix.dirname(source), path));
-    return `](${REPO_URL}/blob/main/${resolved}${anchor ? `#${anchor}` : ""})`;
-  });
-  page(destination, { title: title ?? heading?.[1] ?? source, order }, text);
+  page(
+    destination,
+    { title: title ?? heading?.[1] ?? source, order },
+    repositoryLinks(text, source),
+  );
 }
 
 importDocument("CONTRIBUTING.md", "contributing/overview.md", {

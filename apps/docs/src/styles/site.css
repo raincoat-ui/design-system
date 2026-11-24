@@ -704,9 +704,9 @@ starlight-toc a[aria-current="true"]:hover {
   vertical-align: middle;
 }
 
-/* Plates: static renditions of the Button. Every value comes from the theme stylesheet's
-   custom properties; the panel's data-theme and data-density attributes pick the mode and
-   density. */
+/* Plates: static renditions of a component (scripts/renditions/<id>.mjs). Every value comes
+   from the theme stylesheet's custom properties; the panel's data-theme and data-density
+   attributes pick the mode and density. */
 .rc-stage {
   display: flex;
   flex-wrap: wrap;
