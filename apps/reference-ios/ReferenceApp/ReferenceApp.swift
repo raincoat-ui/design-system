@@ -9,8 +9,17 @@ import SwiftUI
 struct ReferenceApp: App {
     var body: some Scene {
         WindowGroup {
-            ButtonScreen()
+            screen
                 .raincoatTheme(.base)
+        }
+    }
+
+    /// One screen per component. The Button's is the first; a UI test launches the app with
+    /// `-screen toast` for the Toast's.
+    @ViewBuilder private var screen: some View {
+        switch UserDefaults.standard.string(forKey: "screen") ?? "" {
+        case "toast": ToastScreen()
+        default: ButtonScreen()
         }
     }
 }
