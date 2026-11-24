@@ -50,6 +50,40 @@ test("where React has no client hooks, as in a Server Component, the hydration c
   assert.deepEqual(JSON.parse(output), ["undefined", false, true]);
 });
 
+test("Text and Heading render where React has no client hooks, as in a Server Component", () => {
+  // They hold no state and use no hook, and give their elements no function.
+  const script = `
+    const React = await import("react");
+    const { Heading, Text } = await import("./dist/components/ui/typography.js");
+    const elements = [
+      Text({ children: "Synced 2 minutes ago", variant: "caption", color: "muted" }),
+      Text({ as: "label", htmlFor: "name", maxLines: 2, children: "Name" }),
+      Heading({ level: 2, children: "Notifications" }),
+    ];
+    console.log(JSON.stringify([
+      typeof React.useState,
+      elements.map(({ type, props }) => ({
+        type,
+        variant: props["data-variant"],
+        functions: Object.keys(props).filter((name) => typeof props[name] === "function"),
+      })),
+    ]));
+  `;
+  const output = execFileSync(
+    process.execPath,
+    ["--conditions=react-server", "--input-type=module", "--eval", script],
+    { cwd: root, encoding: "utf8" },
+  );
+  assert.deepEqual(JSON.parse(output), [
+    "undefined",
+    [
+      { type: "p", variant: "caption", functions: [] },
+      { type: "label", variant: "body-md", functions: [] },
+      { type: "h2", variant: "heading-lg", functions: [] },
+    ],
+  ]);
+});
+
 test("until hydrated, a busy or disabled Button gives its element no function", () => {
   // A Server Component may not pass a function to an element: React refuses to render it. Such
   // a Button is never hydrated, and until a Button is, the browser refuses activation for it,
@@ -124,6 +158,8 @@ const NEUTRAL = new Set([
   ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
   ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  // Text: alignment, wrapping, line breaking by language, and the ellipsis after max-lines.
+  ...["start", "balance", "strict", "keep-all", "hidden", "webkit-box", "vertical"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
