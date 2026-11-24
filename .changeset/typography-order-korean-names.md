@@ -9,9 +9,10 @@ Typography fixes.
   largest text sizes. iOS enlarges its large title less than its smaller titles, so at the
   largest accessibility size `headingXl` was smaller than `headingLg`. Each heading now grows to
   at least the size of the look below it.
-- **Compose:** Korean text breaks only between whole words, from Android 13, and every language
-  breaks by the strict rules, as the Button's label does. Korean headings broke in the middle of
-  a word.
+- **Compose:** text set in a Raincoat text style breaks by the rules of the person's language,
+  in every component: by the strict rules, as the Button's label does, and Korean only between
+  whole words, from Android 13. Korean headings broke in the middle of a word. The Button's label
+  keeps its own rule, so it is unchanged.
 - **Every platform:** the guidelines now say what each platform does with a name inside a
   sentence. A paragraph takes its direction from its first strong character, but a name in
   another script takes the punctuation and numbers beside it into its own run, as in "Message

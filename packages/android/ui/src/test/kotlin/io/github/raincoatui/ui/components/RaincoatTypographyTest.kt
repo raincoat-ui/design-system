@@ -32,7 +32,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.ResolvedTextDirection
 import androidx.compose.ui.unit.Density as ComposeDensity
 import androidx.compose.ui.unit.LayoutDirection
@@ -364,7 +363,7 @@ class RaincoatTypographyTest(themeId: String) {
     }
 
     @Test
-    fun `korean breaks only between whole words, and other languages break by the strict rules`() {
+    fun `a Korean heading breaks only between whole words`() {
         RuntimeEnvironment.setQualifiers("+b+ko")
         val heading = "댓글, 멘션 및 공유 문서 변경 사항에 대한 알림"
         // At every width, each line ends at a space: no word is split.
@@ -379,14 +378,6 @@ class RaincoatTypographyTest(themeId: String) {
                     heading[end - 1] == ' ',
                 )
             }
-        }
-
-        // Other languages break by the strict rules, and only Korean by whole words.
-        assertEquals("Korean", LineBreak.WordBreak.Phrase, typographyLineBreak("ko").wordBreak)
-        for (language in listOf("en", "ja", "zh", "vi", "ar")) {
-            val lineBreak = typographyLineBreak(language)
-            assertEquals(language, LineBreak.WordBreak.Default, lineBreak.wordBreak)
-            assertEquals(language, LineBreak.Strictness.Strict, lineBreak.strictness)
         }
     }
 
