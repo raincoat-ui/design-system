@@ -21,7 +21,8 @@ line or several. It follows `specs/components/input/spec.yaml`.
   field the look of the field alone.
 - **Compose.** `RaincoatInput(value, onValueChange, label = "Email", type = InputType.Email)`, on
   Compose Foundation's `BasicTextField`. An invalid field carries Compose's error semantics with
-  its message, and the description is part of the field's semantics after its name.
+  its message, and the description is part of the field's semantics after its name. Its texts
+  break into lines as every Raincoat text style does: Korean only between whole words.
 
 Every size is as tall as the Button of the same size. A field shorter than the minimum touch
 target still takes touches across that target, without taking more room than it shows. As the
