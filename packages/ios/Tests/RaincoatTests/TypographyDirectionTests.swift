@@ -30,10 +30,13 @@
         @Test func typographyANameInASentenceKeepsItsDirectionOnlyWhenIsolated() throws {
             // Joined, as `Text("Message from \(name), 2 minutes ago")` builds it, the comma and
             // the number join the name's right-to-left run: "Message from 2 ,<name> minutes ago".
+            // The 2 is drawn before the end of the name, not after it. (Where the run starts, the
+            // caret offsets of the name and of what joined it overlap, so the 2 is not
+            // necessarily before the name's first offset.)
             let joined = try positions("Message from \(name), 2 minutes ago")
-            #expect(joined.number < joined.name.lowerBound, "joined: the 2 at \(joined.number), the name at \(joined.name)")
+            #expect(joined.number < joined.name.upperBound, "joined: the 2 at \(joined.number), the name at \(joined.name)")
 
-            // Isolated, the sentence reads in order.
+            // Isolated, the sentence reads in order: the 2 is drawn after the whole name.
             let isolated = try positions("Message from \u{2068}\(name)\u{2069}, 2 minutes ago")
             #expect(
                 isolated.number > isolated.name.upperBound,
