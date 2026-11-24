@@ -235,7 +235,7 @@
 
     @MainActor
     @Test(arguments: [LayoutDirection.leftToRight, .rightToLeft])
-    func theLeadingIconIsOnTheSideWhereReadingStarts(direction: LayoutDirection) throws {
+    func aFieldsLeadingIconIsOnTheSideWhereReadingStarts(direction: LayoutDirection) throws {
         let drawing = try Drawing(field(leadingIcon: marker(magenta)), direction: direction)
         let icon = try #require(drawing.columns(with: magenta).first)
         if direction == .leftToRight {
