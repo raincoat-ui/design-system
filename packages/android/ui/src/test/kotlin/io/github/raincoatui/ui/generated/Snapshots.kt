@@ -8,6 +8,7 @@ package io.github.raincoatui.ui.generated
 import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.ColorMode
+import io.github.raincoatui.tokens.TabsActivationMode
 
 /** A text size of the snapshot matrix, and the font scale that gives it. */
 internal enum class SnapshotTextSize(val fontScale: Float) {
@@ -166,6 +167,76 @@ internal val buttonExamples: List<SpecExample<ButtonExampleProperties>> = listOf
             "ko" to mapOf("label" to "변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기"),
             "ar" to mapOf("label" to "حفظ كل هذه التغييرات وإرسال النسخة المحدثة إلى جميع المراجعين"),
             "en-XA" to mapOf("label" to "[Šåṽé åļļ öƒ ţĥéšé çĥåñĝéš åñð šéñð ţĥé ûþðåţéð ṽéŕšîöñ ţö éṽéŕý ŕéṽîéŵéŕ one two three four five six]"),
+        ),
+    ),
+)
+
+/** The properties of one Tabs in an example. */
+internal data class TabsExampleProperties(
+    val activationMode: TabsActivationMode,
+    val keepMounted: Boolean,
+)
+
+/** The examples of specs/components/tabs/spec.yaml, with their text. */
+internal val tabsExamples: List<SpecExample<TabsExampleProperties>> = listOf(
+    SpecExample(
+        id = "labels",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Details\nReviews\nShipping", "panel" to "Made of waxed cotton, with taped seams."),
+            "vi" to mapOf("label" to "Chi tiết\nĐánh giá\nVận chuyển", "panel" to "Làm từ vải cotton phủ sáp, các đường may được dán kín."),
+            "zh-Hans" to mapOf("label" to "详情\n评价\n配送", "panel" to "采用上蜡棉布制成，接缝处经过压胶处理。"),
+            "ja" to mapOf("label" to "詳細\nレビュー\n配送", "panel" to "ワックスコットン製で、縫い目はテープで防水加工されています。"),
+            "ko" to mapOf("label" to "상세 정보\n리뷰\n배송", "panel" to "왁스 코튼으로 만들었으며 솔기는 테이프로 마감했습니다."),
+            "ar" to mapOf("label" to "التفاصيل\nالمراجعات\nالشحن", "panel" to "مصنوع من القطن المشمّع، مع درزات ملصوقة."),
+            "en-XA" to mapOf("label" to "[Ðéţåîļš\nŔéṽîéŵš\nŠĥîþþîñĝ one two]", "panel" to "[Ṁåðé öƒ ŵåẋéð çöţţöñ, ŵîţĥ ţåþéð šéåɱš. one two three]"),
+        ),
+    ),
+    SpecExample(
+        id = "icons",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Photos\nVideos\nFiles"),
+            "vi" to mapOf("label" to "Ảnh\nVideo\nTệp"),
+            "zh-Hans" to mapOf("label" to "照片\n视频\n文件"),
+            "ja" to mapOf("label" to "写真\n動画\nファイル"),
+            "ko" to mapOf("label" to "사진\n동영상\n파일"),
+            "ar" to mapOf("label" to "الصور\nالفيديوهات\nالملفات"),
+            "en-XA" to mapOf("label" to "[Þĥöţöš\nṼîðéöš\nƑîļéš one two]"),
+        ),
+    ),
+    SpecExample(
+        id = "icon-only",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("accessible-name" to "List\nGrid"),
+            "vi" to mapOf("accessible-name" to "Danh sách\nLưới"),
+            "zh-Hans" to mapOf("accessible-name" to "列表\n网格"),
+            "ja" to mapOf("accessible-name" to "リスト\nグリッド"),
+            "ko" to mapOf("accessible-name" to "목록\n그리드"),
+            "ar" to mapOf("accessible-name" to "قائمة\nشبكة"),
+            "en-XA" to mapOf("accessible-name" to "[Ļîšţ\nĜŕîð one]"),
+        ),
+    ),
+    SpecExample(
+        id = "overflow",
+        instances = listOf(
+            TabsExampleProperties(activationMode = TabsActivationMode.Automatic, keepMounted = false),
+        ),
+        text = mapOf(
+            "en" to mapOf("label" to "Overview\nSpecifications\nReviews\nQuestions\nShipping\nReturns"),
+            "vi" to mapOf("label" to "Tổng quan\nThông số\nĐánh giá\nCâu hỏi\nVận chuyển\nĐổi trả"),
+            "zh-Hans" to mapOf("label" to "概览\n规格\n评价\n问答\n配送\n退货"),
+            "ja" to mapOf("label" to "概要\n仕様\nレビュー\n質問\n配送\n返品"),
+            "ko" to mapOf("label" to "개요\n사양\n리뷰\n질문\n배송\n반품"),
+            "ar" to mapOf("label" to "نظرة عامة\nالمواصفات\nالمراجعات\nالأسئلة\nالشحن\nالإرجاع"),
+            "en-XA" to mapOf("label" to "[Öṽéŕṽîéŵ\nŠþéçîƒîçåţîöñš\nŔéṽîéŵš\nǪûéšţîöñš\nŠĥîþþîñĝ\nŔéţûŕñš one two three four five]"),
         ),
     ),
 )

@@ -163,20 +163,19 @@ motion:
     tabs.transition.duration and its easing.
   reduced-motion: Color changes are immediate.
 
-# Named examples. Stories, tests, and documentation are built from these.
+# Named examples. Stories, tests, and documentation are built from these. An example shows a row
+# of tabs: its text (strings.yaml) gives one line per tab.
 examples:
   - id: labels
-    description: Three tabs with labels. The first is selected.
+    description: Three tabs with labels, and the first one's panel. The first is selected.
   - id: icons
     description: Tabs with a leading icon beside each label.
   - id: icon-only
     description: Tabs that show only an icon. Each is given an accessible name.
   - id: overflow
-    description: More tabs than fit the width. The list scrolls sideways.
-  - id: manual
-    description: Tabs whose panels are slow to show. The arrow keys move focus, and Enter or Space selects.
-    properties:
-      activation-mode: manual
+    description: >-
+      More tabs than fit the width, the last one selected: the list scrolls sideways to show it.
+      In a long translation on a narrow screen, the row is scrolled to its last tab.
 
 # Each platform's component: its source file and what it is called there. The spec linter checks
 # that each file exists and mentions the name. The documentation's parity matrix is built from
