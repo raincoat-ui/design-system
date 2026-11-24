@@ -240,49 +240,43 @@
                 let wholeScrolls = scrolling == .whole
                 // While the body scrolls, the header and the footer stay in place, with a hairline
                 // at an edge while content is beneath it. On a screen too short for three lines of
-                // the body, everything scrolls, and they move into the scrolling area.
+                // the body, the whole dialog scrolls instead.
                 let dividers =
                     wholeScrolls
                     ? DialogDividers.none
                     : DialogDividers(offset: Double(offset), viewport: Double(viewport), content: Double(bodyHeight))
-                // One arrangement for both, in which the body keeps its place: switching between
-                // them, as when the keyboard shows at a large text size, keeps the app's content,
-                // with its state and its focus, instead of making it anew.
-                VStack(spacing: 0) {
-                    if !wholeScrolls {
+                // One arrangement for both, in which every section keeps its place: the outer
+                // scrolling area scrolls the whole dialog, the inner one the body, and only one of
+                // them is ever taller than its content needs, so only one scrolls. Switching
+                // between them, as when the keyboard comes up at a large text size, so makes
+                // nothing anew: the app's content keeps its state and its focus, and assistive
+                // technology keeps the same elements.
+                ScrollView {
+                    VStack(spacing: 0) {
                         sections.headerSection(look, divider: dividers.underHeader)
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
-                    }
-                    if sections.hasBody || wholeScrolls {
-                        ScrollView {
-                            VStack(spacing: 0) {
-                                if wholeScrolls {
-                                    sections.headerSection(look, divider: false)
-                                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
-                                            headerHeight = $0
-                                        }
-                                }
+                        if sections.hasBody {
+                            ScrollView {
                                 sections.bodySection(look)
                                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { bodyHeight = $0 }
                                     .onGeometryChange(for: CGFloat.self) {
                                         -$0.frame(in: .named(dialogBodySpace)).minY
                                     } action: { offset = $0 }
-                                if wholeScrolls {
-                                    sections.footerSection(look, divider: false)
-                                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
-                                            footerHeight = $0
-                                        }
-                                }
                             }
+                            .coordinateSpace(.named(dialogBodySpace))
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { viewport = $0 }
+                            // While the whole dialog scrolls, the body is as tall as its content.
+                            .frame(height: wholeScrolls ? bodyHeight : nil)
                         }
-                        .coordinateSpace(.named(dialogBodySpace))
-                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { viewport = $0 }
-                    }
-                    if !wholeScrolls {
                         sections.footerSection(look, divider: dividers.overFooter)
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { footerHeight = $0 }
                     }
+                    // While the body scrolls, the sections fill the dialog exactly, and the body
+                    // takes the height that the header and the footer leave.
+                    .frame(height: wholeScrolls ? nil : proxy.size.height, alignment: .top)
                 }
+                // Neither moves under a drag unless its content is taller than it is.
+                .scrollBounceBehavior(.basedOnSize)
                 .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
             }
             .presentationDetents([detent])
