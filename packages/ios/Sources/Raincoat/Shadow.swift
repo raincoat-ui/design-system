@@ -3,62 +3,56 @@
     import SwiftUI
 
     extension View {
-        /// Draws a token shadow, such as `tokens.toast.shadow`, around this view in `shape`.
+        /// Fills `shape` behind this view with `fill`, and draws a token shadow, such as
+        /// `tokens.toast.shadow`, with it, as CSS draws a `box-shadow`: the outer layers behind
+        /// the fill, the inset layers over the fill and behind the view.
         ///
-        /// Every component that lifts a surface draws its shadow token with this:
+        /// Every component that lifts a surface draws its shadow token and its fill with this, in
+        /// place of a background:
         ///
         ///     let shape = RoundedRectangle(cornerRadius: tokens.card.radius)
-        ///     content
-        ///         .background { shape.fill(Color(tokens.card.bg.default)) }
-        ///         .raincoatShadow(tokens.card.shadow, in: shape)
+        ///     content.raincoatShadow(tokens.card.shadow, in: shape, fill: Color(tokens.card.bg.default))
         ///
         /// It draws only the shadow's visible layers, so a shadow of transparent layers, such as
-        /// the base theme's `shadow.none`, draws nothing at all. The layers are drawn as CSS draws a
-        /// `box-shadow`: the first one on top, each moved by its offset, grown by its spread, and
-        /// blurred by half its blur radius. An outer layer is drawn behind the view: give the view
-        /// an opaque fill, because under a translucent one the shadow shows through, where CSS
-        /// would not draw it. An inset layer is drawn over the view, inside the shape.
-        public func raincoatShadow<S: InsettableShape>(_ shadow: TokenShadow, in shape: S) -> some View {
-            modifier(TokenShadowModifier(shadow: shadow, shape: shape))
+        /// the base theme's `shadow.none`, draws nothing at all: only the fill. The first layer is
+        /// drawn on top, and each is moved by its offset, grown by its spread (shrunk, for an inset
+        /// layer), and blurred by half its blur radius, the Gaussian deviation CSS uses.
+        public func raincoatShadow<S: InsettableShape>(
+            _ shadow: TokenShadow, in shape: S, fill: Color
+        ) -> some View {
+            background { TokenShadowBackground(shadow: shadow, shape: shape, fill: fill) }
         }
     }
 
-    /// Draws the visible layers of a token shadow. See `View.raincoatShadow(_:in:)`.
-    struct TokenShadowModifier<S: InsettableShape>: ViewModifier {
+    /// The fill of a shape with a token shadow's layers around and inside it. See
+    /// `View.raincoatShadow(_:in:fill:)`.
+    private struct TokenShadowBackground<S: InsettableShape>: View {
         let shadow: TokenShadow
         let shape: S
+        let fill: Color
 
-        func body(content: Content) -> some View {
+        var body: some View {
             // The first layer is on top, so it is drawn last.
             let layers = Array(shadow.visibleLayers.reversed().enumerated())
-            let outer = layers.filter { !$0.element.inset }
-            let inner = layers.filter { $0.element.inset }
-            content
-                .background {
-                    ZStack {
-                        ForEach(outer, id: \.offset) { _, layer in
-                            shape
-                                .inset(by: -layer.spread)
-                                .fill(Color(layer.color))
-                                .offset(x: layer.offsetX, y: layer.offsetY)
-                                .blur(radius: layer.blur / 2)
-                        }
-                    }
-                    .allowsHitTesting(false)
+            ZStack {
+                ForEach(layers.filter { !$0.element.inset }, id: \.offset) { _, layer in
+                    shape
+                        .inset(by: -layer.spread)
+                        .fill(Color(layer.color))
+                        .offset(x: layer.offsetX, y: layer.offsetY)
+                        .blur(radius: layer.blur / 2)
                 }
-                .overlay {
-                    ZStack {
-                        ForEach(inner, id: \.offset) { _, layer in
-                            InsetShadowLayer(layer: layer, shape: shape)
-                        }
-                    }
-                    .allowsHitTesting(false)
+                shape.fill(fill)
+                ForEach(layers.filter { $0.element.inset }, id: \.offset) { _, layer in
+                    InsetShadowLayer(layer: layer, shape: shape)
                 }
+            }
+            .allowsHitTesting(false)
         }
     }
 
     /// One inset layer: its color inside the shape, except where the shape, moved by the offset
-    /// and shrunk by the spread, lets the view show through.
+    /// and shrunk by the spread, lets the fill show through.
     private struct InsetShadowLayer<S: InsettableShape>: View {
         let layer: TokenShadowLayer
         let shape: S

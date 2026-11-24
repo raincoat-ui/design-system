@@ -165,19 +165,47 @@
         #expect(drawn)
     }
 
+    /// The first and last columns with ink on the fill: anything drawn inside the outline that is
+    /// not the fill, such as text or the cross.
+    @MainActor
+    private func inkedColumns(_ drawing: Drawing, fill: TokenColor, edge: Int) -> ClosedRange<Int>? {
+        let columns = (edge + 1..<drawing.width - edge - 1).filter { x in
+            (edge + 1..<drawing.height - edge - 1).contains { y in !drawing.has(fill, at: x, y) }
+        }
+        guard let first = columns.first, let last = columns.last else { return nil }
+        return first...last
+    }
+
+    @MainActor
+    @Test func inRightToLeftTheActionAndTheCloseButtonAreOnTheLeft() throws {
+        let toast = tokens().toast
+        let edge = Int(toast.border.width)
+        let view = RaincoatToast("Message archived", action: undo, closeLabel: "Close")
+        let ltr = try Drawing(view)
+        let rtl = try Drawing(view.environment(\.layoutDirection, .rightToLeft))
+        let left = try #require(inkedColumns(ltr, fill: toast.bg, edge: edge))
+        let right = try #require(inkedColumns(rtl, fill: toast.bg, edge: edge))
+        let inset = Int(toast.paddingInline) + edge
+        // Left to right, the message starts right after the padding and the cross ends well
+        // before it on the other side. Right to left, the other way round.
+        #expect(left.lowerBound <= inset + 3)
+        #expect(left.upperBound < ltr.width - inset - 6)
+        #expect(right.lowerBound > inset + 6)
+        #expect(right.upperBound >= rtl.width - inset - 4)
+    }
+
     // MARK: - The shadow helper
 
     private let ink = TokenColor(hex: 0x000000)
     private let paper = TokenColor(hex: 0xFFFFFF)
 
-    /// A 40-point square of paper with a shadow, on 20 points of clear space.
+    /// A 40-point square filled with paper, with a shadow, on 20 points of clear space.
     @MainActor
     private func square(_ shadow: TokenShadow) throws -> Drawing {
         try Drawing(
-            Rectangle()
-                .fill(Color(paper))
+            Color.clear
                 .frame(width: 40, height: 40)
-                .raincoatShadow(shadow, in: Rectangle())
+                .raincoatShadow(shadow, in: Rectangle(), fill: Color(paper))
                 .padding(20)
         )
     }
@@ -238,12 +266,29 @@
         #expect(clock.announced == ["First"])
         #expect(model.queue.shown?.message == "First")
 
+        // With no time to leave the screen, the second follows at once.
         model.close(try #require(model.queue.shown?.id))
-        // The second follows once the first has left the screen.
-        try await Task.sleep(for: .milliseconds(200))
         #expect(clock.announced == ["First", "Second"])
         #expect(model.queue.shown?.message == "Second")
         #expect(model.queue.deadline == clock.now + toastDuration)
+    }
+
+    @MainActor
+    @Test func theNextToastWaitsUntilTheLastHasLeftTheScreen() async throws {
+        let clock = Recorder()
+        let model = ToastHostModel(now: { clock.now }, announce: { clock.announced.append($0) })
+        model.exitDuration = 0.05
+        model.show(RaincoatToast("First", closeLabel: "Close"))
+        model.show(RaincoatToast("Second", closeLabel: "Close"))
+        model.close(try #require(model.queue.shown?.id))
+        #expect(model.queue.shown?.id == nil)
+        #expect(model.queue.isLeaving)
+        // Waits on the system's clock for the first toast to leave, a few frames at most.
+        for _ in 0..<200 where model.queue.shown == nil {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(model.queue.shown?.message == "Second")
+        #expect(clock.announced == ["First", "Second"])
     }
 
     @MainActor

@@ -83,15 +83,9 @@
             HStack(alignment: .top, spacing: toast.gap) {
                 // The message and the action share a line while they fit. When they do not, the
                 // action moves below the message, at the end.
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .top, spacing: toast.gap) {
-                        messageText
-                        actionButton
-                    }
-                    VStack(alignment: .trailing, spacing: toast.gap) {
-                        messageText.frame(maxWidth: .infinity, alignment: .leading)
-                        actionButton
-                    }
+                MessageAndAction(spacing: toast.gap) {
+                    messageText
+                    actionButton
                 }
                 closeButton
             }
@@ -99,9 +93,8 @@
             .padding(.horizontal, toast.paddingInline + toast.border.width)
             .padding(.vertical, toast.paddingBlock + toast.border.width)
             .foregroundStyle(Color(toast.fg))
-            .background { shape.fill(Color(toast.bg)) }
+            .raincoatShadow(toast.shadow, in: shape, fill: Color(toast.bg))
             .overlay { shape.strokeBorder(Color(toast.border.color), lineWidth: toast.border.width) }
-            .raincoatShadow(toast.shadow, in: shape)
             .contentShape(shape)
             .onHover { hovering in control?.setPaused(.hover, hovering) }
             .onChange(of: voiceOverFocus != nil || keyboardFocus != nil) { _, focused in
@@ -175,6 +168,64 @@
                         swipe = 0
                     }
                 }
+        }
+    }
+
+    /// The message, and the action after it while the two fit on one line. When they do not, the
+    /// message takes the whole width and wraps, and the action moves below it, at the end.
+    private struct MessageAndAction: Layout {
+        let spacing: CGFloat
+
+        func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache _: inout ()) -> CGSize {
+            arrangement(width: proposal.width, subviews: subviews).size
+        }
+
+        func placeSubviews(in bounds: CGRect, proposal _: ProposedViewSize, subviews: Subviews, cache _: inout ()) {
+            let frames = arrangement(width: bounds.width, subviews: subviews).frames
+            for (subview, frame) in zip(subviews, frames) {
+                subview.place(
+                    at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+                    anchor: .topLeading,
+                    proposal: ProposedViewSize(frame.size)
+                )
+            }
+        }
+
+        /// Where the message and the action go in a given width, or in their ideal width when
+        /// there is no limit.
+        private func arrangement(width: CGFloat?, subviews: Subviews) -> (size: CGSize, frames: [CGRect]) {
+            guard let message = subviews.first else { return (.zero, []) }
+            let available = width ?? .infinity
+            let line = message.sizeThatFits(.unspecified)
+            guard subviews.count > 1 else {
+                let size =
+                    line.width <= available
+                    ? line : message.sizeThatFits(ProposedViewSize(width: available, height: nil))
+                return (size, [CGRect(origin: .zero, size: size)])
+            }
+            let action = subviews[1].sizeThatFits(.unspecified)
+            if line.width + spacing + action.width <= available {
+                let size = CGSize(width: line.width + spacing + action.width, height: max(line.height, action.height))
+                return (
+                    size,
+                    [
+                        CGRect(origin: .zero, size: line),
+                        CGRect(x: line.width + spacing, y: 0, width: action.width, height: action.height),
+                    ]
+                )
+            }
+            let wrapped = message.sizeThatFits(ProposedViewSize(width: available, height: nil))
+            let width = max(available, action.width)
+            return (
+                CGSize(width: width, height: wrapped.height + spacing + action.height),
+                [
+                    CGRect(x: 0, y: 0, width: width, height: wrapped.height),
+                    CGRect(
+                        x: width - action.width, y: wrapped.height + spacing, width: action.width,
+                        height: action.height
+                    ),
+                ]
+            )
         }
     }
 
@@ -355,12 +406,17 @@
         private func leave() {
             scheduleTimer()
             let leaving = exitDuration
-            Task { [weak self] in
+            guard leaving > 0 else { return showNext() }
+            Task { @MainActor [weak self] in
                 try? await Task.sleep(for: .seconds(leaving))
-                guard let self else { return }
-                if let shown = queue.finishLeaving(now: now()) { announce(shown.message) }
-                scheduleTimer()
+                self?.showNext()
             }
+        }
+
+        /// Shows the next toast, if one is waiting, now that the last one has left the screen.
+        private func showNext() {
+            if let shown = queue.finishLeaving(now: now()) { announce(shown.message) }
+            scheduleTimer()
         }
 
         /// Waits until the toast on the screen is due to close, if it has a timer that runs.
@@ -369,7 +425,7 @@
             timer = nil
             guard let deadline = queue.deadline else { return }
             let delay = max(0, deadline - now())
-            timer = Task { [weak self] in
+            timer = Task { @MainActor [weak self] in
                 try? await Task.sleep(for: .seconds(delay))
                 guard !Task.isCancelled, let self else { return }
                 if queue.expire(now: now()) { leave() }
