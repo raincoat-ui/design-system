@@ -66,7 +66,8 @@ can for any version: Actions, reference apps, Run workflow.
 ## Adding a component
 
 Add a screen for it in `src/`, with one example for each state in its spec, and a test file in
-`tests/`.
+`tests/`. Each component has a page of its own: `src/main.tsx` picks the screen by path. The
+Button's is `/`, and the Toast's `/toast`, with a bar of the app's own at the bottom of the window.
 
 ## What the tests do not cover
 

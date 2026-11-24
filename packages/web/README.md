@@ -107,6 +107,52 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the SwiftUI and Compose Buttons follow too.
 
+## Toast
+
+Put `ToastProvider` around the app once, and show toasts from anywhere inside it:
+
+```tsx
+import { ToastProvider, useToast } from "@raincoat-ui/react";
+
+<ToastProvider label="Notifications">
+  <App />
+</ToastProvider>;
+
+const toast = useToast();
+toast.show({ message: "Message archived" });
+toast.show({
+  message: "Message archived",
+  action: { label: "Undo", onClick: undoArchive },
+  closeLabel: "Close",
+});
+```
+
+| Prop          | Type               | Default | Notes                                                                  |
+| ------------- | ------------------ | ------- | ---------------------------------------------------------------------- |
+| `label`       | `string`           |         | The name of the region that holds the toasts, such as "Notifications"  |
+| `bottomInset` | `number \| string` | `0`     | Room below the toasts for a bar of your own: pixels, or any CSS length |
+
+- **Every word comes from your app.** The region's name, the message, the action's label, and
+  the close button's name. A toast with an action must have a named close button; TypeScript
+  reports one without.
+- **One at a time.** Toasts appear at the bottom center of the window, one at a time, in the
+  order they were shown.
+- **Never takes focus.** The message is announced politely, through a status region, after
+  whatever the screen reader is saying. F8 moves focus to the toast, and F8 again moves it back.
+  Escape closes it.
+- **Timing.** Without an action, a toast closes after 6 seconds. The time stops while a pointer
+  is over it, while it has focus, and while the page is hidden. A toast with an action stays
+  until the action is used or the toast is closed.
+- **Touch.** A swipe down closes a toast. The toasts sit above the on-screen keyboard.
+- **Client Components.** The provider and `useToast` need a Client Component; the provider can
+  be rendered by a Server Component layout and holds the app's server-rendered content.
+
+`Toast` draws a toast standing still, with the same props as `show`, for documentation and
+tests.
+
+The Toast follows the
+[Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
+
 ## Browsers
 
 Chrome and Edge 111, Safari 16.4, Firefox 128, and later.

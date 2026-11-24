@@ -63,3 +63,49 @@ p {
   flex-direction: column;
   align-items: flex-start;
 }
+
+/* The Toast screen keeps a bar at the bottom of the window, as many apps do. It tells the
+   ToastProvider how tall the bar is, so the toasts sit above it. */
+:root {
+  --app-bar-height: var(--rc-space-16);
+}
+
+.with-bar {
+  padding-block-end: calc(var(--app-bar-height) + var(--rc-space-6));
+}
+
+.bottom-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--rc-space-6);
+  height: var(--app-bar-height);
+  padding-inline: var(--rc-space-6);
+  background: var(--rc-color-bg-surface);
+  border-top: var(--rc-border-width-thin) solid var(--rc-color-border-default);
+}
+
+.bottom-bar a {
+  color: var(--rc-color-fg-default);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--rc-space-1);
+}
+
+.field input {
+  min-height: var(--rc-button-height-md);
+  box-sizing: border-box;
+  padding-inline: var(--rc-space-3);
+  border: var(--rc-border-width-thin) solid var(--rc-color-border-control);
+  border-radius: var(--rc-radius-md);
+  background: var(--rc-color-bg-canvas);
+  color: var(--rc-color-fg-default);
+  font: inherit;
+}

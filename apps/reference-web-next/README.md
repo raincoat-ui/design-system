@@ -79,6 +79,8 @@ Component stops the page from rendering; this app found that bug.
 
 Add a Client Component for it in `app/`, with one example for each state in its spec, and render
 it from the Server Component too, wherever it can be used there. Add a test file in `tests/`.
+A component can have a page of its own: the Toast's is `app/toast/page.tsx`, a Server Component
+that renders the `ToastProvider` around the page, as an app's layout does.
 
 ## Licenses
 
