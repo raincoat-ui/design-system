@@ -40,8 +40,16 @@ final class CardTests: ReferenceAppTestCase {
             for part in rest {
                 XCTAssertTrue(card.label.contains(part), "\(identifier) reads \(part): \(card.label)")
             }
-            // The card's content is not a set of separate elements.
-            XCTAssertEqual(app.staticTexts.matching(identifier: title).count, 0, identifier)
+            // Its texts are not elements of their own beside it. UI testing still lists them
+            // under the card's one button, as it lists the children of any combined element;
+            // VoiceOver stops at the button and reads its label.
+            for text in [title] + rest {
+                XCTAssertEqual(
+                    app.descendants(matching: .any).matching(identifier: text).count,
+                    card.descendants(matching: .any).matching(identifier: text).count,
+                    "\(identifier): \(text) is only inside the card"
+                )
+            }
         }
     }
 
