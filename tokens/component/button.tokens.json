@@ -63,7 +63,7 @@
         "$description": "Color of the focus ring, drawn on the surface behind the button.",
         "$extensions": {
           "raincoat": {
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
             "contrast": "graphic"
           }
         }
@@ -131,7 +131,7 @@
         "$description": "Outline color. It is what identifies the control against the surface.",
         "$extensions": {
           "raincoat": {
-            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
             "contrast": "graphic"
           }
         }
@@ -153,6 +153,7 @@
               "color.bg.canvas",
               "color.bg.surface",
               "color.bg.subtle",
+              "color.bg.raised",
               "button.ghost.bg.hover",
               "button.ghost.bg.pressed"
             ],

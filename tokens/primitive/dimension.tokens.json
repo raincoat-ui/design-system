@@ -68,6 +68,18 @@
       "$value": { "value": 64, "unit": "px" },
       "$description": "Sixty-four pixels: sixteen grid units."
     },
+    "400": {
+      "$value": { "value": 400, "unit": "px" },
+      "$description": "Four hundred pixels: the width of a small panel."
+    },
+    "560": {
+      "$value": { "value": 560, "unit": "px" },
+      "$description": "Five hundred and sixty pixels: the width of a medium panel."
+    },
+    "800": {
+      "$value": { "value": 800, "unit": "px" },
+      "$description": "Eight hundred pixels: the width of a large panel."
+    },
     "9999": {
       "$value": { "value": 9999, "unit": "px" },
       "$description": "A radius large enough to make any control fully rounded."

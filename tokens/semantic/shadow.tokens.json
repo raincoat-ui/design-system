@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "shadow": {
+    "$type": "shadow",
+    "$description": "Shadows of surfaces above the page. The base is flat: ruled, not raised. A theme that lifts its surfaces gives these a value.",
+    "raised": {
+      "$value": "{shadow.none}",
+      "$description": "The shadow of a card.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    },
+    "overlay": {
+      "$value": "{shadow.none}",
+      "$description": "The shadow of dialogs, sheets, and toasts.",
+      "$extensions": { "raincoat": { "overridable": true } }
+    }
+  }
+}

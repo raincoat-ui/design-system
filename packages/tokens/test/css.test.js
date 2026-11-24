@@ -78,9 +78,13 @@ for (const theme of openProject(repoRoot).themes) {
     /** How a resolved token value is written in CSS. */
     function cssValue(type, value) {
       switch (type) {
-        case "color":
-          assert.equal(value.alpha ?? 1, 1, "translucent colors need their own expectation");
-          return hexOf(value);
+        case "color": {
+          const alpha = value.alpha ?? 1;
+          const alphaHex = Math.round(alpha * 255)
+            .toString(16)
+            .padStart(2, "0");
+          return alpha < 1 ? `${hexOf(value)}${alphaHex}` : hexOf(value);
+        }
         case "dimension":
           return `${value.value}${value.unit}`;
         case "duration":
@@ -92,6 +96,19 @@ for (const theme of openProject(repoRoot).themes) {
             .join(", ");
         case "cubicBezier":
           return `cubic-bezier(${value.join(", ")})`;
+        case "shadow":
+          return []
+            .concat(value)
+            .map((layer) =>
+              [
+                ...(layer.inset ? ["inset"] : []),
+                ...["offsetX", "offsetY", "blur", "spread"].map((field) =>
+                  cssValue("dimension", layer[field]),
+                ),
+                cssValue("color", layer.color),
+              ].join(" "),
+            )
+            .join(", ");
         default:
           return String(value);
       }
@@ -183,13 +200,20 @@ for (const theme of openProject(repoRoot).themes) {
       }
     });
 
-    test("colors are written as six-digit hex, with no functions that older tools cannot read", () => {
-      for (const [name, value] of base) {
-        if (name.startsWith("--rc-color-") && !value.startsWith("var(")) {
-          assert.match(value, /^#[0-9a-f]{6}$/, name);
-        }
+    test("colors are written as hex, with no functions that older tools cannot read", () => {
+      const { tokens } = compose(files, { mode: "light", density: "comfortable" });
+      for (const token of tokens.values()) {
+        const value = base.get(`--rc-${token.name}`);
+        if (resolvedType(token.id, tokens) !== "color" || value.startsWith("var(")) continue;
+        // Six digits, and eight only for a translucent color, such as a scrim.
+        const translucent = (resolveToken(token.id, tokens).alpha ?? 1) < 1;
+        assert.match(value, translucent ? /^#[0-9a-f]{8}$/ : /^#[0-9a-f]{6}$/, token.id);
       }
-      assert.ok(!/color-mix|oklch|rgb\(/.test(css));
+      assert.ok(!/color-mix|oklch|rgba?\(/.test(css));
+    });
+
+    test("shadow.none is one fully transparent layer of no size, which draws nothing", () => {
+      assert.equal(base.get("--rc-shadow-none"), "0px 0px 0px 0px #00000000");
     });
   });
 }

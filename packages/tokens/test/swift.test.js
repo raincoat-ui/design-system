@@ -34,6 +34,38 @@ test("canonical text matches the format of TokenFormat in the Swift package", ()
     "Be Vietnam Pro, system-ui",
   );
   assert.equal(canonical("cubicBezier", [0.2, 0, 0, 1]), "0.2000,0.0000,0.0000,1.0000");
+  const px = (value) => ({ value, unit: "px" });
+  const layer = (color, offsetY, blur, inset) => ({
+    color,
+    offsetX: px(0),
+    offsetY: px(offsetY),
+    blur: px(blur),
+    spread: px(0),
+    ...(inset === undefined ? {} : { inset }),
+  });
+  assert.equal(
+    canonical("shadow", layer(srgb("#000000", 0), 0, 0)),
+    "#00000000|0.0000|0.0000|0.0000|0.0000|false",
+  );
+  assert.equal(
+    canonical("shadow", [layer(srgb("#000000", 0.2), 2, 4), layer(srgb("#ffffff"), 1, 0, true)]),
+    "#00000033|0.0000|2.0000|4.0000|0.0000|false, #ffffff|0.0000|1.0000|0.0000|0.0000|true",
+  );
+});
+
+test("translucent colors and shadows are written as Swift literals", () => {
+  assert.match(theme, /scrim: TokenColor\(hex: 0x000000, alpha: 0\.4\)/);
+  assert.match(schema, /public let raised: TokenShadow/);
+  assert.match(schema, /"card\.shadow": TokenFormat\.string\(card\.shadow\)/);
+  assert.match(
+    theme,
+    /raised: TokenShadow\(layers: \[TokenShadowLayer\(color: TokenColor\(hex: 0x000000, alpha: 0\), offsetX: 0, offsetY: 0, blur: 0, spread: 0, inset: false\)\]\)/,
+  );
+  assert.match(
+    expected,
+    /"shadow\.overlay": "#00000000\|0\.0000\|0\.0000\|0\.0000\|0\.0000\|false"/,
+  );
+  assert.match(expected, /"color\.bg\.scrim": "#00000066"/);
 });
 
 test("every semantic and component token is exposed, and no primitive is", () => {

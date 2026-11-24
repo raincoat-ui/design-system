@@ -39,6 +39,26 @@ class ValuesTest {
     }
 
     @Test
+    fun `shadows format layer by layer`() {
+        val drop = TokenShadowLayer(TokenColor(0x33000000), 0.0, 2.0, 4.0, 0.0, inset = false)
+        val inner = TokenShadowLayer(TokenColor(0xFFFFFFFF), 0.0, 1.0, 0.0, 0.0, inset = true)
+        assertEquals(
+            "#00000033|0.0000|2.0000|4.0000|0.0000|false, #ffffff|0.0000|1.0000|0.0000|0.0000|true",
+            TokenFormat.shadow(TokenShadow(listOf(drop, inner))),
+        )
+    }
+
+    @Test
+    fun `a transparent shadow has nothing to draw`() {
+        val none = TokenShadow(listOf(TokenShadowLayer(TokenColor(0x00000000), 0.0, 0.0, 0.0, 0.0, inset = false)))
+        assertEquals(emptyList<TokenShadowLayer>(), none.visibleLayers)
+        assertEquals("#00000000|0.0000|0.0000|0.0000|0.0000|false", TokenFormat.shadow(none))
+
+        val faint = TokenShadowLayer(TokenColor(0x1A000000), 0.0, 1.0, 2.0, 0.0, inset = false)
+        assertEquals(listOf(faint), TokenShadow(none.layers + faint).visibleLayers)
+    }
+
+    @Test
     fun `the color mode follows the scheme and contrast setting`() {
         assertEquals(ColorMode.Light, ColorMode.of(isDark = false, increasedContrast = false))
         assertEquals(ColorMode.Dark, ColorMode.of(isDark = true, increasedContrast = false))

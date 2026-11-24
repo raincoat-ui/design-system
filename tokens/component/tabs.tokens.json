@@ -1,0 +1,143 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "tabs": {
+    "$description": "Tokens of the Tabs component. See rfcs/0007-tabs.md.",
+    "height": {
+      "$type": "dimension",
+      "$value": "{size.control.md}",
+      "$description": "Height of a tab."
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "$value": "{space.4}",
+      "$description": "Side padding of a tab."
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.2}",
+      "$description": "Space between a tab's icon and its label."
+    },
+    "label": {
+      "$type": "typography",
+      "$value": "{type.label.md}",
+      "$description": "Text style of a tab's label."
+    },
+    "icon-size": {
+      "$type": "dimension",
+      "$value": "{size.icon.md}",
+      "$description": "Icon size in a tab."
+    },
+    "fg": {
+      "$type": "color",
+      "default": {
+        "$value": "{color.fg.muted}",
+        "$description": "Label and icon color of a tab that is not selected.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "text"
+          }
+        }
+      },
+      "selected": {
+        "$value": "{color.fg.default}",
+        "$description": "Label and icon color of the selected tab.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "text"
+          }
+        }
+      },
+      "hover": {
+        "$value": "{color.fg.default}",
+        "$description": "Label and icon color of a tab when hovered or pressed.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["tabs.bg.hover", "tabs.bg.pressed"],
+            "contrast": "text"
+          }
+        }
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "hover": { "$value": "{color.control.hover}", "$description": "Fill of a tab when hovered." },
+      "pressed": {
+        "$value": "{color.control.pressed}",
+        "$description": "Fill of a tab when pressed."
+      }
+    },
+    "indicator": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.selected}",
+        "$description": "The rule under the selected tab. It marks which tab is selected.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      },
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.thick}",
+        "$description": "Thickness of the rule under the selected tab."
+      }
+    },
+    "divider": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.default}",
+        "$description": "The hairline under the row of tabs.",
+        "$extensions": {
+          "raincoat": {
+            "contrast": "exempt",
+            "contrast-note": "Decorative: no information is lost if it is not perceived."
+          }
+        }
+      },
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.thin}",
+        "$description": "Thickness of the hairline under the row of tabs."
+      }
+    },
+    "focus-ring": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.focus}",
+        "$description": "Width of the focus ring."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.focus}",
+        "$description": "Color of the focus ring, drawn on the surface behind the tab.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["color.bg.canvas", "color.bg.surface", "color.bg.subtle", "color.bg.raised"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "target-minimum": {
+      "$type": "dimension",
+      "$value": "{size.target.minimum}",
+      "$description": "Smallest touch target of a tab, whatever its visible height."
+    },
+    "transition": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.fast}",
+        "$description": "Duration of hover, press, and selection changes."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.interactive}",
+        "$description": "Easing of hover, press, and selection changes."
+      }
+    }
+  }
+}

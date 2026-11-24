@@ -12,6 +12,21 @@ const NAME = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/;
 const NEEDS_CONTRAST = ["fg", "border", "focus-ring"];
 // The tier each tier may reference. Primitives hold literal values only.
 const MAY_REFERENCE = { primitive: null, semantic: "primitive", component: "semantic" };
+// The smallest font size a text style may have. Below it, text is hard to read in any script.
+const SMALLEST_TEXT = "font.size.12";
+
+/** A dimension in CSS pixels, at 16px to the rem. */
+const pixels = ({ value, unit }) => (unit === "rem" ? value * 16 : value);
+
+/** The size of {font.size.12} in pixels, or 12 where the token is missing or broken. */
+function smallestText(tokens) {
+  try {
+    const value = resolveToken(SMALLEST_TEXT, tokens);
+    return checkValue("dimension", value).length === 0 ? pixels(value) : 12;
+  } catch {
+    return 12;
+  }
+}
 
 const camelCase = (name) => name.replace(/-([a-z0-9])/g, (_, char) => char.toUpperCase());
 
@@ -182,8 +197,21 @@ function checkComposition(files, problems) {
           problems.add(token.file, `${at} ${error.message}`);
           continue;
         }
-        for (const problem of checkValue(type, resolved)) {
+        const valueProblems = checkValue(type, resolved);
+        for (const problem of valueProblems) {
           problems.add(token.file, `${at} ${problem}`);
+        }
+
+        // No text smaller than the smallest size of the scale (RFC 0003).
+        if (type === "typography" && valueProblems.length === 0) {
+          const size = pixels(resolved.fontSize);
+          const smallest = smallestText(tokens);
+          if (size < smallest) {
+            problems.add(
+              token.file,
+              `${at} its font size, ${size}px, is below {${SMALLEST_TEXT}} (${smallest}px), the smallest size text may have`,
+            );
+          }
         }
 
         // Contrast declarations.

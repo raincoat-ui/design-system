@@ -9,6 +9,7 @@ import {
   HEADER,
   hexParts,
   indent,
+  layers,
   pascal,
   permutations,
   points,
@@ -35,6 +36,7 @@ const SWIFT_TYPE = {
   fontFamily: "[String]",
   cubicBezier: "TokenEasing",
   typography: "TokenTextStyle",
+  shadow: "TokenShadow",
 };
 
 // Words that need backticks when declared as a property or parameter name.
@@ -92,6 +94,13 @@ function literal(type, value) {
       return `TokenEasing(x1: ${number(value[0])}, y1: ${number(value[1])}, x2: ${number(value[2])}, y2: ${number(value[3])})`;
     case "typography":
       return `TokenTextStyle(families: ${literal("fontFamily", value.fontFamily)}, size: ${number(points(value.fontSize))}, weight: ${weight(value.fontWeight)}, letterSpacing: ${number(points(value.letterSpacing))}, lineHeight: ${number(value.lineHeight)})`;
+    case "shadow":
+      return `TokenShadow(layers: [${layers(value)
+        .map(
+          (layer) =>
+            `TokenShadowLayer(color: ${literal("color", layer.color)}, offsetX: ${number(points(layer.offsetX))}, offsetY: ${number(points(layer.offsetY))}, blur: ${number(points(layer.blur))}, spread: ${number(points(layer.spread))}, inset: ${layer.inset ?? false})`,
+        )
+        .join(", ")}])`;
     default:
       throw new Error(`the Swift emitter does not support the type "${type}" yet`);
   }

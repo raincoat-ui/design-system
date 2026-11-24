@@ -46,8 +46,9 @@ npm install --save-dev --save-exact @raincoat-ui/tokens@0.1.0-next.4
 
 Each file under `tokens/` has the name of a file of the base token source and gives new values
 to tokens that file marks overridable: the brand and neutral color ramps, each color role in each
-mode, font families and weights, and radii. A token changed in one color mode is changed in all
-four. Spacing, sizes, touch targets, focus rules, and the red used for danger are locked, and a
+mode, font families and weights, radii, the shadows of raised surfaces, and the few component
+tokens marked overridable, such as `card.border.default`. A token changed in one color mode is
+changed in all four. Spacing, sizes, touch targets, focus rules, and the red used for danger are locked, and a
 theme can neither add nor remove a token.
 
 ```json

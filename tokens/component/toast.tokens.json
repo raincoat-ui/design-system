@@ -1,0 +1,104 @@
+{
+  "$schema": "../../schemas/tokens.schema.json",
+  "toast": {
+    "$description": "Tokens of the Toast component. See rfcs/0008-toast.md.",
+    "bg": {
+      "$type": "color",
+      "$value": "{color.bg.raised}",
+      "$description": "Fill of a toast."
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{border-width.thin}",
+        "$description": "Outline width of a toast."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.border.strong}",
+        "$description": "Outline of a toast. With no scrim behind it, its edge alone sets it apart from what it covers.",
+        "$extensions": {
+          "raincoat": {
+            "on": ["toast.bg", "color.bg.canvas", "color.bg.surface", "color.bg.subtle"],
+            "contrast": "graphic"
+          }
+        }
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{radius.lg}",
+      "$description": "Corner radius of a toast."
+    },
+    "shadow": {
+      "$type": "shadow",
+      "$value": "{shadow.overlay}",
+      "$description": "Shadow of a toast."
+    },
+    "max-width": {
+      "$type": "dimension",
+      "$value": "{size.panel.md}",
+      "$description": "The widest a toast grows."
+    },
+    "margin": {
+      "$type": "dimension",
+      "$value": "{space.4}",
+      "$description": "Space between a toast and the edges of the window, and what it sits above."
+    },
+    "padding-block": {
+      "$type": "dimension",
+      "$value": "{space.3}",
+      "$description": "Space above and below a toast's content."
+    },
+    "padding-inline": {
+      "$type": "dimension",
+      "$value": "{space.4}",
+      "$description": "Space at the start and end of a toast's content."
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.3}",
+      "$description": "Space between the message, the action, and the close button."
+    },
+    "message": {
+      "$type": "typography",
+      "$value": "{type.body.md}",
+      "$description": "Text style of the message."
+    },
+    "fg": {
+      "$type": "color",
+      "$value": "{color.fg.default}",
+      "$description": "Color of the message and the close button.",
+      "$extensions": {
+        "raincoat": {
+          "on": ["toast.bg"],
+          "contrast": "text"
+        }
+      }
+    },
+    "enter": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.normal}",
+        "$description": "Duration of a toast appearing."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.interactive}",
+        "$description": "Easing of a toast appearing."
+      }
+    },
+    "exit": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.fast}",
+        "$description": "Duration of a toast leaving."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.leave}",
+        "$description": "Easing of a toast leaving."
+      }
+    }
+  }
+}

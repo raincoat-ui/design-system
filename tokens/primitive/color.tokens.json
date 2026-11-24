@@ -403,6 +403,36 @@
         "$description": "Red, step 950 (lightness 0.24)."
       },
       "$description": "Reds for destructive actions and errors. Not replaced by themes."
+    },
+    "scrim": {
+      "40": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0, 0, 0],
+          "alpha": 0.4,
+          "hex": "#000000"
+        },
+        "$description": "Black at 40% opacity."
+      },
+      "60": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0, 0, 0],
+          "alpha": 0.6,
+          "hex": "#000000"
+        },
+        "$description": "Black at 60% opacity."
+      },
+      "80": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0, 0, 0],
+          "alpha": 0.8,
+          "hex": "#000000"
+        },
+        "$description": "Black at 80% opacity."
+      },
+      "$description": "Translucent black for the veil behind a modal surface. Never a background in a contrast check, because what shows through it is unknown."
     }
   }
 }
