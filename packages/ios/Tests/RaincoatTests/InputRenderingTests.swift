@@ -276,6 +276,34 @@
         #expect(abs((columns.first ?? 0) - Int(padding)) <= 1)
     }
 
+    @Test func theFieldAreaIsTheWholeFieldAndAtLeastTheMinimumTarget() {
+        // A text field 300 wide and 22 tall, in a one-line field 36 tall with 12 on each side:
+        // the area is the field, then grown to the minimum target, centered on it.
+        let small = FieldArea(leading: 12, trailing: 12, height: 36, paddingBlock: 7, minimum: 44, isRightToLeft: false)
+        #expect(
+            small.path(in: CGRect(x: 0, y: 0, width: 300, height: 22)).boundingRect
+                == CGRect(x: -12, y: -11, width: 324, height: 44)
+        )
+        // A field as tall as the target: the area is the field.
+        let medium = FieldArea(leading: 12, trailing: 12, height: 44, paddingBlock: 10, minimum: 44, isRightToLeft: false)
+        #expect(
+            medium.path(in: CGRect(x: 0, y: 0, width: 300, height: 22)).boundingRect
+                == CGRect(x: -12, y: -11, width: 324, height: 44)
+        )
+        // The icon's side is where reading starts: on the right in a right-to-left layout.
+        let withIcon = FieldArea(leading: 40, trailing: 12, height: 44, paddingBlock: 10, minimum: 44, isRightToLeft: true)
+        #expect(
+            withIcon.path(in: CGRect(x: 0, y: 0, width: 300, height: 22)).boundingRect
+                == CGRect(x: -12, y: -11, width: 352, height: 44)
+        )
+        // A multi-line field: its lines and the space above and below them.
+        let lines = FieldArea(leading: 12, trailing: 12, height: nil, paddingBlock: 10, minimum: 44, isRightToLeft: false)
+        #expect(
+            lines.path(in: CGRect(x: 0, y: 0, width: 300, height: 72)).boundingRect
+                == CGRect(x: -12, y: -10, width: 324, height: 92)
+        )
+    }
+
     @MainActor
     @Test func aReadOnlyFieldShowsItsValueInTheValueColor() throws {
         let input = tokens(.light).input

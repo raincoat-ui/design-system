@@ -233,9 +233,10 @@
 
     /// The field: fill, outline, padding, the leading icon, and the text style of the value.
     ///
-    /// The field takes the room it shows. Where it is shorter than the minimum touch target, the
-    /// control inside reaches past its top and bottom, so that touches there place the caret and
-    /// assistive technology is given the larger area.
+    /// The text field inside is only as tall as its text. The field takes the room it shows, and
+    /// a touch anywhere on it, or just outside a field shorter than the minimum touch target,
+    /// puts the caret in the text field. Assistive technology is given the same area as the
+    /// text field's frame.
     struct InputBox<Content: View>: View {
         let size: InputSize
         let isInvalid: Bool
@@ -250,6 +251,7 @@
         @Environment(\.isEnabled) private var isEnabled
         @Environment(\.layoutDirection) private var layoutDirection
         @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @FocusState private var isFocused: Bool
 
         var body: some View {
             let input = tokens.input
@@ -257,13 +259,21 @@
             let colors = InputColors(input, isEnabled: isEnabled, isInvalid: isInvalid, isReadOnly: isReadOnly)
             let value = measurements.value.resolved(scale: textScale)
             let paddingBlock = CGFloat(measurements.paddingBlock)
-            // One line of the value with the space above and below it: the token's height, unless
-            // the text is enlarged, when the field grows instead.
-            let line = max(CGFloat(measurements.height), value.lineHeight + 2 * paddingBlock)
-            let reach: CGFloat = isMultiline ? 0 : max(0, (CGFloat(input.targetMinimum) - line) / 2)
+            let paddingInline = CGFloat(measurements.paddingInline)
             // Icons grow with the text.
             let iconSize = measurements.iconSize * textScale
             let shape = RoundedRectangle(cornerRadius: input.radius, style: .continuous)
+            let target = CGFloat(input.targetMinimum)
+            let direction = isLeftToRight ? LayoutDirection.leftToRight : layoutDirection
+            // The field's box around the text field, for assistive technology.
+            let area = FieldArea(
+                leading: paddingInline + (leadingIcon == nil ? 0 : iconSize + CGFloat(input.gap)),
+                trailing: paddingInline,
+                height: isMultiline ? nil : value.lineHeight + 2 * paddingBlock,
+                paddingBlock: paddingBlock,
+                minimum: target,
+                isRightToLeft: direction == .rightToLeft
+            )
 
             // The stack follows the layout direction, so in right-to-left layouts the leading icon
             // is on the right.
@@ -279,23 +289,65 @@
                         .accessibilityHidden(true)
                 }
                 content
+                    .focused($isFocused)
+                    // Assistive technology is given the whole field, and at least the minimum
+                    // target, rather than the text field's own frame, which is one line tall.
+                    .contentShape(.accessibility, area)
                     .font(value.font)
                     .tracking(value.tracking)
                     .lineSpacing(value.lineSpacing)
                     .foregroundStyle(Color(colors.foreground))
-                    .frame(
-                        maxWidth: .infinity,
-                        minHeight: isMultiline ? nil : line + 2 * reach,
-                        alignment: .leading
-                    )
-                    .padding(.vertical, isMultiline ? paddingBlock : -reach)
+                    // One line of the value is as tall as the token's line height, so the field is
+                    // as tall as its token, and grows when the text is enlarged.
+                    .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : value.lineHeight, alignment: .leading)
+                    .padding(.vertical, paddingBlock)
             }
-            .padding(.horizontal, measurements.paddingInline)
+            .padding(.horizontal, paddingInline)
             .frame(minHeight: measurements.height)
             .foregroundStyle(Color(colors.foreground))
-            .background { shape.fill(Color(colors.fill)) }
+            .background {
+                shape.fill(Color(colors.fill))
+                    // Behind the text field: a touch on the rest of the field, or just outside a
+                    // small one, puts the caret in it. A touch on the text itself is the text
+                    // field's own.
+                    .contentShape(TouchTarget(minimum: target))
+                    .onTapGesture { isFocused = true }
+            }
             .overlay { shape.strokeBorder(Color(colors.border), lineWidth: input.borderWidth) }
-            .environment(\.layoutDirection, isLeftToRight ? .leftToRight : layoutDirection)
+            .environment(\.layoutDirection, direction)
+        }
+    }
+
+    /// The area of a field that assistive technology is given, in the coordinates of the text
+    /// field inside it: the field's box, and where that is smaller than the minimum target, the
+    /// space around it out to that size.
+    struct FieldArea: Shape {
+        /// Space between the text field and the field's edge where reading starts, the icon
+        /// included.
+        let leading: CGFloat
+        let trailing: CGFloat
+        /// Height of a one-line field's box, which is centered on the text field. Nil for a
+        /// multi-line field, whose box is the text field and the space above and below it.
+        let height: CGFloat?
+        let paddingBlock: CGFloat
+        let minimum: CGFloat
+        let isRightToLeft: Bool
+
+        func path(in rect: CGRect) -> Path {
+            let left = isRightToLeft ? trailing : leading
+            let right = isRightToLeft ? leading : trailing
+            let box: CGRect =
+                if let height {
+                    CGRect(x: rect.minX - left, y: rect.midY - height / 2, width: rect.width + left + right, height: height)
+                } else {
+                    CGRect(
+                        x: rect.minX - left, y: rect.minY - paddingBlock,
+                        width: rect.width + left + right, height: rect.height + 2 * paddingBlock
+                    )
+                }
+            return Path(
+                box.insetBy(dx: min(0, (box.width - minimum) / 2), dy: min(0, (box.height - minimum) / 2))
+            )
         }
     }
 

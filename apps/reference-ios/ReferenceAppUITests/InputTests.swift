@@ -38,8 +38,11 @@ final class InputTests: ReferenceAppTestCase {
         for name in ["Full name", "Email", "Phone (optional)", "Small", "Medium", "Large", "Company", "Search the docs"] {
             XCTAssertTrue(app.textFields[name].exists, name)
         }
-        // A field of several lines is a text view.
-        XCTAssertTrue(app.textViews["Message (optional)"].exists)
+        // A field of several lines is a text field or a text view, as the system makes it.
+        let message = app.descendants(matching: .any)["Message (optional)"]
+        XCTAssertTrue(message.exists)
+        XCTAssertTrue([.textField, .textView].contains(message.elementType), "\(message.elementType)")
+        XCTAssertGreaterThanOrEqual(message.frame.height, minimumTarget - 0.5)
         // The texts around a field are not said again: the field says them.
         XCTAssertFalse(app.staticTexts["We send the receipt here."].exists)
         // A read-only field is its value, named by its label.
