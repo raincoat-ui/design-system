@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.PixelMap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.AccessibilityManager
 import androidx.compose.ui.platform.LocalAccessibilityManager
 import androidx.compose.ui.platform.LocalInputModeManager
@@ -45,9 +46,11 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.unit.LayoutDirection
@@ -234,6 +237,17 @@ class RaincoatToastTest(themeId: String) {
         toast().performSemanticsAction(SemanticsActions.Dismiss)
         compose.waitForIdle()
         assertEquals(RaincoatToastResult.Closed, second.result)
+    }
+
+    @Test
+    fun `Escape closes the toast while keyboard focus is in it`() {
+        val state = RaincoatToastHostState()
+        host(state, keyboard = true)
+        val shown = showToastWithUndo(state)
+        compose.onNodeWithContentDescription("Close").requestFocus().assertIsFocused()
+            .performKeyInput { pressKey(Key.Escape) }
+        compose.waitForIdle()
+        assertEquals(RaincoatToastResult.Closed, shown.result)
     }
 
     @Test

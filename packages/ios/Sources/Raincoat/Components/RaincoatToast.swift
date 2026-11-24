@@ -102,6 +102,13 @@
             }
             .offset(y: swipe)
             .simultaneousGesture(swipeDown)
+            // Escape closes the toast while the keyboard is on one of its buttons, and VoiceOver's
+            // escape gesture while VoiceOver is in it.
+            .onKeyPress(.escape) {
+                guard let control else { return .ignored }
+                control.close()
+                return .handled
+            }
             .accessibilityElement(children: .contain)
             .accessibilityAction(.escape) { control?.close() }
             // At most the panel width; the toast itself is as wide as its content.

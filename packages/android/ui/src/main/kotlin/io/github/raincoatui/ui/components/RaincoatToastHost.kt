@@ -42,6 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -381,6 +386,12 @@ private fun ToastLayout(
             )
             .hoverable(hover)
             .onFocusChanged { onPause(ToastPause.Focus, it.hasFocus) }
+            // Escape closes the toast while keyboard focus is in it.
+            .onKeyEvent { event ->
+                if (event.key != Key.Escape) return@onKeyEvent false
+                if (event.type == KeyEventType.KeyUp) onClose()
+                true
+            }
             // TalkBack offers to dismiss the toast, as a swipe would.
             .semantics { dismiss { onClose(); true } }
             .raincoatShadow(toast.shadow, shape, toast.bg.toColor())
