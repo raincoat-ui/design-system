@@ -91,7 +91,14 @@ generated `allSnapshots` and `<component>Examples`:
   and no pixel may differ. Unlike pixelmatch, the comparison does not excuse antialiased pixels:
   Robolectric draws in software, and draws the same pixels on every run. A check fails when a
   spec with an Android implementation has no snapshot test. The `android modules` job runs them
-  and uploads what it drew as the `android-snapshots` artifact.
+  and uploads what it drew as the `android-snapshots` artifact. A component that opens a window
+  of its own, the dialog, the alert dialog, and the sheet, is shown one instance at a time, in a
+  window as wide as the specimen's content, 432dp. Each window is captured and cut to the panel
+  with the dialog margin of scrim above and below it, or, for a sheet, down to the bottom of the
+  window; the cuts are stacked on the canvas color, which shows through the scrim, as the web
+  draws each dialog inside the specimen. Every capture is taken from a frame drawn at the time
+  of the capture: Robolectric can skip the first frame after the content is set, and a capture
+  would then show only the window's background.
 
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.

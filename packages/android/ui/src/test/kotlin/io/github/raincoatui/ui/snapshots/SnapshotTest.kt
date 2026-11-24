@@ -54,7 +54,8 @@ internal fun Text.optional(content: String): String? = runCatching { this(conten
  * To add a component, write <Component>SnapshotTest.kt beside this file: a subclass that passes
  * the component's spec id, its generated examples, and a function that draws one instance of
  * them. SnapshotCoverageTest fails while a spec with an Android implementation has none. A
- * component that opens a window of its own, such as a dialog, also overrides [drawSpecimen].
+ * component that opens a window of its own, such as a dialog, also overrides [drawSpecimen]
+ * (DialogSnapshotTest).
  *
  * In CI each snapshot is compared with its baseline,
  * src/test/__screenshots__/<theme>/<component>/<snapshot>.png. A missing or different baseline

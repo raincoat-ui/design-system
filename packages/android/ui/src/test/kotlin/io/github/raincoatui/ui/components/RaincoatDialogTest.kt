@@ -29,7 +29,6 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsFocused
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.isDialog
@@ -53,6 +52,7 @@ import io.github.raincoatui.tokens.SheetEdge
 import io.github.raincoatui.tokens.TokenColor
 import io.github.raincoatui.tokens.TokenFormat
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.captureRedrawn
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
 import kotlin.math.abs
@@ -160,7 +160,7 @@ class RaincoatDialogTest(themeId: String) {
 
     private val dialogWindow get() = compose.onNode(isDialog())
 
-    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureToImage().toPixelMap()
+    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureRedrawn(compose).toPixelMap()
 
     private fun SemanticsNodeInteraction.bounds(): Rect = fetchSemanticsNode().boundsInWindow
 
