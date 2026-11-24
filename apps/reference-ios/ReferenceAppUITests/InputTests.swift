@@ -137,6 +137,8 @@ final class InputTests: ReferenceAppTestCase {
     }
 
     /// The system's accessibility audit: names, traits, touch targets, contrast, clipped text.
+    /// An issue that is not exempt is also left to XCTest, which records it with its element and
+    /// a screenshot.
     @MainActor
     func testTheScreenPassesTheAccessibilityAudit() throws {
         let app = launch()
@@ -147,8 +149,17 @@ final class InputTests: ReferenceAppTestCase {
             // The audit takes any font that was not made from a text style to be fixed in size.
             // Raincoat scales its token sizes itself, which testFieldsGrowWithTheTextSize checks.
             if issue.auditType == .dynamicType { return true }
-            problems.append("\(issue.compactDescription): \(issue.element?.label ?? "no element")")
-            return true
+            if let element = issue.element {
+                let value = element.value.map { "\($0)" } ?? "none"
+                let placeholder = element.placeholderValue ?? "none"
+                problems.append(
+                    "\(issue.compactDescription): \(element.label), frame \(element.frame), "
+                        + "value \(value), placeholder \(placeholder)"
+                )
+            } else {
+                problems.append("\(issue.compactDescription): no element")
+            }
+            return false
         }
         XCTAssertEqual(problems, [])
     }

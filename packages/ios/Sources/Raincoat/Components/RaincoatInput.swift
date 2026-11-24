@@ -233,10 +233,9 @@
 
     /// The field: fill, outline, padding, the leading icon, and the text style of the value.
     ///
-    /// The text field inside is only as tall as its text. The field takes the room it shows, and
-    /// a touch anywhere on it, or just outside a field shorter than the minimum touch target,
-    /// puts the caret in the text field. Assistive technology is given the same area as the
-    /// text field's frame.
+    /// The field takes the room it shows. On iOS, a one-line text field is as tall as the field,
+    /// and at least the minimum touch target, so a touch anywhere on it, or just outside a small
+    /// field, is a touch on the text field. Assistive technology is given the same area.
     struct InputBox<Content: View>: View {
         let size: InputSize
         let isInvalid: Bool
@@ -252,6 +251,18 @@
         @Environment(\.layoutDirection) private var layoutDirection
         @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
         @FocusState private var isFocused: Bool
+
+        /// Whether an editable one-line text field is made as tall as the touch target. On iOS a
+        /// touch is a text field's only inside the text field's own bounds, which UIKit tests, and
+        /// a frame or a content shape around it does not change them. A pointer needs no larger
+        /// target, so on macOS the text field keeps its own height.
+        private static var textFieldReachesTheTarget: Bool {
+            #if os(iOS)
+                return true
+            #else
+                return false
+            #endif
+        }
 
         var body: some View {
             let input = tokens.input
@@ -278,6 +289,12 @@
                 minimum: target,
                 isRightToLeft: direction == .rightToLeft
             )
+            // An editable one-line text field is as tall as the field and at least the minimum
+            // target, centered on the field, and the room it takes past the field is given back.
+            // The text field places the caret for a touch anywhere in it, as any text field does.
+            let textFieldHeight: CGFloat? =
+                Self.textFieldReachesTheTarget && !isMultiline && !isReadOnly ? max(line, target) : nil
+            let overhang = textFieldHeight.map { ($0 - line) / 2 } ?? 0
 
             // The stack follows the layout direction, so in right-to-left layouts the leading icon
             // is on the right.
@@ -300,24 +317,24 @@
                     .font(value.font)
                     .tracking(value.tracking)
                     // Space between lines brings them to the token's line height. A one-line field
-                    // has none: a text field gives it to its placeholder too, whose one line it
-                    // would then make too tall for the text field, and cut short.
+                    // has one line, and its height comes from the field.
                     .lineSpacing(isMultiline ? value.lineSpacing : 0)
                     .foregroundStyle(Color(colors.foreground))
+                    .frame(height: textFieldHeight)
+                    .padding(.vertical, -overhang)
                     .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : line, alignment: .leading)
                     .padding(.vertical, isMultiline ? paddingBlock : 0)
             }
             .padding(.horizontal, paddingInline)
             .frame(minHeight: measurements.height)
             .foregroundStyle(Color(colors.foreground))
-            .background { shape.fill(Color(colors.fill)) }
+            .background {
+                shape.fill(Color(colors.fill))
+                    // Behind the text field: a touch on the rest of the field, its icon or the space
+                    // beside the text, puts the caret in the text field too.
+                    .onTapGesture { isFocused = true }
+            }
             .overlay { shape.strokeBorder(Color(colors.border), lineWidth: input.borderWidth) }
-            // A touch anywhere on the field, or just outside a field smaller than the minimum
-            // target, puts the caret in the text field, as the Button takes touches across its
-            // target. The gesture is simultaneous, so that the text field keeps its own touches:
-            // placing the caret, selecting, and VoiceOver's activation.
-            .contentShape(TouchTarget(minimum: target))
-            .simultaneousGesture(TapGesture().onEnded { isFocused = true })
             .environment(\.layoutDirection, direction)
         }
     }
