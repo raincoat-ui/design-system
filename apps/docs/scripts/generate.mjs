@@ -27,7 +27,19 @@ import {
   resolvedType,
   resolveToken,
 } from "@raincoat-ui/tokens";
-import { code, dimension, list, MODE_LABEL, readable, swatch, table } from "./markdown.mjs";
+import {
+  code,
+  colorCell,
+  dimension,
+  draws,
+  list,
+  MODE_LABEL,
+  opacity,
+  readable,
+  shadowCell,
+  swatch,
+  table,
+} from "./markdown.mjs";
 import { buttonRow } from "./renditions/button.mjs";
 
 const scriptsDir = dirname(fileURLToPath(import.meta.url));
@@ -84,19 +96,20 @@ const composed = Object.fromEntries(
 const base = composed.light;
 const compact = compose(files, { mode: "light", density: "compact" }).tokens;
 const tokensWhere = (predicate) => [...base.values()].filter(predicate);
-const colorIn = (mode, id) => hexOf(resolveToken(id, composed[mode]));
+const colorIn = (mode, id) => resolveToken(id, composed[mode]);
 const isType = (token, type) => resolvedType(token.id, base) === type;
 
 // ---------------------------------------------------------------------------------------------
 // Foundations: color
 
-const ramps = ["neutral", "brand", "red"]
+const primitiveColors = tokensWhere((t) => t.tier === "primitive" && t.path[0] === "color");
+const ramps = [...new Set(primitiveColors.map((t) => t.path[1]))]
   .map((ramp) => {
-    const steps = tokensWhere((t) => t.tier === "primitive" && t.path[1] === ramp);
-    const chips = steps
+    const chips = primitiveColors
+      .filter((t) => t.path[1] === ramp)
       .map((t) => {
-        const hex = hexOf(resolveToken(t.id, base));
-        return `<div><span class="rc-chip" style="background:${hex}"></span><strong>${t.path[2]}</strong><br><code>${hex}</code></div>`;
+        const color = resolveToken(t.id, base);
+        return `<div>${swatch(color, "rc-chip")}<strong>${t.path[2]}</strong><br><code>${hexOf(color)}</code>${opacity(color)}</div>`;
       })
       .join("");
     return `### ${ramp[0].toUpperCase()}${ramp.slice(1)}\n\n<div class="rc-ramp">${chips}</div>`;
@@ -118,7 +131,7 @@ const roles = roleGroups
     ).map((t) => [
       code(t.id),
       t.description,
-      ...MODES.map((mode) => `${swatch(colorIn(mode, t.id))}${code(colorIn(mode, t.id))}`),
+      ...MODES.map((mode) => colorCell(colorIn(mode, t.id))),
     ]);
     return `### ${label}\n\n${table(["Token", "Use", ...MODES.map((m) => MODE_LABEL[m])], rows)}`;
   })
@@ -137,7 +150,14 @@ in each of the four color modes, so a component styled with roles works in all o
 
 This page shows the base brand: near-neutral ink greys with a raincoat-yellow accent. A theme replaces
 the brand and neutral ramps and may remap any role.
-
+${
+  primitiveColors.some((t) => opacity(resolveToken(t.id, base)))
+    ? `
+A translucent color, such as the scrim behind a dialog, is given with its opacity, as in
+${code("#000000")} at 40%. Its swatch is drawn over hatching, which shows through it.
+`
+    : ""
+}
 ## Roles
 
 ${roles}
@@ -271,17 +291,39 @@ const heightRows = tokensWhere((t) => t.id.startsWith("size.control.")).map((t) 
   dimension(resolveToken(t.id, compact)),
   t.description,
 ]);
+const panelRows = tokensWhere((t) => t.id.startsWith("size.panel.")).map((t) => [
+  code(t.id),
+  dimension(resolveToken(t.id, base)),
+  t.description,
+]);
 const otherSizes = tokensWhere(
   (t) =>
     t.tier === "semantic" &&
-    (t.path[0] === "border-width" || (t.path[0] === "size" && t.path[1] !== "control")),
+    (t.path[0] === "border-width" ||
+      (t.path[0] === "size" && t.path[1] !== "control" && t.path[1] !== "panel")),
 ).map((t) => [code(t.id), dimension(resolveToken(t.id, base)), t.description]);
+
+// Shadows: the base's, which of them a theme may change, and which themes here change them.
+const shadows = tokensWhere((t) => t.tier !== "component" && isType(t, "shadow"));
+const shadowRows = shadows.map((t) => [
+  typeof t.value === "string" ? `${code(t.id)}<br>${code(t.value)}` : code(t.id),
+  shadowCell(resolveToken(t.id, base)),
+  t.description,
+]);
+const flat = !shadows.some((t) => draws(resolveToken(t.id, base)));
+const liftable = shadows.filter((t) => t.extension.overridable).map((t) => code(t.id));
+const lifting = openProject(repoRoot)
+  .themes.filter((theme) =>
+    theme.files.some((entry) => entry.tokens.some((t) => t.overridden && t.path[0] === "shadow")),
+  )
+  .map((theme) => theme.meta.name);
 
 page(
   "foundations/spacing-and-shape.md",
   {
     title: "Spacing and shape",
-    description: "The spacing scale, corner radii, control heights, and border widths.",
+    description:
+      "The spacing scale, corner radii, shadows, control heights, panel widths, and border widths.",
     order: 4,
   },
   `
@@ -298,12 +340,35 @@ Themes may change the radii to set how round a brand feels.
 
 ${table(["Token", "Value", "", "Use"], radiusRows)}
 
+## Shadow
+
+${
+  flat
+    ? `The base is flat: every shadow is none. Cards, dialogs, sheets, and toasts are set apart by
+their outline, and a dialog or sheet also by the scrim behind it, not lifted on a shadow.`
+    : "Surfaces above the page take their shadow from these roles."
+} A theme may give ${list(liftable)} ${liftable.length === 1 ? "a value" : "values"} to lift
+its surfaces. ${
+    lifting.length === 0
+      ? "No theme in this repository does."
+      : `In this repository, ${list(lifting)} ${lifting.length === 1 ? "does" : "do"}: see [Themes](/design-system/foundations/themes/).`
+  }
+
+${table(["Token, and what it points to", "Value", "Use"], shadowRows)}
+
 ## Control height
 
 Control heights depend on density. Whatever the visible height, the touch target is never
 smaller than ${code("size.target.minimum")}.
 
 ${table(["Token", "Comfortable", "Compact", "Use"], heightRows)}
+
+## Panel width
+
+Panels above the page, such as dialogs, sheets, and toasts, take one of these widths. Like every
+size, they are locked: themes cannot change them.
+
+${table(["Token", "Value", "Use"], panelRows)}
 
 ## Borders and fixed sizes
 
@@ -432,10 +497,11 @@ page(
   },
   `
 A theme is a directory of overrides on top of the base token source. It may change the brand and
-neutral ramps, the color each role takes in each mode, font families and weights, and radii. It
-cannot change spacing, sizes, touch targets, focus rules, or contrast minimums, and it cannot add
-or remove a token. Each theme is a package of its own on every platform, so an app installs only
-its own. To add one, see [Add a theme](/design-system/contributing/add-a-theme/).
+neutral ramps, the color each role takes in each mode, font families and weights, radii, the
+shadows of raised surfaces and overlays, and the outline of a card. It cannot change spacing,
+sizes, touch targets, focus rules, or contrast minimums, and it cannot add or remove a token.
+Each theme is a package of its own on every platform, so an app installs only its own. To add
+one, see [Add a theme](/design-system/contributing/add-a-theme/).
 
 The plates below use each theme's own stylesheet, and the fonts it carries in
 ${code("themes/<id>/fonts/")}. The theme packages do not bundle fonts yet: an app that does not
@@ -565,7 +631,9 @@ function tokenValue(id) {
   const value = resolveToken(id, base);
   switch (resolvedType(id, base)) {
     case "color":
-      return `${swatch(colorIn("light", id))}${code(colorIn("light", id))}`;
+      return colorCell(value);
+    case "shadow":
+      return shadowCell(value);
     case "dimension":
       return dimension(value);
     case "duration":
