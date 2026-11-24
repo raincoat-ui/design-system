@@ -257,7 +257,7 @@ Density is a second axis, selected by `data-density`: **comfortable** (controls 
 
 ## Elevation & Depth
 
-The system is flat. No surface casts a shadow; Starlight's shadows on menus, pagination and mobile controls are removed. Depth is shown by rules and outlines alone: a 1px ink rule under the header, hairlines between rows and around notes and plates, a 2px ink rule to open a section. The only box-shadow in the build is the inset 4px yellow cover stripe on the header, which is a printed band, not elevation.
+The system is flat. No surface casts a shadow; Starlight's shadows on menus, pagination and mobile controls are removed. Depth is shown by rules and outlines alone: a 1px ink rule under the header, hairlines between rows and around notes and plates, a 2px ink rule to open a section. The only box-shadow in the build is the inset 4px yellow cover stripe on the header, which is a printed band, not elevation. In the token source the two shadow roles, `shadow.raised` (cards) and `shadow.overlay` (dialogs, sheets, toasts), both point to `shadow.none`; a brand theme may give them values.
 
 **The Ruled Not Raised Rule.** If something needs separating, draw a line; never lift it.
 
@@ -300,7 +300,7 @@ Small text, tabular figures, no fills and no zebra striping: an ink rule (`color
 A component shown in a framed panel that sets its own `data-theme` and `data-density`: canvas fill, 1px `color.border.default` frame, 2px corner, 32px / 24px padding, 12px between specimens. Every value comes from the theme's custom properties, so one plate per mode shows the component in all four. On the Themes page each plate also sets `data-rc-theme` and is styled by that theme's own stylesheet, scoped to it (and the fonts the theme carries); its color mode is a 600-weight small caption in Gray 2 directly above it, 0.5rem from the plate and 1.25rem from the plate before.
 
 ### Token swatches and ramps
-20px swatches and 56px ramp chips with a 2px corner and a faint currentColor outline; scale bars in ink with the 2px corner. Inside token tables a swatch cell stays on one line: a 1rem swatch, the hex in mono at 0.75rem, and 0.75rem end padding, so the description column keeps its width.
+20px swatches and 56px ramp chips with a 2px corner and a faint currentColor outline; scale bars in ink with the 2px corner. Inside token tables a swatch cell stays on one line: a 1rem swatch, the hex in mono at 0.75rem, and 0.75rem end padding, so the description column keeps its width. A translucent color (the scrim) is drawn over 1px hatching in the text color at -45°, every 4px, which shows through it as far as the color allows, and its hex is followed by its opacity: "#000000 at 40%". Hatching, not a checkerboard, because it is ruled like everything else.
 
 ## Do's and Don'ts
 
