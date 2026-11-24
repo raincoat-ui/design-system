@@ -22,7 +22,10 @@
         /// - Parameters:
         ///   - mode: The color mode to draw in, given by a theme that answers every request with
         ///     that mode's tokens, as the Button's rendering tests do.
-        ///   - width: The width offered to the view, or nil for its own ideal width.
+        ///   - width: The width offered to the view, or nil for its own ideal width. With a width,
+        ///     the view is offered a tall height too, as a screen offers it: a toast's
+        ///     `ViewThatFits` measures wrongly when offered a width and no height. The toast is no
+        ///     taller than its content either way.
         init(
             _ view: some View,
             theme: RaincoatTheme = .base,
@@ -35,7 +38,7 @@
             }
             let renderer = ImageRenderer(content: view.raincoatTheme(fixed).raincoatDensity(density))
             renderer.scale = 1
-            renderer.proposedSize = ProposedViewSize(width: width, height: nil)
+            renderer.proposedSize = ProposedViewSize(width: width, height: width == nil ? nil : 2000)
             let image = try #require(renderer.cgImage)
             self.width = image.width
             self.height = image.height
