@@ -123,6 +123,52 @@ Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the React and Compose versions follow too.
 
+## Card
+
+```swift
+// Static: a container, which can hold links and buttons.
+RaincoatCard("Storage", level: 3) {
+    Text("4.2 GB of 15 GB used").raincoatText(color: .muted)
+}
+.footer { RaincoatButton("Manage storage") { manageStorage() } }
+
+// Interactive: the whole card is one link or one button.
+NavigationLink(value: order) {
+    RaincoatCard("Order 1042", level: 3) {
+        Text("Delivered on Monday").raincoatText(color: .muted)
+    }
+    .media {
+        Image("parcel").resizable().scaledToFill().frame(height: 120)
+            .accessibilityLabel("A parcel at a front door")
+    }
+}
+.buttonStyle(.raincoatCard)
+```
+
+| API                              | Notes                                                                                           |
+| -------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `RaincoatCard(_:level:content:)` | The title, as `Text`, a localized key, or a string, and the body. The body is optional          |
+| `.media { }`                     | An image at the top, edge to edge, with the card's top corners. Give it a height                |
+| `.footer { }`                    | Buttons at the trailing edge of a static card. They wrap onto more rows when they do not fit    |
+| `.buttonStyle(.raincoatCard)`    | On a `Button`, `NavigationLink`, or `Link` whose label is a `RaincoatCard`: an interactive card |
+
+- **The title is a heading** at `level`, from 1 to 6, in the `headingSm` look. It wraps and is
+  never cut short.
+- **One action per interactive card.** In the card style, the card is the label of one button
+  or link. VoiceOver reads it as one element, title first, so put no other controls in it. A
+  card that needs Buttons stays static.
+- **States.** An interactive card's outline steps to the strong border color under a pointer,
+  and its fill changes while it is pressed. With Full Keyboard Access the system draws its own
+  focus indicator, which follows the person's settings.
+- **Media** is drawn at the top, and VoiceOver reads it after the title. Give it an accessibility
+  label that says what it shows, or none when it only decorates.
+- **Width.** A card fills the width it is offered and grows with its content. The stack or grid
+  around it is the app's.
+
+The Card follows the
+[Card spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/card/spec.yaml),
+which the React and Compose Cards follow too.
+
 ## Working on this package
 
 ```sh

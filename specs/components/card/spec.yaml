@@ -177,3 +177,6 @@ implementations:
   web:
     file: packages/web/src/components/ui/card.tsx
     name: [Card, CardMedia, CardTitle, CardLink, CardButton, CardBody, CardFooter]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatCard.swift
+    name: [RaincoatCard, RaincoatCardStyle]
