@@ -88,6 +88,9 @@ private struct RenameField: View {
     var body: some View {
         TextField("Name", text: $name)
             .textFieldStyle(.roundedBorder)
+            // A file name is not prose: it is typed as it is, without corrections or the keyboard's
+            // suggestions above the keys.
+            .autocorrectionDisabled()
             .focused($isFocused)
             .onAppear { isFocused = true }
     }

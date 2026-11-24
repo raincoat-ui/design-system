@@ -525,6 +525,42 @@ export function describeTabs(environment: string) {
         await expect.element(screen.getByRole("link", { name: "Read all reviews" })).toHaveFocus();
       });
 
+      test("a panel with a link that an arrow key selects is never a Tab stop, so an immediate Tab reaches the link", async () => {
+        const screen = await render(
+          <Stage>
+            <Product defaultValue="reviews" />
+          </Stage>,
+        );
+        await userEvent.tab();
+        await userEvent.keyboard("{ArrowRight}");
+        await expect.element(screen.getByRole("tabpanel", { name: "Shipping" })).toBeVisible();
+        const selectedPanel = () =>
+          screen.container.querySelector<HTMLElement>(
+            '[data-slot="tabs-content"][data-state="active"]',
+          );
+        // The selected panel's tabindex each time the page changes while it holds the link, as
+        // soon as any script can see the change: this observer is told after the panels' own,
+        // in the same task, before the browser can handle the next key.
+        const seen: (string | null)[] = [];
+        const watch = new MutationObserver(() => {
+          const panel = selectedPanel();
+          if (panel?.querySelector("a")) seen.push(panel.getAttribute("tabindex"));
+        });
+        watch.observe(screen.container, { subtree: true, childList: true, attributes: true });
+        try {
+          await userEvent.keyboard("{ArrowLeft}");
+        } finally {
+          watch.disconnect();
+        }
+        expect(seen.length).toBeGreaterThan(0);
+        expect(seen.filter((tabindex) => tabindex !== null)).toEqual([]);
+        // Checked at once, without waiting.
+        expect(selectedPanel()?.textContent).toBe("Rated 4 of 5. Read all reviews");
+        expect(selectedPanel()?.hasAttribute("tabindex")).toBe(false);
+        await userEvent.keyboard("{Tab}");
+        expect(document.activeElement?.textContent).toBe("Read all reviews");
+      });
+
       test("a panel that gains or loses its only control changes whether it takes focus", async () => {
         const screen = await render(
           <Stage>

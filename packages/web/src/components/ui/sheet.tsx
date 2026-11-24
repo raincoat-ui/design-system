@@ -19,12 +19,14 @@ import {
   ModalContext,
   ModalFooter,
   ModalHeader,
+  ModalOpenContext,
   overlayClasses,
   type TitleProps,
   titleClasses,
   useBothRefs,
   useModalFocus,
   useModalLayout,
+  useModalOpen,
 } from "./dialog.js";
 import { Heading } from "./typography.js";
 
@@ -93,8 +95,13 @@ type SheetProps = React.ComponentProps<typeof SheetPrimitive.Root>;
  * with `open` and `onOpenChange`: to keep it open while it holds unsaved changes, control it and
  * ask before you set `open` to false.
  */
-function Sheet(props: SheetProps) {
-  return <SheetPrimitive.Root {...props} />;
+function Sheet({ open, defaultOpen, onOpenChange, ...props }: SheetProps) {
+  const state = useModalOpen({ open, defaultOpen, onOpenChange });
+  return (
+    <ModalOpenContext value={state.setOpen}>
+      <SheetPrimitive.Root {...props} open={state.open} onOpenChange={state.setOpen} />
+    </ModalOpenContext>
+  );
 }
 
 type SheetTriggerProps = React.ComponentProps<typeof SheetPrimitive.Trigger>;
@@ -143,6 +150,7 @@ function SheetContent({
   returnFocus,
   onOpenAutoFocus,
   onCloseAutoFocus,
+  onEscapeKeyDown,
   onKeyDown,
   onPointerDown,
   className,
@@ -156,6 +164,7 @@ function SheetContent({
     returnFocus,
     onOpenAutoFocus,
     onCloseAutoFocus,
+    onEscapeKeyDown,
     onKeyDown,
     onPointerDown,
     focusTitle: true,

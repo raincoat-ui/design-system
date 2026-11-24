@@ -523,6 +523,51 @@ export function describeToast(environment: string) {
         await expect.element(compose).toHaveFocus();
       });
 
+      test("Escape on the toast's action closes the toast without running the action", async () => {
+        const undo = vi.fn();
+        const screen = await render(
+          <Stage>
+            <Button>Compose</Button>
+          </Stage>,
+        );
+        const compose = screen.getByRole("button", { name: "Compose" });
+        await showAndWait(WITH_UNDO(undo));
+        await userEvent.tab();
+        await userEvent.keyboard("{F8}");
+        await userEvent.tab();
+        await expect.element(screen.getByRole("button", { name: "Undo" })).toHaveFocus();
+        await userEvent.keyboard("{Escape}");
+        await gone();
+        expect(undo).not.toHaveBeenCalled();
+        await expect.element(compose).toHaveFocus();
+      });
+
+      test("Escape outside the toast leaves it open, and reaches the page unprevented", async () => {
+        const escapes: boolean[] = [];
+        const screen = await render(
+          <Stage>
+            <Button
+              onKeyDown={(event) => {
+                if (event.key === "Escape") escapes.push(event.nativeEvent.defaultPrevented);
+              }}
+            >
+              Compose
+            </Button>
+          </Stage>,
+        );
+        await showAndWait(WITH_UNDO());
+        await userEvent.tab();
+        await expect.element(screen.getByRole("button", { name: "Compose" })).toHaveFocus();
+        await userEvent.keyboard("{Escape}");
+        await frames();
+        expect(escapes).toEqual([false]);
+        expect(openToast()).not.toBeNull();
+        // Escape in the toast still closes it.
+        await userEvent.keyboard("{F8}");
+        await userEvent.keyboard("{Escape}");
+        await gone();
+      });
+
       test("Enter on the close button closes the toast, and focus goes back", async () => {
         const screen = await render(
           <Stage>
