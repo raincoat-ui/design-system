@@ -91,6 +91,48 @@ The Button follows the
 [Button spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/button/spec.yaml),
 which the React and SwiftUI Buttons follow too.
 
+## Input
+
+```kotlin
+var email by rememberSaveable { mutableStateOf("") }
+RaincoatInput(email, { email = it }, label = "Email", type = InputType.Email)
+RaincoatInput(email, { email = it }, label = "Email", invalid = !valid, error = "Enter an email address")
+RaincoatInput(query, { query = it }, label = "Search", type = InputType.Search, labelHidden = true)
+RaincoatInput(message, { message = it }, label = "Message", multiline = true)
+```
+
+| Parameter           | Type                        | Default          | Notes                                                                   |
+| ------------------- | --------------------------- | ---------------- | ----------------------------------------------------------------------- |
+| `type`              | `InputType`                 | `InputType.Text` | `Text`, `Email`, `Password`, `Search`, `Tel`, `Url`: the keyboard       |
+| `size`              | `InputSize`                 | `InputSize.Md`   | `Sm`, `Md`, `Lg`: the heights of the Button's sizes                     |
+| `description`       | `String?`                   | `null`           | Between the label and the field, and read after its name                |
+| `placeholder`       | `String?`                   | `null`           | An example of the format, shown while the field is empty                |
+| `invalid`           | `Boolean`                   | `false`          | Shows the error below the field, and sets the field's error semantics   |
+| `error`             | `String?`                   | `null`           | What to do to make the value acceptable. An invalid field must have one |
+| `multiline`         | `Boolean`                   | `false`          | Starts `rows` lines tall (3) and grows with its content                 |
+| `enabled`           | `Boolean`                   | `true`           | A disabled field cannot be focused or changed                           |
+| `readOnly`          | `Boolean`                   | `false`          | The value can be focused and selected, not changed                      |
+| `labelHidden`       | `Boolean`                   | `false`          | Hides the label from view. It is still the field's name                 |
+| `leadingIcon`       | `Painter?`                  | `null`           | Decoration; it has no description and takes the value's color           |
+| `keyboardActions`   | `KeyboardActions`           | default          | What the keyboard's action key does                                     |
+| `interactionSource` | `MutableInteractionSource?` | `null`           | Observes focus and presses                                              |
+
+- The field is built on Compose Foundation's `BasicTextField`. The label, the description, and
+  the error are part of it, so that a touch on them focuses it and assistive technology is given
+  them with it: the label as its name, then the description. An invalid field carries Compose's
+  error semantics with its message.
+- Android has no required state: mark the fields that are optional in their label.
+- To move focus to the first field in error on submit, pass `Modifier.focusRequester(...)`.
+- The focus ring is drawn whenever the field has focus.
+- The field takes the room it shows. The area that takes touches is at least 48dp tall, so
+  around a small field it reaches past the edges.
+- Email, phone, and web address fields stay left-to-right in a right-to-left layout, their icon
+  included.
+
+The Input follows the
+[Input spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/input/spec.yaml),
+which the React and SwiftUI Inputs follow too.
+
 ## Working on these modules
 
 ```sh
