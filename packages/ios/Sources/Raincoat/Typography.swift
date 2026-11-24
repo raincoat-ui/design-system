@@ -3,46 +3,88 @@
     import RaincoatTokens
     import SwiftUI
 
-    /// How much the person's text size setting enlarges a system text style: its size at the
-    /// setting over its size at the default, such as 53 / 17 for body text at the largest
-    /// accessibility size.
+    #if canImport(UIKit)
+        import UIKit
+    #endif
+
+    /// How much the person's text size setting enlarges a system text style: the system font's
+    /// size for the style at the environment's Dynamic Type size over its size at the default,
+    /// such as 53 / 17 for body text at the largest accessibility size. That is how the system
+    /// grows the style's own text.
     ///
-    /// `@ScaledMetric` does not scale a value in proportion: it follows the system's sizes for
-    /// the text style, which are set for the style's own size. At the largest accessibility size
-    /// it scales 1 to 3 and 1000 to 2818, where body text is 3.12 times as large. So the scale is
-    /// the style's own size at the default setting, 17 points for body text, scaled and divided
-    /// back: the system's ratio for the style. A Mac has no Dynamic Type, and the scale is 1.
+    /// `@ScaledMetric` scales by a factor of its own, 2.82 at the largest accessibility size,
+    /// where the system's body font is 3.12 times as large, so it is not used. A Mac has no
+    /// Dynamic Type, and the scale there is 1.
     @propertyWrapper
     struct TextScale: DynamicProperty {
-        /// The text style's size at the default text size setting.
-        private let base: CGFloat
-        @ScaledMetric private var scaled: CGFloat
+        private let textStyle: Font.TextStyle
+        @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
         init(relativeTo textStyle: Font.TextStyle) {
-            let base = Self.defaultSize(of: textStyle)
-            self.base = base
-            _scaled = ScaledMetric(wrappedValue: base, relativeTo: textStyle)
+            self.textStyle = textStyle
         }
 
-        var wrappedValue: CGFloat { scaled / base }
-
-        /// The size of a system text style at the default text size setting, Large, in points.
-        private static func defaultSize(of textStyle: Font.TextStyle) -> CGFloat {
-            switch textStyle {
-            case .largeTitle: 34
-            case .title: 28
-            case .title2: 22
-            case .title3: 20
-            case .headline: 17
-            case .subheadline: 15
-            case .callout: 16
-            case .footnote: 13
-            case .caption: 12
-            case .caption2: 11
-            default: 17
-            }
+        var wrappedValue: CGFloat {
+            #if canImport(UIKit)
+                let style = textStyle.uiKit
+                let category = dynamicTypeSize.uiKit
+                // Views are drawn on the main actor.
+                return MainActor.assumeIsolated { () -> CGFloat in
+                    let size = { (category: UIContentSizeCategory) in
+                        UIFont.preferredFont(
+                            forTextStyle: style,
+                            compatibleWith: UITraitCollection(preferredContentSizeCategory: category)
+                        ).pointSize
+                    }
+                    return size(category) / size(.large)
+                }
+            #else
+                return 1
+            #endif
         }
     }
+
+    #if canImport(UIKit)
+        extension Font.TextStyle {
+            /// The UIKit text style of the same role.
+            var uiKit: UIFont.TextStyle {
+                switch self {
+                case .largeTitle: return .largeTitle
+                case .title: return .title1
+                case .title2: return .title2
+                case .title3: return .title3
+                case .headline: return .headline
+                case .subheadline: return .subheadline
+                case .callout: return .callout
+                case .footnote: return .footnote
+                case .caption: return .caption1
+                case .caption2: return .caption2
+                default: return .body
+                }
+            }
+        }
+
+        extension DynamicTypeSize {
+            /// The UIKit text size of the same name.
+            var uiKit: UIContentSizeCategory {
+                switch self {
+                case .xSmall: return .extraSmall
+                case .small: return .small
+                case .medium: return .medium
+                case .large: return .large
+                case .xLarge: return .extraLarge
+                case .xxLarge: return .extraExtraLarge
+                case .xxxLarge: return .extraExtraExtraLarge
+                case .accessibility1: return .accessibilityMedium
+                case .accessibility2: return .accessibilityLarge
+                case .accessibility3: return .accessibilityExtraLarge
+                case .accessibility4: return .accessibilityExtraExtraLarge
+                case .accessibility5: return .accessibilityExtraExtraExtraLarge
+                @unknown default: return .large
+                }
+            }
+        }
+    #endif
 
     /// A token text style made ready for SwiftUI.
     struct ResolvedTextStyle {
