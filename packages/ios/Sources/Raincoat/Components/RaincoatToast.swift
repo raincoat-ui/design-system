@@ -113,7 +113,13 @@
 
         /// The message, with its first line centered on the small buttons beside it.
         private var messageText: some View {
-            let text = tokens.toast.message.resolved(scale: textScale)
+            Self.message(message, tokens: tokens, scale: textScale)
+                .accessibilityFocused($voiceOverFocus, equals: .message)
+        }
+
+        /// The text of a message, as a toast draws it: its first line centered on a small Button.
+        static func message(_ message: String, tokens: RaincoatTokenSet, scale: CGFloat) -> some View {
+            let text = tokens.toast.message.resolved(scale: scale)
             let inset = max(0, (tokens.button.height.sm - text.lineHeight) / 2)
             return Text(verbatim: message)
                 .font(text.font)
@@ -125,7 +131,6 @@
                 .padding(.vertical, text.halfLeading)
                 .frame(minHeight: text.lineHeight)
                 .padding(.vertical, inset)
-                .accessibilityFocused($voiceOverFocus, equals: .message)
         }
 
         @ViewBuilder private var actionButton: some View {
