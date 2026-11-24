@@ -260,6 +260,10 @@
             let value = measurements.value.resolved(scale: textScale)
             let paddingBlock = CGFloat(measurements.paddingBlock)
             let paddingInline = CGFloat(measurements.paddingInline)
+            // A one-line field is one line of the value with the space above and below it: the
+            // token's height, unless the text is enlarged, when the field grows instead. The text
+            // field is centered in it, whatever its own height on the platform.
+            let line = max(CGFloat(measurements.height), value.lineHeight + 2 * paddingBlock)
             // Icons grow with the text.
             let iconSize = measurements.iconSize * textScale
             let shape = RoundedRectangle(cornerRadius: input.radius, style: .continuous)
@@ -269,7 +273,7 @@
             let area = FieldArea(
                 leading: paddingInline + (leadingIcon == nil ? 0 : iconSize + CGFloat(input.gap)),
                 trailing: paddingInline,
-                height: isMultiline ? nil : value.lineHeight + 2 * paddingBlock,
+                height: isMultiline ? nil : line,
                 paddingBlock: paddingBlock,
                 minimum: target,
                 isRightToLeft: direction == .rightToLeft
@@ -297,10 +301,8 @@
                     .tracking(value.tracking)
                     .lineSpacing(value.lineSpacing)
                     .foregroundStyle(Color(colors.foreground))
-                    // One line of the value is as tall as the token's line height, so the field is
-                    // as tall as its token, and grows when the text is enlarged.
-                    .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : value.lineHeight, alignment: .leading)
-                    .padding(.vertical, paddingBlock)
+                    .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : line, alignment: .leading)
+                    .padding(.vertical, isMultiline ? paddingBlock : 0)
             }
             .padding(.horizontal, paddingInline)
             .frame(minHeight: measurements.height)
