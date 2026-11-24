@@ -125,8 +125,8 @@ Box(Modifier.fillMaxSize()) {
   a bar of your own, place the host above the bar.
 - `RaincoatToast(...)` draws a toast on its own, standing still, for previews and tests.
 
-`Modifier.raincoatShadow(shadow, shape)` draws a token shadow, such as `toast.shadow`, around
-any element.
+`Modifier.raincoatShadow(shadow, shape, fill)` fills a shape and draws a token shadow, such as
+`toast.shadow`, with it, as CSS draws a `box-shadow`. Use it in place of `background`.
 
 The Toast follows the
 [Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).

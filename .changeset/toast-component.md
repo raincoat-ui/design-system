@@ -13,11 +13,11 @@ as "Message archived", optionally with one action such as Undo.
   F8 moves focus to the toast and back. `bottomInset` keeps the toasts above a bar of your own.
   `Toast` draws a toast standing still, for documentation and tests.
 - **SwiftUI.** `raincoatToastHost()` puts a host on a screen, and the `showRaincoatToast`
-  environment action shows a `RaincoatToast` from anywhere inside it. `raincoatShadow(_:in:)`
-  draws a token shadow around any view.
+  environment action shows a `RaincoatToast` from anywhere inside it.
+  `raincoatShadow(_:in:fill:)` fills a shape behind a view and draws a token shadow with it.
 - **Compose.** `RaincoatToastHost` shows the toasts of a `RaincoatToastHostState`, whose `show`
   suspends until the toast closes and says how. `RaincoatToast` draws a toast on its own.
-  `Modifier.raincoatShadow` draws a token shadow.
+  `Modifier.raincoatShadow(shadow, shape, fill)` fills a shape and draws a token shadow with it.
 
 On every platform one toast is shown at a time, and others wait in order. A toast never takes
 focus, and its message is announced politely. Without an action, a toast closes after 6 seconds;

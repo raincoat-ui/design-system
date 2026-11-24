@@ -106,7 +106,8 @@ showToast(RaincoatToast("Message archived", action: .init("Undo") { undo() }, cl
 - Outside a host, `showRaincoatToast` does nothing. A `RaincoatToast` drawn on its own stands
   still, for previews and tests.
 
-`raincoatShadow(_:in:)` draws a token shadow, such as `tokens.toast.shadow`, around any view.
+`raincoatShadow(_:in:fill:)` fills a shape behind a view and draws a token shadow, such as
+`tokens.toast.shadow`, with it, as CSS draws a `box-shadow`. Use it in place of a background.
 
 The Toast follows the
 [Toast spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/toast/spec.yaml).
