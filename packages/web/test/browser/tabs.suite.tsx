@@ -549,13 +549,17 @@ export function describeTabs(environment: string) {
         watch.observe(screen.container, { subtree: true, childList: true, attributes: true });
         try {
           await userEvent.keyboard("{ArrowLeft}");
+          // The key can be delivered to the page after the command that sends it returns, as in
+          // WebKit, so the observer keeps watching until the selected panel holds the link.
+          await expect
+            .poll(() => selectedPanel()?.textContent)
+            .toBe("Rated 4 of 5. Read all reviews");
         } finally {
           watch.disconnect();
         }
         expect(seen.length).toBeGreaterThan(0);
         expect(seen.filter((tabindex) => tabindex !== null)).toEqual([]);
         // Checked at once, without waiting.
-        expect(selectedPanel()?.textContent).toBe("Rated 4 of 5. Read all reviews");
         expect(selectedPanel()?.hasAttribute("tabindex")).toBe(false);
         await userEvent.keyboard("{Tab}");
         expect(document.activeElement?.textContent).toBe("Read all reviews");
