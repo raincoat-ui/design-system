@@ -166,3 +166,6 @@ implementations:
   web:
     file: packages/web/src/components/ui/toast.tsx
     name: [ToastProvider, useToast, Toast]
+  ios:
+    file: packages/ios/Sources/Raincoat/Components/RaincoatToast.swift
+    name: [RaincoatToast, raincoatToastHost, showRaincoatToast]
