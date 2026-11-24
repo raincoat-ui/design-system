@@ -299,7 +299,10 @@
                     .contentShape(.accessibility, area)
                     .font(value.font)
                     .tracking(value.tracking)
-                    .lineSpacing(value.lineSpacing)
+                    // Space between lines brings them to the token's line height. A one-line field
+                    // has none: a text field gives it to its placeholder too, whose one line it
+                    // would then make too tall for the text field, and cut short.
+                    .lineSpacing(isMultiline ? value.lineSpacing : 0)
                     .foregroundStyle(Color(colors.foreground))
                     .frame(maxWidth: .infinity, minHeight: isMultiline ? nil : line, alignment: .leading)
                     .padding(.vertical, isMultiline ? paddingBlock : 0)
@@ -307,15 +310,14 @@
             .padding(.horizontal, paddingInline)
             .frame(minHeight: measurements.height)
             .foregroundStyle(Color(colors.foreground))
-            .background {
-                shape.fill(Color(colors.fill))
-                    // Behind the text field: a touch on the rest of the field, or just outside a
-                    // small one, puts the caret in it. A touch on the text itself is the text
-                    // field's own.
-                    .contentShape(TouchTarget(minimum: target))
-                    .onTapGesture { isFocused = true }
-            }
+            .background { shape.fill(Color(colors.fill)) }
             .overlay { shape.strokeBorder(Color(colors.border), lineWidth: input.borderWidth) }
+            // A touch anywhere on the field, or just outside a field smaller than the minimum
+            // target, puts the caret in the text field, as the Button takes touches across its
+            // target. The gesture is simultaneous, so that the text field keeps its own touches:
+            // placing the caret, selecting, and VoiceOver's activation.
+            .contentShape(TouchTarget(minimum: target))
+            .simultaneousGesture(TapGesture().onEnded { isFocused = true })
             .environment(\.layoutDirection, direction)
         }
     }
