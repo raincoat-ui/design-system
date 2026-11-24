@@ -81,7 +81,7 @@ Raincoat in awesome-design-systems.
 
 ## Capabilities and Constraints
 
-- **Today (<RELEASE-VERSION>; milestone 3 complete):** the token source with its linter and
+- **Today (0.1.0-next.5; milestone 3 complete):** the token source with its linter and
   contrast checker; the generated web theme stylesheet, Swift package, and Kotlin modules; and
   the seven v1 components on all three platforms, published to all three registries and tested
   in the reference apps from each of them. Two themes, the base and Ink: a theme is a directory
@@ -130,13 +130,14 @@ Raincoat in awesome-design-systems.
 
 ## Evidence on Hand
 
-- The prereleases 0.1.0-next.0 to <RELEASE-VERSION> on GitHub Releases, with provenance
+- The prereleases 0.1.0-next.0 to 0.1.0-next.5 on GitHub Releases, with provenance
   attestations and a bill of materials. From 0.1.0-next.1 on, each is on npm, the Maven
   repository, and the Swift mirror. 0.1.0-next.2 was published to npm through trusted
   publishing, with no token; 0.1.0-next.3 brought two new npm packages, the Ink theme and the
   token build, which needed a token for their first publish. The release runs of both passed
-  every reference app's tests, in every theme. <RELEASE-VERSION> is the first with the six
-  components milestone 3 added, and its release run installed it into every reference app.
+  every reference app's tests, in every theme. 0.1.0-next.5 is the first with the six
+  components milestone 3 added. Its release run passed every reference app's tests, in every
+  theme, after its install job was run a second time: Gradle had failed to download a plugin.
 - A second theme added with no code (pull request 41, Ink), and a theme pack kept outside the
   repository, built with the published token build and tested against the published Swift
   mirror and Maven repository: the evidence for milestone 2 in `docs/roadmap.md`.

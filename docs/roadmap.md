@@ -177,7 +177,7 @@ What M2 built, a second theme that needed no code:
   command line from outside the checkout, and tests the Swift package and the Gradle build it
   produces against the staged Swift mirror and Maven repository.
 
-M3 was completed on <DATE>. Evidence for each exit criterion:
+M3 was completed on 2026-11-24. Evidence for each exit criterion:
 
 - **Each has an accepted RFC.**
   [Pull request 52](https://github.com/raincoat-ui/design-system/pull/52) accepted an RFC for
@@ -215,9 +215,19 @@ M3 was completed on <DATE>. Evidence for each exit criterion:
   and 63. The one item no pull request ticks, the performance budget, applies from M4. The
   [parity matrix](https://raincoat-ui.github.io/design-system/components/parity-matrix/), which
   the documentation build reads from the specs and the source files, shows all seven on all
-  three platforms. [<RELEASE-VERSION>](<RELEASE-URL>) was published on <DATE> with all seven, and
-  [its release run](<RELEASE-RUN-URL>) installed it from npm, the Maven repository, and the Swift
-  mirror into every reference app, whose tests passed in both themes.
+  three platforms. After the last code change merged,
+  [CI on `main`](https://github.com/raincoat-ui/design-system/actions/runs/45490009218) passed
+  in full.
+  [0.1.0-next.5](https://github.com/raincoat-ui/design-system/releases/tag/v0.1.0-next.5), the
+  first prerelease with all seven, was published on 2026-11-24 from
+  [pull request 70](https://github.com/raincoat-ui/design-system/pull/70).
+  [Its release run](https://github.com/raincoat-ui/design-system/actions/runs/45495374127)
+  published it to npm, the Maven repository, and the Swift mirror, with provenance, the tag, and
+  the GitHub release, each on the first attempt. Its `install the published release` job failed
+  once, because Gradle could not download the Kotlin Compose plugin from the plugin
+  repositories; run again, it passed. The reference apps then installed the release from npm,
+  the Maven repository, and the Swift mirror and passed their tests: web, Android, and iOS, in
+  both themes.
 - **Vietnamese, CJK, right-to-left, and text-expansion snapshots are in place.**
   [ADR 0019](adr/0019-visual-snapshots.md) defines one matrix for every platform,
   `specs/snapshots.yaml`: 11 snapshots for each component and theme. They are the four color
@@ -233,7 +243,11 @@ M3 was completed on <DATE>. Evidence for each exit criterion:
   fails on a snapshot that has no baseline or differs from it, on a baseline that belongs to no
   snapshot, and on a component with no snapshot test. The jobs that compare them, `web snapshots`,
   `ios snapshots`, and `android modules`, are all required by `ci-gate`, which passed on the last
-  commit of [pull request 61](<PR61>) and [pull request 63](<PR63>).
+  commit of
+  [pull request 61](https://github.com/raincoat-ui/design-system/actions/runs/45480949499) and
+  [pull request 63](https://github.com/raincoat-ui/design-system/actions/runs/45466552397). On
+  pull request 61, the iOS reference app job in Ink was run a second time, after the runner
+  cancelled it for lack of capacity.
 
 What M3 built, six components beside the Button, on three platforms:
 
@@ -275,15 +289,22 @@ What M3 built, six components beside the Button, on three platforms:
     only between composed syllables, so the components now compose decomposed (NFD) text, such
     as a file name from macOS, before they draw it. An Input's value is left as typed
     ([pull request 63](https://github.com/raincoat-ui/design-system/pull/63)).
-  - On iOS, text grew less than the system's at the largest text sizes. The components took the
-    scale from `@ScaledMetric`, which scales by a factor of its own and rounds: at the largest
-    size it gave 3, where the system's body text is 3.12 times as large. Each component now
-    grows its text by the system font's ratio for the text style it follows, and a test compares
-    each style with the system's fonts at every text size
+  - On iOS, text grew about 4% less than the system's at the largest text size: 3.0 times its
+    default size, where the system's body text grows 3.118 times. The components took the scale
+    from `@ScaledMetric`, which scales by a factor of its own, 2.818 at the largest size, and
+    rounded a scaled 1 to 3. Each text style now grows by the system font's ratio for that
+    style. A test checks it against `UIFont` at all 12 Dynamic Type sizes, and each largest-text
+    snapshot measures the body text it draws at 3.118 times
     ([pull request 61](https://github.com/raincoat-ui/design-system/pull/61)). At the two
     largest sizes, heading-xl was also drawn smaller than heading-lg. Each heading now grows to
     at least the size of the one below it
     ([pull request 66](https://github.com/raincoat-ui/design-system/pull/66)).
+  - The correct text size showed a fault in the iOS Dialog. At the largest size, with the
+    keyboard up, the dialog filled the sheet under the keyboard, so the field and the footer
+    slid behind it. The dialog now keeps to what shows above the keyboard. The Dialog's audit at
+    the largest size runs with the keyboard put away, because the system audit misread black
+    text on white while scrolling with the keyboard up; the keyboard-up state is audited at the
+    default size ([pull request 61](https://github.com/raincoat-ui/design-system/pull/61)).
   - On the web, Escape pressed in a dialog closed a toast shown from that dialog, and the dialog
     stayed open. A toast now closes on Escape only while it has focus, and the dialog takes the
     Escape. A Tab pressed right after an arrow key selected a tab could also focus the tab panel
@@ -298,7 +319,11 @@ What M3 built, six components beside the Button, on three platforms:
     so a pixel capture could show only the window's background, and one Android test failed
     now and then. Every capture now redraws the window first
     ([pull request 63](https://github.com/raincoat-ui/design-system/pull/63)).
-- **One limitation is documented, not fixed.** On the web, a toast shown while a dialog or sheet
-  is open appears above it. On iOS and Android it appears on the screen behind, where the dialog
-  covers it. The Toast guidelines say how to avoid it, and the fix, with an amendment to RFC 0008,
-  is planned for M4 ([issue 68](https://github.com/raincoat-ui/design-system/issues/68)).
+- **Two known limitations, not fixed in M3:**
+  - On the web, a toast shown while a dialog or sheet is open appears above it. On iOS and
+    Android it appears on the screen behind, where the dialog covers it. The Toast guidelines
+    say how to avoid it, and the fix, with an amendment to RFC 0008, is planned for M4
+    ([issue 68](https://github.com/raincoat-ui/design-system/issues/68)).
+  - On iOS, a one-line Input whose value wraps, as at the largest text size, draws its lines
+    with no space between them and almost none above and below
+    ([issue 69](https://github.com/raincoat-ui/design-system/issues/69)).
