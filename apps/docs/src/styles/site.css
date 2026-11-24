@@ -397,6 +397,7 @@ site-search kbd kbd {
 /* Swatch cells stay on one line at a smaller size, so the description column keeps its width. */
 .sl-markdown-content td:has(.rc-swatch) {
   padding-inline-end: 0.75rem;
+  font-size: 0.75rem;
 }
 
 .sl-markdown-content td:has(.rc-swatch) code {
@@ -664,6 +665,15 @@ starlight-toc a[aria-current="true"]:hover {
   border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
   border-radius: var(--rc-site-corner);
   vertical-align: middle;
+}
+
+/* A translucent color, a swatch or a chip, is drawn over hatching in the text color: the hatching
+   shows through it as far as the color lets it. */
+.rc-translucent {
+  background:
+    linear-gradient(var(--rc-fill), var(--rc-fill)),
+    repeating-linear-gradient(-45deg, currentColor 0 1px, transparent 1px 4px);
+  background-clip: padding-box;
 }
 
 .rc-ramp {
