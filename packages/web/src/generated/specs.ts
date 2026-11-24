@@ -30,6 +30,37 @@ export const BUTTON_SIZES = ["sm", "md", "lg"] as const satisfies readonly Butto
 export const BUTTON_SIZE_DEFAULT: ButtonSize = "md";
 
 /**
+ * Input: The height and text size of the field, the same heights as the Button's.
+ * - `sm`: For dense layouts such as toolbars and tables. Its text is 14px.
+ * - `md`: The default size.
+ * - `lg`: For prominent fields, such as the one field of a step.
+ */
+export type InputSize = "sm" | "md" | "lg";
+
+/** Every InputSize, in the order the spec lists them. */
+export const INPUT_SIZES = ["sm", "md", "lg"] as const satisfies readonly InputSize[];
+
+/** The InputSize used when none is given. */
+export const INPUT_SIZE_DEFAULT: InputSize = "md";
+
+/**
+ * Input: What the field holds. It chooses the keyboard on touch screens and what autofill offers. A multi-line field holds text.
+ * - `text`: Any text.
+ * - `email`: An email address. It stays left-to-right in a right-to-left layout.
+ * - `password`: A password. What is typed is not shown.
+ * - `search`: A search query.
+ * - `tel`: A phone number. It stays left-to-right in a right-to-left layout.
+ * - `url`: A web address. It stays left-to-right in a right-to-left layout.
+ */
+export type InputType = "text" | "email" | "password" | "search" | "tel" | "url";
+
+/** Every InputType, in the order the spec lists them. */
+export const INPUT_TYPES = ["text", "email", "password", "search", "tel", "url"] as const satisfies readonly InputType[];
+
+/** The InputType used when none is given. */
+export const INPUT_TYPE_DEFAULT: InputType = "text";
+
+/**
  * Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control.
  * - `automatic`: The arrow keys select the tab they move to. The panel shows at once.
  * - `manual`: The arrow keys only move focus, and Enter or Space selects. For panels that are slow to show.

@@ -261,6 +261,128 @@ let cardExamples: [SpecExample<CardExampleProperties>] = [
     ),
 ]
 
+/// The properties of one Input in an example.
+struct InputExampleProperties: Sendable {
+    let size: InputSize
+    let type: InputType
+    let multiline: Bool
+    let required: Bool
+    let invalid: Bool
+    let disabled: Bool
+    let readOnly: Bool
+}
+
+/// The examples of specs/components/input/spec.yaml, with their text.
+let inputExamples: [SpecExample<InputExampleProperties>] = [
+    SpecExample(
+        id: "sizes",
+        instances: [
+            InputExampleProperties(size: .sm, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+            InputExampleProperties(size: .lg, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Full name", "value": "Ana Lima"],
+            "vi": ["label": "Họ và tên", "value": "Nguyễn Thị Hương"],
+            "zh-Hans": ["label": "姓名", "value": "王小明"],
+            "ja": ["label": "氏名", "value": "山田 花子"],
+            "ko": ["label": "이름", "value": "김민준"],
+            "ar": ["label": "الاسم الكامل", "value": "ليلى حسن"],
+            "en-XA": ["label": "[Ƒûļļ ñåɱé one]", "value": "[Åñå Ļîɱå one]"],
+        ]
+    ),
+    SpecExample(
+        id: "description",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Delivery address", "description": "Include the floor and the name of the building.", "value": "12 Harbour Street"],
+            "vi": ["label": "Địa chỉ giao hàng", "description": "Ghi rõ số tầng và tên tòa nhà.", "value": "12 Phố Hàng Bạc"],
+            "zh-Hans": ["label": "收货地址", "description": "请写明楼层和楼名。", "value": "建国路 88 号"],
+            "ja": ["label": "配送先住所", "description": "階数と建物名も入力してください。", "value": "丸の内 1-1"],
+            "ko": ["label": "배송 주소", "description": "층수와 건물 이름을 포함하세요.", "value": "세종대로 110"],
+            "ar": ["label": "عنوان التوصيل", "description": "اذكر الطابق واسم المبنى.", "value": "١٢ شارع الميناء"],
+            "en-XA": ["label": "[Ðéļîṽéŕý åððŕéšš one two]", "description": "[Îñçļûðé ţĥé ƒļööŕ åñð ţĥé ñåɱé öƒ ţĥé ƀûîļðîñĝ. one two three four]", "value": "[12 Ĥåŕƀöûŕ Šţŕééţ one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "email",
+        instances: [
+            InputExampleProperties(size: .md, type: .email, multiline: false, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Email address", "placeholder": "name@example.com"],
+            "vi": ["label": "Địa chỉ email", "placeholder": "name@example.com"],
+            "zh-Hans": ["label": "电子邮箱", "placeholder": "name@example.com"],
+            "ja": ["label": "メールアドレス", "placeholder": "name@example.com"],
+            "ko": ["label": "이메일 주소", "placeholder": "name@example.com"],
+            "ar": ["label": "البريد الإلكتروني", "placeholder": "name@example.com"],
+            "en-XA": ["label": "[Éɱåîļ åððŕéšš one]", "placeholder": "[ñåɱé@éẋåɱþļé.çöɱ one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "invalid",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: true, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Username", "description": "Letters, numbers, and dots, with no spaces.", "value": "ana lima", "error": "Remove the space, for example: ana.lima"],
+            "vi": ["label": "Tên người dùng", "description": "Chữ cái, chữ số và dấu chấm, không có khoảng trắng.", "value": "ana lima", "error": "Xóa khoảng trắng, ví dụ: ana.lima"],
+            "zh-Hans": ["label": "用户名", "description": "仅限字母、数字和句点，不能有空格。", "value": "ana lima", "error": "请删除空格，例如：ana.lima"],
+            "ja": ["label": "ユーザー名", "description": "英字、数字、ピリオドのみ。スペースは使えません。", "value": "ana lima", "error": "スペースを削除してください（例：ana.lima）"],
+            "ko": ["label": "사용자 이름", "description": "영문자, 숫자, 마침표만 쓰고 공백은 넣지 마세요.", "value": "ana lima", "error": "공백을 삭제하세요. 예: ana.lima"],
+            "ar": ["label": "اسم المستخدم", "description": "أحرف وأرقام ونقاط فقط، بدون مسافات.", "value": "ana lima", "error": "احذف المسافة، مثل: ana.lima"],
+            "en-XA": ["label": "[Ûšéŕñåɱé one]", "description": "[Ļéţţéŕš, ñûɱƀéŕš, åñð ðöţš, ŵîţĥ ñö šþåçéš. one two three four]", "value": "[åñå ļîɱå one]", "error": "[Ŕéɱöṽé ţĥé šþåçé, ƒöŕ éẋåɱþļé: åñå.ļîɱå one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "disabled",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: true, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Company", "value": "Harbour Supplies"],
+            "vi": ["label": "Công ty", "value": "Công ty Bình Minh"],
+            "zh-Hans": ["label": "公司", "value": "晨光贸易"],
+            "ja": ["label": "会社名", "value": "朝日商事"],
+            "ko": ["label": "회사", "value": "한빛상사"],
+            "ar": ["label": "الشركة", "value": "شركة الفجر"],
+            "en-XA": ["label": "[Çöɱþåñý one]", "value": "[Ĥåŕƀöûŕ Šûþþļîéš one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "read-only",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: false, required: false, invalid: false, disabled: false, readOnly: true),
+        ],
+        text: [
+            "en": ["label": "Account number", "value": "DE89 3704 0044 0532 0130 00"],
+            "vi": ["label": "Số tài khoản", "value": "DE89 3704 0044 0532 0130 00"],
+            "zh-Hans": ["label": "账号", "value": "DE89 3704 0044 0532 0130 00"],
+            "ja": ["label": "口座番号", "value": "DE89 3704 0044 0532 0130 00"],
+            "ko": ["label": "계좌 번호", "value": "DE89 3704 0044 0532 0130 00"],
+            "ar": ["label": "رقم الحساب", "value": "DE89 3704 0044 0532 0130 00"],
+            "en-XA": ["label": "[Åççöûñţ ñûɱƀéŕ one]", "value": "[ÐÉ89 3704 0044 0532 0130 00 one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "multiline",
+        instances: [
+            InputExampleProperties(size: .md, type: .text, multiline: true, required: false, invalid: false, disabled: false, readOnly: false),
+        ],
+        text: [
+            "en": ["label": "Message", "value": "Please leave the parcel with the neighbour at number 14 if nobody answers the door."],
+            "vi": ["label": "Lời nhắn", "value": "Nếu không có ai mở cửa, vui lòng gửi bưu kiện cho hàng xóm ở số nhà 14."],
+            "zh-Hans": ["label": "留言", "value": "如果没人开门，请把包裹交给 14 号的邻居。"],
+            "ja": ["label": "メッセージ", "value": "誰も出ない場合は、14 番地の隣人に荷物を預けてください。"],
+            "ko": ["label": "메시지", "value": "아무도 문을 열지 않으면 14번지 이웃에게 택배를 맡겨 주세요."],
+            "ar": ["label": "الرسالة", "value": "إذا لم يفتح أحد الباب، يرجى ترك الطرد عند الجار في المنزل رقم 14."],
+            "en-XA": ["label": "[Ṁéššåĝé one]", "value": "[Þļéåšé ļéåṽé ţĥé þåŕçéļ ŵîţĥ ţĥé ñéîĝĥƀöûŕ åţ ñûɱƀéŕ 14 îƒ ñöƀöðý åñšŵéŕš ţĥé ðööŕ. one two three four five six seven]"],
+        ]
+    ),
+]
+
 /// The properties of one Tabs in an example.
 struct TabsExampleProperties: Sendable {
     let activationMode: TabsActivationMode

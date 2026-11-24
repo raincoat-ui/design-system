@@ -102,6 +102,18 @@ p {
   fill: var(--rc-color-accent-default);
 }
 
+/* Fields, one under another, as wide as a form usually is. */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rc-space-4);
+  max-width: var(--rc-size-panel-md);
+}
+
+.fields > button {
+  align-self: flex-start;
+}
+
 /* The Toast screen keeps a bar at the bottom of the window, as many apps do. It tells the
    ToastProvider how tall the bar is, so the toasts sit above it. */
 :root {

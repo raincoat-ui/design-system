@@ -18,6 +18,10 @@ The page (`app/page.tsx`) is a Server Component. It shows the Button in two ways
 - **From the Server Component itself**, in forms that post to Server Actions (`app/actions.ts`).
   These Buttons reach the browser as HTML and are never hydrated.
 
+The Input's page (`app/input/page.tsx`) is a Server Component too. Its form posts to a Server
+Action that checks the email address and, when it is not one, shows the page again with the
+field in error, with JavaScript on and off. The forms of the Button's page use the Input as well.
+
 The tests run the production build, served by `next start`, in Chromium, with Playwright, and
 check what the [Vite app](../reference-web-vite/README.md) cannot:
 

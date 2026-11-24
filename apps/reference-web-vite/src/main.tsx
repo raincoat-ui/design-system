@@ -3,6 +3,7 @@ import { type JSX, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ButtonScreen } from "./ButtonScreen";
 import { CardScreen } from "./CardScreen";
+import { InputScreen } from "./InputScreen";
 import { TabsScreen } from "./TabsScreen";
 import { ToastScreen } from "./ToastScreen";
 import { TypographyScreen } from "./TypographyScreen";
@@ -15,6 +16,7 @@ const SCREENS: Record<string, () => JSX.Element> = {
   "/typography": TypographyScreen,
   "/card": CardScreen,
   "/tabs": TabsScreen,
+  "/input": InputScreen,
   "/toast": ToastScreen,
 };
 const Screen = SCREENS[location.pathname] ?? ButtonScreen;

@@ -313,6 +313,61 @@ The Tabs follow the
 [Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
 which the SwiftUI and Compose Tabs follow too.
 
+## Input
+
+```tsx
+import { Input } from "@raincoat-ui/react";
+
+<Input label="Full name" name="name" autoComplete="name" />
+<Input label="Email" type="email" description="We send the receipt here." placeholder="name@example.com" />
+<Input label="Email" type="email" invalid={!valid} error="Enter an email address, like name@example.com" />
+<Input label="Search the docs" labelHidden type="search" leadingIcon={<SearchIcon />} />
+<Input label="Message" multiline rows={4} />
+```
+
+| Prop          | Type                                                            | Default  | Notes                                                                       |
+| ------------- | --------------------------------------------------------------- | -------- | --------------------------------------------------------------------------- |
+| `label`       | `ReactNode`                                                     |          | Required. Above the field; the field's name                                 |
+| `labelHidden` | `boolean`                                                       | `false`  | Hides the label from view. It is still the name                             |
+| `description` | `ReactNode`                                                     |          | Between the label and the field                                             |
+| `invalid`     | `boolean`                                                       | `false`  | Needs `error`. Sets `aria-invalid` and shows the error below the field      |
+| `error`       | `ReactNode`                                                     |          | Shown only while `invalid`. It does not replace the description             |
+| `size`        | `"sm" \| "md" \| "lg"`                                          | `"md"`   | The same heights as the Button's sizes                                      |
+| `type`        | `"text" \| "email" \| "password" \| "search" \| "tel" \| "url"` | `"text"` | Chooses the keyboard and what autofill offers                               |
+| `multiline`   | `boolean`                                                       | `false`  | A `<textarea>` that starts `rows` lines tall (3) and grows with its content |
+| `leadingIcon` | `ReactNode`                                                     |          | A decorative SVG at the start of the field                                  |
+| `className`   | `string`                                                        |          | Classes for the whole: label, description, field, and error                 |
+
+Every other prop goes to the native `<input>`, or to the `<textarea>` of a multi-line field,
+including `ref`, `value`, `defaultValue`, `onChange`, `name`, `required`, `disabled`, `readOnly`,
+`placeholder`, and `autoComplete`.
+
+- **A field needs a label,** and an invalid one an error message. TypeScript reports either one
+  missing.
+- **Description and error.** The field is described by the description, then the error. Errors
+  are not announced as they appear: when a form is submitted, move focus to the first field in
+  error, which then reads its label, its state, and its message.
+- **Required.** `required` sets the field's required state, and with it the browser's own check
+  when the form is submitted. If your app checks fields itself, add `noValidate` to the form.
+- **Input methods.** While a Vietnamese or CJK input method composes a character, the field
+  keeps the error state it had, and Enter that commits the character does not submit the form.
+  The value is always what the input method wrote.
+- **Focus.** The focus ring is drawn whenever the field has focus.
+- **Touch.** On a touch screen a small field can still be touched across the theme's minimum
+  target size. The extra area takes no room in the layout.
+- **Text size.** The value, the label, and the leading icon grow with the person's text size.
+  The space above and below the value stays as it is, so the field grows taller.
+- **Left to right.** Email, phone, and web address fields stay left-to-right in a right-to-left
+  layout, their icon included.
+- **Multi-line.** Where the browser can size a field to its content (Chrome and Edge), it grows
+  as text is added. Elsewhere it can be made taller by hand.
+- **A Client Component.** The Input marks itself `"use client"`. A Server Component can render
+  it, and its HTML works before any script runs, in a form that posts to a Server Action too.
+
+The Input follows the
+[Input spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/input/spec.yaml),
+which the SwiftUI and Compose Inputs follow too.
+
 ## Browsers
 
 Chrome and Edge 111, Safari 16.4, Firefox 128, and later.

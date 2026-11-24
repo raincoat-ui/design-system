@@ -15,6 +15,7 @@ export {
   CardTitle,
   type CardTitleProps,
 } from "./components/ui/card.js";
+export { Input, type InputProps } from "./components/ui/input.js";
 export {
   Tabs,
   TabsContent,
@@ -58,6 +59,12 @@ export {
   type HeadingColor,
   type HeadingLevel,
   type HeadingVariant,
+  INPUT_SIZE_DEFAULT,
+  INPUT_SIZES,
+  INPUT_TYPE_DEFAULT,
+  INPUT_TYPES,
+  type InputSize,
+  type InputType,
   TABS_ACTIVATION_MODE_DEFAULT,
   TABS_ACTIVATION_MODES,
   type TabsActivationMode,
