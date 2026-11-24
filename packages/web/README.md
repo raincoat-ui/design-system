@@ -203,7 +203,9 @@ Every other prop of the element is passed through, including `ref`.
   have. Text cut short is still read in full by assistive technology. Headings balance their
   lines where the browser can.
 - **Text from people.** Set `dir="auto"` on the Text that holds a name or a message, so that its
-  direction comes from its first strong character.
+  direction comes from its first strong character. Inside a sentence, put the name in a
+  `<Text as="span" dir="auto">`: that also isolates it, so the punctuation and numbers beside it
+  do not join it.
 - **Languages.** Text aligns to the start edge. Lines break strictly in Japanese and between
   whole words in Korean, read from the `lang` attribute of the text or of any element around it.
 - **Margins.** Neither has a margin: spacing between paragraphs and headings is your layout's.
@@ -213,6 +215,57 @@ Every other prop of the element is passed through, including `ref`.
 Text and Heading follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
 which the SwiftUI and Compose versions follow too.
+
+## Tabs
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@raincoat-ui/react";
+
+<Tabs defaultValue="details">
+  <TabsList aria-label="Product">
+    <TabsTrigger value="details">Details</TabsTrigger>
+    <TabsTrigger value="reviews">Reviews</TabsTrigger>
+    <TabsTrigger value="list" aria-label="List" leadingIcon={<ListIcon />} />
+  </TabsList>
+  <TabsContent value="details">…</TabsContent>
+  <TabsContent value="reviews">…</TabsContent>
+  <TabsContent value="list">…</TabsContent>
+</Tabs>;
+```
+
+| Part          | Prop                     | Default       | Notes                                                                                 |
+| ------------- | ------------------------ | ------------- | ------------------------------------------------------------------------------------- |
+| `Tabs`        | `defaultValue`           |               | The tab selected first, when the tabs keep their own selection                        |
+| `Tabs`        | `value`, `onValueChange` |               | The selection, when the app controls it                                               |
+| `Tabs`        | `activationMode`         | `"automatic"` | `"manual"`: the arrow keys only move focus, and Enter or Space selects                |
+| `Tabs`        | `dir`                    |               | Only to give the tabs a direction other than the page's                               |
+| `TabsTrigger` | `value`                  |               | The value it selects                                                                  |
+| `TabsTrigger` | `leadingIcon`            |               | An SVG before the label. Pass the icon of an icon-only tab here, with an `aria-label` |
+| `TabsContent` | `value`                  |               | The tab whose panel it is                                                             |
+| `TabsContent` | `keepMounted`            | `false`       | Keeps the panel's content in the page, hidden, while its tab is not selected          |
+
+Every other prop of the element each part renders is passed through, including `ref`.
+
+- **A tab needs a name.** Give it a label, or `aria-label` when an icon is all it shows.
+  TypeScript reports a tab with neither. There are no disabled tabs: leave out a tab that leads
+  nowhere.
+- **Labels stay on one line.** When the tabs do not fit, the list scrolls sideways. Moving focus
+  to a tab, or selecting it from the app, scrolls it into view. A mouse also gets previous and
+  next buttons at the ends of the list; they are hidden from assistive technology and are not in
+  the Tab order.
+- **Keyboard.** The arrow keys move between the tabs and select, wrapping at the ends; Home and
+  End go to the first and last. Right to left, the arrow keys swap. Tab moves on to the panel: to
+  its first control, or to the panel itself when it has nothing focusable.
+- **Direction.** The tabs follow the page's direction, read from the page when focus first
+  enters them, so a right-to-left page needs nothing more.
+- **Panels.** Only the selected tab's panel has content. The others are empty and hidden, so
+  that each tab can point at its panel. Give the panel its own spacing.
+- **Server Components.** Tabs are Client Components. A Server Component can render them with
+  text and markup inside; the server sends the selected panel, and React hydrates the rest.
+
+The Tabs follow the
+[Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
+which the SwiftUI and Compose Tabs follow too.
 
 ## Browsers
 

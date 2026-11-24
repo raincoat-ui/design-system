@@ -68,8 +68,19 @@ Text and headings wrap and grow taller. Nothing is cut short unless you ask for 
 ## Text from people
 
 Names, messages, and other text that people write can be in any language, in either direction.
-On the web, set `dir="auto"` on the Text that holds it, so that its direction comes from its
-first strong character. iOS and Android do this by default.
+
+- **A whole paragraph** takes its direction from its first strong character. On the web, set
+  `dir="auto"` on the Text that holds it. iOS and Android do this by default.
+- **A name inside a sentence** must be isolated by the app. Without that, the punctuation and
+  numbers beside it join it: "Message from مريم الحسيني, 2 minutes ago" is drawn as "Message
+  from 2 ,مريم الحسيني minutes ago". This happens on every platform, also to a string built from
+  a translation with the name filled in.
+
+| Platform | Isolate the name                                                                         |
+| -------- | ---------------------------------------------------------------------------------------- |
+| Web      | `<Text as="span" dir="auto">{name}</Text>` inside the sentence                           |
+| iOS      | `"\u{2068}\(name)\u{2069}"`: U+2068 first strong isolate, U+2069 pop directional isolate |
+| Android  | `"⁨$name⁩"`, or `BidiFormatter.getInstance().unicodeWrap(name)`                            |
 
 ## Do and don't
 

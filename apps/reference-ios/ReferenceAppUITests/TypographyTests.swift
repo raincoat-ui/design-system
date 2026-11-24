@@ -45,6 +45,42 @@ final class TypographyTests: ReferenceAppTestCase {
         XCTAssertLessThan(text.frame.height, 2.5 * line, "\(text.frame.height) for lines of \(line)")
     }
 
+    @MainActor
+    func testAHeadingIsNeverSmallerThanTheHeadingOneLevelBelowIt() {
+        // From the default size to the largest accessibility size, where iOS enlarges its large
+        // title less than its smaller titles.
+        let sizes = [
+            "UICTContentSizeCategoryL", "UICTContentSizeCategoryAccessibilityL",
+            "UICTContentSizeCategoryAccessibilityXXXL",
+        ]
+        let looks = ["heading-xl", "heading-lg", "heading-md", "heading-sm"]
+        for size in sizes {
+            let app = launch(textSize: size)
+            let heights = looks.map { app.staticTexts["look-\($0)"].frame.height }
+            for (index, pair) in zip(heights, heights.dropFirst()).enumerated() {
+                XCTAssertGreaterThanOrEqual(
+                    pair.0, pair.1 - 0.5,
+                    "\(size): \(looks[index]) and \(looks[index + 1]) are \(pair.0) and \(pair.1) high"
+                )
+            }
+            app.terminate()
+        }
+    }
+
+    @MainActor
+    func testANameInASentenceIsGivenInOrder() {
+        let app = launch()
+        // The name is isolated, so it is drawn in its own direction inside the sentence, and
+        // VoiceOver is given the sentence in order.
+        let label = app.staticTexts["message"].label
+        let isolates = CharacterSet(charactersIn: "\u{2068}\u{2069}")
+        XCTAssertEqual(
+            String(label.unicodeScalars.filter { !isolates.contains($0) }),
+            "Message from مريم الحسيني, 2 minutes ago",
+            label
+        )
+    }
+
     /// The system's accessibility audit: contrast, clipped text, traits, and the rest.
     @MainActor
     func testTheScreenPassesTheAccessibilityAudit() throws {

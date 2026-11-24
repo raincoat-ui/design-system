@@ -199,16 +199,18 @@ const NEUTRAL = new Set([
   ...["0", "0px", "100%", "1lh", "2", "calc(", "min(", "tan(", "atan2(", '""', "''"],
   ...["absolute", "relative", "border-box", "flex", "inline-flex", "center", "none", "solid"],
   ...["normal", "break-word", "pointer", "default", "not-allowed"],
+  // Layout and overflow keywords, for a row that scrolls sideways.
+  ...["auto", "column", "nowrap"],
   // Text: alignment, wrapping, line breaking by language, and the ellipsis after max-lines.
   ...["start", "balance", "strict", "keep-all", "hidden", "webkit-box", "vertical"],
   // "transparent", as the minifier writes it.
   "#0000",
   // The properties that transition.
   ...["background-color", "border-color", "color"],
-  // A card's parts in a column; its media first in the flex order, as a block, with corners no
-  // less than square; actions that wrap at the end edge, below the rest; and a link or button that
-  // takes its title's look.
-  ...["column", "9999", "block", "max(", "wrap", "flex-end", "auto", "inherit"],
+  // A card: its media first in the flex order, as a block, with corners no less than square;
+  // actions that wrap at the end edge, below the rest; and a link or button that takes its
+  // title's look.
+  ...["9999", "block", "max(", "wrap", "flex-end", "inherit"],
 ]);
 // The spinner turns once a second. That speed is not a token yet.
 const EXEMPT = new Set([".animate-rc-spin"]);

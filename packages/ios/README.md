@@ -113,11 +113,14 @@ Text(message.preview).raincoatText(maxLines: 2)
 - **Text size.** Each style grows with Dynamic Type, with the system text style nearest its
   role: headings with `.largeTitle`, `.title2`, `.title3`, and `.headline`, body and label
   styles with `.body`, and captions with `.caption`. Large headings grow less than body text, as
-  the system's own do.
+  the system's own do, but a heading always grows to at least the size of the heading one level
+  below it: at the largest sizes the large title grows less than title 2.
 - **Long text wraps**, and the view grows taller. A heading is never cut short, even inside a
   `lineLimit`. Text cut short by `maxLines` is still read in full by VoiceOver.
-- **Direction.** Text aligns to the leading edge: the right in right-to-left layouts. The
-  direction of a name or a message inside it is left to SwiftUI's default.
+- **Direction.** Text aligns to the leading edge: the right in right-to-left layouts. A
+  paragraph takes its direction from its first strong character. A name or a message inside a
+  sentence must be isolated, or the punctuation and numbers beside it join it:
+  `Text("Message from \u{2068}\(name)\u{2069}, 2 minutes ago")`.
 
 Text and headings follow the
 [Typography spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/typography/spec.yaml),
@@ -168,6 +171,34 @@ NavigationLink(value: order) {
 The Card follows the
 [Card spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/card/spec.yaml),
 which the React and Compose Cards follow too.
+
+## Tabs
+
+```swift
+RaincoatTabs(selection: $section, tabs: [
+    RaincoatTab("Details", value: Section.details),
+    RaincoatTab("Photos", value: .photos, icon: Image(systemName: "photo")),
+    RaincoatTab(icon: Image(systemName: "list.bullet"), accessibilityLabel: Text("List"), value: .list),
+]) { section in
+    SectionView(section)
+}
+
+RaincoatTabs(tabs: tabs) { section in SectionView(section) } // keeps its own selection
+```
+
+- The row runs across the full width over a hairline. When the tabs do not fit, it scrolls
+  sideways, and the selected tab is scrolled into view. Labels stay on one line.
+- Only the selected tab's panel is shown. There are no disabled tabs: leave out a tab that leads
+  nowhere.
+- VoiceOver is told the row is a tab bar, and the selected tab carries the selected trait. A
+  tab with only an icon needs an accessibility label.
+- A keyboard moves focus between the tabs as Full Keyboard Access does for any control, and
+  Space selects.
+- Each tab's touch area is at least 44 points tall.
+
+The Tabs follow the
+[Tabs spec](https://github.com/raincoat-ui/design-system/blob/main/specs/components/tabs/spec.yaml),
+which the React and Compose Tabs follow too.
 
 ## Working on this package
 

@@ -116,6 +116,8 @@ export default defineConfig({
           exclude: [...configDefaults.exclude, TOUCH_TESTS],
           provide: { theme },
           globalSetup: ["./test/browser/expected-tokens.js"],
+          // Each file starts with a mouse, or fails before its first test.
+          setupFiles: ["./test/browser/mouse.setup.ts"],
           // One theme at a time. Two themes' browsers side by side lose pointer hover in one of
           // their pages, which fails every hover test of that page's file.
           sequence: { groupOrder: index },

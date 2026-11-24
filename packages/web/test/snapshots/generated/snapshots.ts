@@ -3,7 +3,7 @@
 // The visual snapshot matrix of specs/snapshots.yaml, and the examples of each component spec
 // with their text in every locale of the matrix. See docs/adr/0019-visual-snapshots.md.
 
-import type { ButtonVariant, ButtonSize, TextVariant, TextColor, HeadingLevel, HeadingVariant, HeadingColor } from "../../../src/generated/specs.js";
+import type { ButtonVariant, ButtonSize, TabsActivationMode, TextVariant, TextColor, HeadingLevel, HeadingVariant, HeadingColor } from "../../../src/generated/specs.js";
 
 /** A snapshot of the matrix: all the examples of a component, drawn together in one theme. */
 export interface Snapshot {
@@ -302,6 +302,80 @@ export const CARD_EXAMPLES: readonly SpecExample<CardExampleProperties>[] = [
       ko: { title: "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다", body: "목요일 도착 예정" },
       ar: { title: "طلبك المكون من ثلاثة قمصان من الكتان ووشاح من الصوف في الطريق إليك", body: "يصل يوم الخميس" },
       "en-XA": { title: "[Ýöûŕ öŕðéŕ öƒ ţĥŕéé ļîñéñ šĥîŕţš åñð å ŵööļ šçåŕƒ îš öñ îţš ŵåý one two three four five]", body: "[Åŕŕîṽéš öñ Ţĥûŕšðåý one two]" },
+    },
+  },
+];
+
+/** The properties of one Tabs in an example, as the React component names them. */
+export interface TabsExampleProperties {
+  readonly activationMode: TabsActivationMode;
+  readonly keepMounted: boolean;
+}
+
+/** The examples of specs/components/tabs/spec.yaml, with their text. */
+export const TABS_EXAMPLES: readonly SpecExample<TabsExampleProperties>[] = [
+  {
+    id: "labels",
+    description: "Three tabs with labels, and the first one's panel. The first is selected.",
+    instances: [
+      { activationMode: "automatic", keepMounted: false },
+    ],
+    text: {
+      en: { label: "Details\nReviews\nShipping", panel: "Made of waxed cotton, with taped seams." },
+      vi: { label: "Chi tiết\nĐánh giá\nVận chuyển", panel: "Làm từ vải cotton phủ sáp, các đường may được dán kín." },
+      "zh-Hans": { label: "详情\n评价\n配送", panel: "采用上蜡棉布制成，接缝处经过压胶处理。" },
+      ja: { label: "詳細\nレビュー\n配送", panel: "ワックスコットン製で、縫い目はテープで防水加工されています。" },
+      ko: { label: "상세 정보\n리뷰\n배송", panel: "왁스 코튼으로 만들었으며 솔기는 테이프로 마감했습니다." },
+      ar: { label: "التفاصيل\nالمراجعات\nالشحن", panel: "مصنوع من القطن المشمّع، مع درزات ملصوقة." },
+      "en-XA": { label: "[Ðéţåîļš\nŔéṽîéŵš\nŠĥîþþîñĝ one two]", panel: "[Ṁåðé öƒ ŵåẋéð çöţţöñ, ŵîţĥ ţåþéð šéåɱš. one two three]" },
+    },
+  },
+  {
+    id: "icons",
+    description: "Tabs with a leading icon beside each label.",
+    instances: [
+      { activationMode: "automatic", keepMounted: false },
+    ],
+    text: {
+      en: { label: "Photos\nVideos\nFiles" },
+      vi: { label: "Ảnh\nVideo\nTệp" },
+      "zh-Hans": { label: "照片\n视频\n文件" },
+      ja: { label: "写真\n動画\nファイル" },
+      ko: { label: "사진\n동영상\n파일" },
+      ar: { label: "الصور\nالفيديوهات\nالملفات" },
+      "en-XA": { label: "[Þĥöţöš\nṼîðéöš\nƑîļéš one two]" },
+    },
+  },
+  {
+    id: "icon-only",
+    description: "Tabs that show only an icon. Each is given an accessible name.",
+    instances: [
+      { activationMode: "automatic", keepMounted: false },
+    ],
+    text: {
+      en: { "accessible-name": "List\nGrid" },
+      vi: { "accessible-name": "Danh sách\nLưới" },
+      "zh-Hans": { "accessible-name": "列表\n网格" },
+      ja: { "accessible-name": "リスト\nグリッド" },
+      ko: { "accessible-name": "목록\n그리드" },
+      ar: { "accessible-name": "قائمة\nشبكة" },
+      "en-XA": { "accessible-name": "[Ļîšţ\nĜŕîð one]" },
+    },
+  },
+  {
+    id: "overflow",
+    description: "More tabs than fit the width, the last one selected: the list scrolls sideways to show it. In a long translation on a narrow screen, the row is scrolled to its last tab.",
+    instances: [
+      { activationMode: "automatic", keepMounted: false },
+    ],
+    text: {
+      en: { label: "Overview\nSpecifications\nReviews\nQuestions\nShipping\nReturns" },
+      vi: { label: "Tổng quan\nThông số\nĐánh giá\nCâu hỏi\nVận chuyển\nĐổi trả" },
+      "zh-Hans": { label: "概览\n规格\n评价\n问答\n配送\n退货" },
+      ja: { label: "概要\n仕様\nレビュー\n質問\n配送\n返品" },
+      ko: { label: "개요\n사양\n리뷰\n질문\n배송\n반품" },
+      ar: { label: "نظرة عامة\nالمواصفات\nالمراجعات\nالأسئلة\nالشحن\nالإرجاع" },
+      "en-XA": { label: "[Öṽéŕṽîéŵ\nŠþéçîƒîçåţîöñš\nŔéṽîéŵš\nǪûéšţîöñš\nŠĥîþþîñĝ\nŔéţûŕñš one two three four five]" },
     },
   },
 ];

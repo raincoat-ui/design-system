@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -49,9 +50,11 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performMouseInput
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.github.raincoatui.tokens.ColorMode
@@ -412,6 +415,28 @@ class RaincoatCardTest(themeId: String) {
         val first = compose.onNodeWithTag("first").getUnclippedBoundsInRoot()
         val second = compose.onNodeWithTag("second").getUnclippedBoundsInRoot()
         assertEquals("one under the other, the gap apart", card.gap, (second.top - first.bottom).value.toDouble(), 0.5)
+    }
+
+    @Test
+    fun `a Korean title breaks only between whole words`() {
+        RuntimeEnvironment.setQualifiers("+b+ko")
+        // The long title of the card's examples (specs/components/card/strings.yaml).
+        val title = "주문하신 린넨 셔츠 세 벌과 울 목도리 한 개가 지금 고객님께 배송되고 있습니다"
+        // At every width, each line ends at a space: no word is split.
+        for (width in 200..432 step 29) {
+            show { Box(Modifier.width(width.dp)) { RaincoatCard(title, level = 3) } }
+            val results = mutableListOf<TextLayoutResult>()
+            compose.onNodeWithText(title).performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(results) }
+            val layout = results.single()
+            assertTrue("the title wraps at $width", layout.lineCount > 1)
+            for (line in 0 until layout.lineCount - 1) {
+                val end = layout.getLineEnd(line)
+                assertTrue(
+                    "line ${line + 1} of ${layout.lineCount} at $width ends with \"${title.substring(0, end)}\"",
+                    title[end - 1] == ' ',
+                )
+            }
+        }
     }
 
     @Test

@@ -18,6 +18,13 @@
       "fetched": "2026-11-24",
       "local": "src/components/ui/card.tsx"
     },
+    "tabs": {
+      "registry": "https://ui.shadcn.com/r/styles/new-york-v4/tabs.json",
+      "upstream": ".shadcn-upstream/tabs.tsx",
+      "sha256": "e1df6e2f95ece373ca909c1d54b8ba8cf4c47dd425c1784bbb9a01c38dd0936b",
+      "fetched": "2026-11-24",
+      "local": "src/components/ui/tabs.tsx"
+    },
     "typography": {
       "registry": "https://ui.shadcn.com/r/styles/new-york-v4/typography.json",
       "upstream": null,

@@ -620,6 +620,31 @@ class RaincoatButtonTest(themeId: String) {
     }
 
     @Test
+    fun `a Korean label wraps only between whole words`() {
+        // The language is the person's, as on a device: set before anything is drawn.
+        RuntimeEnvironment.setQualifiers("+b+ko")
+        // The long label of the spec's examples, in Korean.
+        val label = "변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기"
+        val split = mutableListOf<String>()
+        var wrapped = false
+        // At widths a few pixels apart, so that a line ends at every place it can.
+        for (width in 120..400 step 4) {
+            show {
+                Box(Modifier.width(width.dp)) { RaincoatButton(label, onClick = {}, variant = ButtonVariant.Primary) }
+            }
+            val layout = textLayout(label)
+            assertEquals("at $width", LineBreak.WordBreak.Phrase, layout.layoutInput.style.lineBreak.wordBreak)
+            for (line in 0 until layout.lineCount - 1) {
+                wrapped = true
+                val end = layout.getLineEnd(line)
+                if (label[end - 1] != ' ') split += "at $width: ${label.substring(0, end)}|"
+            }
+        }
+        assertTrue("the label wraps", wrapped)
+        assertEquals("lines that end inside a word", emptyList<String>(), split)
+    }
+
+    @Test
     fun `a full-width button fills the width it is offered`() {
         show { Box(Modifier.width(300.dp)) { RaincoatButton("Save", onClick = {}) } }
         assertTrue(compose.onNodeWithText("Save").pixels().width < 300)

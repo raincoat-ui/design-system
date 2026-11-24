@@ -17,6 +17,7 @@ struct ReferenceApp: App {
                 switch screen {
                 case "typography": TypographyScreen()
                 case "card": CardScreen()
+                case "tabs": TabsScreen()
                 default: ButtonScreen()
                 }
             }

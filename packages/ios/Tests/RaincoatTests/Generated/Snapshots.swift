@@ -261,6 +261,76 @@ let cardExamples: [SpecExample<CardExampleProperties>] = [
     ),
 ]
 
+/// The properties of one Tabs in an example.
+struct TabsExampleProperties: Sendable {
+    let activationMode: TabsActivationMode
+    let keepMounted: Bool
+}
+
+/// The examples of specs/components/tabs/spec.yaml, with their text.
+let tabsExamples: [SpecExample<TabsExampleProperties>] = [
+    SpecExample(
+        id: "labels",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["label": "Details\nReviews\nShipping", "panel": "Made of waxed cotton, with taped seams."],
+            "vi": ["label": "Chi tiết\nĐánh giá\nVận chuyển", "panel": "Làm từ vải cotton phủ sáp, các đường may được dán kín."],
+            "zh-Hans": ["label": "详情\n评价\n配送", "panel": "采用上蜡棉布制成，接缝处经过压胶处理。"],
+            "ja": ["label": "詳細\nレビュー\n配送", "panel": "ワックスコットン製で、縫い目はテープで防水加工されています。"],
+            "ko": ["label": "상세 정보\n리뷰\n배송", "panel": "왁스 코튼으로 만들었으며 솔기는 테이프로 마감했습니다."],
+            "ar": ["label": "التفاصيل\nالمراجعات\nالشحن", "panel": "مصنوع من القطن المشمّع، مع درزات ملصوقة."],
+            "en-XA": ["label": "[Ðéţåîļš\nŔéṽîéŵš\nŠĥîþþîñĝ one two]", "panel": "[Ṁåðé öƒ ŵåẋéð çöţţöñ, ŵîţĥ ţåþéð šéåɱš. one two three]"],
+        ]
+    ),
+    SpecExample(
+        id: "icons",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["label": "Photos\nVideos\nFiles"],
+            "vi": ["label": "Ảnh\nVideo\nTệp"],
+            "zh-Hans": ["label": "照片\n视频\n文件"],
+            "ja": ["label": "写真\n動画\nファイル"],
+            "ko": ["label": "사진\n동영상\n파일"],
+            "ar": ["label": "الصور\nالفيديوهات\nالملفات"],
+            "en-XA": ["label": "[Þĥöţöš\nṼîðéöš\nƑîļéš one two]"],
+        ]
+    ),
+    SpecExample(
+        id: "icon-only",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["accessible-name": "List\nGrid"],
+            "vi": ["accessible-name": "Danh sách\nLưới"],
+            "zh-Hans": ["accessible-name": "列表\n网格"],
+            "ja": ["accessible-name": "リスト\nグリッド"],
+            "ko": ["accessible-name": "목록\n그리드"],
+            "ar": ["accessible-name": "قائمة\nشبكة"],
+            "en-XA": ["accessible-name": "[Ļîšţ\nĜŕîð one]"],
+        ]
+    ),
+    SpecExample(
+        id: "overflow",
+        instances: [
+            TabsExampleProperties(activationMode: .automatic, keepMounted: false),
+        ],
+        text: [
+            "en": ["label": "Overview\nSpecifications\nReviews\nQuestions\nShipping\nReturns"],
+            "vi": ["label": "Tổng quan\nThông số\nĐánh giá\nCâu hỏi\nVận chuyển\nĐổi trả"],
+            "zh-Hans": ["label": "概览\n规格\n评价\n问答\n配送\n退货"],
+            "ja": ["label": "概要\n仕様\nレビュー\n質問\n配送\n返品"],
+            "ko": ["label": "개요\n사양\n리뷰\n질문\n배송\n반품"],
+            "ar": ["label": "نظرة عامة\nالمواصفات\nالمراجعات\nالأسئلة\nالشحن\nالإرجاع"],
+            "en-XA": ["label": "[Öṽéŕṽîéŵ\nŠþéçîƒîçåţîöñš\nŔéṽîéŵš\nǪûéšţîöñš\nŠĥîþþîñĝ\nŔéţûŕñš one two three four five]"],
+        ]
+    ),
+]
+
 /// The properties of one Text in an example.
 struct TextExampleProperties: Sendable {
     let variant: TextVariant
