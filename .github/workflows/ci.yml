@@ -188,10 +188,25 @@ jobs:
       # library, built with the Android SDK that the runner provides, and their tests run on
       # the JVM with Robolectric, so no emulator is needed. licensee is the license gate for
       # shipped dependencies.
+      #
+      # The tests include the visual snapshots of the Compose components: every snapshot of
+      # specs/snapshots.yaml, in every theme, compared with its baseline in
+      # packages/android/ui/src/test/__screenshots__. A missing or different baseline fails the
+      # job. --continue runs the other tests and the license gate all the same.
       - name: Test, and check the licenses of shipped dependencies
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
-          ./gradlew test licensee --no-daemon --console=plain
+          ./gradlew test licensee --continue --no-daemon --console=plain
+      # What the snapshots drew for a baseline that is missing or differs, laid out as the
+      # baselines are, so that it can be reviewed and committed (CONTRIBUTING.md).
+      - name: Keep what the snapshots drew
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-snapshots
+          path: packages/android/ui/build/snapshots/
+          if-no-files-found: ignore
+          retention-days: 14
 
   web:
     name: react components (${{ matrix.browser }})
@@ -273,6 +288,64 @@ jobs:
         with:
           name: web-snapshots
           path: packages/web/test-results/snapshots/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # The visual snapshots of the SwiftUI components, drawn by iOS in a simulator with SwiftUI's
+  # ImageRenderer: every snapshot of specs/snapshots.yaml, in every theme, compared with its
+  # baseline in packages/ios/__screenshots__. A missing or different baseline fails the job. What
+  # the job drew for those is uploaded, laid out as the baselines are, so that it can be reviewed
+  # and committed (CONTRIBUTING.md). The tests run only when RAINCOAT_SNAPSHOTS is set, so the
+  # other Swift jobs leave them out.
+  ios-snapshots:
+    name: ios snapshots
+    runs-on: macos-26
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Select Xcode 26.6
+        run: sudo xcode-select --switch /Applications/Xcode_26.6.app
+      - name: Show the toolchain and the simulators
+        run: xcodebuild -version && xcrun simctl list devices available
+      # As in the reference apps: the simulator is started first, and waited for.
+      - name: Start an iPhone simulator on the newest iOS
+        id: simulator
+        run: |
+          udid=$(xcrun simctl list devices available --json | jq -r '
+            [ .devices | to_entries[]
+              | select(.key | test("SimRuntime\\.iOS-"))
+              | { version: (.key | capture("iOS-(?<major>[0-9]+)-(?<minor>[0-9]+)") | [(.major | tonumber), (.minor | tonumber)]),
+                  device: (.value[] | select(.name == "iPhone 17")) } ]
+            | sort_by(.version) | last | .device.udid')
+          test -n "$udid" && test "$udid" != "null"
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+      # xcodebuild hands TEST_RUNNER_ variables to the tests without the prefix. The tests read the
+      # baselines from this checkout and write what they drew into it, which the simulator can do.
+      - name: Draw the snapshots and compare them with their baselines
+        working-directory: packages/ios
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          TEST_RUNNER_RAINCOAT_SNAPSHOTS: "1"
+          TEST_RUNNER_CI: "true"
+        run: |
+          xcodebuild test \
+            -scheme Raincoat-Package \
+            -destination "platform=iOS Simulator,id=$SIMULATOR" \
+            -derivedDataPath ../../build/ios-snapshots \
+            -only-testing:RaincoatTests/VisualSnapshots
+      - name: Keep what the snapshots drew
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ios-snapshots
+          path: packages/ios/test-results/snapshots/
           if-no-files-found: ignore
           retention-days: 14
 
@@ -359,6 +432,7 @@ jobs:
         kotlin,
         web,
         web-snapshots,
+        ios-snapshots,
         reference-apps,
         release-rehearsal,
       ]

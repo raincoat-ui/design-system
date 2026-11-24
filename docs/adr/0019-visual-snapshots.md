@@ -3,6 +3,11 @@
 - Status: accepted
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
+- Amended: 2026-11-24, iOS draws its snapshots in a simulator, by drawing a window's layers
+  rather than with `ImageRenderer`, in a job of its own, with its baselines in
+  `packages/ios/__screenshots__`
+- Amended: 2026-11-24, Android sets a snapshot's font scale as the system does, not with a
+  `Density`
 
 ## Context
 
@@ -74,13 +79,80 @@ generated `allSnapshots` and `<component>Examples`:
   Linux has no SwiftUI and skips it. A component that uses `accessibilityFocused`, such as the
   Toast, is drawn in an `NSHostingView` in a window instead, through AppKit's display cache:
   `ImageRenderer` on macOS measures such a view as if it had no content.
-- Android draws with Robolectric and `captureToImage` at one pixel per dp, as
-  `RaincoatButtonTest` does: the same examples with `LocalLayoutDirection`, a `Density` whose
-  `fontScale` is the snapshot's, and the snapshot's locale. The `android modules` job runs it and
-  uploads what it drew.
+- Android draws with Robolectric's native graphics and `captureToImage` at one pixel per dp, as
+  `RaincoatButtonTest` does: the same examples on a stage 480dp wide, with `LocalLayoutDirection`,
+  and the snapshot's locale and font scale set in the system's configuration, before anything is
+  drawn (`RuntimeEnvironment.setQualifiers` and `setFontScale`). A `Density` whose `fontScale` is
+  the snapshot's would enlarge all text by the same factor; Android enlarges large text by less,
+  and the snapshot shows what a person who chose that scale sees. Text is set in the fonts
+  Robolectric's native runtime ships with Android's font configuration, the same files on every
+  machine: Roboto, which covers Vietnamese, then Noto Naskh Arabic and Noto Sans CJK, chosen by
+  the locale. Each component has a `<Component>SnapshotTest` in
+  `packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/snapshots/`, and its baselines are
+  in `packages/android/ui/src/test/__screenshots__/`, laid out as on the web. A pixel differs when
+  its color is further from the baseline's than 0.1 by pixelmatch's measure, the web's threshold,
+  and no pixel may differ. Unlike pixelmatch, the comparison does not excuse antialiased pixels:
+  Robolectric draws in software, and draws the same pixels on every run. A check fails when a
+  spec with an Android implementation has no snapshot test. The `android modules` job runs them
+  and uploads what it drew as the `android-snapshots` artifact. A component that opens a window
+  of its own, the dialog, the alert dialog, and the sheet, is shown one instance at a time, in a
+  window as wide as the specimen's content, 432dp. Each window is captured and cut to the panel
+  with the dialog margin of scrim above and below it, or, for a sheet, down to the bottom of the
+  window; the cuts are stacked on the canvas color, which shows through the scrim, as the web
+  draws each dialog inside the specimen. Every capture is taken from a frame drawn at the time
+  of the capture: Robolectric can skip the first frame after the content is set, and a capture
+  would then show only the window's background.
 
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.
+
+**Amended 2026-11-24: iOS.** Building the iOS snapshots changed three things above and settled
+what was left open.
+
+- iOS draws the snapshots in an iPhone simulator, with `xcodebuild test`, not on macOS. On
+  macOS the components' scaled metrics ignore the Dynamic Type size: there, `accessibility5`
+  drew text at its default size, and the check below failed. The simulator draws with iOS and
+  its fonts, as an iPhone does. The tests are compiled for iOS only.
+- iOS draws a specimen through a window, not with `ImageRenderer`. `ImageRenderer` draws only
+  the views SwiftUI draws itself, and leaves out those UIKit provides, such as the text field of
+  an Input and the scroll view of the Tabs. The specimen is shown by a `UIHostingController` in a
+  window of its own, 480 points wide, whose traits are the snapshot's: light or dark, the
+  contrast, the text size, the layout direction, and a display scale of 1. The window's layers
+  are drawn (`layer.render(in:)`). Every view is a layer, those UIKit provides included, so the
+  layers draw a text field's text and a scroll view's content where it is scrolled to; a test of
+  the harness checks both. `drawHierarchy(in:afterScreenUpdates:)`, which draws a window as the
+  screen shows it, draws nothing there: a package's tests on the simulator have no window scene
+  to show a window in. Drawing the layers leaves out Core Animation's filters, such as the blur
+  of a material, so a view that uses one is drawn without it. Nothing in the window animates, so
+  a spinner is drawn where it starts.
+- An alert dialog is left out of the iOS snapshots. On iOS it is the system alert, which the
+  platform draws, not Raincoat.
+- iOS draws at a scale of 1, as above: a specimen 480 points wide is 480 pixels wide, as on the
+  web and on Android. A scale of 2 was tried: the 44 baselines of the Button and Typography
+  weighed 11 MB, where the web's 66 weigh 2.9 MB, in a repository everyone clones. A scale of 1
+  shows every change of layout, color, text, and direction, which is what the snapshots are for.
+- The snapshots run in an `ios snapshots` job of their own, as the web's do, which uploads the
+  `ios-snapshots` artifact. They run only when `RAINCOAT_SNAPSHOTS` is set, which xcodebuild
+  passes to the tests from `TEST_RUNNER_RAINCOAT_SNAPSHOTS`. The simulator reads the baselines
+  from the checkout and writes what it drew there, where the job collects it.
+- The baselines are in `packages/ios/__screenshots__/<theme>/<component>/<snapshot>.png`, outside
+  the package's targets. SwiftPM warns about every file in a target that is not source, and the
+  Swift mirror, which every app that uses the package clones, copies `Tests/`.
+- A drawn pixel matches its baseline when each of its channels is within 8 of 255 of the
+  baseline's. One pixel that does not match fails the snapshot.
+- The text is set in the snapshot's language (`typesettingLanguage`), as on a device set to that
+  language, so that line height, line breaks, and spacing follow its script.
+- Each snapshot checks that its text size is in effect: SwiftUI and the window are given it, and
+  body text grows as much as the system's body text there, within 1%: 3.12 times as large at
+  the largest size (53 points instead of 17). The check found the components' text growing 3.0
+  times: they multiplied token sizes by a scaled metric of 1. `@ScaledMetric` scales by a
+  factor of its own, 2.82 at the largest size whatever the value, which it rounds (1 became 3);
+  it is not the system font's ratio. The components now take the ratio of the system font's
+  sizes for the style, at the environment's Dynamic Type size and at the default. A test checks
+  every style they follow at every size.
+- Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
+  fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
+  belongs to no theme, component, or snapshot.
 
 **Firefox and WebKit.** The React component tests, not the snapshots, also run in Firefox and
 WebKit, in CI, one job per browser, chosen with `RAINCOAT_BROWSER`. What a test asks of the
@@ -99,7 +171,8 @@ without testing more of the components.
   pull request, where reviewers see the images.
 - A new runner image, new fonts in Ubuntu, or a Playwright update that brings a new Chromium can
   change many baselines at once. Each is accepted the same way, in the pull request that brings
-  the change; a dependency update of Playwright cannot merge without it.
+  the change; a dependency update of Playwright cannot merge without it. On Android, a Robolectric
+  update brings its own graphics and fonts, and the same holds.
 - The baselines add about 30 KB per image: about 700 KB for the Button's 22 on the web.
 - Until themes ship their fonts, the snapshots show the system's fonts, not each theme's.
 - Firefox gives a button `:active`, which a pressed fill selects, only while a pointer presses

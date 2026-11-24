@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import io.github.raincoatui.tokens.InputSize
 import io.github.raincoatui.tokens.InputType
 import io.github.raincoatui.ui.LocalRaincoatTokens
+import io.github.raincoatui.ui.rememberComposedForDisplay
 import io.github.raincoatui.ui.toColor
 import io.github.raincoatui.ui.toTextStyle
 import kotlin.math.ceil
@@ -177,14 +178,16 @@ public fun RaincoatInput(
                     verticalArrangement = Arrangement.spacedBy(input.gap.dp),
                 ) {
                     if (!labelHidden) {
+                        // The read-only texts are composed (NFC); the value, which the person
+                        // edits, is left as it is.
                         BasicText(
-                            text = label,
+                            text = rememberComposedForDisplay(label),
                             style = measurements.label.toTextStyle().copy(color = input.label.fg.toColor()),
                         )
                     }
                     if (description != null) {
                         BasicText(
-                            text = description,
+                            text = rememberComposedForDisplay(description),
                             style = input.description.type.toTextStyle().copy(color = input.description.fg.toColor()),
                         )
                     }
@@ -225,7 +228,7 @@ public fun RaincoatInput(
                             ) {
                                 if (value.isEmpty() && placeholder != null) {
                                     BasicText(
-                                        text = placeholder,
+                                        text = rememberComposedForDisplay(placeholder),
                                         style = valueStyle.copy(color = colors.placeholder.toColor()),
                                     )
                                 }
@@ -236,7 +239,7 @@ public fun RaincoatInput(
                     if (shownError != null) {
                         // The field says it, as its error.
                         BasicText(
-                            text = shownError,
+                            text = rememberComposedForDisplay(shownError),
                             modifier = Modifier.clearAndSetSemantics {},
                             style = input.error.type.toTextStyle().copy(color = input.error.fg.toColor()),
                         )

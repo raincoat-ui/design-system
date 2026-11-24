@@ -198,7 +198,7 @@
         @Environment(\.isEnabled) private var isEnabled
         @Environment(\.accessibilityReduceMotion) private var reduceMotion
         @Environment(\.raincoatButtonFillsWidth) private var fillsWidth
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
         @State private var isHovered = false
 
         var body: some View {
@@ -280,7 +280,7 @@
 
         @Tokens private var tokens
         @Environment(\.isEnabled) private var isEnabled
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
 
         var body: some View {
             let measurements = ButtonMeasurements(tokens.button, size: size)

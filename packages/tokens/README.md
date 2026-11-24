@@ -30,7 +30,7 @@ Install the token build at the version of Raincoat your apps use, so that the th
 on the base they will run with:
 
 ```sh
-npm install --save-dev --save-exact @raincoat-ui/tokens@0.1.0-next.4
+npm install --save-dev --save-exact @raincoat-ui/tokens@0.1.0-next.5
 ```
 
 `theme.json` names the theme and says where its packages are published:

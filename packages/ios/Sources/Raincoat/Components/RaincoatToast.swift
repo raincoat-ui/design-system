@@ -45,7 +45,7 @@
 
         @Tokens private var tokens
         @Environment(\.raincoatToastControl) private var control
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
         @AccessibilityFocusState private var voiceOverFocus: ToastPart?
         @FocusState private var keyboardFocus: ToastPart?
         @State private var swipe: CGFloat = 0

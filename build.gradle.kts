@@ -49,3 +49,28 @@ subprojects {
         }
     }
 }
+
+// The visual snapshots of the Compose components, in packages/android/ui/src/test/kotlin/.../
+// snapshots, compare what they draw with the baselines in packages/android/ui/src/test/
+// __screenshots__, in CI only, and write what they drew to packages/android/ui/build/snapshots.
+// Every component spec with an Android implementation needs a snapshot test. See
+// docs/adr/0019-visual-snapshots.md. This is test configuration only. It is here rather than in
+// the module's build file, where any change counts as a change to what the module ships
+// (.changeset/config.json).
+project(":ui") {
+    tasks.withType<Test>().configureEach {
+        val baselines = layout.projectDirectory.dir("src/test/__screenshots__")
+        val specs = rootProject.layout.projectDirectory.dir("specs/components")
+        inputs.files(fileTree(baselines))
+            .withPropertyName("snapshotBaselines")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+        inputs.files(fileTree(specs) { include("*/spec.yaml") })
+            .withPropertyName("componentSpecs")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+        systemProperty("raincoat.specs", specs.asFile.absolutePath)
+        systemProperty("raincoat.snapshots.baselines", baselines.asFile.absolutePath)
+        systemProperty("raincoat.snapshots.output", layout.buildDirectory.dir("snapshots").get().asFile.absolutePath)
+        // CI sets CI. Only CI compares, because the baselines are drawn there (CONTRIBUTING.md).
+        systemProperty("raincoat.snapshots.compare", providers.environmentVariable("CI").isPresent.toString())
+    }
+}

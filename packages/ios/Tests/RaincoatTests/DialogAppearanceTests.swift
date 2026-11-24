@@ -81,6 +81,25 @@ import Testing
         #expect(bodiless == .whole, "no body")
     }
 
+    @Test func theKeyboardCoversTheBottomOfADialogItIsDockedOver() {
+        // A sheet from 300 to 866, on a screen 874 tall, and a keyboard from 538 to the bottom.
+        let docked = KeyboardCover(dialogTop: 300, dialogBottom: 866, keyboardTop: 538, keyboardBottom: 874)
+        #expect(docked.height == 328, "from the keyboard's top to the sheet's bottom")
+        let whole = KeyboardCover(dialogTop: 700, dialogBottom: 866, keyboardTop: 538, keyboardBottom: 874)
+        #expect(whole.height == 166, "a keyboard taller than the sheet covers all of it")
+    }
+
+    @Test func aKeyboardThatIsHiddenBelowOrElsewhereCoversNothing() {
+        let hidden = KeyboardCover(dialogTop: 300, dialogBottom: 866, keyboardTop: nil, keyboardBottom: nil)
+        #expect(hidden.height == 0, "no keyboard")
+        // A sheet that has risen above the keyboard.
+        let below = KeyboardCover(dialogTop: 100, dialogBottom: 530, keyboardTop: 538, keyboardBottom: 874)
+        #expect(below.height == 0, "the keyboard below the sheet")
+        // A keyboard floating in the middle of an iPad's screen.
+        let floating = KeyboardCover(dialogTop: 200, dialogBottom: 1000, keyboardTop: 500, keyboardBottom: 800)
+        #expect(floating.height == 0, "a floating keyboard")
+    }
+
     @Test func theHairlinesShowWhileTheBodyHasContentBeneathThem() {
         let top = DialogDividers(offset: 0, viewport: 300, content: 1000)
         #expect(!top.underHeader && top.overFooter, "at the top, content is beneath the footer only")
