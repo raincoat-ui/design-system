@@ -267,7 +267,7 @@
         @Tokens private var tokens
         @Environment(\.isEnabled) private var isEnabled
         @Environment(\.layoutDirection) private var layoutDirection
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
         @FocusState private var isFocused: Bool
 
         var body: some View {
@@ -406,7 +406,7 @@
         let style: TokenTextStyle
         let color: TokenColor
 
-        @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
+        @TextScale(relativeTo: .body) private var textScale
 
         init(_ text: Text, style: TokenTextStyle, color: TokenColor) {
             self.text = text

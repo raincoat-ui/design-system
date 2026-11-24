@@ -97,12 +97,12 @@
         @Tokens private var tokens
         // How much each system text style enlarges text at the person's setting. A heading
         // needs the styles of the looks below it too.
-        @ScaledMetric(relativeTo: .largeTitle) private var largeTitle: CGFloat = 1
-        @ScaledMetric(relativeTo: .title2) private var title2: CGFloat = 1
-        @ScaledMetric(relativeTo: .title3) private var title3: CGFloat = 1
-        @ScaledMetric(relativeTo: .headline) private var headline: CGFloat = 1
-        @ScaledMetric(relativeTo: .body) private var bodyText: CGFloat = 1
-        @ScaledMetric(relativeTo: .caption) private var caption: CGFloat = 1
+        @TextScale(relativeTo: .largeTitle) private var largeTitle
+        @TextScale(relativeTo: .title2) private var title2
+        @TextScale(relativeTo: .title3) private var title3
+        @TextScale(relativeTo: .headline) private var headline
+        @TextScale(relativeTo: .body) private var bodyText
+        @TextScale(relativeTo: .caption) private var caption
 
         init(choice: TypographyChoice, maxLines: Int?) {
             self.choice = choice

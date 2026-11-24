@@ -3,6 +3,9 @@
 - Status: accepted
 - Date: 2026-11-24
 - Amends: [0015](0015-web-components.md), [0016](0016-native-components.md)
+- Amended: 2026-11-24, iOS draws its snapshots in a simulator, by drawing a window's layers
+  rather than with `ImageRenderer`, in a job of its own, with its baselines in
+  `packages/ios/__screenshots__`
 - Amended: 2026-11-24, Android sets a snapshot's font scale as the system does, not with a
   `Density`
 
@@ -102,6 +105,54 @@ generated `allSnapshots` and `<component>Examples`:
 
 Both record baselines only in CI, fail on a missing or different one, and have them accepted the
 same way as the web.
+
+**Amended 2026-11-24: iOS.** Building the iOS snapshots changed three things above and settled
+what was left open.
+
+- iOS draws the snapshots in an iPhone simulator, with `xcodebuild test`, not on macOS. On
+  macOS the components' scaled metrics ignore the Dynamic Type size: there, `accessibility5`
+  drew text at its default size, and the check below failed. The simulator draws with iOS and
+  its fonts, as an iPhone does. The tests are compiled for iOS only.
+- iOS draws a specimen through a window, not with `ImageRenderer`. `ImageRenderer` draws only
+  the views SwiftUI draws itself, and leaves out those UIKit provides, such as the text field of
+  an Input and the scroll view of the Tabs. The specimen is shown by a `UIHostingController` in a
+  window of its own, 480 points wide, whose traits are the snapshot's: light or dark, the
+  contrast, the text size, the layout direction, and a display scale of 1. The window's layers
+  are drawn (`layer.render(in:)`). Every view is a layer, those UIKit provides included, so the
+  layers draw a text field's text and a scroll view's content where it is scrolled to; a test of
+  the harness checks both. `drawHierarchy(in:afterScreenUpdates:)`, which draws a window as the
+  screen shows it, draws nothing there: a package's tests on the simulator have no window scene
+  to show a window in. Drawing the layers leaves out Core Animation's filters, such as the blur
+  of a material, so a view that uses one is drawn without it. Nothing in the window animates, so
+  a spinner is drawn where it starts.
+- An alert dialog is left out of the iOS snapshots. On iOS it is the system alert, which the
+  platform draws, not Raincoat.
+- iOS draws at a scale of 1, as above: a specimen 480 points wide is 480 pixels wide, as on the
+  web and on Android. A scale of 2 was tried: the 44 baselines of the Button and Typography
+  weighed 11 MB, where the web's 66 weigh 2.9 MB, in a repository everyone clones. A scale of 1
+  shows every change of layout, color, text, and direction, which is what the snapshots are for.
+- The snapshots run in an `ios snapshots` job of their own, as the web's do, which uploads the
+  `ios-snapshots` artifact. They run only when `RAINCOAT_SNAPSHOTS` is set, which xcodebuild
+  passes to the tests from `TEST_RUNNER_RAINCOAT_SNAPSHOTS`. The simulator reads the baselines
+  from the checkout and writes what it drew there, where the job collects it.
+- The baselines are in `packages/ios/__screenshots__/<theme>/<component>/<snapshot>.png`, outside
+  the package's targets. SwiftPM warns about every file in a target that is not source, and the
+  Swift mirror, which every app that uses the package clones, copies `Tests/`.
+- A drawn pixel matches its baseline when each of its channels is within 8 of 255 of the
+  baseline's. One pixel that does not match fails the snapshot.
+- The text is set in the snapshot's language (`typesettingLanguage`), as on a device set to that
+  language, so that line height, line breaks, and spacing follow its script.
+- Each snapshot checks that its text size is in effect: SwiftUI and the window are given it, and
+  body text grows as much as the system's body text there, within 1%: 3.12 times as large at
+  the largest size (53 points instead of 17). The check found the components' text growing 3.0
+  times: they multiplied token sizes by a scaled metric of 1. `@ScaledMetric` scales by a
+  factor of its own, 2.82 at the largest size whatever the value, which it rounds (1 became 3);
+  it is not the system font's ratio. The components now take the ratio of the system font's
+  sizes for the style, at the environment's Dynamic Type size and at the default. A test checks
+  every style they follow at every size.
+- Each component's test is `Tests/RaincoatTests/Snapshots/<Component>Snapshots.swift`. The run
+  fails when a spec that names a SwiftUI implementation has no such test, and on a baseline that
+  belongs to no theme, component, or snapshot.
 
 **Firefox and WebKit.** The React component tests, not the snapshots, also run in Firefox and
 WebKit, in CI, one job per browser, chosen with `RAINCOAT_BROWSER`. What a test asks of the
