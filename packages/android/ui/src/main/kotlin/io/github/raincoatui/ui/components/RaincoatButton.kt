@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
@@ -202,6 +203,12 @@ private fun ButtonLayout(
         val line = ceil((measurements.label.lineHeight * measurements.label.size).dp.toPx()).toInt()
         (maxOf(0, height.roundToPx() - line) / 2).toDp()
     }
+    // Around an icon alone, the space centers the icon in the height on every side, in whole
+    // pixels at the default font size. It stays the same when the icon grows with the text, so
+    // the button grows and stays square.
+    val paddingAroundIcon = with(density) {
+        (maxOf(0, height.roundToPx() - measurements.iconSize.dp.roundToPx()) / 2).toDp()
+    }
 
     // The button's layout size is what it shows. Where that is smaller than the minimum touch
     // target, Compose also gives the button the touches that land just outside it, and reports
@@ -245,8 +252,8 @@ private fun ButtonLayout(
                     colors.border?.let { Modifier.border(button.borderWidth.dp, it.toColor(), shape) } ?: Modifier,
                 )
                 .padding(
-                    horizontal = if (text == null) 0.dp else measurements.paddingInline.dp,
-                    vertical = if (text == null) 0.dp else paddingBlock,
+                    horizontal = if (text == null) paddingAroundIcon else measurements.paddingInline.dp,
+                    vertical = if (text == null) paddingAroundIcon else paddingBlock,
                 ),
             // The row follows the layout direction, so in right-to-left layouts the leading icon
             // is on the right.
@@ -263,7 +270,10 @@ private fun ButtonLayout(
                     text = text,
                     // The label takes the room the icons leave and wraps inside it.
                     modifier = Modifier.weight(1f, fill = false),
-                    style = measurements.label.toTextStyle().copy(textAlign = TextAlign.Center),
+                    style = measurements.label.toTextStyle().copy(
+                        textAlign = TextAlign.Center,
+                        lineBreak = LabelLineBreak,
+                    ),
                     color = { foreground },
                 )
             }
@@ -273,6 +283,16 @@ private fun ButtonLayout(
         }
     }
 }
+
+/**
+ * How the label breaks into lines: by the strict rules, so that no line of Japanese starts with
+ * a small kana or a prolonged sound mark.
+ */
+private val LabelLineBreak = LineBreak(
+    strategy = LineBreak.Strategy.Simple,
+    strictness = LineBreak.Strictness.Strict,
+    wordBreak = LineBreak.WordBreak.Default,
+)
 
 /**
  * This configuration with a touch target of at least [minimum] in each direction. The platform
