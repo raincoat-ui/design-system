@@ -7,7 +7,7 @@
 			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
 		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
 	})();
-</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.DsTppTjK.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</script><link rel="stylesheet" href="/design-system/_astro/print.C9eyqPGL.css" media="print"><link rel="stylesheet" href="/design-system/_astro/middleware.BIHqomj4.css"><style>@layer starlight.components.icon{svg[data-astro-cid-dtrqdpou]{color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
 </style><script type="module" src="/design-system/_astro/page.cNngjUgL.js"></script></head><body data-astro-cid-e5zlmhtl><a class="sl-skip-link" href="#_top" data-astro-cid-gqf5geeq>Skip to content</a><div class="page sl-flex" data-astro-cid-i2x5ll5c><header class="header" data-astro-cid-i2x5ll5c><div class="header" data-astro-cid-ipx4v6nm><div class="title-wrapper sl-flex" data-astro-cid-ipx4v6nm><a href="/design-system/" class="site-title sl-flex" data-astro-cid-jjlhdxu5><img class="light:sl-hidden print:hidden" alt="Raincoat" src="/design-system/_astro/raincoat-logo-dark.CMmnjvhr.svg" width="291" height="64" data-astro-cid-jjlhdxu5><img class="dark:sl-hidden print:block" alt="Raincoat" src="/design-system/_astro/raincoat-logo-light.DEUigS9Z.svg" width="291" height="64" data-astro-cid-jjlhdxu5><span class="sr-only" translate="no" data-astro-cid-jjlhdxu5>Raincoat</span></a></div><div class="sl-flex print:hidden" data-astro-cid-ipx4v6nm><site-search data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}" data-astro-cid-ip2d5p4j="true"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" data-astro-cid-ip2d5p4j><svg data-astro-cid-ip2d5p4j="true" aria-hidden="true" class="astro-dtrqdpou" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-cid-dtrqdpou><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block" aria-hidden="true" data-astro-cid-ip2d5p4j>Search</span><kbd class="sl-hidden md:sl-flex" style="display: none" data-astro-cid-ip2d5p4j><kbd data-astro-cid-ip2d5p4j>Ctrl</kbd><kbd data-astro-cid-ip2d5p4j>K</kbd></kbd></button><dialog style="padding: 0" aria-label="Search" data-astro-cid-ip2d5p4j><div class="dialog-frame sl-flex" data-astro-cid-ip2d5p4j><button data-close-modal class="sl-flex md:sl-hidden" data-astro-cid-ip2d5p4j>Cancel</button><div class="search-container" data-astro-cid-ip2d5p4j><div id="starlight__search" data-astro-cid-ip2d5p4j></div></div></div></dialog></site-search><script>
 	(() => {
 		const openBtn = document.querySelector('button[data-open-modal]');
@@ -85,7 +85,7 @@ color mode and fails if any pair is below its requirement.</p>
 </tr>
 </tbody>
 </table>
-<p>All 192 checks pass. The table lists each pair’s ratio.</p>
+<p>All 524 checks pass. The table lists each pair’s ratio.</p>
 <table>
 <thead>
 <tr>
@@ -121,6 +121,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>13.06:1</td>
 <td>18.97:1</td>
 <td>19.41:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.default</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
 </tr>
 <tr>
 <td><code dir="auto">color.fg.default</code><br>on <code dir="auto">color.control.default</code></td>
@@ -171,6 +179,30 @@ color mode and fails if any pair is below its requirement.</p>
 <td>15.32:1</td>
 </tr>
 <tr>
+<td><code dir="auto">color.fg.muted</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>7.83:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.muted</code><br>on <code dir="auto">color.control.default</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>6.98:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.muted</code><br>on <code dir="auto">color.control.hover</code></td>
+<td>Text</td>
+<td>5.90:1</td>
+<td>5.50:1</td>
+<td>8.67:1</td>
+<td>15.32:1</td>
+</tr>
+<tr>
 <td><code dir="auto">color.fg.inverse</code><br>on <code dir="auto">color.bg.inverse</code></td>
 <td>Text</td>
 <td>17.31:1</td>
@@ -203,6 +235,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>15.85:1</td>
 </tr>
 <tr>
+<td><code dir="auto">color.fg.accent</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>6.82:1</td>
+<td>14.44:1</td>
+<td>10.42:1</td>
+<td>17.15:1</td>
+</tr>
+<tr>
 <td><code dir="auto">color.fg.danger</code><br>on <code dir="auto">color.bg.canvas</code></td>
 <td>Text</td>
 <td>7.50:1</td>
@@ -225,6 +265,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>7.02:1</td>
 <td>9.36:1</td>
 <td>13.24:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.fg.danger</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>7.50:1</td>
+<td>10.00:1</td>
+<td>10.36:1</td>
+<td>14.33:1</td>
 </tr>
 <tr>
 <td><code dir="auto">color.fg.on-accent</code><br>on <code dir="auto">color.accent.default</code></td>
@@ -299,6 +347,110 @@ color mode and fails if any pair is below its requirement.</p>
 <td>17.54:1</td>
 </tr>
 <tr>
+<td><code dir="auto">color.border.strong</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.control</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.control</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>15.64:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.control</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>12.32:1</td>
+<td>15.64:1</td>
+<td>17.54:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.control</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.danger</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>5.40:1</td>
+<td>7.04:1</td>
+<td>10.36:1</td>
+<td>10.82:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.danger</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>5.18:1</td>
+<td>6.28:1</td>
+<td>10.36:1</td>
+<td>10.82:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.danger</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>4.88:1</td>
+<td>4.94:1</td>
+<td>9.36:1</td>
+<td>10.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.danger</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>5.40:1</td>
+<td>7.04:1</td>
+<td>10.36:1</td>
+<td>10.82:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.selected</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.selected</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>15.64:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.selected</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>12.32:1</td>
+<td>15.64:1</td>
+<td>17.54:1</td>
+</tr>
+<tr>
+<td><code dir="auto">color.border.selected</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
 <td><code dir="auto">color.border.focus</code><br>on <code dir="auto">color.bg.canvas</code></td>
 <td>Outline or icon</td>
 <td>17.31:1</td>
@@ -323,6 +475,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>14.44:1</td>
 </tr>
 <tr>
+<td><code dir="auto">color.border.focus</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
 <td><code dir="auto">button.focus-ring.color</code><br>on <code dir="auto">color.bg.canvas</code></td>
 <td>Outline or icon</td>
 <td>17.31:1</td>
@@ -345,6 +505,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>9.21:1</td>
 <td>18.97:1</td>
 <td>14.44:1</td>
+</tr>
+<tr>
+<td><code dir="auto">button.focus-ring.color</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
 </tr>
 <tr>
 <td><code dir="auto">button.primary.fg</code><br>on <code dir="auto">button.primary.bg.default</code></td>
@@ -419,6 +587,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>17.54:1</td>
 </tr>
 <tr>
+<td><code dir="auto">button.secondary.border</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
 <td><code dir="auto">button.ghost.fg</code><br>on <code dir="auto">color.bg.canvas</code></td>
 <td>Text</td>
 <td>17.31:1</td>
@@ -441,6 +617,14 @@ color mode and fails if any pair is below its requirement.</p>
 <td>13.06:1</td>
 <td>18.97:1</td>
 <td>19.41:1</td>
+</tr>
+<tr>
+<td><code dir="auto">button.ghost.fg</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
 </tr>
 <tr>
 <td><code dir="auto">button.ghost.fg</code><br>on <code dir="auto">button.ghost.bg.hover</code></td>
@@ -481,6 +665,486 @@ color mode and fails if any pair is below its requirement.</p>
 <td>10.36:1</td>
 <td>16.87:1</td>
 <td>7.61:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.hover</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.hover</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>15.64:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.hover</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>12.32:1</td>
+<td>15.64:1</td>
+<td>17.54:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.border.hover</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.focus-ring.color</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.focus-ring.color</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>11.70:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.focus-ring.color</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>9.21:1</td>
+<td>18.97:1</td>
+<td>14.44:1</td>
+</tr>
+<tr>
+<td><code dir="auto">card.focus-ring.color</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">dialog.fg</code><br>on <code dir="auto">dialog.bg</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">sheet.handle.color</code><br>on <code dir="auto">dialog.bg</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.label.fg</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.label.fg</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Text</td>
+<td>16.58:1</td>
+<td>16.58:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.label.fg</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Text</td>
+<td>15.64:1</td>
+<td>13.06:1</td>
+<td>18.97:1</td>
+<td>19.41:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.label.fg</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.description.fg</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>7.83:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.description.fg</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Text</td>
+<td>6.26:1</td>
+<td>6.98:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.description.fg</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Text</td>
+<td>5.90:1</td>
+<td>5.50:1</td>
+<td>8.67:1</td>
+<td>15.32:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.description.fg</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>7.83:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.error.fg</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Text</td>
+<td>7.50:1</td>
+<td>10.00:1</td>
+<td>10.36:1</td>
+<td>14.33:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.error.fg</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Text</td>
+<td>7.18:1</td>
+<td>8.92:1</td>
+<td>10.36:1</td>
+<td>14.33:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.error.fg</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Text</td>
+<td>6.78:1</td>
+<td>7.02:1</td>
+<td>9.36:1</td>
+<td>13.24:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.error.fg</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>7.50:1</td>
+<td>10.00:1</td>
+<td>10.36:1</td>
+<td>14.33:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.fg.default</code><br>on <code dir="auto">input.bg.default</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>16.58:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.fg.default</code><br>on <code dir="auto">input.bg.read-only</code></td>
+<td>Text</td>
+<td>15.64:1</td>
+<td>13.06:1</td>
+<td>18.97:1</td>
+<td>19.41:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.placeholder</code><br>on <code dir="auto">input.bg.default</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>6.98:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.default</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.default</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>15.64:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.default</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>12.32:1</td>
+<td>15.64:1</td>
+<td>17.54:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.default</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.invalid</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>5.40:1</td>
+<td>7.04:1</td>
+<td>10.36:1</td>
+<td>10.82:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.invalid</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>5.18:1</td>
+<td>6.28:1</td>
+<td>10.36:1</td>
+<td>10.82:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.invalid</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>4.88:1</td>
+<td>4.94:1</td>
+<td>9.36:1</td>
+<td>10.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.border.invalid</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>5.40:1</td>
+<td>7.04:1</td>
+<td>10.36:1</td>
+<td>10.82:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.focus-ring.color</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.focus-ring.color</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>11.70:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.focus-ring.color</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>9.21:1</td>
+<td>18.97:1</td>
+<td>14.44:1</td>
+</tr>
+<tr>
+<td><code dir="auto">input.focus-ring.color</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.default</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>7.83:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.default</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Text</td>
+<td>6.26:1</td>
+<td>6.98:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.default</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Text</td>
+<td>5.90:1</td>
+<td>5.50:1</td>
+<td>8.67:1</td>
+<td>15.32:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.default</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>6.53:1</td>
+<td>7.83:1</td>
+<td>9.60:1</td>
+<td>16.58:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.selected</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.selected</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Text</td>
+<td>16.58:1</td>
+<td>16.58:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.selected</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Text</td>
+<td>15.64:1</td>
+<td>13.06:1</td>
+<td>18.97:1</td>
+<td>19.41:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.selected</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.hover</code><br>on <code dir="auto">tabs.bg.hover</code></td>
+<td>Text</td>
+<td>15.64:1</td>
+<td>13.06:1</td>
+<td>18.97:1</td>
+<td>19.41:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.fg.hover</code><br>on <code dir="auto">tabs.bg.pressed</code></td>
+<td>Text</td>
+<td>13.66:1</td>
+<td>9.20:1</td>
+<td>16.58:1</td>
+<td>17.31:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.indicator.color</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.indicator.color</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>15.64:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.indicator.color</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>12.32:1</td>
+<td>15.64:1</td>
+<td>17.54:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.indicator.color</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.focus-ring.color</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.focus-ring.color</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>11.70:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.focus-ring.color</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>9.21:1</td>
+<td>18.97:1</td>
+<td>14.44:1</td>
+</tr>
+<tr>
+<td><code dir="auto">tabs.focus-ring.color</code><br>on <code dir="auto">color.bg.raised</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>13.12:1</td>
+<td>21.00:1</td>
+<td>15.62:1</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.border.color</code><br>on <code dir="auto">toast.bg</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.border.color</code><br>on <code dir="auto">color.bg.canvas</code></td>
+<td>Outline or icon</td>
+<td>17.31:1</td>
+<td>17.54:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.border.color</code><br>on <code dir="auto">color.bg.surface</code></td>
+<td>Outline or icon</td>
+<td>16.58:1</td>
+<td>15.64:1</td>
+<td>17.31:1</td>
+<td>18.97:1</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.border.color</code><br>on <code dir="auto">color.bg.subtle</code></td>
+<td>Outline or icon</td>
+<td>15.64:1</td>
+<td>12.32:1</td>
+<td>15.64:1</td>
+<td>17.54:1</td>
+</tr>
+<tr>
+<td><code dir="auto">toast.fg</code><br>on <code dir="auto">toast.bg</code></td>
+<td>Text</td>
+<td>17.31:1</td>
+<td>18.59:1</td>
+<td>21.00:1</td>
+<td>21.00:1</td>
 </tr>
 </tbody>
 </table>
