@@ -52,35 +52,56 @@ class TabsScreenTest {
     private fun tab(name: String): SemanticsNodeInteraction =
         compose.onNode(isTab and (hasText(name) or hasContentDescription(name)))
 
+    /** Every node a service is given, as the service sees it now. */
+    private fun serviceTree(): List<AccessibilityNodeInfo> {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        return automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
+    }
+
     /**
      * The node an accessibility service, such as TalkBack, stops on for a tab: the one it can
      * focus that carries the name, as its own text or description or a child's. A tab that is
      * already selected is not offered a click, so the node is found by focus, not by click.
      */
-    private fun serviceNode(name: String): AccessibilityNodeInfo {
+    private fun serviceNode(name: String, tree: List<AccessibilityNodeInfo>): AccessibilityNodeInfo? =
+        tree.firstOrNull { node ->
+            node.isScreenReaderFocusable &&
+                (listOf(node) + children(node)).any { it.text?.toString() == name || it.contentDescription?.toString() == name }
+        }
+
+    /** One line per node: what a service reads of it, and its state. */
+    private fun describe(tree: List<AccessibilityNodeInfo>): String = tree.joinToString("\n") { node ->
+        val role = node.extras.getCharSequence("AccessibilityNodeInfo.roleDescription")
+        "${node.className} text=${node.text} description=${node.contentDescription} role=$role " +
+            "selected=${node.isSelected} clickable=${node.isClickable} " +
+            "screenReaderFocusable=${node.isScreenReaderFocusable}"
+    }
+
+    /**
+     * Waits until the service is given the tab [name] in the state [check] describes. Compose
+     * tells a service of a change a moment after it happens. If it never is, the failure lists
+     * every node the service is given.
+     */
+    private fun assertService(name: String, state: String, check: (AccessibilityNodeInfo) -> Boolean) {
         compose.waitForIdle()
-        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
-        var seen = emptyList<AccessibilityNodeInfo>()
-        // The tree is built once a service is listening, which takes a moment.
+        var tree = emptyList<AccessibilityNodeInfo>()
         repeat(50) {
-            seen = automation.rootInActiveWindow?.let(::withDescendants).orEmpty()
-            val found = seen.firstOrNull { node ->
-                node.isScreenReaderFocusable &&
-                    (listOf(node) + children(node)).any { it.text?.toString() == name || it.contentDescription?.toString() == name }
-            }
-            if (found != null) return found
+            tree = serviceTree()
+            if (serviceNode(name, tree)?.let(check) == true) return
             Thread.sleep(100)
         }
-        val tree = seen.joinToString("\n") { "${it.className} text=${it.text} description=${it.contentDescription}" }
-        throw AssertionError("no tab named \"$name\" among the ${seen.size} nodes a service is given:\n$tree")
+        throw AssertionError("a service is not given the tab \"$name\" $state. It is given:\n${describe(tree)}")
     }
 
     private fun children(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
         (0 until node.childCount).mapNotNull(node::getChild)
 
     /** A node and everything under it. Compose does not answer a search by text, so walk the tree. */
-    private fun withDescendants(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> =
-        listOf(node) + children(node).flatMap(::withDescendants)
+    private fun withDescendants(node: AccessibilityNodeInfo): List<AccessibilityNodeInfo> {
+        // A node can be one the service cached before the last change.
+        node.refresh()
+        return listOf(node) + children(node).flatMap(::withDescendants)
+    }
 
     @Test
     fun eachRowIsASelectableGroupOfTabsNamedByTheirLabels() {
@@ -101,14 +122,12 @@ class TabsScreenTest {
 
     @Test
     fun aServiceIsGivenEachTabWithItsSelectedState() {
-        assertTrue(serviceNode("Details").isSelected)
-        assertFalse(serviceNode("Reviews").isSelected)
+        assertService("Details", "as selected") { it.isSelected }
         // A tab that is not selected can be activated by the service.
-        assertTrue(serviceNode("Reviews").isClickable)
+        assertService("Reviews", "as not selected, and activatable") { !it.isSelected && it.isClickable }
         tab("Reviews").performClick()
-        assertTrue(serviceNode("Reviews").isSelected)
-        assertFalse(serviceNode("Details").isSelected)
-        assertTrue(serviceNode("Details").isClickable)
+        assertService("Reviews", "as selected") { it.isSelected }
+        assertService("Details", "as not selected, and activatable") { !it.isSelected && it.isClickable }
     }
 
     @Test
