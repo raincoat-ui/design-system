@@ -47,6 +47,7 @@ import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.raincoatui.tokens.ColorMode
 import io.github.raincoatui.tokens.Density
 import io.github.raincoatui.tokens.InputSize
@@ -65,6 +66,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 /**
@@ -397,6 +399,34 @@ class RaincoatInputTest(themeId: String) {
         node.assertIsNotFocused()
         node.performTouchInput { click(Offset(centerX, -reach + 1)) }
         node.assertIsFocused()
+    }
+
+    // Text size
+
+    @Test
+    fun `the field grows with the font size setting, and the space above and below the value stays`() {
+        val input = tokens().input
+        RuntimeEnvironment.setFontScale(2f)
+        show { Field(labelHidden = true, leadingIcon = Block) }
+        val pixels = field().pixels()
+        val line = input.value.md.lineHeight * input.value.md.size
+        // Android enlarges big text by less than the setting says, so ask it for the sizes. The
+        // line height stays a multiple of the font size.
+        val (scaledLine, scaledIcon) = with(compose.density) {
+            ceil(input.value.md.lineHeight * input.value.md.size.sp.toPx()).toInt() to
+                input.iconSize.md.sp.roundToPx()
+        }
+        assertTrue("one line is $scaledLine pixels at twice the font size", scaledLine > 1.5 * line)
+        // The line is taller, and the space above and below it is what it was.
+        val padding = (input.height.md.toInt() - ceil(line).toInt()) / 2
+        assertEquals("a line of $scaledLine and $padding above and below", scaledLine + 2 * padding, pixels.height)
+        // The icon grows with the text.
+        assertTrue("the icon is $scaledIcon pixels", scaledIcon > input.iconSize.md)
+        assertEquals(
+            "columns of the icon",
+            scaledIcon,
+            pixels.columnsFilledWith(input.fg.default, rows = scaledIcon).size,
+        )
     }
 
     // Layout

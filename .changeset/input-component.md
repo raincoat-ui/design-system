@@ -22,5 +22,7 @@ line or several. It follows `specs/components/input/spec.yaml`.
   its message, and the description is part of the field's semantics after its name.
 
 Every size is as tall as the Button of the same size. A field shorter than the minimum touch
-target still takes touches across that target, without taking more room than it shows. The
+target still takes touches across that target, without taking more room than it shows. As the
+person's text size grows, the value, the label, and the leading icon grow with it, and the space
+above and below the value stays as it is, so the field grows taller, as the Button does. The
 generated `InputSize` and `InputType` types are exported on every platform.

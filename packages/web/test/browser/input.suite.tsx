@@ -112,6 +112,19 @@ async function withMedia(media: Media, run: () => Promise<void>) {
 /** Whether the browser can size a multi-line field to its content: Chromium can. */
 const sizesToContent = () => CSS.supports("field-sizing", "content");
 
+/**
+ * Runs with the text size enlarged by `scale`: a larger root font size, as a browser's text
+ * size setting sets. The snapshots draw the largest text size the same way.
+ */
+async function withTextSize(scale: number, run: () => Promise<void>) {
+  document.documentElement.style.fontSize = `${scale * 100}%`;
+  try {
+    await run();
+  } finally {
+    document.documentElement.style.fontSize = "";
+  }
+}
+
 /** Undoes what serverRender set up. */
 const serverRendered: (() => void)[] = [];
 
@@ -764,13 +777,14 @@ export function describeInput(environment: string) {
         // The text starts after the padding, the icon, and the gap; and ends before the padding.
         const padding = number(`input.padding-inline.${size}`);
         const iconSize = number(`input.icon-size.${size}`);
-        expect(pixels(computed(control).paddingInlineStart)).toBe(
+        expect(pixels(computed(control).paddingInlineStart)).toBeCloseTo(
           padding + iconSize + number("input.gap"),
+          2,
         );
         expect(pixels(computed(control).paddingInlineEnd)).toBe(padding);
         const icon = screen.getByTestId("icon").element().getBoundingClientRect();
-        expect(icon.width).toBe(iconSize);
-        expect(icon.height).toBe(iconSize);
+        expect(icon.width).toBeCloseTo(iconSize, 2);
+        expect(icon.height).toBeCloseTo(iconSize, 2);
         expect(icon.left).toBeCloseTo(box.left + number("input.border-width") + padding, 2);
         expect(icon.top + icon.height / 2).toBeCloseTo(box.top + box.height / 2, 2);
 
@@ -802,6 +816,76 @@ export function describeInput(environment: string) {
             number(`button.height.${size}`, density),
           );
         }
+      });
+    });
+
+    describe("at twice the text size", () => {
+      test.each(INPUT_SIZES)(
+        "the %s value and icon are twice as large, and the space above and below the value stays",
+        async (size) => {
+          await withTextSize(2, async () => {
+            const screen = await render(
+              <Stage>
+                <Input
+                  size={size}
+                  label="Email"
+                  defaultValue="ana"
+                  leadingIcon={<Dot id="icon" />}
+                />
+              </Stage>,
+            );
+            const control = screen.getByRole("textbox", { name: "Email" }).element();
+            const style = computed(control);
+            const box = parts(control).field.getBoundingClientRect();
+            const height = number(`input.height.${size}`);
+            const lineHeight = number(`input.value.${size}.line-height`);
+            const iconSize = number(`input.icon-size.${size}`);
+            // What it is at the default text size.
+            const padding = (height - lineHeight) / 2 - number("input.border-width");
+
+            expect(pixels(style.fontSize)).toBeCloseTo(
+              2 * number(`input.value.${size}.font-size`),
+              2,
+            );
+            expect(pixels(style.lineHeight)).toBeCloseTo(2 * lineHeight, 2);
+            expect(pixels(style.paddingTop)).toBeCloseTo(padding, 2);
+            expect(pixels(style.paddingBottom)).toBeCloseTo(padding, 2);
+            // So the field is taller by what the line grew.
+            expect(box.height).toBeCloseTo(height + lineHeight, 1);
+
+            // The icon grows with the text, beside the line, and the text starts after it.
+            const icon = screen.getByTestId("icon").element().getBoundingClientRect();
+            expect(icon.width).toBeCloseTo(2 * iconSize, 2);
+            expect(icon.height).toBeCloseTo(2 * iconSize, 2);
+            expect(icon.top + icon.height / 2).toBeCloseTo(box.top + box.height / 2, 1);
+            expect(pixels(style.paddingInlineStart)).toBeCloseTo(
+              number(`input.padding-inline.${size}`) + 2 * iconSize + number("input.gap"),
+              2,
+            );
+          });
+        },
+      );
+
+      test("a multi-line field keeps the same space, and its icon stays beside the first line", async () => {
+        await withTextSize(2, async () => {
+          const screen = await render(
+            <Stage>
+              <Input label="Message" multiline rows={3} leadingIcon={<Dot id="icon" />} />
+            </Stage>,
+          );
+          const control = screen.getByRole("textbox", { name: "Message" }).element();
+          const box = parts(control).field.getBoundingClientRect();
+          const height = number("input.height.md");
+          const lineHeight = number("input.value.md.line-height");
+          const padding = (height - lineHeight) / 2 - number("input.border-width");
+          expect(pixels(computed(control).paddingTop)).toBeCloseTo(padding, 2);
+          // Three lines, each twice as tall, and the space above and below them.
+          expect(box.height).toBeCloseTo(height - lineHeight + 3 * 2 * lineHeight, 1);
+          // The icon is centered on the first line.
+          const icon = screen.getByTestId("icon").element().getBoundingClientRect();
+          const firstLine = box.top + number("input.border-width") + padding + lineHeight;
+          expect(icon.top + icon.height / 2).toBeCloseTo(firstLine, 1);
+        });
       });
     });
 

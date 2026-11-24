@@ -21,7 +21,15 @@ import {
 } from "../../generated/specs.js";
 import { cn } from "../../lib/utils.js";
 
-/** Classes that differ by size, for each part. Every value is a token. */
+/**
+ * Classes that differ by size, for each part. Every value is a token.
+ *
+ * Text, and the icon with it, grow with the person's text size: the icon is its token size times
+ * the text scale, which is 1 at the default size. The text scale is font.size.16 (1rem, which
+ * the setting enlarges) over dimension.16 (16px, which it does not), as for the Button.
+ * tan(atan2(a, b)) is a / b as a number: calc() cannot yet divide one length by another in
+ * every browser.
+ */
 const SIZES = {
   sm: {
     label:
@@ -31,18 +39,24 @@ const SIZES = {
     field: "min-h-(--rc-input-height-sm)",
     control: "px-(--rc-input-padding-inline-sm)",
     withIcon:
-      "ps-[calc(var(--rc-input-padding-inline-sm)_+_var(--rc-input-icon-size-sm)_+_var(--rc-input-gap))]",
-    icon: "start-(--rc-input-padding-inline-sm) top-[calc((var(--rc-input-height-sm)_-_var(--rc-input-icon-size-sm))_/_2_-_var(--rc-input-border-width))] size-(--rc-input-icon-size-sm) [&_svg]:size-(--rc-input-icon-size-sm)",
-    // The space above the first line of a multi-line field, and below the last: the first line
-    // sits where the text of a one-line field does.
-    lines: "py-[calc((var(--rc-input-height-sm)_-_1lh)_/_2_-_var(--rc-input-border-width))]",
+      "ps-[calc(var(--rc-input-padding-inline-sm)_+_var(--rc-input-icon-size-sm)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_+_var(--rc-input-gap))]",
+    // The icon grows with the text and sits beside the first line: 1lh is the value's line
+    // height, which the field sets.
+    icon: "start-(--rc-input-padding-inline-sm) top-[calc((var(--rc-input-height-sm)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width)_+_1lh_/_2_-_var(--rc-input-icon-size-sm)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_/_2)] size-[calc(var(--rc-input-icon-size-sm)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))] [&_svg]:size-[calc(var(--rc-input-icon-size-sm)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))]",
+    // The space above and below the value. It is what it is at the default text size, so
+    // that larger text makes the field taller and the space stays: one line at the default
+    // size is one line now, divided by the text scale.
+    paddingBlock:
+      "py-[calc((var(--rc-input-height-sm)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width))]",
     // On a touch screen, how far the control reaches past the field's outline, above and
-    // below, so that it is at least the minimum target tall.
+    // below, so that it is at least the minimum target tall. The field is one line, the
+    // space above and below it, and its outline.
     reach:
-      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-sm)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))]",
-    // The same for a field of one row of text, whose first line stays in place.
+      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-sm)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))]",
+    // The same for a multi-line field of one row, whose text starts at the top of the
+    // control: the space above grows by as much as the control reaches.
     reachLines:
-      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-sm)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))] pointer-coarse:py-[calc((var(--rc-input-height-sm)_-_1lh)_/_2_-_var(--rc-input-border-width)_-_min(0px,calc((var(--rc-input-height-sm)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width))))]",
+      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-sm)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))] pointer-coarse:py-[calc((var(--rc-input-height-sm)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width)_-_min(0px,calc((var(--rc-input-height-sm)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width))))]",
   },
   md: {
     label:
@@ -52,13 +66,14 @@ const SIZES = {
     field: "min-h-(--rc-input-height-md)",
     control: "px-(--rc-input-padding-inline-md)",
     withIcon:
-      "ps-[calc(var(--rc-input-padding-inline-md)_+_var(--rc-input-icon-size-md)_+_var(--rc-input-gap))]",
-    icon: "start-(--rc-input-padding-inline-md) top-[calc((var(--rc-input-height-md)_-_var(--rc-input-icon-size-md))_/_2_-_var(--rc-input-border-width))] size-(--rc-input-icon-size-md) [&_svg]:size-(--rc-input-icon-size-md)",
-    lines: "py-[calc((var(--rc-input-height-md)_-_1lh)_/_2_-_var(--rc-input-border-width))]",
+      "ps-[calc(var(--rc-input-padding-inline-md)_+_var(--rc-input-icon-size-md)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_+_var(--rc-input-gap))]",
+    icon: "start-(--rc-input-padding-inline-md) top-[calc((var(--rc-input-height-md)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width)_+_1lh_/_2_-_var(--rc-input-icon-size-md)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_/_2)] size-[calc(var(--rc-input-icon-size-md)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))] [&_svg]:size-[calc(var(--rc-input-icon-size-md)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))]",
+    paddingBlock:
+      "py-[calc((var(--rc-input-height-md)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width))]",
     reach:
-      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-md)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))]",
+      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-md)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))]",
     reachLines:
-      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-md)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))] pointer-coarse:py-[calc((var(--rc-input-height-md)_-_1lh)_/_2_-_var(--rc-input-border-width)_-_min(0px,calc((var(--rc-input-height-md)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width))))]",
+      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-md)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))] pointer-coarse:py-[calc((var(--rc-input-height-md)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width)_-_min(0px,calc((var(--rc-input-height-md)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width))))]",
   },
   lg: {
     label:
@@ -68,13 +83,14 @@ const SIZES = {
     field: "min-h-(--rc-input-height-lg)",
     control: "px-(--rc-input-padding-inline-lg)",
     withIcon:
-      "ps-[calc(var(--rc-input-padding-inline-lg)_+_var(--rc-input-icon-size-lg)_+_var(--rc-input-gap))]",
-    icon: "start-(--rc-input-padding-inline-lg) top-[calc((var(--rc-input-height-lg)_-_var(--rc-input-icon-size-lg))_/_2_-_var(--rc-input-border-width))] size-(--rc-input-icon-size-lg) [&_svg]:size-(--rc-input-icon-size-lg)",
-    lines: "py-[calc((var(--rc-input-height-lg)_-_1lh)_/_2_-_var(--rc-input-border-width))]",
+      "ps-[calc(var(--rc-input-padding-inline-lg)_+_var(--rc-input-icon-size-lg)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_+_var(--rc-input-gap))]",
+    icon: "start-(--rc-input-padding-inline-lg) top-[calc((var(--rc-input-height-lg)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width)_+_1lh_/_2_-_var(--rc-input-icon-size-lg)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_/_2)] size-[calc(var(--rc-input-icon-size-lg)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))] [&_svg]:size-[calc(var(--rc-input-icon-size-lg)_*_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))]",
+    paddingBlock:
+      "py-[calc((var(--rc-input-height-lg)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width))]",
     reach:
-      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-lg)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))]",
+      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-lg)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))]",
     reachLines:
-      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-lg)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))] pointer-coarse:py-[calc((var(--rc-input-height-lg)_-_1lh)_/_2_-_var(--rc-input-border-width)_-_min(0px,calc((var(--rc-input-height-lg)_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width))))]",
+      "pointer-coarse:my-[min(0px,calc((var(--rc-input-height-lg)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width)))] pointer-coarse:py-[calc((var(--rc-input-height-lg)_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16))))_/_2_-_var(--rc-input-border-width)_-_min(0px,calc((var(--rc-input-height-lg)_+_1lh_-_1lh_/_tan(atan2(var(--rc-font-size-16),var(--rc-dimension-16)))_-_var(--rc-input-target-minimum))_/_2_-_var(--rc-input-border-width))))]",
   },
 } satisfies Record<InputSize, Record<string, string>>;
 
@@ -84,8 +100,16 @@ const HEIGHTS = {
   lg: "var(--rc-input-height-lg)",
 } satisfies Record<InputSize, string>;
 
-/** The height of a multi-line field of `rows` lines, as an inline style of the field. */
-const linesHeight = (size: InputSize, rows: number) => `calc(${HEIGHTS[size]} + ${rows - 1} * 1lh)`;
+/** The text scale: see SIZES. */
+const TEXT_SCALE = "tan(atan2(var(--rc-font-size-16), var(--rc-dimension-16)))";
+
+/**
+ * The height of a multi-line field of `rows` lines, as an inline style of the field: its lines,
+ * and the space above and below them, which is the height of one field less one line at the
+ * default text size.
+ */
+const linesHeight = (size: InputSize, rows: number) =>
+  `calc(${HEIGHTS[size]} + ${rows} * 1lh - 1lh / ${TEXT_SCALE})`;
 
 // Content that is left-to-right whatever the language: the field stays left-to-right, its icon
 // included, in a right-to-left layout.
@@ -120,8 +144,9 @@ const classes = {
     "text-(--rc-input-fg-default) placeholder:text-(--rc-input-placeholder) placeholder:opacity-100",
     "disabled:cursor-not-allowed disabled:text-(--rc-input-fg-disabled) disabled:placeholder:text-(--rc-input-fg-disabled)",
   ],
-  // A one-line field. A browser centers its line of text.
-  oneLine: "py-0 autofill:my-0",
+  // A one-line field does not reach past its outline while the browser has autofilled it, so
+  // that the autofill fill stays inside the field.
+  oneLine: "autofill:my-0",
   // A multi-line field grows with its content where the browser can size it, and otherwise
   // the person can make it taller.
   lines:
@@ -277,7 +302,7 @@ function Input(props: InputProps) {
           sizes.value,
           sizes.control,
           leadingIcon != null && sizes.withIcon,
-          sizes.lines,
+          sizes.paddingBlock,
           classes.lines,
           // A field of one row is shorter than the touch target.
           rows === 1 && sizes.reachLines,
@@ -296,6 +321,7 @@ function Input(props: InputProps) {
           sizes.value,
           sizes.control,
           leadingIcon != null && sizes.withIcon,
+          sizes.paddingBlock,
           classes.oneLine,
           sizes.reach,
         )}

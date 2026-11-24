@@ -197,6 +197,8 @@ including `ref`, `value`, `defaultValue`, `onChange`, `name`, `required`, `disab
 - **Focus.** The focus ring is drawn whenever the field has focus.
 - **Touch.** On a touch screen a small field can still be touched across the theme's minimum
   target size. The extra area takes no room in the layout.
+- **Text size.** The value, the label, and the leading icon grow with the person's text size.
+  The space above and below the value stays as it is, so the field grows taller.
 - **Left to right.** Email, phone, and web address fields stay left-to-right in a right-to-left
   layout, their icon included.
 - **Multi-line.** Where the browser can size a field to its content (Chrome and Edge), it grows
