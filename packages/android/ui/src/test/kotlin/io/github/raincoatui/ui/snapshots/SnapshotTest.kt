@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.LayoutDirection
@@ -25,6 +24,7 @@ import io.github.raincoatui.tokens.Density
 import io.github.raincoatui.tokens.RaincoatTokenSet
 import io.github.raincoatui.ui.LocalRaincoatTokens
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.captureRedrawn
 import io.github.raincoatui.ui.generated.SpecExample
 import io.github.raincoatui.ui.generated.VisualSnapshot
 import io.github.raincoatui.ui.generated.allSnapshots
@@ -175,7 +175,8 @@ internal abstract class SnapshotTest<Properties>(
         }
         compose.waitForIdle()
 
-        val image = compose.onNodeWithTag(SPECIMEN).captureToImage()
+        // From a frame drawn now, so that no skipped frame is ever taken for the specimen (Capture.kt).
+        val image = compose.onNodeWithTag(SPECIMEN).captureRedrawn(compose)
         // The content is as tall as it needs, up to the window. A capture shows nothing below it.
         val height = checkNotNull(window).height
         if (image.height >= height) {
