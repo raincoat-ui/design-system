@@ -83,15 +83,9 @@
             HStack(alignment: .top, spacing: toast.gap) {
                 // The message and the action share a line while they fit. When they do not, the
                 // action moves below the message, at the end.
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .top, spacing: toast.gap) {
-                        messageText
-                        actionButton
-                    }
-                    VStack(alignment: .trailing, spacing: toast.gap) {
-                        messageText.frame(maxWidth: .infinity, alignment: .leading)
-                        actionButton
-                    }
+                MessageAndAction(spacing: toast.gap) {
+                    messageText
+                    actionButton
                 }
                 closeButton
             }
@@ -108,15 +102,11 @@
             }
             .offset(y: swipe)
             .simultaneousGesture(swipeDown)
-            // Escape closes the toast while the keyboard is on one of its buttons, and VoiceOver's
-            // escape gesture while VoiceOver is in it.
-            .onKeyPress(.escape) {
-                guard let control else { return .ignored }
-                control.close()
-                return .handled
-            }
             .accessibilityElement(children: .contain)
+            // VoiceOver's escape gesture closes the toast.
             .accessibilityAction(.escape) { control?.close() }
+            // Exactly as tall as its content, whatever height it is offered.
+            .fixedSize(horizontal: false, vertical: true)
             // At most the panel width; the toast itself is as wide as its content.
             .frame(maxWidth: toast.maxWidth)
         }
@@ -181,6 +171,64 @@
                         swipe = 0
                     }
                 }
+        }
+    }
+
+    /// The message, and the action after it while the two fit on one line. When they do not, the
+    /// message takes the whole width and wraps, and the action moves below it, at the end.
+    private struct MessageAndAction: Layout {
+        let spacing: CGFloat
+
+        func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache _: inout ()) -> CGSize {
+            arrangement(width: proposal.width, subviews: subviews).size
+        }
+
+        func placeSubviews(in bounds: CGRect, proposal _: ProposedViewSize, subviews: Subviews, cache _: inout ()) {
+            let frames = arrangement(width: bounds.width, subviews: subviews).frames
+            for (subview, frame) in zip(subviews, frames) {
+                subview.place(
+                    at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+                    anchor: .topLeading,
+                    proposal: ProposedViewSize(frame.size)
+                )
+            }
+        }
+
+        /// Where the message and the action go in a given width, or in their ideal width when
+        /// there is no limit.
+        private func arrangement(width: CGFloat?, subviews: Subviews) -> (size: CGSize, frames: [CGRect]) {
+            guard let message = subviews.first else { return (.zero, []) }
+            let available = width ?? .infinity
+            let line = message.sizeThatFits(.unspecified)
+            guard subviews.count > 1 else {
+                let size =
+                    line.width <= available
+                    ? line : message.sizeThatFits(ProposedViewSize(width: available, height: nil))
+                return (size, [CGRect(origin: .zero, size: size)])
+            }
+            let action = subviews[1].sizeThatFits(.unspecified)
+            if line.width + spacing + action.width <= available {
+                let size = CGSize(width: line.width + spacing + action.width, height: max(line.height, action.height))
+                return (
+                    size,
+                    [
+                        CGRect(origin: .zero, size: line),
+                        CGRect(x: line.width + spacing, y: 0, width: action.width, height: action.height),
+                    ]
+                )
+            }
+            let wrapped = message.sizeThatFits(ProposedViewSize(width: available, height: nil))
+            let width = max(available, action.width)
+            return (
+                CGSize(width: width, height: wrapped.height + spacing + action.height),
+                [
+                    CGRect(x: 0, y: 0, width: width, height: wrapped.height),
+                    CGRect(
+                        x: width - action.width, y: wrapped.height + spacing, width: action.width,
+                        height: action.height
+                    ),
+                ]
+            )
         }
     }
 

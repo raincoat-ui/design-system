@@ -22,23 +22,22 @@
         /// - Parameters:
         ///   - mode: The color mode to draw in, given by a theme that answers every request with
         ///     that mode's tokens, as the Button's rendering tests do.
-        ///   - width: The width offered to the view, or nil for its own ideal width. With a width,
-        ///     the view is offered a tall height too, as a screen offers it: a toast's
-        ///     `ViewThatFits` measures wrongly when offered a width and no height. The toast is no
-        ///     taller than its content either way.
+        ///   - width: The width offered to the view, or nil for its own ideal width.
+        ///   - height: The height offered to the view, or nil for its own ideal height.
         init(
             _ view: some View,
             theme: RaincoatTheme = .base,
             mode: ColorMode = .light,
             density: Density = .comfortable,
-            width: CGFloat? = nil
+            width: CGFloat? = nil,
+            height: CGFloat? = nil
         ) throws {
             let fixed = RaincoatTheme(id: "\(theme.id)-\(mode.rawValue)") { _, density in
                 theme.tokens(mode: mode, density: density)
             }
             let renderer = ImageRenderer(content: view.raincoatTheme(fixed).raincoatDensity(density))
             renderer.scale = 1
-            renderer.proposedSize = ProposedViewSize(width: width, height: width == nil ? nil : 2000)
+            renderer.proposedSize = ProposedViewSize(width: width, height: height)
             let image = try #require(renderer.cgImage)
             self.width = image.width
             self.height = image.height
@@ -114,6 +113,14 @@
             let drawing = try Drawing(view, theme: theme, density: density)
             #expect(drawing.height == expected)
         }
+    }
+
+    @MainActor
+    @Test func offeredAScreenfulAToastIsAsTallAsItsContent() throws {
+        let set = tokens()
+        let expected = Int(set.button.height.sm + 2 * (set.toast.paddingBlock + set.toast.border.width))
+        let drawing = try Drawing(RaincoatToast("Message archived"), width: 400, height: 800)
+        #expect(drawing.height == expected)
     }
 
     @MainActor
