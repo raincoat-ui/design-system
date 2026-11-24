@@ -188,10 +188,25 @@ jobs:
       # library, built with the Android SDK that the runner provides, and their tests run on
       # the JVM with Robolectric, so no emulator is needed. licensee is the license gate for
       # shipped dependencies.
+      #
+      # The tests include the visual snapshots of the Compose components: every snapshot of
+      # specs/snapshots.yaml, in every theme, compared with its baseline in
+      # packages/android/ui/src/test/__screenshots__. A missing or different baseline fails the
+      # job. --continue runs the other tests and the license gate all the same.
       - name: Test, and check the licenses of shipped dependencies
         run: |
           export JAVA_HOME="$JAVA_HOME_21_X64"
-          ./gradlew test licensee --no-daemon --console=plain
+          ./gradlew test licensee --continue --no-daemon --console=plain
+      # What the snapshots drew for a baseline that is missing or differs, laid out as the
+      # baselines are, so that it can be reviewed and committed (CONTRIBUTING.md).
+      - name: Keep what the snapshots drew
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-snapshots
+          path: packages/android/ui/build/snapshots/
+          if-no-files-found: ignore
+          retention-days: 14
 
   web:
     name: react components (${{ matrix.browser }})

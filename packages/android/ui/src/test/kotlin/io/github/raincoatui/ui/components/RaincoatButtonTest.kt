@@ -41,11 +41,11 @@ import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertTouchHeightIsEqualTo
 import androidx.compose.ui.test.assertTouchWidthIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.click
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -70,8 +70,10 @@ import io.github.raincoatui.tokens.RaincoatTokenSet
 import io.github.raincoatui.tokens.TokenColor
 import io.github.raincoatui.tokens.TokenFormat
 import io.github.raincoatui.ui.RaincoatTheme
+import io.github.raincoatui.ui.captureRedrawn
 import io.github.raincoatui.ui.generated.allThemes
 import io.github.raincoatui.ui.toColor
+import java.text.Normalizer
 import kotlin.math.ceil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -158,7 +160,7 @@ class RaincoatButtonTest(themeId: String) {
     /** The color behind the content of the current scene. */
     private var canvas: TokenColor = tokens().color.bg.canvas
 
-    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureToImage().toPixelMap()
+    private fun SemanticsNodeInteraction.pixels(): PixelMap = captureRedrawn(compose).toPixelMap()
 
     private fun PixelMap.has(color: TokenColor, x: Int, y: Int): Boolean {
         val pixel = this[x, y]
@@ -642,6 +644,23 @@ class RaincoatButtonTest(themeId: String) {
         }
         assertTrue("the label wraps", wrapped)
         assertEquals("lines that end inside a word", emptyList<String>(), split)
+    }
+
+    @Test
+    fun `a decomposed Korean label draws and breaks as its composed form does`() {
+        RuntimeEnvironment.setQualifiers("+b+ko")
+        val composed = "변경 사항을 모두 저장하고 업데이트된 버전을 모든 검토자에게 보내기"
+        // Hangul as letters rather than syllables, as in file names from some systems.
+        val decomposed = Normalizer.normalize(composed, Normalizer.Form.NFD)
+        assertTrue("the label is decomposed", decomposed != composed)
+        val drawn = listOf(composed, decomposed).map { label ->
+            show { Box(Modifier.width(220.dp)) { RaincoatButton(label, onClick = {}, variant = ButtonVariant.Primary) } }
+            // Assistive technology is given the composed label, which it reads the same.
+            compose.onNode(isButton).assertTextEquals(composed).pixels()
+        }
+        val (expected, actual) = drawn
+        assertEquals("the size", expected.width to expected.height, actual.width to actual.height)
+        assertTrue("the same lines and pixels", expected.buffer.contentEquals(actual.buffer))
     }
 
     @Test

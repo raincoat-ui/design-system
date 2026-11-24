@@ -12,6 +12,7 @@ import io.github.raincoatui.tokens.HeadingVariant
 import io.github.raincoatui.tokens.TextColor
 import io.github.raincoatui.tokens.TextVariant
 import io.github.raincoatui.ui.LocalRaincoatTokens
+import io.github.raincoatui.ui.rememberComposedForDisplay
 import io.github.raincoatui.ui.toColor
 import io.github.raincoatui.ui.toTextStyle
 
@@ -86,7 +87,9 @@ public fun RaincoatHeading(
 @Composable
 private fun TypographyText(text: String, appearance: TextAppearance, modifier: Modifier, maxLines: Int) {
     BasicText(
-        text = text,
+        // Composed (NFC), so that decomposed Korean breaks between words too. It draws and reads
+        // the same.
+        text = rememberComposedForDisplay(text),
         modifier = modifier,
         // Every line is exactly the token's line height, and lines break by the rules of the
         // person's language (toTextStyle). Start is the right in right-to-left text; the

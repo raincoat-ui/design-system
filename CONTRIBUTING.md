@@ -94,10 +94,11 @@ text the examples show is in the component's `strings.yaml`, beside its spec. CI
 drawing with its baseline, and fails when a baseline is missing or differs. Each platform has a
 job of its own:
 
-| Platform | Job             | Artifact        | Baselines                                     |
-| -------- | --------------- | --------------- | --------------------------------------------- |
-| Web      | `web snapshots` | `web-snapshots` | `packages/web/test/snapshots/__screenshots__` |
-| iOS      | `ios snapshots` | `ios-snapshots` | `packages/ios/__screenshots__`                |
+| Platform | Job               | Artifact            | Baselines                                      |
+| -------- | ----------------- | ------------------- | ---------------------------------------------- |
+| Web      | `web snapshots`   | `web-snapshots`     | `packages/web/test/snapshots/__screenshots__`  |
+| iOS      | `ios snapshots`   | `ios-snapshots`     | `packages/ios/__screenshots__`                 |
+| Android  | `android modules` | `android-snapshots` | `packages/android/ui/src/test/__screenshots__` |
 
 A drawing differs from its baseline when a single pixel does: on the web, by more than
 pixelmatch's default color threshold; on iOS, when one of the pixel's channels differs by more
@@ -141,6 +142,23 @@ writes no baseline; do not copy what it draws over the baselines.
   It draws them into `packages/ios/test-results/snapshots/local/`. Without that variable the
   snapshots are left out, and `swift test` on macOS never draws them: SwiftUI there does not
   enlarge text for a larger Dynamic Type size.
+
+**Android.** The Compose components' snapshots are drawn with Robolectric, in the
+`android modules` job, and compared with `packages/android/ui/src/test/__screenshots__`. The job
+uploads what it drew as the `android-snapshots` artifact, with `actual/` and `diff/` as on the
+web. Accept them the same way:
+
+```sh
+gh run download <run-id> --name android-snapshots --dir /tmp/android-snapshots
+cp -R /tmp/android-snapshots/actual/. packages/android/ui/src/test/__screenshots__/
+git add packages/android/ui/src/test/__screenshots__
+```
+
+`./gradlew :ui:testDebugUnitTest` draws them on your machine, into
+`packages/android/ui/build/snapshots/local/`, and compares nothing. A component with an Android
+implementation needs `<Component>SnapshotTest.kt` in
+`packages/android/ui/src/test/kotlin/io/github/raincoatui/ui/snapshots/`, which draws one instance
+of its generated examples, as `ButtonSnapshotTest.kt` does; the tests fail until it has one.
 
 To give a new component its snapshots, write its `strings.yaml` (`pnpm tokens:lint` says what is
 missing), run `pnpm tokens:build`, and add a test on each platform that draws one instance of its

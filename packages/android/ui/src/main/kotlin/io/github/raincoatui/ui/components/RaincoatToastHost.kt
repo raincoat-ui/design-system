@@ -72,6 +72,7 @@ import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.tokens.TokenEasing
 import io.github.raincoatui.ui.LocalRaincoatTokens
+import io.github.raincoatui.ui.rememberComposedForDisplay
 import io.github.raincoatui.ui.raincoatShadow
 import io.github.raincoatui.ui.toColor
 import io.github.raincoatui.ui.toTextStyle
@@ -409,7 +410,8 @@ private fun ToastLayout(
             modifier = Modifier.weight(1f, fill = false),
             message = {
                 BasicText(
-                    text = message,
+                    // Composed (NFC), as all read-only text is.
+                    text = rememberComposedForDisplay(message),
                     // Announced politely, after whatever TalkBack is saying.
                     modifier = Modifier
                         .semantics { liveRegion = LiveRegionMode.Polite }

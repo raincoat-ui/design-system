@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import io.github.raincoatui.tokens.ButtonSize
 import io.github.raincoatui.tokens.ButtonVariant
 import io.github.raincoatui.ui.LocalRaincoatTokens
+import io.github.raincoatui.ui.rememberComposedForDisplay
 import io.github.raincoatui.ui.toColor
 import io.github.raincoatui.ui.toTextStyle
 import kotlin.math.ceil
@@ -266,7 +267,8 @@ private fun ButtonLayout(
             }
             if (text != null) {
                 BasicText(
-                    text = text,
+                    // Composed (NFC), so that decomposed Korean breaks between words too.
+                    text = rememberComposedForDisplay(text),
                     // The label takes the room the icons leave and wraps inside it, by the rules
                     // of the person's language (toTextStyle): strictly, so that no line of
                     // Japanese starts with a small kana or a prolonged sound mark, and Korean

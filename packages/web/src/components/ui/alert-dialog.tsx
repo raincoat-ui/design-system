@@ -19,6 +19,7 @@ import {
   ModalContext,
   ModalFooter,
   ModalHeader,
+  ModalOpenContext,
   overlayClasses,
   type TitleProps,
   titleClasses,
@@ -26,6 +27,7 @@ import {
   useKeyboardAttribute,
   useModalFocus,
   useModalLayout,
+  useModalOpen,
 } from "./dialog.js";
 import { Heading } from "./typography.js";
 
@@ -39,8 +41,13 @@ type AlertDialogProps = React.ComponentProps<typeof AlertDialogPrimitive.Root>;
  * Give it an `AlertDialogTrigger` and an `AlertDialogContent`. It opens and closes by itself, or
  * is controlled with `open` and `onOpenChange`.
  */
-function AlertDialog(props: AlertDialogProps) {
-  return <AlertDialogPrimitive.Root {...props} />;
+function AlertDialog({ open, defaultOpen, onOpenChange, ...props }: AlertDialogProps) {
+  const state = useModalOpen({ open, defaultOpen, onOpenChange });
+  return (
+    <ModalOpenContext value={state.setOpen}>
+      <AlertDialogPrimitive.Root {...props} open={state.open} onOpenChange={state.setOpen} />
+    </ModalOpenContext>
+  );
 }
 
 type AlertDialogTriggerProps = React.ComponentProps<typeof AlertDialogPrimitive.Trigger>;
@@ -69,6 +76,7 @@ function AlertDialogContent({
   returnFocus,
   onOpenAutoFocus,
   onCloseAutoFocus,
+  onEscapeKeyDown,
   onKeyDown,
   onPointerDown,
   className,
@@ -80,6 +88,7 @@ function AlertDialogContent({
     returnFocus,
     onOpenAutoFocus,
     onCloseAutoFocus,
+    onEscapeKeyDown,
     onKeyDown,
     onPointerDown,
     // Radix puts the first focus on Cancel.

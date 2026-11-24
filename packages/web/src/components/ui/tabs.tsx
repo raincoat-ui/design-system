@@ -7,6 +7,7 @@
 // and no disabled tabs.
 import { Tabs as TabsPrimitive } from "radix-ui";
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { TABS_ACTIVATION_MODE_DEFAULT, type TabsActivationMode } from "../../generated/specs.js";
 import { cn } from "../../lib/utils.js";
 
@@ -426,12 +427,18 @@ function TabsContent({
 }: TabsContentProps) {
   const [element, setElement] = React.useState<HTMLDivElement | null>(null);
   const panelRef = useBothRefs(ref, setElement);
+  // False until the panel is in the page, as on the server: a panel without a script takes focus,
+  // so that its content can be reached either way.
   const [holdsFocusable, setHoldsFocusable] = React.useState(false);
 
-  React.useEffect(() => {
+  // Whether the panel holds something Tab reaches is read before the browser can handle the next
+  // key: as the panel appears, and as soon as its content changes. Radix keeps a panel in the
+  // page and adds its content when its tab is selected, as an arrow key does, and Tab may follow
+  // at once. So each change is drawn now, not when React would otherwise draw it.
+  React.useLayoutEffect(() => {
     if (!element) return;
     const check = () => setHoldsFocusable(element.querySelector(TABBABLE) !== null);
-    const changes = new MutationObserver(check);
+    const changes = new MutationObserver(() => flushSync(check));
     changes.observe(element, {
       childList: true,
       subtree: true,
