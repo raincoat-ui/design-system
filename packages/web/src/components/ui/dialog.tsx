@@ -126,8 +126,12 @@ function lineHeight(style: CSSStyleDeclaration) {
     : (px(style.lineHeight) || 1.2) * px(style.fontSize);
 }
 
+/**
+ * A section of a container. It may be inside an element of the app's that lays out as if it were
+ * not there (display: contents), such as a form around the sections.
+ */
 const section = (content: HTMLElement, name: "header" | "body" | "footer") =>
-  content.querySelector<HTMLElement>(`:scope > [data-section="${name}"]`);
+  content.querySelector<HTMLElement>(`[data-section="${name}"]`);
 
 /** Whether the footer's buttons, each as wide as its label, are wider together than the footer. */
 function footerOverflows(footer: HTMLElement) {
