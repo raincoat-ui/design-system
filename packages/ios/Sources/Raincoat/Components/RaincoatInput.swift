@@ -201,11 +201,15 @@
     /// without its label, description, and error:
     ///
     ///     TextField("Search", text: $query).textFieldStyle(.raincoat(size: .sm))
-    public struct RaincoatTextFieldStyle: TextFieldStyle {
+    // Unlike ButtonStyle, TextFieldStyle is not isolated to the main actor, though SwiftUI draws
+    // a text field on it. The style is, and its conformance says so, so that it can build the
+    // field's views, which are.
+    @MainActor
+    public struct RaincoatTextFieldStyle: @preconcurrency TextFieldStyle {
         let size: InputSize
         let isInvalid: Bool
 
-        public init(size: InputSize = .standard, isInvalid: Bool = false) {
+        public nonisolated init(size: InputSize = .standard, isInvalid: Bool = false) {
             self.size = size
             self.isInvalid = isInvalid
         }
