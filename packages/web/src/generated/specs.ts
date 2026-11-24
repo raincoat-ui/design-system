@@ -28,3 +28,16 @@ export const BUTTON_SIZES = ["sm", "md", "lg"] as const satisfies readonly Butto
 
 /** The ButtonSize used when none is given. */
 export const BUTTON_SIZE_DEFAULT: ButtonSize = "md";
+
+/**
+ * Tabs: On the web, whether the arrow keys select the tab they move to. On iOS and Android a keyboard moves focus the platform's way, and Enter or Space selects, as for any control.
+ * - `automatic`: The arrow keys select the tab they move to. The panel shows at once.
+ * - `manual`: The arrow keys only move focus, and Enter or Space selects. For panels that are slow to show.
+ */
+export type TabsActivationMode = "automatic" | "manual";
+
+/** Every TabsActivationMode, in the order the spec lists them. */
+export const TABS_ACTIVATION_MODES = ["automatic", "manual"] as const satisfies readonly TabsActivationMode[];
+
+/** The TabsActivationMode used when none is given. */
+export const TABS_ACTIVATION_MODE_DEFAULT: TabsActivationMode = "automatic";
